@@ -1,0 +1,24 @@
+
+@if ( localSelect().id !== 0 ) {
+
+    <div class="flex my-2">
+        <div class="m-auto bg-primary-100 f-w-600 text-primary-500 px-4 py-2 border-round">
+            <i class="ti ti-map-pin"></i>
+          {{localSelect().nombre}}
+        </div>
+      </div>
+}
+<!-- <button mat-flat-button color="primary" class="b-rad-20" matTooltip="Agregar Programa" (click)="openModalLocal()">
+    <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+</button> -->
+
+ 
+@if (localSelect().id == 0) {
+    <button mat-flat-button color="primary" class="b-rad-20 flex m-auto my-2" matTooltip="Agregar Local" (click)="openModalLocal()">
+        <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+    </button>
+} @else {
+    <button mat-flat-button color="primary" class="b-rad-20 flex m-auto my-2" matTooltip="Agregar Local" (click)="openModalLocal()">
+        <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+    </button>
+}

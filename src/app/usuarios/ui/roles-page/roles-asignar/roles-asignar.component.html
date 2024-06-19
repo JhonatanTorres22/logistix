@@ -1,0 +1,50 @@
+<app-card cardTitle="Asignar Rol" padding="0" cardClass="customer-edit-card m-b-0"
+    headerClass="p-15" actionClass="card-footer block">
+    <ng-template #headerOptionsTemplate>
+        <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
+            <i class="ti ti-x f-20"></i>
+        </a>
+    </ng-template>
+    <ng-scrollbar style="height: 210px" visibility="hover">
+        <form [formGroup]="formAsignarRol" class="m-3">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+                <mat-label>Usuarios</mat-label>
+                <mat-select formControlName="usuario">
+                    @for (usuario of usuarios; track usuario) {
+                        <mat-option [value]="usuario.id">{{usuario.apellidoPaterno}}</mat-option>
+                    }
+                  <!-- <mat-option value="2">FEMENINO</mat-option> -->
+                </mat-select>
+                @if (formAsignarRol.get('usuario')?.hasError('required')) {
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+                <mat-label>Roles</mat-label>
+                <mat-select formControlName="rol">
+                    @for (rol of roles; track rol) {
+                        <mat-option [value]="rol.id">{{rol.rol}}</mat-option>
+                    }
+                  <!-- <mat-option value="2">FEMENINO</mat-option> -->
+                </mat-select>
+                @if (formAsignarRol.get('rol')?.hasError('required')) {
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+            </mat-form-field>
+        </form>
+
+    </ng-scrollbar>
+    <ng-template #actionTemplate>
+        <div class="flex align-item-center justify-content-between">
+            <div class="flex-grow-1 text-end">
+
+                <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+                <ui-button color="primary" label="Asignar" [disabled]="formAsignarRol.invalid"
+                    (click)="onSubmit()"></ui-button>
+
+            </div>
+        </div>
+    </ng-template>
+
+
+    <!-- {{ semestreEdit | json }} -->

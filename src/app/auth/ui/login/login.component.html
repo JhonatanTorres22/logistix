@@ -1,0 +1,61 @@
+<div class="auth-main">
+    <div class="auth-wrapper version-1">
+      <div class="auth-form -mx-1 md:mx-0">
+        <div class="auth-background">
+          <div class="yellow-circle"></div>
+          <div class="red-circle"></div>
+        </div>
+        @if ( roles.length == 0 ) {
+          <div class="main-form">
+            <app-card [showHeader]="false" class="auth-form-card" cardClass="mt-6 md:mt-0" padding="40">
+              <div class="text-center">
+                <a href="javascript:">
+                  <img src="assets/images/logo.png" alt="logo" width="100px"/>
+                  <h2>LOGOTIPO</h2>
+                  <!-- <img src="assets/images/logo-dark.svg" alt="logo" /> -->
+                </a>
+              </div>
+              <div class="separator">
+                <!-- <span>OR</span> -->
+              </div>
+              <div class="text-center m-b-25 f-20 f-w-500">Iniciar Sesión</div>
+              <form [formGroup]="formLogin" class="text-start">
+                <ui-input
+                  label="Usuario" formControlName="userName"
+                  [maxlength]="maxLengthUserName"
+                  [minlength]="minLengthUserName"
+                  [expReg]="expRegUserNameToLockInput"
+  
+                ></ui-input>
+                <ui-input
+                  label="Contraseña" formControlName="password"
+                  [maxlength]="maxLengthPassword"
+                  [minlength]="minLengthPassword"
+                  [expReg]="expRegPasswordToLockInput"
+                  type="password"
+                ></ui-input>
+  
+                @if (messageErrorLogin) {
+                  <div class="bg-warn-500 text-warn-50 p-10 m-t-15 mb-0 border-round">{{ messageErrorLogin }}</div>
+                }
+                <div class="grid col-6 col-offset-6">
+                  <button [disabled]="formLogin.invalid" mat-flat-button color="primary" class="b-rad-0 m-t-15" (click)="onSubmit()">INICIAR SESIÓN</button>
+                </div>
+                <!-- <pre>{{ roles | json }}</pre> -->
+              </form>
+            </app-card>
+          </div>
+        } @else {
+          <select-rol [roles]="roles" [token]="token"></select-rol>
+        }
+        
+
+        <div class="absolute bottom-0 right-0 my-3 mx-4 text-white">Universidad Autónoma de Ica</div>
+        <div class="absolute top-0 left-0 my-3 mx-4 text-white">
+          <img src="assets/images/logo-uai-white.png" alt="logo" width="200px"/>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,42 @@
+<mat-form-field appearance="outline" class="w-100 m-t-5">
+    <mat-label>{{ label }}</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+        <!-- <input matStartDate formControlName="fechaInicioST" placeholder="Fecha Inicio" (click)="picker.open()" >
+        <input matEndDate formControlName="fechaFinST" placeholder="Fecha Fin" (click)="picker.open()" (dateChange)="onDateChanged($event, 'fechaFin')">
+         -->
+
+        <input
+            [readonly]="readonlyInicio" 
+            [formControl]="formControlInicio"
+            [type]="type"
+            matInput
+            [maxlength]="maxlength"
+            autocomplete="off"
+            [matDatepicker]="picker"
+        />
+
+        <input
+            [readonly]="readonlyFin" 
+            [formControl]="formControlFin"
+            [type]="type"
+            matInput
+            [maxlength]="maxlength"
+            autocomplete="off"
+            [matDatepicker]="picker"
+        />                                          
+
+    </mat-date-range-input>
+    
+    <mat-hint>Fecha Inicio – Fecha Fin</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+
+    @if (formControlInicio?.hasError('required')) {
+        <mat-error>Este campo es obligatorio</mat-error>
+    }
+
+    @if (formControlFin?.hasError('required')) {
+        <mat-error>Este campo es obligatorio</mat-error>
+    }
+
+</mat-form-field>

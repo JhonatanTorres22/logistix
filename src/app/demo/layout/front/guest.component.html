@@ -1,0 +1,43 @@
+<div>
+  <mat-toolbar>
+    <div class="component-header top-header default">
+      <div class="container">
+        <a href="/" class="theme-logo">
+          <img src="assets/images/logo-dark.svg" alt="logo" />
+        </a>
+        <button mat-stroked-button class="nav-content-collapse" (click)="this.navDataShow = !this.navDataShow">
+          <i class="ti ti-menu-2 f-26 flex"></i>
+        </button>
+        <div class="nav-bar-data" [ngClass]="{ show: navDataShow }">
+          <ul class="navbar align-item-center">
+            <li class="mat-body p-x-10">
+              <a class="text-muted f-w-500" [routerLink]="['/auth/login']" target="_blank">Dashboard</a> <!-- /authentication-1/login -->
+            </li>
+            <li class="mat-body p-x-10">
+              <a class="text-muted f-w-500" [routerLink]="['/components/input/button']">Component</a>
+            </li>
+            <li class="mat-body p-x-10">
+              <a class="text-muted f-w-500" href="https://phoenixcoded.gitbook.io/able-pro/v/angular" target="_blank">Documentation</a>
+            </li>
+            <li class="mat-body github p-r-5 m-r-10">
+              <a class="text-muted" href="https://github.com/phoenixcoded/able-pro-free-admin-dashboard-template" target="_blank">
+                <svg class="pc-icon">
+                  <use xlink:href="assets/fonts/custom-icon.svg#custom-document-2"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="mat-body">
+              <a mat-stroked-button class="b-rad-20 bg-success-500 text-accent-100" target="_blank" [href]="productIdService.buyNowLink"
+                >Purchase Now <i class="ti ti-external-link"></i
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+  <div class="router-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<app-configuration></app-configuration>

@@ -1,0 +1,25 @@
+<app-card class="flex" headerClassTemplate="m-auto"> <!-- flex align-items-center gap-4 -->
+    <ng-template #headerTitleTemplate >
+        @if ( programaSelect().id !== 0 ) {
+            <div class="flex flex-column">
+                {{programaSelect().nombre}}
+                <!-- <span class="f-14 f-w-500"> {{ directorSelect().usuario}}</span> -->
+            </div>
+        } @else {
+            Agregar Programa Académico
+        }
+        <!-- <button mat-flat-button color="primary" class="b-rad-20" matTooltip="Agregar Programa" (click)="openModalPrograma()">
+            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+        </button> -->
+    </ng-template>
+ 
+    @if (programaSelect().id == 0) {
+        <button mat-flat-button color="primary" class="b-rad-20 flex m-auto" matTooltip="Agregar Programa" (click)="openModalPrograma()">
+            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+        </button>
+    } @else {
+        <!-- LOCAL COMPONENT -->
+        <ng-content select="[director-page]"></ng-content>
+        <ng-content select="[local-page]"></ng-content>
+    }
+</app-card>

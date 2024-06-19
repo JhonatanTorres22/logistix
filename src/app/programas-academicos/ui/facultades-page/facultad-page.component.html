@@ -1,0 +1,22 @@
+<app-card headerClassTemplate="">
+    <ng-template #headerTitleTemplate class="align-items-center">
+        @if ( facultadSelect().id !== 0 ) {
+            <ng-content select="[decano-page]"></ng-content>
+        } @else {
+            Agregar Facultad
+        }
+        <!-- <button mat-flat-button color="primary" class="b-rad-20" matTooltip="Agregar Facultad" (click)="openModalFacultad()">
+            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+        </button> -->
+    </ng-template>
+ 
+    @if (facultadSelect().id == 0) {
+        <button mat-flat-button color="primary" class="b-rad-20" matTooltip="Agregar Facultad" (click)="openModalFacultad()">
+            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+        </button>
+    } @else {
+
+        <ng-content select="[programa-page]"></ng-content>
+       
+    }
+</app-card>

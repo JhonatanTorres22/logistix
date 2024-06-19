@@ -1,0 +1,22 @@
+<div class="row p-t-25">
+  <div class="col-sm-12">
+    <app-card cardTitle="Google Re-Captcha">
+      <form #captchaProtectedForm="ngForm">
+        <re-captcha
+          siteKey="6LeAbLkgAAAAACvQtz3fFjGepHHuE2Qx_Fx1GIYk"
+          [(ngModel)]="formModel.captcha"
+          name="captcha"
+          required
+          #captchaControl="ngModel"
+        ></re-captcha>
+        <div [hidden]="captchaControl.valid || captchaControl.pristine" class="text-warn-500"> Captcha must be solved </div>
+        <div [hidden]="captchaProtectedForm.form.valid" class="text-warn-500"> The form must be filled out </div>
+        <div class="block m-10">
+          <div [hidden]="!captchaControl.valid" class="text-success-500"> Captcha is valid </div>
+          <div [hidden]="!captchaProtectedForm.form.valid" class="text-success-500"> The form is valid </div>
+        </div>
+        <button mat-flat-button color="primary" (click)="formModel.captcha = ''"> Reset Captcha </button>
+      </form>
+    </app-card>
+  </div>
+</div>

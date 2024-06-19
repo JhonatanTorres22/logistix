@@ -1,0 +1,39 @@
+<mat-form-field appearance="outline" class="w-100 m-t-5">
+  <mat-label>{{ label }}</mat-label>
+  <input
+  (input)="onInput($event)"
+    [expReg]="expReg"
+    [readonly]="readonly" 
+    [formControl]="formControl"
+    [type]="hide ? type : hide"
+    matInput
+    [maxlength]="maxlength"
+    autocomplete="off"
+    UpperCase
+  />
+  @if ( type == 'password') {
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+      <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  }
+  <mat-hint align="end">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
+  @if (formControl?.hasError('maxlength')) {
+    <mat-error>Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
+  }
+  @if (formControl?.hasError('minlength')) {
+    <mat-error>Este campo debe tener como mínimo {{ minlength }} caracteres</mat-error>
+  }
+  @if (formControl?.hasError('required')) {
+    <mat-error>Este campo es obligatorio</mat-error>
+  }
+  @if (formControl?.hasError('pattern')) {
+    <mat-error>Este campo no cumple con el formato establecido</mat-error>
+  }
+</mat-form-field>
+
+<!-- <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!hayUsuarioExistente && formUserAdd.value.numeroDocumento.length >= minLengthNumeroDocumento ? picker.open() : ''">
+  <mat-label>Fecha de Nacimiento</mat-label>
+  <input readonly="true" formControlName="fechaNacimiento" matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY" autocomplete="off" />
+ 
+  
+</mat-form-field> -->

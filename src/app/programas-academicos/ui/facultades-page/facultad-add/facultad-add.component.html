@@ -1,0 +1,32 @@
+<app-card [cardTitle]="facultadEdit.id ? 'Editar ' : 'Crear ' + entidad" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
+    <ng-template #headerOptionsTemplate>
+        <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
+          <i class="ti ti-x f-20"></i>
+        </a>
+    </ng-template>
+    <div style="height: 300px" visibility="hover">
+        <form [formGroup]="formFacultad" class="p-3">
+          <!-- {{ semestreEdit | json }} -->
+          <div class="flex gap-3">
+            <ui-input class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput"></ui-input>
+          </div>
+          <div class="flex gap-3">
+            <ui-input class="w-full" label="Definicion" formControlName="definicion" [maxlength]="maxLengthCodigo" [minlength]="minLengthCodigo" [expReg]='expRegCodigoToLockInput'></ui-input>
+            <!-- {{ formSemestre.value.fechaInicio }} -->
+            
+
+          </div>
+        </form>
+
+    </div>
+    <ng-template #actionTemplate>
+      <div class="flex align-item-center justify-content-between">
+        <div class="flex-grow-1 text-end">
+
+          <ui-button color="secondary" label="Cancelar" (click)="cancelarAdd()" class="m-r-10"></ui-button>
+          <ui-button color="primary" [label]="facultadEdit.id != 0 ? 'Editar' : 'Crear'" [disabled]="formFacultad.invalid" (click)="onSubmit()"></ui-button>
+
+        </div>
+      </div>
+    </ng-template>
+  </app-card>

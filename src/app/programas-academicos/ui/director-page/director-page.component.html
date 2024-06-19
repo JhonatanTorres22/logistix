@@ -1,0 +1,26 @@
+@if ( directorSelect().id == 0 ) {
+
+    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Agregar Director de Escuela" (click)="openModalDirector()">
+        <img src="assets/images/user/avatar-0.png" alt="img" class="img-fluid" />
+        <label for="uplfile" class="img-avatar-upload">
+          <i class="ti ti-plus f-24 m-b-5"></i>
+          <!-- <span>Decano</span> -->
+        </label>
+    </div>
+    <!-- {{programaSelect().nombre}} -->
+
+} @else {
+    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Cambiar de Director de Escuela" (click)="openModalDirector()">
+        <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
+        <label for="uplfile" class="img-avatar-upload">
+          <i class="ti ti-refresh f-24 m-b-5"></i>
+        </label>
+    </div>
+    <div class="flex flex-column">
+        <!-- {{programaSelect().nombre}} -->
+        <span class="f-12 f-w-500"> {{ directorSelect().usuario}}</span>
+        <span class="f-14 f-w-500"> Director de Escuela</span>
+    </div>
+}
+
+

@@ -1,0 +1,211 @@
+<app-card [cardTitle]="usuarioToEdit?.id != 0 ? 'Editar Usuario' : 'Crear Usuario'" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
+  <div [formGroup]="formUserAdd" (ngSubmit)="onSubmit">
+    <ng-template #headerOptionsTemplate>
+      <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
+        <i class="ti ti-x f-20"></i>
+      </a>
+    </ng-template>
+    <ng-scrollbar style="height: calc(100vh - 275px)" visibility="hover">
+      <div class="p-20 edit-customer mt-3 md:mt-4">
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Tipo de Documento</mat-label>
+              <mat-select formControlName="tipoDocumento" (valueChange)="onChangeTipoDocumento( $event )" [disabled]="isReadonly('case5')">
+                <mat-option [disabled]="isReadonly('case5')" value="DNI">DNI</mat-option>
+                <mat-option [disabled]="isReadonly('case5')" value="CE">CARNET DE EXTRANJERÍA</mat-option>
+              </mat-select>
+              @if (formUserAdd.get('tipoDocumento')?.hasError('required')) {
+                <mat-error>Debe seleccionar el tipo de documento</mat-error>
+              }
+
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Número de Documento</mat-label>
+              <input
+                autocomplete="off"
+                (keypress)="buscarNumeroDocumento($event)"
+                (paste)="validarSoloNumeros($event)"
+                [readonly]="(isReadonly('case0'))"
+                formControlName="numeroDocumento"
+                type="text"
+                [maxlength]="maxLengthNumeroDocumento()"
+                matInput
+                placeholder="Ingrese el número de documento"
+              />
+              
+              @if (usuarioExistente && formUserAdd.value.numeroDocumento == usuarioExistente.numeroDocumento ) {
+                <mat-hint class="text-red-500 absolute">Número de documento ya existe
+                  <span (click)="openModalDetalleUsuario()" matTooltip="Ver información del usuario" class=" px-2 text-gray-700 cursor-pointer p-1 bg-gray-200 vertical-align-sub">
+                    <mat-icon>remove_red_eye</mat-icon>
+                  </span>
+                </mat-hint>
+              } @else {
+                <mat-hint align="end">{{ formUserAdd.get('numeroDocumento')?.value.length }}/ {{ maxLengthNumeroDocumento() }}</mat-hint>
+              }
+              @if (formUserAdd.get('numeroDocumento')?.hasError('invalidMaxLength')) {
+                <mat-error>El número de doc. debe tener como máximo {{ maxLengthNumeroDocumento() }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('numeroDocumento')?.hasError('invalidMinLength')) {
+                <mat-error>El número de doc. debe tener como mínimo {{ minLengthNumeroDocumento() }} caracteres</mat-error>
+              }
+       
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Apellido Paterno</mat-label>
+              <input [readonly]="isReadonly('case1')"  
+                formControlName="apellidoPaterno"
+                type="text"
+                matInput
+                placeholder="Apellido paterno"
+                autocomplete="off"
+                [maxlength]="maxLengthApellidos"
+              />
+              <mat-hint align="end">{{ formUserAdd.get('apellidoPaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
+              @if (formUserAdd.get('apellidoPaterno')?.hasError('maxlength')) {
+                <mat-error>El apellido debe tener como máximo {{ maxLengthApellidos }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('apellidoPaterno')?.hasError('minlength')) {
+                <mat-error>El apellido debe tener como mínimo {{ minLengthApellidos }} caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Apellido Materno</mat-label>
+              <input [readonly]="isReadonly('case1')" 
+                formControlName="apellidoMaterno"
+                type="text"
+                matInput
+                placeholder="Apellido materno"
+                [maxlength]="maxLengthApellidos"
+                autocomplete="off"/>
+              <mat-hint align="end">{{ formUserAdd.get('apellidoMaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
+              @if (formUserAdd.get('apellidoMaterno')?.hasError('maxlength')) {
+                <mat-error>El apellido debe tener como máximo {{ maxLengthApellidos }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('apellidoMaterno')?.hasError('minlength')) {
+                <mat-error>El apellido debe tener como mínimo {{ minLengthApellidos }} caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Nombres</mat-label>
+              <input [readonly]="isReadonly('case1')" 
+                formControlName="nombres"
+                type="text"
+                matInput
+                placeholder="Nombre"
+                [maxlength]="maxLengthNombres"
+                autocomplete="off" />
+              <mat-hint align="end">{{ formUserAdd.get('nombres')?.value.length }}/ {{ maxLengthNombres }}</mat-hint>
+              @if (formUserAdd.get('nombres')?.hasError('maxlength')) {
+                <mat-error>El apellido debe tener como máximo {{ maxLengthNombres }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('nombres')?.hasError('minlength')) {
+                <mat-error>El apellido debe tener como mínimo {{ minLengthNombres }} caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Sexo</mat-label>
+              <mat-select formControlName="sexo">
+                <mat-option [disabled]="isReadonly('case2')" value="M">MASCULINO</mat-option>
+                <mat-option [disabled]="isReadonly('case2')" value="F">FEMENINO</mat-option>
+              </mat-select>
+              @if (formUserAdd.get('sexo')?.hasError('required')) {
+                <mat-error>Este campo es obligatorio</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Correo Institucional</mat-label>
+              <input [readonly]="isReadonly('case1')"  formControlName="correoInstitucional" type="text" matInput placeholder="Correo institucional" autocomplete="off" />
+              @if (formUserAdd.get('correoInstitucional')?.hasError('pattern')) {
+                <mat-error>Debe ingresar un correo válido</mat-error>
+              }
+              @if (formUserAdd.get('correoInstitucional')?.hasError('maxlength')) {
+                <mat-error>El correo institucional debe tener como máximo {{ maxLengthCorreo }} caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Correo Personal</mat-label>
+              <input [readonly]="isReadonly('case1')"
+                formControlName="correoPersonal"
+                type="text"
+                matInput
+                placeholder="Correo personal"
+                [maxlength]="maxLengthCorreo"
+                autocomplete="off" />
+              @if (formUserAdd.get('correoPersonal')?.hasError('pattern')) {
+                <mat-error>Debe ingresar un correo válido</mat-error>
+              }
+              @if (formUserAdd.get('correoPersonal')?.hasError('maxlength')) {
+                <mat-error>El correo personal debe tener como máximo {{ maxLengthCorreo }} caracteres</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5">
+              <mat-label>Número de Celular</mat-label>
+              <input [readonly]="isReadonly('case1')" 
+                (paste)="validarSoloNumeros($event)"
+                (keypress)="validarSoloNumeros($event)"
+                formControlName="celular"
+                type="text"
+                matInput
+                placeholder="Ingrese el número de celular"
+                maxlength="9"
+                autocomplete="off"
+                />
+
+                @if (formUserAdd.get('celular')?.hasError('minlength')) {
+                  <mat-error>El celular debe tener 9 caracteres</mat-error>
+                }
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!isReadonly('case3') ? '' : picker.open()">
+              <mat-label>Fecha de Nacimiento</mat-label>
+              <input readonly="true" formControlName="fechaNacimiento" matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY" autocomplete="off" />
+              @if (formUserAdd.get('fechaNacimiento')?.hasError('required')) {
+                <mat-error>Este campo es obligatorio</mat-error>
+              }
+              <mat-datepicker-toggle [disabled]="isReadonly('case4')" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </ng-scrollbar>
+    <ng-template #actionTemplate>
+      <div class="flex align-item-center justify-content-between">
+        <div class="flex-grow-1 text-end">
+          <!-- {{ formUserAdd.invalid }}
+          {{ hayUsuarioExistente }}
+          {{ this.usuarioToEdit.id != 0 }} -->
+          <button mat-button mat-dialog-close="cancelar" class="m-r-10">Cancelar</button>
+          <button [disabled]="isReadonly('case6')" (click)="onSubmit()" mat-flat-button color="primary">{{ usuarioToEdit?.id != 0 ? 'Editar' : 'Crear'}}</button>
+        </div>
+      </div>
+    </ng-template>
+        
+  </div>    
+</app-card>

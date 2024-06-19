@@ -1,0 +1,18 @@
+<mat-form-field appearance="outline" class="w-100 m-t-5">
+    <mat-label>{{ label }}</mat-label>
+    <input
+      [readonly]="readonly" 
+      [formControl]="formControl"
+      [type]="type"
+      matInput
+      [maxlength]="maxlength"
+      autocomplete="off"
+      [matDatepicker]="picker"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    @if (formControl?.hasError('required')) {
+        <mat-error>Este campo es obligatorio</mat-error>
+    }
+
+</mat-form-field>
