@@ -11,7 +11,7 @@
                 <mat-label>Usuarios</mat-label>
                 <mat-select formControlName="usuario">
                     @for (usuario of usuarios; track usuario) {
-                        <mat-option [value]="usuario.id">{{usuario.apellidoPaterno}}</mat-option>
+                        <mat-option [value]="usuario.id">{{usuario.apellidoPaterno}} {{usuario.apellidoMaterno}} {{usuario.nombres}} </mat-option>
                     }
                   <!-- <mat-option value="2">FEMENINO</mat-option> -->
                 </mat-select>
@@ -40,7 +40,7 @@
 
                 <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
                 <ui-button color="primary" label="Asignar" [disabled]="formAsignarRol.invalid"
-                    (click)="onSubmit()"></ui-button>
+                    ></ui-button>
 
             </div>
         </div>

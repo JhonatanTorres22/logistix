@@ -95,11 +95,13 @@ export class SemestreListComponent {
     this.obtenerSemestres();
   }
 
+  listaCodigoSemestre: string [] = [];
   obtenerSemestres = () => {
     this.semestreAcademicoRepository.obtenerSemestres().subscribe({
       next: ( semestres ) => {
-        
-          console.log(semestres);
+
+          this.listaCodigoSemestre =[];
+          console.log(semestres,'lista de semestres');
           // this.existeSemestreCreado = semestres.length > 0;
           // if( semestres.length == 0 ) {
           //   this.semestreAcademicoDomainService.setSemestreAcademicoDefault();
@@ -109,6 +111,11 @@ export class SemestreListComponent {
 
           // })
           this.semestreAcademicoDomainService.setSemestreAcademico(semestres); 
+          for(let i=0 ; i < semestres.length; i++){
+            this.listaCodigoSemestre.push(semestres[i].codigo)
+          }
+
+
         
           // this.semestreSelect = {
           //   id: 0,
@@ -136,6 +143,7 @@ export class SemestreListComponent {
     
       switch( event ) {
         case 'Add': {
+          
           console.log('Semestre Creado');
           this.semestreEdit = {
             id: 0,
@@ -149,6 +157,8 @@ export class SemestreListComponent {
         } break;
 
         case 'Edit': {
+          console.log('editar');
+          
           console.log('Semestre Editado');
           this.semestreEdit = {
             id: 0,
@@ -162,6 +172,8 @@ export class SemestreListComponent {
         } break;
 
         case 'Open': {
+          console.log('open');
+          
           this.showFormAgregarSemestre = true;
           this.semestreEdit = {
             id: 0,
@@ -170,6 +182,9 @@ export class SemestreListComponent {
             condicion: '',
             usuarioId: 0,
           };
+          this.listaCodigoSemestre
+          console.log(this.semestreEdit);
+          
         } break;
 
         case 'Cancelar': {
@@ -242,6 +257,7 @@ export class SemestreListComponent {
       if( !isConfirm ) return;
 
       this.eliminarSemestre( semestre );
+      this.semestreSelect.id = 0
 
     });
     
@@ -323,7 +339,8 @@ export class SemestreListComponent {
   addSemestre = ( newSemestre: SemestreAcademico ) => {
     this.semestreRepository.agregarSemestre( newSemestre ).subscribe({
       next: (data) => {
-        this.alertService.sweetAlert('success', 'Correcto', 'Semestre creado correctamente')
+        this.alertService.sweetAlert('success', 'Correcto', 'Semestre creado correctamente');
+        
           // this.semestreAcademicoDomainService.setSemestreAcademico( data );
           this.dialogRef.close(data);
       }, error: ( error ) => {

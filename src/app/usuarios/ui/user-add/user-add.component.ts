@@ -92,7 +92,7 @@ export class UserAddComponent {
       sexo                : ['', [ Validators.required ]],
       correoInstitucional : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
       correoPersonal : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
-      celular : ['', [ Validators.required ]],
+      celular : ['', [ Validators.required, Validators.required, Validators.pattern(/^9\d{8}$/)]],
       fechaNacimiento: [new Date(''), [ Validators.required]],
       imagenPerfil: [''],
     });
@@ -151,11 +151,11 @@ export class UserAddComponent {
     console.log(this.usuarioToEdit);
     this.usuarioToEdit.sexo = this.usuarioToEdit.sexo.substring(0,1);
     this.formUserAdd.patchValue({
-      apellidoPaterno: this.usuarioToEdit.apellidoPaterno,
-      apellidoMaterno: this.usuarioToEdit.apellidoMaterno,
+      apellidoPaterno: this.usuarioToEdit.apellidoPaterno.trim(),
+      apellidoMaterno: this.usuarioToEdit.apellidoMaterno.trim(),
       tipoDocumento: this.usuarioToEdit.tipoDocumento,
       numeroDocumento: this.usuarioToEdit.numeroDocumento,
-      nombres: this.usuarioToEdit.nombres,
+      nombres: this.usuarioToEdit.nombres.trim(),
       sexo: this.usuarioToEdit.sexo,
       correoInstitucional: this.usuarioToEdit.correoInstitucional,
       correoPersonal: this.usuarioToEdit.correoPersonal,
@@ -373,4 +373,22 @@ export class UserAddComponent {
       default: return false;
     }
   } 
+
+  ValidarSinNumeros(event: KeyboardEvent | ClipboardEvent) {
+    if (event instanceof KeyboardEvent) {
+      const regex = new RegExp('[0-9]');
+      if (regex.test(event.key)) {
+        event.preventDefault();
+      }
+    } else if (event instanceof ClipboardEvent) {
+      const clipboardData = event.clipboardData;
+      const pastedText = clipboardData?.getData('text');
+      const regex = new RegExp('[0-9]');
+      if (pastedText && regex.test(pastedText)) {
+        event.preventDefault();
+      }
+    }
+  }
+
+
 }

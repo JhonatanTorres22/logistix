@@ -34,6 +34,7 @@
                 [maxlength]="maxLengthNumeroDocumento()"
                 matInput
                 placeholder="Ingrese el número de documento"
+               
               />
               
               @if (usuarioExistente && formUserAdd.value.numeroDocumento == usuarioExistente.numeroDocumento ) {
@@ -65,6 +66,9 @@
                 placeholder="Apellido paterno"
                 autocomplete="off"
                 [maxlength]="maxLengthApellidos"
+                (keydown)="ValidarSinNumeros($event)"
+                (paste)="ValidarSinNumeros($event)"
+                UpperCase
               />
               <mat-hint align="end">{{ formUserAdd.get('apellidoPaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
               @if (formUserAdd.get('apellidoPaterno')?.hasError('maxlength')) {
@@ -84,7 +88,10 @@
                 matInput
                 placeholder="Apellido materno"
                 [maxlength]="maxLengthApellidos"
-                autocomplete="off"/>
+                autocomplete="off"
+                (keydown)="ValidarSinNumeros($event)"
+                (paste)="ValidarSinNumeros($event)"
+                UpperCase/>
               <mat-hint align="end">{{ formUserAdd.get('apellidoMaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
               @if (formUserAdd.get('apellidoMaterno')?.hasError('maxlength')) {
                 <mat-error>El apellido debe tener como máximo {{ maxLengthApellidos }} caracteres</mat-error>
@@ -104,7 +111,11 @@
                 matInput
                 placeholder="Nombre"
                 [maxlength]="maxLengthNombres"
-                autocomplete="off" />
+                autocomplete="off"
+                (keydown)="ValidarSinNumeros($event)"
+                (paste)="ValidarSinNumeros($event)"
+                UpperCase
+                 />
               <mat-hint align="end">{{ formUserAdd.get('nombres')?.value.length }}/ {{ maxLengthNombres }}</mat-hint>
               @if (formUserAdd.get('nombres')?.hasError('maxlength')) {
                 <mat-error>El apellido debe tener como máximo {{ maxLengthNombres }} caracteres</mat-error>
@@ -177,6 +188,9 @@
 
                 @if (formUserAdd.get('celular')?.hasError('minlength')) {
                   <mat-error>El celular debe tener 9 caracteres</mat-error>
+                }
+                @if (formUserAdd.get('celular')?.hasError('pattern')){
+                  <mat-error>Número de celular inválido</mat-error>
                 }
             </mat-form-field>
           </div>

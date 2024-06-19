@@ -139,21 +139,26 @@ export class UserRolComponent implements OnInit {
     })
   }
 
-  changeAltaRol = ( $event: MatSlideToggleChange, rol: Rol) => {
+  changeAltaRol = ($event: MatSlideToggleChange, rol: Rol) => {
+    console.log($event.checked);
     const alta = $event.checked ? 'DAR ALTA' : 'DAR BAJA';
-    this.alertService.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ${alta} el ROL?`).then( isConfirm => {
-      if( !isConfirm ) {
-        $event.source.checked = !$event.checked;
-        return;
-      }
-      $event.checked ? this.darAltaRolUser( rol ) : [
-        $event.source.checked = !$event.checked,
-        this.alertService.showAlert('No se puede dar baja el rol')
-      ];
-
-    })
     
+    if ($event.checked) {
+      // Si se está marcando como true
+      this.alertService.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ${alta} el ROL?`).then(isConfirm => {
+        if (!isConfirm) {
+          $event.source.checked = false;
+          return;
+        }
+        this.darAltaRolUser(rol);
+      });
+    } else {
+      $event.source.checked = true; // Forzar a que no se pueda desmarcar
+      this.alertService.showAlert('No se puede dar baja el rol');
+      return
+    }
   }
+  
 
   activarRolUser = ( rol: Rol) => {
 
