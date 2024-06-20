@@ -11,7 +11,7 @@ import { SemestreAcademicoDomainService } from "../domain/services/semestre-acad
 import { FormBuilder, Validators } from "@angular/forms";
 import { SemestreListComponent } from "./semestre-academico-page/semestre-list/semestre-list.component";
 import { UiButtonComponent } from "src/app/core/components/ui-button/ui-button.component";
-import { ProgramaAcademicoSignal } from "../domain/signals/programa-academico.signal";
+import { SemestreSignal } from "../domain/signals/semestre.signal";
 import { FacultadListComponent } from "./facultades-page/facultad-list/facultad-list.component";
 import { Facultad } from "../domain/models/facultad.model";
 import { FacultadSignal } from "../domain/signals/facultad.signal";
@@ -19,6 +19,14 @@ import { ProgramaAcademicoPageComponent } from "./programa-academico-page/progra
 import { LocalPageComponent } from "./local-page/local-page.component";
 import { DecanoPageComponent } from "./decano-page/decano-page.component";
 import { DirectorPageComponent } from "./director-page/director-page.component";
+import { Programa, ProgramaFacultad } from "../domain/models/programa.model";
+import { ProgramaSignal } from "../domain/signals/programa.signal";
+import { DecanoSignal } from "../domain/signals/decano.signal";
+import { DirectorSignal } from "../domain/signals/director.signal";
+import { UsuarioRol } from "src/app/usuarios/domain/models/usuario-rol.model";
+import { LocalSignal } from "../domain/signals/local.signal";
+import { Local } from "../domain/models/local.model";
+import { AsignacionPageComponent } from "./asignacion-page/asignacion-page.component";
 
 
 @Component({
@@ -37,6 +45,7 @@ import { DirectorPageComponent } from "./director-page/director-page.component";
         LocalPageComponent,
         DecanoPageComponent,
         DirectorPageComponent,
+        AsignacionPageComponent,
         UiButtonComponent]
 })
 
@@ -50,16 +59,23 @@ export class ProgramasAcademicosComponent implements OnInit {
     semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
 
-    semestreSelect: WritableSignal<SemestreAcademico> = this.programaSignal.semestreSelect;
+    semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
     facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
-
+    programaSelect: WritableSignal<ProgramaFacultad> = this.programaSignal.programaSelect;
+    decanoSelect: WritableSignal<UsuarioRol> = this.decanoSignal.decanoSelect;
+    directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
+    localSelect: WritableSignal<Local> = this.localSignal.localSelect;
+    // decanoSelect: 
     constructor( 
         
         private dialog: MatDialog,
         private semestreAcademicoDomainService: SemestreAcademicoDomainService,
-        private programaSignal: ProgramaAcademicoSignal,
+        private programaSignal: ProgramaSignal,
+        private semestreSignal: SemestreSignal,
         private facultadSignal: FacultadSignal,
-
+        private decanoSignal: DecanoSignal,
+        private directorSignal: DirectorSignal,
+        private localSignal: LocalSignal
     ) {}
 
     ngOnInit(): void {

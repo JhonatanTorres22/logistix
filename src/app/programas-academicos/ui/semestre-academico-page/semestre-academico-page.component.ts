@@ -10,7 +10,7 @@ import { SemestreAcademicoDomainService } from '../../domain/services/semestre-a
 import { SemestreAcademicoRepository } from '../../domain/repositories/semestre-academico.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreListComponent } from './semestre-list/semestre-list.component';
-import { ProgramaAcademicoSignal } from '../../domain/signals/programa-academico.signal';
+import { SemestreSignal } from '../../domain/signals/semestre.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 
 @Component({
@@ -26,13 +26,13 @@ export class SemestreAcademicoPageComponent {
   semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
   existeSemestreCreado: boolean;
 
-  semestreSelect: WritableSignal<SemestreAcademico> = this.programaSignal.semestreSelect;
+  semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
 
   constructor(
     private semestreAcademicoRepository: SemestreAcademicoRepository,
     private dialog: MatDialog,
     private semestreAcademicoDomainService: SemestreAcademicoDomainService,
-    private programaSignal: ProgramaAcademicoSignal,
+    private semestreSignal: SemestreSignal,
     private alertService: AlertService
   ) {
     

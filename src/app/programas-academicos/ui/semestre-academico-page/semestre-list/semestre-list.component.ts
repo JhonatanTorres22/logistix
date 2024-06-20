@@ -14,7 +14,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SemestreAcademicoValidations } from 'src/app/programas-academicos/domain/validations/semestre-academico.valitations';
 import { DateAdapter } from '@angular/material/core';
-import { ProgramaAcademicoSignal } from 'src/app/programas-academicos/domain/signals/programa-academico.signal';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 
 @Component({
   selector: 'semestre-list',
@@ -62,7 +62,7 @@ export class SemestreListComponent {
     private semestreRepository: SemestreAcademicoRepository,
     private semestreAcademicoDomainService: SemestreAcademicoDomainService,
     private datePipe: DatePipe,
-    private programaSignal: ProgramaAcademicoSignal
+    private semestreSignal: SemestreSignal
   ) {
     this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
 
@@ -292,7 +292,7 @@ export class SemestreListComponent {
     .then( isConfirm => {
       if( !isConfirm ) return;
 
-      this.programaSignal.setSelectSemestre(  this.semestreSelect );
+      this.semestreSignal.setSelectSemestre(  this.semestreSelect );
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     

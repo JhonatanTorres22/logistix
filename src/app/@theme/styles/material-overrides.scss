@@ -16,7 +16,7 @@ body {
       background-color: var(--accent-100) !important;
 
       &.mat-drawer-side {
-        border-right: 1px dashed var(--accent-400) !important;
+        border-right: 1px dashed var(--accent-400) ; //!important
       }
 
       .mat-drawer-inner-container {

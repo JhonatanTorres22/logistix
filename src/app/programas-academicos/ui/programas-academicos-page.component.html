@@ -10,41 +10,11 @@
     </facultad-page>
 }
 
+<asignacion-page> </asignacion-page>
 
-
-<!-- 
-<app-card cardTitle="Crear Programa Académico">
-    <mat-stepper orientation="vertical" #stepperVertical>
-      <mat-step [stepControl]="firstFormGroup">
-        <form [formGroup]="firstFormGroup">
-          <ng-template matStepLabel >
-            <span class="f-w-600">{{ semestreSelect().id == 0 ? 'Seleccionar Semestre' : semestreSelect().nombre }}</span>
-          </ng-template>
-          <ui-button color="primary" [label]="semestreSelect().id == 0 ? 'Seleccionar Semestre' : 'Cambiar Semestre'" (click)="openListarSemestre()"></ui-button>
-
-          <div>
-
-          </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>{{ facultadSelect().id == 0 ? 'Facultad' : facultadSelect().nombre }}</ng-template>
-          <ui-button color="primary" [label]="facultadSelect().id == 0 ? 'Seleccionar Facultad' : 'Cambiar Facultad'" (click)="openListarFacultad()"></ui-button>
-
-        </form>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Review your order</ng-template>
-        <div class="f-w-600">Thank you for your order.</div>
-        <div class="f-w-500 m-b-10"
-          >Your order number is #2001539. We have emailed your order confirmation, and will send you an update when your order has
-          shipped.</div
-        >
-        <div>
-          <button mat-button color="primary" matStepperPrevious>Back</button>
-          <button mat-flat-button color="primary" class="float-end" (click)="stepperVertical.reset()">Place Order</button>
-        </div>
-      </mat-step>
-    </mat-stepper>
-  </app-card> -->
+{{ semestreSelect() | json}}
+{{ facultadSelect() | json }}
+{{ programaSelect() | json }}
+{{ decanoSelect() | json }}
+{{ directorSelect() | json }}
+{{ localSelect() | json }}

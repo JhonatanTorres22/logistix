@@ -61,7 +61,18 @@ export class AuthMapper {
     static fromDomainToTemplateMenu( param: Navigation[]): Navigation {
         // console.log(param);
         
-        const menu = param.map( param => param )
+        const menu = param.map( param => {
+            if (param.title == 'Mensajería' || param.title == 'Dashboard' ) {
+                return {
+                    ...param,
+                    breadcrumbs: false,
+                    // url: param.url?.substring(1)
+
+                }
+            }
+
+            return param
+        } )
         // console.log( menu );
         
         return {
@@ -69,7 +80,7 @@ export class AuthMapper {
             title: 'Navigation',
             type: 'group',
             icon: 'icon-navigation',
-            children: param
+            children: menu
             
         }
     }

@@ -15,6 +15,8 @@ import { LocalRepository } from "./domain/repositories/local.repository";
 import { LocalRepositoryImpl } from "./infraestructure/repositories/local.repository.impl";
 import { UsuarioRolRepository } from "../usuarios/domain/repositories/usuario-rol.repository";
 import { UsuarioRolRepositoryImp } from "../usuarios/infraestructure/repositories/usuario-rol.repository.impl";
+import { AsignacionRepository } from "./domain/repositories/asignacion.repository";
+import { AsignacionRepositoryImpl } from "./infraestructure/repositories/asignacion.repository.impl";
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { UsuarioRolRepositoryImp } from "../usuarios/infraestructure/repositorie
             // { provide: UsuarioRepository, useClass: UsuarioRepositoryImpl },
             { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
             { provide: UsuarioRepository, useClass: UsuarioRepositoryImpl },
+            { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl },
 
 
         ]
