@@ -162,7 +162,8 @@ export class FacultadListComponent implements OnInit{
     this.facultadRepository.eliminarFacultad( facultadEliminar ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alertService.showAlert('Facultad eliminado correctamente', 'success');
+        this.alertService.sweetAlert('success', '¡ELIMINADO!', 'La facultad fue eliminada correctamente')
+        // this.alertService.showAlert('Facultad eliminado correctamente', 'success');
         this.facultadSelect = {
           id: 0,
           definicion: '',
