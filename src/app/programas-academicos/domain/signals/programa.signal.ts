@@ -19,6 +19,7 @@ export class ProgramaSignal {
 
     programaSelect = signal( this.programa);
     programasList = signal( this.programas )
+    programaEdit = signal(this.programa)
 
     setSelectPrograma = ( programa: ProgramaFacultad) => {
         this.programaSelect.set( programa );
@@ -26,5 +27,9 @@ export class ProgramaSignal {
 
     setProgramaesList = ( programas: ProgramaFacultad[] ) => {
         this.programasList.set( programas );
+    }
+
+    setProgramaEdit = (programa : ProgramaFacultad) => {
+        this.programaEdit.set( programa );
     }
 }

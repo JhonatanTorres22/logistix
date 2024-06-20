@@ -1,4 +1,7 @@
 import { Injectable } from "@angular/core";
+import { AbstractControl } from "@angular/forms";
+import { Facultad } from "../models/facultad.model";
+import { FacultadSignal } from "../signals/facultad.signal";
 
 
 @Injectable({
@@ -7,19 +10,53 @@ import { Injectable } from "@angular/core";
 
 export class FacultadValidations {
 
+    listaFacultades: Facultad[] = [];
+    facultadEditar!: Facultad
+
+    constructor(private facultadSignal: FacultadSignal,){}
+
 // INICIO NOMBRE    
-    maxLengthNombre = 40;
+    maxLengthNombre = 60;
     minLengthNombre = 5;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
     expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
-// FIN NOMBRE
-
-
-// INICIO CODIGO
-    maxLengthCodigo = 6;
+    duplicado = this.duplicadoNombreFacultad.bind(this);
+    // FIN NOMBRE
+    
+    
+    // INICIO CODIGO
+    maxLengthCodigo = 150;
     minLengthCodigo = 6;
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
     expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
-// FIN CODIGO
+    // FIN CODIGO
+     /* GENERAL INICIO */
+    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
+    /* GENERAL FIN */
 
+/* INICIO DUPLICIDAD */
+listaNombreFacultad: string [] = [];
+nombreFacultadFiltro: string [] = [];
+
+duplicadoNombreFacultad(control:AbstractControl) {
+    this.listaFacultades = this.facultadSignal.facultadesList();
+    this.listaNombreFacultad = [];
+    this.nombreFacultadFiltro = [];
+
+    for(let i = 0; i < this.listaFacultades.length; i++){
+        this.listaNombreFacultad.push(this.listaFacultades[i].nombre)
+    }
+
+    this.facultadEditar = this.facultadSignal.facultadEdit();
+    let nombreIngresado = control.value;
+    let nombreEnEdicion = "";
+
+    this.facultadEditar === undefined ? nombreEnEdicion = '': nombreEnEdicion = this.facultadEditar.nombre;
+    this.nombreFacultadFiltro = this.listaNombreFacultad.filter((listaNombreFacultad : string) =>  listaNombreFacultad !== nombreEnEdicion)
+
+    if(this.nombreFacultadFiltro.includes(nombreIngresado)) {
+        return { codigoDuplicado : true}
+    } else { return null;}
+}
+/* FIN DUPLICIDAD */
 }

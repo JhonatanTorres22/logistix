@@ -21,7 +21,8 @@ export class LocalSignal {
     locales: Local[] = [];
 
     localSelect = signal( this.local);
-    localList = signal( this.locales )
+    localList = signal( this.locales );
+    localEdit = signal ( this.local )
 
     setSelectLocal = ( local: Local) => {
         this.localSelect.set( local );
@@ -29,5 +30,9 @@ export class LocalSignal {
 
     setLocalesList = ( locales: Local[] ) => {
         this.localList.set( locales );
+    }
+
+    setLocalEditar = (local:Local) => {
+        this.localEdit.set( local )
     }
 }

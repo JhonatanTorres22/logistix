@@ -131,6 +131,8 @@ export class FacultadListComponent implements OnInit{
           this.showFormAgregarFacultad = true;
           this.facultadEdit = facultad;
           // this.pathValueFormSemestreEdit();
+          this.facultadSignal.setEditFacultad(facultad)
+          
         } break;
 
         case 'Cancelar': {
@@ -144,8 +146,9 @@ export class FacultadListComponent implements OnInit{
   eliminarFacultadConfirm = ( facultad: Facultad ) => {
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea eliminar el semestre?').then( isConfirm => {
       if( !isConfirm ) return;
-
       this.eliminarFacultad( facultad );
+      this.facultadSelect.id = 0
+      
 
     });
     

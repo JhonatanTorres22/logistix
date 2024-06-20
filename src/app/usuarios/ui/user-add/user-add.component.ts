@@ -71,7 +71,6 @@ export class UserAddComponent {
     
 
     // this.hayUsuarioExistente = this.usuarioToEdit.id != 0 ? true;
-    
     this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
     this.maxLengthNumeroDocumento = this.usuarioDomainValidacionService.getMaxLength;
     this.minLengthNumeroDocumento = this.usuarioDomainValidacionService.getMinLength;
@@ -86,13 +85,13 @@ export class UserAddComponent {
      this.formUserAdd = this.fb.group({
       tipoDocumento       : ['', [ Validators.required ]],
       numeroDocumento     : ['', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this) ]],
-      apellidoPaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos) ]],
-      apellidoMaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos) ]],
-      nombres             : ['', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres) ]],
+      apellidoPaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
+      apellidoMaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
+      nombres             : ['', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
       sexo                : ['', [ Validators.required ]],
       correoInstitucional : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
       correoPersonal : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
-      celular : ['', [ Validators.required, Validators.required, Validators.pattern(/^9\d{8}$/)]],
+      celular : ['', [ Validators.required, Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CELULAR)]],
       fechaNacimiento: [new Date(''), [ Validators.required]],
       imagenPerfil: [''],
     });
@@ -373,22 +372,4 @@ export class UserAddComponent {
       default: return false;
     }
   } 
-
-  ValidarSinNumeros(event: KeyboardEvent | ClipboardEvent) {
-    if (event instanceof KeyboardEvent) {
-      const regex = new RegExp('[0-9]');
-      if (regex.test(event.key)) {
-        event.preventDefault();
-      }
-    } else if (event instanceof ClipboardEvent) {
-      const clipboardData = event.clipboardData;
-      const pastedText = clipboardData?.getData('text');
-      const regex = new RegExp('[0-9]');
-      if (pastedText && regex.test(pastedText)) {
-        event.preventDefault();
-      }
-    }
-  }
-
-
 }

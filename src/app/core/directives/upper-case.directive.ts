@@ -19,7 +19,7 @@ export class UpperCaseDirective extends DefaultValueAccessor{
   @HostListener('input', ['$event']) input( $event: InputEvent) {
     const target = $event.target as HTMLInputElement;
     const start = target.selectionStart;
-    console.log(this.expReg);
+
     
     target.value = target.value.toUpperCase().trimStart().replace(/\s{1,}/g, ' ');
   

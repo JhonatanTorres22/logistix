@@ -66,8 +66,6 @@
                 placeholder="Apellido paterno"
                 autocomplete="off"
                 [maxlength]="maxLengthApellidos"
-                (keydown)="ValidarSinNumeros($event)"
-                (paste)="ValidarSinNumeros($event)"
                 UpperCase
               />
               <mat-hint align="end">{{ formUserAdd.get('apellidoPaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
@@ -76,6 +74,9 @@
               }
               @if (formUserAdd.get('apellidoPaterno')?.hasError('minlength')) {
                 <mat-error>El apellido debe tener como mínimo {{ minLengthApellidos }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('apellidoPaterno')?.hasError('pattern')) {
+                <mat-error>El apellido no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
             </mat-form-field>
           </div>
@@ -89,8 +90,6 @@
                 placeholder="Apellido materno"
                 [maxlength]="maxLengthApellidos"
                 autocomplete="off"
-                (keydown)="ValidarSinNumeros($event)"
-                (paste)="ValidarSinNumeros($event)"
                 UpperCase/>
               <mat-hint align="end">{{ formUserAdd.get('apellidoMaterno')?.value.length }}/ {{ maxLengthApellidos }}</mat-hint>
               @if (formUserAdd.get('apellidoMaterno')?.hasError('maxlength')) {
@@ -98,6 +97,9 @@
               }
               @if (formUserAdd.get('apellidoMaterno')?.hasError('minlength')) {
                 <mat-error>El apellido debe tener como mínimo {{ minLengthApellidos }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('apellidoMaterno')?.hasError('pattern')) {
+                <mat-error>El apellido no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
             </mat-form-field>
           </div>
@@ -112,16 +114,17 @@
                 placeholder="Nombre"
                 [maxlength]="maxLengthNombres"
                 autocomplete="off"
-                (keydown)="ValidarSinNumeros($event)"
-                (paste)="ValidarSinNumeros($event)"
                 UpperCase
                  />
               <mat-hint align="end">{{ formUserAdd.get('nombres')?.value.length }}/ {{ maxLengthNombres }}</mat-hint>
               @if (formUserAdd.get('nombres')?.hasError('maxlength')) {
-                <mat-error>El apellido debe tener como máximo {{ maxLengthNombres }} caracteres</mat-error>
+                <mat-error>El nombre debe tener como máximo {{ maxLengthNombres }} caracteres</mat-error>
               }
               @if (formUserAdd.get('nombres')?.hasError('minlength')) {
-                <mat-error>El apellido debe tener como mínimo {{ minLengthNombres }} caracteres</mat-error>
+                <mat-error>El nombre debe tener como mínimo {{ minLengthNombres }} caracteres</mat-error>
+              }
+              @if (formUserAdd.get('nombres')?.hasError('pattern')) {
+                <mat-error>El nombre no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
             </mat-form-field>
           </div>

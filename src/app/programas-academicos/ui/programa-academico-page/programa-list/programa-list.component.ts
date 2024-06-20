@@ -139,6 +139,7 @@ export class ProgramaAcademicoListComponent {
         case 'Open': {
           this.showFormAgregarPrograma = true;
           this.programaEdit = programa;
+          this.programaSignal.setProgramaEdit( programa );
           // this.pathValueFormSemestreEdit();
         } break;
 
@@ -155,6 +156,7 @@ export class ProgramaAcademicoListComponent {
       if( !isConfirm ) return;
 
       this.eliminarPrograma( programa );
+      this.programaSelect.id = 0
 
     });
     
@@ -170,7 +172,8 @@ export class ProgramaAcademicoListComponent {
     this.programaRepository.eliminarPrograma( programaEliminar ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alertService.showAlert('Programa eliminado correctamente', 'success');
+        this.alertService.sweetAlert('success', '¡CORRECTO!', 'Programa académico eliminado correctamente')
+        // this.alertService.showAlert('Programa eliminado correctamente', 'success');
         this.obtenerProgramas();
       }, error: ( error ) => {
         console.log( error );

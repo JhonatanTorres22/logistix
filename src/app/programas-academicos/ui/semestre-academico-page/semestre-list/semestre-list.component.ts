@@ -95,12 +95,10 @@ export class SemestreListComponent {
     this.obtenerSemestres();
   }
 
-  listaCodigoSemestre: string [] = [];
+
   obtenerSemestres = () => {
     this.semestreAcademicoRepository.obtenerSemestres().subscribe({
       next: ( semestres ) => {
-
-          this.listaCodigoSemestre =[];
           console.log(semestres,'lista de semestres');
           // this.existeSemestreCreado = semestres.length > 0;
           // if( semestres.length == 0 ) {
@@ -110,13 +108,8 @@ export class SemestreListComponent {
           // semestres.forEach( semestre => {
 
           // })
-          this.semestreAcademicoDomainService.setSemestreAcademico(semestres); 
-          for(let i=0 ; i < semestres.length; i++){
-            this.listaCodigoSemestre.push(semestres[i].codigo)
-          }
+          this.semestreAcademicoDomainService.setSemestreAcademico(semestres);          
 
-
-        
           // this.semestreSelect = {
           //   id: 0,
           //   codigo: '',
@@ -182,8 +175,6 @@ export class SemestreListComponent {
             condicion: '',
             usuarioId: 0,
           };
-          this.listaCodigoSemestre
-          console.log(this.semestreEdit);
           
         } break;
 
@@ -224,6 +215,8 @@ export class SemestreListComponent {
         case 'Open': {
           this.showFormAgregarSemestre = true;
           this.semestreEdit = semestre;
+          this.semestreAcademicoDomainService.setSemestreEditado(semestre);
+          
           // this.pathValueFormSemestreEdit();
         } break;
 

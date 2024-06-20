@@ -9,7 +9,7 @@ import { SemestreAcademico } from "../models/semestre-academico.model";
 
 export class SemestreAcademicoDomainService {
 
-    semestres: SemestreAcademico[] = []
+    semestres: SemestreAcademico[] = [];
     semestre: SemestreAcademico = {
         codigo: '',
         // estado: '',
@@ -22,11 +22,12 @@ export class SemestreAcademicoDomainService {
     };
     public semestresAcademicos = signal(this.semestres);
     public semestreAcademicoAperturado = signal( this.semestre);
+    public semestreAcademicoEditado = signal (this.semestre)
     constructor() {}
 
     /* SIGNAL */
     public setSemestreAcademico = ( senestres: SemestreAcademico[]) => {
-        this.semestresAcademicos.set( senestres );
+        this.semestresAcademicos.set( senestres );        
     }
 
     public setSemestreAcademicoDefault = () => {
@@ -40,5 +41,13 @@ export class SemestreAcademicoDomainService {
     public setSemestreAcademicoAperturadoDefault = () => {
         this.semestreAcademicoAperturado.set( this.semestre );
     } 
+
+    public setSemestreEditado = (semestreEditado:SemestreAcademico) => {
+        this.semestreAcademicoEditado.set(semestreEditado);
+    }
+    
+    public setSemestreEditadoDefault = () => {
+        this.semestreAcademicoEditado.set(this.semestre)
+    }
 
 }
