@@ -73,7 +73,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   // life cycle event
   ngOnInit() {
     // this.menus = this.authDomainService.currentMenuToRole;
-    // console.log(menus);
+    console.log(this.menus());
     // this.menus = this.authDomainService.menusToRoleOfUsers()[0].menus
     this.breakpointObserver.observe([MIN_WIDTH_1025PX, MAX_WIDTH_1024PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_1024PX]) {

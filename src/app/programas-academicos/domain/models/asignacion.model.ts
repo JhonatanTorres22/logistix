@@ -1,0 +1,23 @@
+export class Asignacion {
+    constructor(
+        public idFacultad: number,
+        public nombreFacultad: string,
+        public idDecano: number,
+        public nombreDecano: string,
+        public programas: AsignacionPrograma[]
+    ) {}
+}
+
+
+export interface AsignacionPrograma {
+    idPrograma: number,
+    nombrePrograma: string,
+    idDirector: number,
+    nombreDirector: string,
+    locales: AsignacionLocal[] 
+}
+
+export interface AsignacionLocal {
+    idLocal: number,
+    nombreLocal: string
+}  

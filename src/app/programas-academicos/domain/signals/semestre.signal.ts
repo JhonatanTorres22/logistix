@@ -6,7 +6,7 @@ import { SemestreAcademico } from "../models/semestre-academico.model";
     providedIn: 'root'
 })
 
-export class ProgramaAcademicoSignal {
+export class SemestreSignal {
 
     semestre: SemestreAcademico = {
         id: 0,

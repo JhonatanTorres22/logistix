@@ -30,10 +30,17 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.authenticationService.logout();
         }
 
-        const error = err.error.message || err.statusText;
+        let errorMessage = '';
+        if (err instanceof ErrorEvent) {
+          errorMessage = `Client-side error: ${err.error?.message}`;
+        } else {
+          errorMessage = `Server-side error: ${err.status} ${err?.message}`;
+        }
+
+        // const error = err.error.message || err.statusText;
         // return throwError(error);
-        this.errorService.show(error);
-        return throwError(() => error);
+        this.errorService.show(errorMessage);
+        return throwError(() => errorMessage);
       })
 
       //   let errorMessage = '';

@@ -22,7 +22,8 @@ export const menus: Navigation[] = [
         type: 'item',
         url: '/mensajeria',
         icon: '#custom-direct-inbox',
-        children: []
+        children: [],
+        breadcrumbs: false
       },
       {
         id: 'programas-academicos',

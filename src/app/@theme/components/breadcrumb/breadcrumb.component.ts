@@ -1,5 +1,5 @@
 // Angular Import
-import { Component, Input } from '@angular/core';
+import { Component, Input, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -9,6 +9,7 @@ import { NavigationItem } from '../../types/navigation';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { menus } from 'src/app/demo/data/menu';
 import { componentMenus } from 'src/app/demo/data/component';
+import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
 
 interface titleType {
   // eslint-disable-next-line
@@ -33,6 +34,7 @@ export class BreadcrumbComponent {
   @Input() dashboard = true;
 
   navigations: NavigationItem[];
+  menu: WritableSignal <NavigationItem[]> = this.authDomainService.currentMenu;
   ComponentNavigations: NavigationItem[];
   breadcrumbList: Array<string> = [];
   navigationList: titleType[];
@@ -41,9 +43,14 @@ export class BreadcrumbComponent {
   // constructor
   constructor(
     private route: Router,
-    private titleService: Title
+    private titleService: Title,
+    private authDomainService: AuthDomainService
+
   ) {
-    this.navigations = menus;
+    // this.navigations = menus;
+    this.navigations = this.menu();
+    console.log(this.navigations);
+    
     this.ComponentNavigations = componentMenus;
     this.type = 'theme1';
     this.setBreadcrumb();
