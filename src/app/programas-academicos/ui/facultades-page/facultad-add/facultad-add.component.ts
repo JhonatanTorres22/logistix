@@ -31,7 +31,7 @@ export class FacultadAddComponent {
   maxLengthNombre: number;
   minLengthNombre: number;
   expRegNombre: RegExp;
-  expRegSinNúmero: string;
+  expRegNombreBlockNumeroAndEspacio: string;
   expRegNombreToLockInput: RegExp;
   maxLengthCodigo: number;
   minLengthCodigo: number;
@@ -63,7 +63,7 @@ export class FacultadAddComponent {
     this.maxLengthNombre = this.validation.maxLengthNombre;
     this.minLengthNombre = this.validation.minLengthNombre;
     this.expRegNombre = this.validation.expRegNombre;
-    this.expRegSinNúmero = this.validation.EXP_REG_SIN_NUMERO;
+    this.expRegNombreBlockNumeroAndEspacio = this.validation.EXP_REG_SIN_NUMERO;
     this.expRegNombreToLockInput = this.validation.expRegNombreToLockInput;
     
 
@@ -73,8 +73,8 @@ export class FacultadAddComponent {
     this.expRegCodigoToLockInput = this.validation.expRegCodigoToLockInput;
 
     this.formFacultad = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegSinNúmero) ,validation.duplicado]),
-      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegSinNúmero)]),
+      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio) ,validation.duplicado]),
+      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio)]),
 
      })
 

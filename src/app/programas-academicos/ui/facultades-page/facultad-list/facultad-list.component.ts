@@ -146,9 +146,7 @@ export class FacultadListComponent implements OnInit{
   eliminarFacultadConfirm = ( facultad: Facultad ) => {
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea eliminar el semestre?').then( isConfirm => {
       if( !isConfirm ) return;
-      this.eliminarFacultad( facultad );
-      this.facultadSelect.id = 0
-      
+      this.eliminarFacultad( facultad );    
 
     });
     
@@ -165,6 +163,12 @@ export class FacultadListComponent implements OnInit{
       next: ( data ) => {
         console.log( data );
         this.alertService.showAlert('Facultad eliminado correctamente', 'success');
+        this.facultadSelect = {
+          id: 0,
+          definicion: '',
+          nombre: '',
+          usuarioId: 0
+      };
         this.obtenerFacultades();
       }, error: ( error ) => {
         console.log( error );

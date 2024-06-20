@@ -36,8 +36,6 @@ export class SemestreAddComponent implements OnInit {
   minLengthCodigo: number;
   expRegCodigo: RegExp;
   expRegCodigoToLockInput: RegExp;
-
-  listaCodigo: any;
   formSemestre: FormGroup;
 
 
@@ -45,7 +43,6 @@ export class SemestreAddComponent implements OnInit {
   @Input() semestreEdit: SemestreAcademico;
   @Input() listaCodigoSemestre : string[] = []
   semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos();
-  hola = this.semestreAcademicoDomainService.semestreAcademicoAperturado
 
 
   constructor(

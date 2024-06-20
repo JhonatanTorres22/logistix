@@ -39,7 +39,7 @@ export class ProgramaAcademicoAddComponent {
   expRegCodigoToLockInput: RegExp;
   formPrograma: FormGroup;
 
-  expSinNumero: string;
+  expRegNombreBlockNumeroAndEspacio: string;
 
 
 
@@ -73,11 +73,11 @@ export class ProgramaAcademicoAddComponent {
     this.expRegCodigo = this.validation.expRegCodigo;
     this.expRegCodigoToLockInput = this.validation.expRegCodigoToLockInput;
 
-    this.expSinNumero = this.validation.EXP_REG_SIN_NUMERO
+    this.expRegNombreBlockNumeroAndEspacio = this.validation.EXP_REG_SIN_NUMERO
 
     this.formPrograma = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expSinNumero), validation.duplicado]),
-      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expSinNumero)]),
+      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio), validation.duplicado]),
+      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio)]),
 
      })
 

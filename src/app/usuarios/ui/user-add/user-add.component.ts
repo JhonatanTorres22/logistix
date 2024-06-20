@@ -50,6 +50,8 @@ export class UserAddComponent {
 
   hayUsuarioExistente: boolean;
 
+  expRegBlockNumeroAndEspacio: string;
+
   sexoList: Sexo[] = [
     {name: 'M', color: 'primary', value: 'M'},
     {name: 'F', color: 'warn', value: 'F'},
@@ -82,12 +84,14 @@ export class UserAddComponent {
 
     this.maxLengthCorreo = this.usuarioDomainValidacionService.maxLengthCorreo;
 
+    this.expRegBlockNumeroAndEspacio = usuarioDomainValidacionService.EXP_REG_SIN_NUMERO
+
      this.formUserAdd = this.fb.group({
       tipoDocumento       : ['', [ Validators.required ]],
       numeroDocumento     : ['', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this) ]],
-      apellidoPaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
-      apellidoMaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
-      nombres             : ['', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_SIN_NUMERO)]],
+      apellidoPaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
+      apellidoMaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
+      nombres             : ['', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
       sexo                : ['', [ Validators.required ]],
       correoInstitucional : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
       correoPersonal : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
