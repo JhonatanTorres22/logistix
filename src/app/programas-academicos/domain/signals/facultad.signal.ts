@@ -19,6 +19,7 @@ export class FacultadSignal {
 
     facultadSelect = signal( this.facultad);
     facultadesList = signal( this.facultades )
+    facultadEdit = signal (this.facultad);
 
     setSelectFacultad = ( facultad: Facultad) => {
         this.facultadSelect.set( facultad );
@@ -26,5 +27,9 @@ export class FacultadSignal {
 
     setFacultadesList = ( facultades: Facultad[] ) => {
         this.facultadesList.set( facultades );
+    }
+
+    setEditFacultad = (facultad: Facultad) => {
+        this.facultadEdit.set(facultad)
     }
 }

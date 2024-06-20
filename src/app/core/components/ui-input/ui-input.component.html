@@ -29,6 +29,9 @@
   @if (formControl?.hasError('pattern')) {
     <mat-error>Este campo no cumple con el formato establecido</mat-error>
   }
+  @if (formControl?.hasError('codigoDuplicado')) {
+    <mat-error>Esta campo está siendo duplicado</mat-error>
+  }
 </mat-form-field>
 
 <!-- <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!hayUsuarioExistente && formUserAdd.value.numeroDocumento.length >= minLengthNumeroDocumento ? picker.open() : ''">

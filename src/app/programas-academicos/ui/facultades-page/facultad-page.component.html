@@ -1,7 +1,12 @@
 <app-card headerClassTemplate="">
     <ng-template #headerTitleTemplate class="align-items-center">
         @if ( facultadSelect().id !== 0 ) {
-            <ng-content select="[decano-page]"></ng-content>
+            <div class="flex gap-2">
+                <ng-content select="[decano-page]"></ng-content>
+                <button mat-flat-button color="primary" class="b-rad-50" matTooltip="Cambiar Facultad" (click)="openModalFacultad()">
+                    <div class="flex align-item-center"><i class="ti ti-refresh f-18 m-r-5"></i></div>
+                </button>
+            </div>
         } @else {
             Agregar Facultad
         }

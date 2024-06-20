@@ -41,7 +41,8 @@ export class SemestreAddComponent implements OnInit {
 
 
   @Input() semestreEdit: SemestreAcademico;
-  semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos;
+  @Input() listaCodigoSemestre : string[] = []
+  semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos();
 
 
   constructor(
@@ -72,7 +73,7 @@ export class SemestreAddComponent implements OnInit {
 
     this.formSemestre = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombre)]),
-      codigo: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegCodigo)]),
+      codigo: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegCodigo), this.validation.duplicado]),
       fechaInicio: new FormControl('',[]), //Validators.required
       fechaFin: new FormControl('', []), // Validators.required
      })
@@ -81,7 +82,7 @@ export class SemestreAddComponent implements OnInit {
     this.semestreEdit ? this.pathValueFormSemestreEdit() : '';
   }
   ngOnInit(): void {
-    this.semestreEdit ? this.pathValueFormSemestreEdit() : '';
+    this.semestreEdit ? this.pathValueFormSemestreEdit() : '';    
   }
 
   
@@ -197,8 +198,8 @@ export class SemestreAddComponent implements OnInit {
     // const fechaFin = month_fin + "-" + day_fin + "-" + year_fin;
 
     this.formSemestre.patchValue({
-      codigo: this.semestreEdit.codigo,
-      nombre: this.semestreEdit.nombre,
+      codigo: this.semestreEdit.codigo.trim(),
+      nombre: this.semestreEdit.nombre.trim(),
       // fechaInicio: new Date( fechaInicio ),
       // fechaFin: new Date( fechaFin ),
     });
@@ -208,5 +209,4 @@ export class SemestreAddComponent implements OnInit {
   cancelarAdd = () => {
     this.cerrarFormulario.emit( 'Cancelar' );
   }
-
 }

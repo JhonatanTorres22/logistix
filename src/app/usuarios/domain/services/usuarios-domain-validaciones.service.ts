@@ -77,11 +77,16 @@ export class UsuariosDomainValidacionesService {
 
     /* GENERAL */
     EXP_REG_SOLO_NUMEROS = /^[0-9]*$/;
+    
+    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
 
     /* CORREOS */
     EXP_REG_CORREO = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     maxLengthCorreo: number = 40;
     // minLengthCorreo: number = 7;
+
+    /* NUMERO DE CELULAR */
+    EXP_REG_CELULAR = /^9\d{8}$/
 
     
 

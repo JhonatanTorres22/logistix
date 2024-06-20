@@ -46,4 +46,9 @@ export class LocalPageComponent {
     })
   }
 
+  abrirUbicacionLocal() {
+    const url = `https://www.google.com/maps?q=${this.localSelect().latitud},${this.localSelect().longitud}`;
+    window.open(url, '_blank');
+  }
+
 }

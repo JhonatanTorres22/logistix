@@ -131,6 +131,8 @@ export class FacultadListComponent implements OnInit{
           this.showFormAgregarFacultad = true;
           this.facultadEdit = facultad;
           // this.pathValueFormSemestreEdit();
+          this.facultadSignal.setEditFacultad(facultad)
+          
         } break;
 
         case 'Cancelar': {
@@ -144,8 +146,7 @@ export class FacultadListComponent implements OnInit{
   eliminarFacultadConfirm = ( facultad: Facultad ) => {
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea eliminar el semestre?').then( isConfirm => {
       if( !isConfirm ) return;
-
-      this.eliminarFacultad( facultad );
+      this.eliminarFacultad( facultad );    
 
     });
     
@@ -161,7 +162,14 @@ export class FacultadListComponent implements OnInit{
     this.facultadRepository.eliminarFacultad( facultadEliminar ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alertService.showAlert('Facultad eliminado correctamente', 'success');
+        this.alertService.sweetAlert('success', '¡ELIMINADO!', 'La facultad fue eliminada correctamente')
+        // this.alertService.showAlert('Facultad eliminado correctamente', 'success');
+        this.facultadSelect = {
+          id: 0,
+          definicion: '',
+          nombre: '',
+          usuarioId: 0
+      };
         this.obtenerFacultades();
       }, error: ( error ) => {
         console.log( error );

@@ -172,8 +172,17 @@ constructor(
     this.repository.eliminar( localEliminar ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alertService.showAlert('Local eliminado correctamente', 'success');
+        this.alertService.sweetAlert('success', '¡ELIMINADO!', 'Local eliminado correctamente')
+        // this.alertService.showAlert('Local eliminado correctamente', 'success');
         this.obtenerLocales();
+        this.localSelect = {
+          id: 0,
+          nombre: '',
+          definicion: '',
+          latitud: 0,
+          longitud: 0,
+          usuarioId: 0
+        }
       }, error: ( error ) => {
         console.log( error );
         this.alertService.showAlert(`Ocurrio un error. ${ error }`, 'error')

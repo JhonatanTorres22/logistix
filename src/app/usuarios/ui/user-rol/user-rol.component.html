@@ -80,8 +80,9 @@
                                 <mat-slide-toggle
                                                 class="f-w-500"
                                                 color="primary"
-                                                [checked]="userRol.alta == 'ALTA' ? true : false"
+                                                [checked]="userRol.alta == 'ALTA'"
                                                 (change)="changeAltaRol($event, userRol)"
+                                                
                                             >
                                                 {{ userRol.alta }}
                                 </mat-slide-toggle>
