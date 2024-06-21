@@ -26,7 +26,7 @@ import { ProgramaAcademicoPageComponent } from '../programa-academico-page/progr
 import { SemestreListComponent } from '../semestre-academico-page/semestre-list/semestre-list.component';
 import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
-import { Asignacion, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
+import { Asignacion, AsignacionEliminar, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
 
 @Component({
   selector: 'asignacion-page',
@@ -63,6 +63,7 @@ export class AsignacionPageComponent implements OnInit {
     decanoSelect: WritableSignal<UsuarioRol> = this.decanoSignal.decanoSelect;
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
     localSelect: WritableSignal<Local> = this.localSignal.localSelect;
+    localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
     // decanoSelect: 
     constructor( 
         
@@ -145,15 +146,20 @@ export class AsignacionPageComponent implements OnInit {
   }
 
   agregarPrograma = ( asignacion: Asignacion ) => {
+
+    const locales = this.localesSelect().map( local => local.id );
+
     const newPrograma: AsignarNuevoPrograma = {
       idDecano: asignacion.idDecano,
       idDirector: this.directorSelect().id,
-      idLocales: [this.localSelect().id],
+      idLocales: locales,
       idPrograma: this.programaSelect().id,
       idSemestre: this.semestreSelect().id,
       usuarioId: 1
     }
 
+    console.log(newPrograma);
+    
     this.asignacionRepository.insertar( newPrograma ).subscribe({
       next: (data) => {
         console.log(data);
@@ -169,6 +175,55 @@ export class AsignacionPageComponent implements OnInit {
 
       }
     });
+  }
+
+  eliminarProgramaConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma) => {
+    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea ELIMINAR el programa?')
+      .then( isConfirm => {
+        if( !isConfirm ) return;
+        this.eliminarPrograma( asignacion, programa );
+    });
+  }
+
+  eliminarProgramaIndividualConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma, idLocal: number ) => {
+    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea ELIMINAR el programa?')
+      .then( isConfirm => {
+        if( !isConfirm ) return;
+        this.eliminarPrograma( asignacion, programa, idLocal );
+    });
+  }
+
+
+  eliminarPrograma = ( asignacion: Asignacion, programa: AsignacionPrograma, idLocal?:number ) => {
+    console.log(asignacion);
+    console.log(idLocal);
+    
+    const locales = idLocal ? [idLocal] : programa.locales.map( local => local.idLocal);
+    const eliminarPrograma: AsignacionEliminar = {
+      idDecano: asignacion.idDecano,
+      idDirector: programa.idDirector,
+      idLocales: locales,
+      idPrograma: programa.idPrograma,
+      idSemestre: this.semestreSelect().id,
+      usuarioId: 1
+    }
+    console.log(eliminarPrograma);
+    
+    this.asignacionRepository.eliminar( eliminarPrograma ).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.alertService.sweetAlert('success', 'Correcto', 'Se eliminó correctamente');
+        this.programaSignal.setSelectProgramaDefault();
+        this.localSignal.setSelectLocalesDefault();
+        this.directorSignal.setSelectDirectorDefault();
+        this.obtener( this.semestreSelect().id );
+      }, error: (error) => {
+        console.log(error);
+        this.alertService.showAlert('Ocurrió un error', 'error');
+
+      }
+    })
+    
   }
 
 }

@@ -34,3 +34,12 @@ export interface AsignarNuevoProgramaDTO {
     codigoLocal: number,
     usuario: number
 }
+
+export interface AsignacionEliminarDTO {
+    codigoDirectorEscuela: number,
+    codigoDecano: number,
+    codigoProgramaAcademico: number,
+    codigoSemestre: number,
+    codigoLocal: number,
+    usuario: number
+}

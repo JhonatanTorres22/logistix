@@ -77,8 +77,38 @@
           <button mat-flat-button color="primary" class="b-rad-20 flex m-auto my-2" matTooltip="Agregar Local" (click)="openModalLocal()">
               <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
           </button>
+          @if ( programa.locales.length == 1 ) {
 
-            
+            <ui-button
+              ui-button-guardar
+              label="ELIMINAR PROGRAMA"
+              color="primary"
+              class="text-center block"
+              (click)="eliminarProgramaConfirm(asignacion, programa)">
+            </ui-button>   
+
+          } @else { 
+
+            <ui-button
+              ui-button-guardar
+              label="ELIMINAR"
+              color="primary"
+              class="text-center block"
+              [matMenuTriggerFor]="optionsLocal"
+
+            >
+            </ui-button>  
+            <!-- {{ programa.locales | json }} -->
+            <mat-menu #optionsLocal="matMenu">
+              @for ( local of programa.locales; track local ) {
+                <button mat-menu-item (click)="eliminarProgramaIndividualConfirm(asignacion, programa, local.idLocal)">{{ local.nombreLocal }}</button>
+              }
+              <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
+
+            </mat-menu>
+
+          }
+
         </app-card>
       }
       <programa-page [idFacultad]="asignacion.idFacultad">

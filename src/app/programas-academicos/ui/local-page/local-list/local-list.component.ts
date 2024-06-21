@@ -200,7 +200,9 @@ constructor(
     .then( isConfirm => {
       if( !isConfirm ) return;
       this.signal.setSelectLocales( this.localesChecked );
-      this.signal.setSelectLocal(  this.localSelect );
+      console.log(this.signal.localesSelect());
+      
+      // this.signal.setSelectLocal(  this.localSelect );
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     

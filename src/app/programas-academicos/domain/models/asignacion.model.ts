@@ -30,3 +30,13 @@ export interface AsignarNuevoPrograma {
     idLocales: number[],
     usuarioId: number
 }
+
+
+export interface AsignacionEliminar {
+    idDirector: number,
+    idDecano: number,
+    idPrograma: number,
+    idSemestre: number,
+    idLocales: number[],
+    usuarioId: number
+}
