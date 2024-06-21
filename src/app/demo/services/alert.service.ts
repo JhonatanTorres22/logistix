@@ -53,7 +53,7 @@ export class AlertService {
     
             case 'warning': {
               Swal.fire({
-                icon: icon, title: title, text: text, confirmButtonText: 'AGREGAR METAS', showCancelButton: true,
+                icon: icon, title: title, text: text, confirmButtonText: 'ENTENDIDO', showCancelButton: true,
                 confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', cancelButtonText: 'CANCELAR',
                 allowEnterKey: false, allowEscapeKey: false, allowOutsideClick: false
               }).then( result => {

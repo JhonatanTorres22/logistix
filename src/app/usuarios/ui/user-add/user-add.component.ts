@@ -30,7 +30,6 @@ export interface Sexo {
 
 })
 export class UserAddComponent {
-
   formUserAdd: FormGroup;
   @Input() usuarioToEdit: Usuario;
   @Input() component: string = '';
@@ -194,6 +193,7 @@ export class UserAddComponent {
         }
 
         switch( tipoAccionForm ) {
+          
           case 'Crear': {
             const newUsuer = {
               ...this.formUserAdd.value,
@@ -206,6 +206,7 @@ export class UserAddComponent {
           case 'Editar': {
             const editUser = {
               ...this.formUserAdd.value,
+              numeroDocumento: this.usuarioToEdit.numeroDocumento,
               id: this.usuarioToEdit.id,
               usuario: 1
             }
@@ -218,6 +219,7 @@ export class UserAddComponent {
       });
 
   }
+
 
   userAdd = ( newUser: Usuario) => {
 
@@ -244,7 +246,7 @@ export class UserAddComponent {
         this.alertService.sweetAlert('success', 'Correcto', 'Usuario editado correctamente');
         this.component == 'decano-list' || this.component == 'director-list' ? this.cerrarFormulario.emit( 'Edit' ) : this.dialogRef.close( data );
       }, error: (error) => {
-        console.log(error);
+        console.log(error,'********');
         this.alertService.sweetAlert('error', 'Error', error)
       }
     })
@@ -301,6 +303,13 @@ export class UserAddComponent {
   }
   
   buscarNumeroDocumento = ( event: any) => {
+    const originalNumeroDocumento = this.usuarioToEdit.numeroDocumento;
+    const nuevoNumeroDocumento = this.formUserAdd.value.numeroDocumento;    
+    if ((originalNumeroDocumento !== nuevoNumeroDocumento) && this.usuarioToEdit && this.usuarioToEdit?.id != 0) {
+      this.alertService.sweetAlert('warning', '¡PELIGRO!', 'Usted no podrá editar el número de documento');
+      this.formUserAdd.controls['numeroDocumento'].setValue(originalNumeroDocumento);
+      return;
+    }
     this.validarSoloNumeros(event).then( result => {
     
       setTimeout(() => {
@@ -382,4 +391,9 @@ export class UserAddComponent {
       default: return false;
     }
   } 
+
+  isDisabled = (campo: string): boolean => {
+    return true;  // Siempre devuelve true para que el campo esté deshabilitado.
+  };
+  
 }
