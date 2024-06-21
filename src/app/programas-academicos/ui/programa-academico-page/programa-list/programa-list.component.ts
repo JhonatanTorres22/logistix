@@ -12,6 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { Facultad } from 'src/app/programas-academicos/domain/models/facultad.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { reject } from 'lodash';
+import { FacultadRepository } from 'src/app/programas-academicos/domain/repositories/facultad.repository';
 
 @Component({
   selector: 'programa-list',
@@ -27,7 +29,7 @@ export class ProgramaAcademicoListComponent {
   programaEdit: ProgramaFacultad;
   programas: WritableSignal<ProgramaFacultad[]>= this.programaSignal.programasList;
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
-  idFacultad = this.facultadSignal.idFacultad;
+  idFacultad: WritableSignal<number> = this.facultadSignal.idFacultad;
   // programaes: 
   programaSelect: ProgramaFacultad = {
     id: 0,
@@ -44,7 +46,7 @@ export class ProgramaAcademicoListComponent {
     private alertService: AlertService,
     private asignacionSignal: AsignacionSignal,
     public dialogRef: MatDialogRef<ProgramaAcademicoListComponent>,
-
+    private facultadRepository: FacultadRepository
   ) {
 
   }
@@ -110,19 +112,73 @@ export class ProgramaAcademicoListComponent {
   }
 
   obtenerProgramas = () => {
-    const idFacultad = this.idFacultad() != 0 ? this.idFacultad() : this.facultadSelect().id
-    this.programaRepository.obtenerProgramas( idFacultad ).subscribe({
-      next: ( programas ) => {
-        console.log(programas);
-        this.programaSignal.setProgramaesList( programas );
-        
-      }, error: ( error ) => {
-        console.log(error);
-        
-      }
+    // console.log(this.idFacultad());
+    // console.log(this.facultadSelect().id);
+
+    this.facultadSelectVerificar().then( suscess => {
+      this.programaRepository.obtenerProgramas( this.facultadSelect().id ).subscribe({
+        next: ( programas ) => {
+          console.log(programas);
+          this.programaSignal.setProgramaesList( programas );
+          
+        }, error: ( error ) => {
+          console.log(error);
+          
+        }
+      });
     })
   }
 
+  facultadSelectVerificar() {
+
+    return new Promise<boolean>( ( resolve, reject ) => {
+
+      const isFacultadAsignada = this.idFacultad() && this.idFacultad() != 0;
+      console.log(this.idFacultad());
+      console.log(isFacultadAsignada);
+      
+      if ( !isFacultadAsignada ) {
+        console.log('No es asignada');
+        
+        resolve( true )
+        return
+      }
+      console.log('Si es asignada');
+
+      this.obtenerFacultades().then( isSuccss => {
+        if( !isSuccss ) return
+
+        console.log(this.facultadSignal.facultadesList());
+      
+        const facultadSelectReconstruida = this.facultadSignal.facultadesList().filter( facultad => facultad.id == this.idFacultad() );
+        this.facultadSignal.setSelectFacultad( facultadSelectReconstruida[0] );
+        resolve( true );
+
+      })
+    })
+
+  }
+
+  obtenerFacultades = () => {
+
+    return new Promise<boolean>( resolve => {
+
+      this.facultadRepository.obtenerFacultades().subscribe({
+        next: ( facultades ) => {
+          console.log(facultades);
+          this.facultadSignal.setFacultadesList( facultades );
+          resolve( true )
+
+        }, error: ( error ) => {
+
+          console.log(error);
+          resolve( false )
+        }
+      });
+
+    });
+
+  }
   
   openShowFormEditarPrograma = ( programa: ProgramaFacultad, event?: EventEmitter<string> | string) => {
 

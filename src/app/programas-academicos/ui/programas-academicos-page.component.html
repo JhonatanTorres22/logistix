@@ -6,6 +6,15 @@
       <programa-page programa-page>
         <app-director-page director-page class="flex align-items-center gap-2 bg-primary-50 text-gray-900 px-2 pt-2 border-round"></app-director-page>
         <local-page local-page class="my-2"></local-page>
+        @if ( localesSelect().length > 0) {
+          <ui-button
+            asignarNewPrograma
+            label="ASIGNAR PROGRAMA"
+            color="primary"
+            class="text-center block w-full mt-2"
+            (click)="agregarProgramaConfirm()">
+          </ui-button>
+        }
       </programa-page>
     </facultad-page>
 } @else {

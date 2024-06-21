@@ -26,6 +26,10 @@ export class DirectorSignal {
         this.directorSelect.set( director );
     }
 
+    setSelectDirectorDefault = () => {
+        this.directorSelect.set( this.director );
+    }
+
     setDirectoresList = ( directors: UsuarioRol[] ) => {
         this.directoresList.set( directors );
     }

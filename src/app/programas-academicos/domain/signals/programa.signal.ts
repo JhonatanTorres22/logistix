@@ -25,6 +25,11 @@ export class ProgramaSignal {
         this.programaSelect.set( programa );
     }
 
+    setSelectProgramaDefault = () => {
+        this.programaSelect.set( this.programa );
+
+    }
+
     setProgramaesList = ( programas: ProgramaFacultad[] ) => {
         this.programasList.set( programas );
     }

@@ -17,8 +17,36 @@
                     <span class="text-gray-600">No hay locales creados</span>
 
                 } @else {
-                    <!-- {{ locales() | json }} -->
-                    <mat-radio-group [(ngModel)]="localSelect">
+                    {{ this.localesChecked | json }}
+                    
+                        @for (local of locales(); track local) {
+
+                            <div class="w-full border-1 border-gray-400 border-round text-left my-2 px-2"  >
+                                    
+                                <mat-checkbox class="flex w-full" (change)="onLocalChecked(local,$event.checked)" >
+                                    <div class="flex justify-content-between">
+                                        <div class="m-3 w-full">
+                                            <div class="f-w-600"> {{ local.nombre }} </div>
+                                            <div class="f-12"> {{ local.definicion }} </div>
+                                        </div>
+
+                                        <div class="top-0 right-0 m-2">
+                                            <button mat-icon-button [matMenuTriggerFor]="optionPrograma" aria-label="Example icon-button with a menu">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #optionPrograma="matMenu">
+                                                <button mat-menu-item (click)="openShowFormEditarPrograma(local, 'Open')" class="text-primary"><i class="ti ti-edit f-18 text-primary"></i> <span class="f-w-600">Editar</span></button>
+                                                <button mat-menu-item (click)="eliminarProgramaConfirm(local)" class="text-red-500"><i class="ti ti-trash f-18 text-red-500"></i> <span class="f-w-600">Eliminar</span></button>
+                                        
+                                            </mat-menu>
+                                        </div>
+                                        
+                                    </div>
+                                </mat-checkbox>
+                            </div>
+                        }
+      
+                    <!-- <mat-radio-group [(ngModel)]="localSelect">
                         @for (local of locales(); track local) {
 
                             <div class="w-full border-1 border-gray-400 border-round text-left my-2 px-2"  >
@@ -45,7 +73,7 @@
                                 </mat-radio-button>
                             </div>
                         }
-                    </mat-radio-group>
+                    </mat-radio-group> -->
                 }
                 
             </div>
@@ -65,7 +93,7 @@
                 <div class="flex-grow-1 text-end">
             
                     <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-                    <ui-button color="primary" label="Seleccionar" [disabled]="localSelect.id == 0" (click)="onSelect()"></ui-button>
+                    <ui-button color="primary" label="Seleccionar" [disabled]="localesChecked.length == 0" (click)="onSelect()"></ui-button>
             
                 </div>
             </div>

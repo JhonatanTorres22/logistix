@@ -28,6 +28,9 @@ import { LocalSignal } from "../domain/signals/local.signal";
 import { Local } from "../domain/models/local.model";
 import { AsignacionPageComponent } from "./asignacion-page/asignacion-page.component";
 import { AsignacionSignal } from "../domain/signals/asignacion.signal";
+import { AlertService } from "src/app/demo/services/alert.service";
+import { AsignarNuevoPrograma } from "../domain/models/asignacion.model";
+import { AsignacionRepository } from "../domain/repositories/asignacion.repository";
 
 
 @Component({
@@ -66,6 +69,7 @@ export class ProgramasAcademicosComponent implements OnInit {
     decanoSelect: WritableSignal<UsuarioRol> = this.decanoSignal.decanoSelect;
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
     localSelect: WritableSignal<Local> = this.localSignal.localSelect;
+    localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
     // decanoSelect: 
     constructor( 
         
@@ -77,11 +81,80 @@ export class ProgramasAcademicosComponent implements OnInit {
         private decanoSignal: DecanoSignal,
         private directorSignal: DirectorSignal,
         private asignacionSignal: AsignacionSignal,
-        private localSignal: LocalSignal
+        private localSignal: LocalSignal,
+        private alertService: AlertService,
+        private asignacionRepository: AsignacionRepository
     ) {}
 
     ngOnInit(): void {
 
     }
+
+    obtener = ( idSemestre: number ) => {
+        this.asignacionRepository.obtener( idSemestre ).subscribe({
+          next: ( programasAsignados ) => {
+            console.log(programasAsignados);
+            this.localSignal.setSelectLocales( [] );
+            this.facultadSignal.setIdFacultad( 0 );
+            this.asignacionSignal.setAsignaciones( programasAsignados );
+          }, error: (error) => {
+            console.log(error);
+            this.alertService.showAlert('Ocurrió un error', 'error');
+          }
+        })
+      }
+
+    agregarProgramaConfirm = () => {
+        if ( 
+            !(this.semestreSelect().id != 0 &&
+            this.facultadSelect().id != 0 &&
+            this.programaSelect().id != 0 &&
+            this.decanoSelect().id != 0 &&
+            this.directorSelect().id != 0
+            && this.localesSelect().length > 0)
+        ) {
+            this.alertService.showAlert('Verifique que exista DECANO, DIRECTOR DE ESCUELA Y LOCALES', 'info')
+            return
+        } 
+            
+        this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea GUARDAR el programa?')
+          .then( isConfirm => {
+            if( !isConfirm ) return;
+
+            this.agregarPrograma();
+          })
+      }
+    
+      agregarPrograma = () => {
+        const localesId = this.localesSelect().map( local => {
+            return local.id
+        });
+
+        console.log( localesId );
+        
+        const newPrograma: AsignarNuevoPrograma = {
+          idDecano: this.decanoSelect().id,
+          idDirector: this.directorSelect().id,
+          idLocales: localesId,
+          idPrograma: this.programaSelect().id,
+          idSemestre: this.semestreSelect().id,
+          usuarioId: 1
+        }
+
+        console.log(newPrograma);
+        
+    
+        this.asignacionRepository.insertar( newPrograma ).subscribe({
+          next: (data) => {
+            console.log(data);
+            this.alertService.sweetAlert('success', 'Correcto', 'Programas agregados correctamente');
+            this.obtener( this.semestreSelect().id );
+          }, error: (error) => {
+            console.log(error);
+            this.alertService.showAlert('Ocurrió un error', 'error');
+    
+          }
+        });
+      }
 
 }
