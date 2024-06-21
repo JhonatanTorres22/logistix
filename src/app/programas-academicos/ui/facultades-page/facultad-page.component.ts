@@ -7,6 +7,8 @@ import { FacultadListComponent } from './facultad-list/facultad-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FacultadSignal } from '../../domain/signals/facultad.signal';
 import { Facultad } from '../../domain/models/facultad.model';
+import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
+import { Asignacion } from '../../domain/models/asignacion.model';
 
 @Component({
   selector: 'facultad-page',
@@ -18,13 +20,14 @@ import { Facultad } from '../../domain/models/facultad.model';
 export class FacultadPageComponent implements OnInit {
 
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
-
+  asignaciones: WritableSignal<Asignacion[]> = this.asignacionSignal.asignaciones;
 
   constructor(
     private facultadRepository: FacultadRepository,
     private alertService: AlertService,
     private dialog: MatDialog,
     private facultadSignal: FacultadSignal,
+    private asignacionSignal: AsignacionSignal
   ) {}
 
   ngOnInit(): void {

@@ -27,6 +27,7 @@ import { UsuarioRol } from "src/app/usuarios/domain/models/usuario-rol.model";
 import { LocalSignal } from "../domain/signals/local.signal";
 import { Local } from "../domain/models/local.model";
 import { AsignacionPageComponent } from "./asignacion-page/asignacion-page.component";
+import { AsignacionSignal } from "../domain/signals/asignacion.signal";
 
 
 @Component({
@@ -52,7 +53,7 @@ import { AsignacionPageComponent } from "./asignacion-page/asignacion-page.compo
 export class ProgramasAcademicosComponent implements OnInit {
     
 
-
+    asignaciones = this.asignacionSignal.asignaciones;
     // semestreAcademico: SemestreAcademico;
     
     semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
@@ -75,6 +76,7 @@ export class ProgramasAcademicosComponent implements OnInit {
         private facultadSignal: FacultadSignal,
         private decanoSignal: DecanoSignal,
         private directorSignal: DirectorSignal,
+        private asignacionSignal: AsignacionSignal,
         private localSignal: LocalSignal
     ) {}
 

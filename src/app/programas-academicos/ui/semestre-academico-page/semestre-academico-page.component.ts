@@ -60,7 +60,7 @@ export class SemestreAcademicoPageComponent {
             }
             
           })
-          this.semestreAcademicoDomainService.setSemestreAcademico(semestres);
+          this.semestreAcademicoDomainService.setSemestresAcademicos(semestres);
       }, error: ( error ) => {
           console.log(error);
           

@@ -1,2 +1,7 @@
-
+<!-- <mat-select class="w-8rem" value="All">
+    @for (semestre of semestresAcademicos(); track semestre) {
+        <mat-option [value]="semestre.codigo">{{ semestre.codigo }}</mat-option>
+    }
+    <mat-option value="new">Nuevo Semestre</mat-option>
+</mat-select> -->
 <ui-button class="b-rad-20 -mt-4 absolute right-0 mr-6" color="primary" [label]="semestreSelect().id == 0 ? 'Seleccionar Semestre' : semestreSelect().codigo" (click)="openModalSemestre()"></ui-button>

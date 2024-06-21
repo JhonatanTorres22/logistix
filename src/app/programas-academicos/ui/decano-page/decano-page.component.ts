@@ -9,6 +9,8 @@ import { DecanoSignal } from '../../domain/signals/decano.signal';
 import { DecanoListComponent } from './decano-list/decano-list.component';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
+import { Asignacion } from '../../domain/models/asignacion.model';
+import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
 
 @Component({
   selector: 'decano-page',
@@ -20,6 +22,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 export class DecanoPageComponent {
 
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
+  asignaciones: WritableSignal<Asignacion[]> = this.asignacionSignal.asignaciones;
   
   decanoSelect: WritableSignal<UsuarioRol> = this.signal.decanoSelect;
 
@@ -30,6 +33,7 @@ export class DecanoPageComponent {
     private facultadSignal: FacultadSignal,
     private dialog: MatDialog,
     private signal: DecanoSignal,
+    private asignacionSignal: AsignacionSignal
   ) {}
 
   ngOnInit(): void {

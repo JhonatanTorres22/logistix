@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Input, WritableSignal } from '@angular/core';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -11,6 +11,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { Facultad } from 'src/app/programas-academicos/domain/models/facultad.model';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 
 @Component({
   selector: 'programa-list',
@@ -25,7 +26,8 @@ export class ProgramaAcademicoListComponent {
   showFormAgregarPrograma: boolean = false;
   programaEdit: ProgramaFacultad;
   programas: WritableSignal<ProgramaFacultad[]>= this.programaSignal.programasList;
-  facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect
+  facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
+  idFacultad = this.facultadSignal.idFacultad;
   // programaes: 
   programaSelect: ProgramaFacultad = {
     id: 0,
@@ -40,13 +42,15 @@ export class ProgramaAcademicoListComponent {
     private programaSignal: ProgramaSignal,
     private facultadSignal: FacultadSignal,
     private alertService: AlertService,
+    private asignacionSignal: AsignacionSignal,
     public dialogRef: MatDialogRef<ProgramaAcademicoListComponent>,
 
   ) {
 
   }
   ngOnInit(): void {
-    this.obtenerProgramas();
+    // this.facultadSelect().id == 0 ? this.asi
+    this.obtenerProgramas()
   }
 
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
@@ -106,7 +110,8 @@ export class ProgramaAcademicoListComponent {
   }
 
   obtenerProgramas = () => {
-    this.programaRepository.obtenerProgramas( this.facultadSelect().id ).subscribe({
+    const idFacultad = this.idFacultad() != 0 ? this.idFacultad() : this.facultadSelect().id
+    this.programaRepository.obtenerProgramas( idFacultad ).subscribe({
       next: ( programas ) => {
         console.log(programas);
         this.programaSignal.setProgramaesList( programas );
