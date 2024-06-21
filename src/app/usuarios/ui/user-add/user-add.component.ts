@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, Output, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipListboxChange } from '@angular/material/chips';
 import { DateAdapter, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { UsuariosDomainService } from '../../domain/services/usuarios-domain.ser
 import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UsuariosDomainValidacionesService } from '../../domain/services/usuarios-domain-validaciones.service';
 import { UsuarioRepository } from '../../domain/repositories/usuario.repository';
+import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 
 export interface Sexo {
   name: string;
@@ -23,7 +24,7 @@ export interface Sexo {
 @Component({
   selector: 'user-add',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, UiInputComponent],
   templateUrl: './user-add.component.html',
   styleUrl: './user-add.component.scss',
 
@@ -47,6 +48,8 @@ export class UserAddComponent {
   minLengthNombres: number;
 
   maxLengthCorreo: number;
+  maxLengthCelular:number;
+  expRegCelular: RegExp ;
 
   hayUsuarioExistente: boolean;
 
@@ -84,20 +87,23 @@ export class UserAddComponent {
 
     this.maxLengthCorreo = this.usuarioDomainValidacionService.maxLengthCorreo;
 
+    this.maxLengthCelular = this.usuarioDomainValidacionService.maxLengthCelular;
+    this.expRegCelular = usuarioDomainValidacionService.EXP_REG_CELULAR
+
     this.expRegBlockNumeroAndEspacio = usuarioDomainValidacionService.EXP_REG_SIN_NUMERO
 
-     this.formUserAdd = this.fb.group({
-      tipoDocumento       : ['', [ Validators.required ]],
-      numeroDocumento     : ['', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this) ]],
-      apellidoPaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
-      apellidoMaterno     : ['', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
-      nombres             : ['', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.expRegBlockNumeroAndEspacio)]],
-      sexo                : ['', [ Validators.required ]],
-      correoInstitucional : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
-      correoPersonal : ['', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo) ]],
-      celular : ['', [ Validators.required, Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CELULAR)]],
-      fechaNacimiento: [new Date(''), [ Validators.required]],
-      imagenPerfil: [''],
+     this.formUserAdd = new FormGroup ({
+      tipoDocumento       : new FormControl ('', [ Validators.required ]),
+      numeroDocumento     : new FormControl ('', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this) ]),
+      apellidoPaterno     : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
+      apellidoMaterno     : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
+      nombres             : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
+      sexo                : new FormControl ('', [ Validators.required ]),
+      correoInstitucional : new FormControl ('', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo)]),
+      correoPersonal      : new FormControl ('', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo)]),
+      celular             : new FormControl('', [ Validators.required, Validators.pattern(this.expRegCelular), Validators.maxLength(this.maxLengthCelular)]),
+      fechaNacimiento     : new FormControl (new Date(''), [ Validators.required]),
+      imagenPerfil        : new FormControl(''),
     });
 
     this.usuarioToEdit = {

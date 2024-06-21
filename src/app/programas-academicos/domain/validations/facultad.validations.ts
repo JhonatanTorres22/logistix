@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { Facultad } from "../models/facultad.model";
 import { FacultadSignal } from "../signals/facultad.signal";
+import { ValidacionComprobarDuplicadoService } from "../services/validacion-comprobar-duplicado.service";
 
 
 @Injectable({
@@ -10,10 +11,9 @@ import { FacultadSignal } from "../signals/facultad.signal";
 
 export class FacultadValidations {
 
-    listaFacultades: Facultad[] = [];
-    facultadEditar!: Facultad
-
-    constructor(private facultadSignal: FacultadSignal,){}
+    constructor(private facultadSignal: FacultadSignal,
+        private validarDuplicadoService:ValidacionComprobarDuplicadoService
+    ){}
 
 // INICIO NOMBRE    
     maxLengthNombre = 60;
@@ -30,33 +30,18 @@ export class FacultadValidations {
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
     expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
     // FIN CODIGO
+    
      /* GENERAL INICIO */
     EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
     /* GENERAL FIN */
 
 /* INICIO DUPLICIDAD */
-listaNombreFacultad: string [] = [];
-nombreFacultadFiltro: string [] = [];
 
-duplicadoNombreFacultad(control:AbstractControl) {
-    this.listaFacultades = this.facultadSignal.facultadesList();
-    this.listaNombreFacultad = [];
-    this.nombreFacultadFiltro = [];
 
-    for(let i = 0; i < this.listaFacultades.length; i++){
-        this.listaNombreFacultad.push(this.listaFacultades[i].nombre)
-    }
-
-    this.facultadEditar = this.facultadSignal.facultadEdit();
-    let nombreIngresado = control.value;
-    let nombreEnEdicion = "";
-
-    this.facultadEditar === undefined ? nombreEnEdicion = '': nombreEnEdicion = this.facultadEditar.nombre;
-    this.nombreFacultadFiltro = this.listaNombreFacultad.filter((listaNombreFacultad : string) =>  listaNombreFacultad !== nombreEnEdicion)
-
-    if(this.nombreFacultadFiltro.includes(nombreIngresado)) {
-        return { codigoDuplicado : true}
-    } else { return null;}
-}
+duplicadoNombreFacultad(control: AbstractControl): { [key: string]: boolean } | null {
+    const listaFacultades = this.facultadSignal.facultadesList();
+    const facultadEditar = this.facultadSignal.facultadEdit();
+    return this.validarDuplicadoService.duplicadoNombre(control, listaFacultades, facultadEditar, 'nombre');
+  }
 /* FIN DUPLICIDAD */
 }
