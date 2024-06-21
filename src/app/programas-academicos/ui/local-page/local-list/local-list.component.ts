@@ -143,6 +143,7 @@ constructor(
         case 'Open': {
           this.showFormAgregarPrograma = true;
           this.localEdit = programa;
+          this.signal.setLocalEditar( programa );
           // this.pathValueFormSemestreEdit();
         } break;
 

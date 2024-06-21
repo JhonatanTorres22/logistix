@@ -25,29 +25,29 @@ export class LocalValidations {
 
 
 // INICIO CODIGO
-    maxLengthCodigo = 6;
-    minLengthCodigo = 20;
+    maxLengthCodigo = 20;
+    minLengthCodigo = 3;
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
     expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
 // FIN CODIGO
 
 // INICIO LATITUD
-    maxLengthLatitud = 6;
+    maxLengthLatitud = 20;
     minLengthLatitud = 6;
-    expRegLatitud = /[a-zA-Z0-9\- ]{0,40}/
-    expRegLatitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegLatitud = /^[0-9-.,]*$/
+    expRegLatitudToLockInput = /^[0-9-.,]*$/;
 // FIN LATITUD
 
 // INICIO LONGITUD
-    maxLengthLongitud = 6;
+    maxLengthLongitud = 20;
     minLengthLongitud = 6;
-    expRegLongitud = /[a-zA-Z0-9\- ]{0,40}/
-    expRegLongitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegLongitud = /^[0-9-.,]*$/
+    expRegLongitudToLockInput = /^[0-9-.,]*$/;
 // FIN LONGITUD
 
     duplicadoNombreLocal(control: AbstractControl): { [key: string]: boolean } | null {
-        const listaProgramas = this.signal.localList();
-        const editarProgramas = this.signal.localEdit();
-        return this.validarDuplicadoService.duplicadoNombre(control, listaProgramas, editarProgramas, 'nombre');
+        const listaLocales = this.signal.localList();
+        const editarLocales = this.signal.localEdit();
+        return this.validarDuplicadoService.duplicadoNombre(control, listaLocales, editarLocales, 'nombre');
       }
 }

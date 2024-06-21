@@ -93,7 +93,7 @@ export class LocalAddComponent {
     this.expRegLongitudToLockInput = this.validation.expRegLongitudToLockInput;
 
     this.formLocal = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombre)]),
+      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombre), validation.duplicarNombre]),
       definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegCodigo)]),
       latitud: new FormControl('', [ Validators.required, Validators.maxLength(this.maxLengthLatitud), Validators.minLength(this.minLengthLatitud), Validators.pattern(this.expRegLatitud)]),
       longitud: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthLongitud), Validators.minLength(this.minLengthLongitud), Validators.pattern(this.expRegLongitud)])
