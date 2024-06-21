@@ -18,7 +18,7 @@ import { LocalListComponent } from './local-list/local-list.component';
 export class LocalPageComponent {
 
   localSelect: WritableSignal<Local> = this.signal.localSelect;
-
+  localesSelect: WritableSignal<Local[]> = this.signal.localesSelect;
 
   constructor(
     // private repository: LocalRepository,

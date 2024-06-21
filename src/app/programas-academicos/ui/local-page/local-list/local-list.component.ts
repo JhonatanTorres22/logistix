@@ -23,6 +23,8 @@ export class LocalListComponent {
   showFormAgregarPrograma: boolean = false;
   localEdit: Local;
   locales: WritableSignal<Local[]>= this.signal.localList;
+  localesSelect: WritableSignal<Local[]> = this.signal.localesSelect;
+  localesChecked: Local[] = [];
   // programaes: 
   localSelect: Local = {
     id: 0,
@@ -192,17 +194,24 @@ constructor(
 
   onSelect = () => {
 
-    if( this.localSelect.id == 0 ) return;
+    if( this.localesChecked.length == 0 ) return;
 
     this.alertService.sweetAlert('question', 'Confirmación', `Está seguro que desea SELECCIONAR el local`)
     .then( isConfirm => {
       if( !isConfirm ) return;
-
+      this.signal.setSelectLocales( this.localesChecked );
       this.signal.setSelectLocal(  this.localSelect );
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     
     })
+  }
+
+  onLocalChecked = ( localCheked: Local, checked: boolean ) => {
+    console.log(checked, localCheked);
+    
+    checked ? this.localesChecked.push( localCheked) : this.localesChecked = this.localesChecked.filter( local => local.id != localCheked.id);
+
   }
 
 }

@@ -22,10 +22,19 @@ export class LocalSignal {
 
     localSelect = signal( this.local);
     localList = signal( this.locales );
-    localEdit = signal ( this.local )
+    localEdit = signal ( this.local );
+    localesSelect = signal( this.locales )
 
     setSelectLocal = ( local: Local) => {
         this.localSelect.set( local );
+    }
+
+    setSelectLocales = ( locales: Local[] ) => {
+        this.localesSelect.set( locales );
+    }
+
+    setSelectLocalesDefault = () => {
+        this.localesSelect.set( [] );
     }
 
     setLocalesList = ( locales: Local[] ) => {

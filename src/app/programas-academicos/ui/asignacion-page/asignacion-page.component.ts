@@ -93,6 +93,8 @@ export class AsignacionPageComponent implements OnInit {
     this.asignacionRepository.obtener( idSemestre ).subscribe({
       next: ( programasAsignados ) => {
         console.log(programasAsignados);
+        this.localSignal.setSelectLocales( [] );
+        this.facultadSignal.setIdFacultad( 0 );
         // const facultad = {
         //   id: programasAsignados[0].idFacultad,
         //   definicion: '',
@@ -134,7 +136,7 @@ export class AsignacionPageComponent implements OnInit {
   openModalLocal = () => {
     
   }
-  agregarProgramaConfirm( asignacion: Asignacion ) {
+  agregarProgramaConfirm = ( asignacion: Asignacion ) => {
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea GUARDAR el programa?')
       .then( isConfirm => {
         if( !isConfirm ) return;
@@ -142,7 +144,7 @@ export class AsignacionPageComponent implements OnInit {
       })
   }
 
-  agregarPrograma( asignacion: Asignacion ) {
+  agregarPrograma = ( asignacion: Asignacion ) => {
     const newPrograma: AsignarNuevoPrograma = {
       idDecano: asignacion.idDecano,
       idDirector: this.directorSelect().id,
@@ -156,13 +158,17 @@ export class AsignacionPageComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.alertService.sweetAlert('success', 'Correcto', 'Programas agregados correctamente');
+        this.programaSignal.setSelectProgramaDefault();
+        this.localSignal.setSelectLocalesDefault();
+        this.directorSignal.setSelectDirectorDefault();
+
         this.obtener( this.semestreSelect().id );
       }, error: (error) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error', 'error');
 
       }
-    })
+    });
   }
 
 }
