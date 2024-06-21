@@ -306,7 +306,7 @@ export class UserAddComponent {
     const originalNumeroDocumento = this.usuarioToEdit.numeroDocumento;
     const nuevoNumeroDocumento = this.formUserAdd.value.numeroDocumento;    
     if ((originalNumeroDocumento !== nuevoNumeroDocumento) && this.usuarioToEdit && this.usuarioToEdit?.id != 0) {
-      this.alertService.sweetAlert('warning', '¡PELIGRO!', 'Usted no podrá editar el número de documento');
+      this.alertService.sweetAlert('warning', '¡ALTO!', 'Usted no podrá editar el número de documento');
       this.formUserAdd.controls['numeroDocumento'].setValue(originalNumeroDocumento);
       return;
     }

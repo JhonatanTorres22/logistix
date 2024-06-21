@@ -143,6 +143,7 @@ constructor(
         case 'Open': {
           this.showFormAgregarPrograma = true;
           this.localEdit = programa;
+          this.signal.setLocalEditar( programa );
           // this.pathValueFormSemestreEdit();
         } break;
 
@@ -175,16 +176,16 @@ constructor(
       next: ( data ) => {
         console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'Local eliminado correctamente')
-        // this.alertService.showAlert('Local eliminado correctamente', 'success');
+        this.localesChecked.length = 0;
+        this.localesChecked.forEach(local => {
+          local.id = 0;
+          local.nombre = '';
+          local.definicion = '';
+          local.latitud = 0;
+          local.longitud = 0;
+          local.usuarioId = 0;
+        });
         this.obtenerLocales();
-        this.localSelect = {
-          id: 0,
-          nombre: '',
-          definicion: '',
-          latitud: 0,
-          longitud: 0,
-          usuarioId: 0
-        }
       }, error: ( error ) => {
         console.log( error );
         this.alertService.showAlert(`Ocurrio un error. ${ error }`, 'error')
