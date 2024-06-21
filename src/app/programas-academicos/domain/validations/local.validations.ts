@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { LocalSignal } from "../signals/local.signal";
 import { Local } from "../models/local.model";
 import { AbstractControl } from "@angular/forms";
+import { ValidacionComprobarDuplicadoService } from "../services/validacion-comprobar-duplicado.service";
 
 
 @Injectable({
@@ -9,17 +10,17 @@ import { AbstractControl } from "@angular/forms";
 })
 
 export class LocalValidations {
-    listaLocales: Local[] = [];
-    localEditar!: Local
-
-    constructor( private signal: LocalSignal,){}
+    constructor( 
+        private signal: LocalSignal,
+        private validarDuplicadoService:ValidacionComprobarDuplicadoService
+    ){}
 
 // INICIO NOMBRE    
     maxLengthNombre = 40;
     minLengthNombre = 3;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
     expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
-    duplicarNombre = this.duplicarNombreLocal.bind(this)
+    duplicarNombre = this.duplicadoNombreLocal.bind(this)
 // FIN NOMBRE
 
 
@@ -44,30 +45,9 @@ export class LocalValidations {
     expRegLongitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
 // FIN LONGITUD
 
-    listaNombreLocal: string[] = [];
-    listaLatitudLocal: number[] = [];
-    listaLongitudLocal: number[] = [];
-
-    duplicarNombreLocal(control:AbstractControl){
-        this.listaLocales = this.signal.localList();
-
-        for(let i = 0 ; i< this.listaLocales.length; i++){
-            this.listaNombreLocal.push(this.listaLocales[i].nombre);
-            this.listaLatitudLocal.push(this.listaLocales[i].latitud);
-            this.listaLongitudLocal.push(this.listaLocales[i].longitud);
-        }
-
-        this.localEditar = this.signal.localEdit();
-
-        let nombreIngresado = control.value;
-        let nombreEnEdicion = "";
-
-        this.localEditar === undefined ? nombreEnEdicion = '' : nombreEnEdicion = this.localEditar.nombre;
-        this.listaNombreLocal = this.listaNombreLocal.filter((listaNombreLocal:string) => listaNombreLocal !== nombreEnEdicion)
-        
-        if(this.listaNombreLocal.includes(nombreIngresado)){
-            return { codigoDuplicado : true }
-        } else { return null }
-    
-    }
+    duplicadoNombreLocal(control: AbstractControl): { [key: string]: boolean } | null {
+        const listaProgramas = this.signal.localList();
+        const editarProgramas = this.signal.localEdit();
+        return this.validarDuplicadoService.duplicadoNombre(control, listaProgramas, editarProgramas, 'nombre');
+      }
 }

@@ -87,6 +87,7 @@ export class UsuariosDomainValidacionesService {
 
     /* NUMERO DE CELULAR */
     EXP_REG_CELULAR = /^9\d{8}$/
+    maxLengthCelular = 9
 
     
 

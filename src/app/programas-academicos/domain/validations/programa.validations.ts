@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { ProgramaSignal } from "../signals/programa.signal";
 import { ProgramaFacultad } from "../models/programa.model";
+import { ValidacionComprobarDuplicadoService } from "../services/validacion-comprobar-duplicado.service";
 
 
 @Injectable({
@@ -12,14 +13,17 @@ export class ProgramaValidations {
 
     listaPrograma: ProgramaFacultad[] = [];
     programaEdit: ProgramaFacultad;
-    constructor(private programaSignal: ProgramaSignal,){}
+    constructor(
+        private programaSignal: ProgramaSignal,
+        private validarDuplicadoService:ValidacionComprobarDuplicadoService
+    ){}
 
 // INICIO NOMBRE    
     maxLengthNombre = 50;
     minLengthNombre = 5;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
     expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
-    duplicado = this.duplicidadNombrePrograma.bind(this);
+    duplicado = this.duplicadoNombrePrograma.bind(this);
 // FIN NOMBRE
 
 
@@ -38,28 +42,12 @@ export class ProgramaValidations {
 
 
 /* INICIO DUPLICIDAD PROGRAMA */
-listaNombrePrograma: string[] = [];
-nombreFiltroPrograma: string[] = [];
-    duplicidadNombrePrograma(control:AbstractControl){
-        this.listaPrograma = this.programaSignal.programasList();
-        
-        this.listaNombrePrograma = [];
-        this.nombreFiltroPrograma = [];
-        for(let i=0;i < this.listaPrograma.length; i++){
-            this.listaNombrePrograma.push(this.listaPrograma[i].nombre);
-        }
-        
-        this.programaEdit = this.programaSignal.programaEdit();
-        let nombreIngresado = control.value;
-        let nombreEnEdicion = "";
 
-        this.programaEdit === undefined ? nombreEnEdicion = '' : nombreEnEdicion = this.programaEdit.nombre
-        this.nombreFiltroPrograma = this.listaNombrePrograma.filter((listaNombrePrograma: string) => listaNombrePrograma !== nombreEnEdicion)
-        
-        if(this.nombreFiltroPrograma.includes(nombreIngresado)){
-            return { codigoDuplicado : true}
-        } else {return null ;}
-    }
 
+duplicadoNombrePrograma(control: AbstractControl): { [key: string]: boolean } | null {
+    const listaProgramas = this.programaSignal.programasList();
+    const editarProgramas = this.programaSignal.programaEdit();
+    return this.validarDuplicadoService.duplicadoNombre(control, listaProgramas, editarProgramas, 'nombre');
+  }
 /* FIN DUPLICIDAD PROGRAMA */
 }

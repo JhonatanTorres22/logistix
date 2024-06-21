@@ -57,7 +57,11 @@
           </div>
 
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+
+            <ui-input class="w-full" label="Apellido Paterno" formControlName="apellidoPaterno" [readonly]="isReadonly('case1')"  [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"></ui-input>
+
+
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Apellido Paterno</mat-label>
               <input [readonly]="isReadonly('case1')"  
                 formControlName="apellidoPaterno"
@@ -78,10 +82,13 @@
               @if (formUserAdd.get('apellidoPaterno')?.hasError('pattern')) {
                 <mat-error>El apellido no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+
+            <ui-input class="w-full" label="apellidoMaterno" formControlName="apellidoMaterno" 
+            [readonly]="isReadonly('case1')" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"> </ui-input>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Apellido Materno</mat-label>
               <input [readonly]="isReadonly('case1')" 
                 formControlName="apellidoMaterno"
@@ -101,11 +108,14 @@
               @if (formUserAdd.get('apellidoMaterno')?.hasError('pattern')) {
                 <mat-error>El apellido no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
 
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+
+            <ui-input label="Nombres" formControlName="nombres" [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthNombres" [minlength]="minLengthNombres"></ui-input>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Nombres</mat-label>
               <input [readonly]="isReadonly('case1')" 
                 formControlName="nombres"
@@ -126,7 +136,7 @@
               @if (formUserAdd.get('nombres')?.hasError('pattern')) {
                 <mat-error>El nombre no debe contener números, caracteres especiales o espacios inadecuados</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
           <div class="col-sm-6">
 
@@ -144,7 +154,9 @@
           
 
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+            <ui-input label="Correo Insitucional" formControlName="correoInstitucional"  [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthCorreo"></ui-input>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Correo Institucional</mat-label>
               <input [readonly]="isReadonly('case1')"  formControlName="correoInstitucional" type="text" matInput placeholder="Correo institucional" autocomplete="off" />
               @if (formUserAdd.get('correoInstitucional')?.hasError('pattern')) {
@@ -153,10 +165,12 @@
               @if (formUserAdd.get('correoInstitucional')?.hasError('maxlength')) {
                 <mat-error>El correo institucional debe tener como máximo {{ maxLengthCorreo }} caracteres</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+            <ui-input label="Correo Personal" formControlName="correoPersonal" [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthCorreo"></ui-input>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Correo Personal</mat-label>
               <input [readonly]="isReadonly('case1')"
                 formControlName="correoPersonal"
@@ -171,16 +185,16 @@
               @if (formUserAdd.get('correoPersonal')?.hasError('maxlength')) {
                 <mat-error>El correo personal debe tener como máximo {{ maxLengthCorreo }} caracteres</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field> -->
 
           </div>
 
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5">
+            <ui-input label="Número de Celular" formControlName="celular" [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthCelular"></ui-input>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Número de Celular</mat-label>
               <input [readonly]="isReadonly('case1')" 
-                (paste)="validarSoloNumeros($event)"
-                (keypress)="validarSoloNumeros($event)"
                 formControlName="celular"
                 type="text"
                 matInput
@@ -195,7 +209,7 @@
                 @if (formUserAdd.get('celular')?.hasError('pattern')){
                   <mat-error>Número de celular inválido</mat-error>
                 }
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
 
           <div class="col-sm-6">

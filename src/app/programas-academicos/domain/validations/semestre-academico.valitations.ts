@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { SemestreAcademicoDomainService } from "../services/semestre-academico-domain.service";
 import { SemestreAcademico } from "../models/semestre-academico.model";
+import { ValidacionComprobarDuplicadoService } from "../services/validacion-comprobar-duplicado.service";
 
 
 @Injectable({
@@ -9,9 +10,11 @@ import { SemestreAcademico } from "../models/semestre-academico.model";
 })
 
 export class SemestreAcademicoValidations {
-    semestreAcademicoEditado!: SemestreAcademico;
-    listaSemestreAcademico: SemestreAcademico[] = [];
-    constructor(private semestreAcademicoDomainService: SemestreAcademicoDomainService,) { }
+
+    constructor(
+        private semestreAcademicoDomainService: SemestreAcademicoDomainService,
+        private validarDuplicadoService:ValidacionComprobarDuplicadoService
+    ) { }
 
     // INICIO NOMBRE    
     maxLengthNombre = 40;
@@ -26,7 +29,7 @@ export class SemestreAcademicoValidations {
     minLengthCodigo = 6;
     expRegCodigo = /[0-9\-]{5}/;
     expRegCodigoToLockInput = /^((?![0-9\-]).)*$/;
-    duplicado = this.comprobarCodigoSemestre.bind(this)
+    duplicado = this.duplicadoNombreSemestre.bind(this)
     // FIN CODIGO
 
 
@@ -42,29 +45,13 @@ export class SemestreAcademicoValidations {
 
 
     /* CODIGO DUPLICADO */
-    listaCodigoSemestre: string[] = [];
-    codigoFiltro: string[] = []
-    comprobarCodigoSemestre(control: AbstractControl) {
-        this.listaSemestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos();
-        this.codigoFiltro = [];
-        this.listaCodigoSemestre = []
-        for (let i = 0; i < this.listaSemestreAcademico.length; i++) {
-            this.listaCodigoSemestre.push(this.listaSemestreAcademico[i].codigo)
-        }
-        // console.log(this.listaSemestreAcademico,'semestre academico');
-        // console.log(this.listaCodigoSemestre,'lista de codigos');
-        this.semestreAcademicoEditado = this.semestreAcademicoDomainService.semestreAcademicoEditado()     
-        let codigoIngresado = control.value;
-        let codigoEnEdicion = "";
 
-        this.semestreAcademicoEditado === undefined ? codigoEnEdicion = '': codigoEnEdicion = this.semestreAcademicoEditado.codigo;
-        this.codigoFiltro = this.listaCodigoSemestre.filter((listaCodigo:string) => listaCodigo !== codigoEnEdicion)
-        // console.log(this.codigoFiltro,'*');
-        
-        if (this.codigoFiltro.includes(codigoIngresado)) {
-            return { codigoDuplicado: true }
-        } else { return null; }
-    }
 
+
+    duplicadoNombreSemestre(control: AbstractControl): { [key: string]: boolean } | null {
+        const listaProgramas = this.semestreAcademicoDomainService.semestresAcademicos();
+        const editarProgramas = this.semestreAcademicoDomainService.semestreAcademicoEditado();
+        return this.validarDuplicadoService.duplicadoNombre(control, listaProgramas, editarProgramas, 'codigo');
+      }
 
 }
