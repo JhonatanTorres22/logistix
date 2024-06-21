@@ -152,6 +152,8 @@ export class ProgramaAcademicoListComponent {
       
         const facultadSelectReconstruida = this.facultadSignal.facultadesList().filter( facultad => facultad.id == this.idFacultad() );
         this.facultadSignal.setSelectFacultad( facultadSelectReconstruida[0] );
+        console.log(facultadSelectReconstruida);
+        
         resolve( true );
 
       })

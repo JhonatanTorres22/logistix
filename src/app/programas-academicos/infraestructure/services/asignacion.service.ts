@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Asignacion, AsignarNuevoPrograma } from "../../domain/models/asignacion.model";
+import { Asignacion, AsignacionEliminar, AsignarNuevoPrograma } from "../../domain/models/asignacion.model";
 import { AsginacionDataArrayDTO } from "../dto/asignacion.dto";
 import { AsignacionMapper } from "../../domain/mappers/asignacion.mapper";
 
@@ -16,12 +16,15 @@ export class AsignacionService {
     urlApi: string;
     urlAsignacion: string;
     urlAsignarPrograma: string;
+    urlEliminarPrograma: string;
+
     constructor(
         private http: HttpClient
     ) {
         this.urlApi = environment.EndPoint;
         this.urlAsignacion = 'api/Asignacion/Listar';
         this.urlAsignarPrograma = 'api/Asignacion/Insertar';
+        this.urlEliminarPrograma = 'api/Asignacion/Eliminar'
     }
 
     obtener( idSemestre: number): Observable<Asignacion[]> {
@@ -34,6 +37,12 @@ export class AsignacionService {
         const newProgramasAPI = AsignacionMapper.fromDomainToApiAsignarNuevoPrograma( newProgramas );
 
         return this.http.post<void>( this.urlApi + this.urlAsignarPrograma, newProgramasAPI);
+    }
+
+    eliminar( eliminarPrograma: AsignacionEliminar ):Observable<void> {
+        const eliminarProgramaAPI = AsignacionMapper.fromDomainToApiEliminarPrograma( eliminarPrograma );
+
+        return this.http.delete<void>( this.urlApi + this.urlEliminarPrograma, { body: eliminarProgramaAPI });
     }
 
 }
