@@ -27,6 +27,8 @@ import { SemestreListComponent } from '../semestre-academico-page/semestre-list/
 import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { Asignacion, AsignacionEliminar, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
+import { LocalListComponent } from '../local-page/local-list/local-list.component';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'asignacion-page',
@@ -43,6 +45,7 @@ import { Asignacion, AsignacionEliminar, AsignacionPrograma, AsignarNuevoProgram
     DecanoPageComponent,
     DirectorPageComponent,
     AsignacionPageComponent,
+    LocalListComponent,
     UiButtonComponent
   ],
   templateUrl: './asignacion-page.component.html',
@@ -134,33 +137,69 @@ export class AsignacionPageComponent implements OnInit {
 
   }
 
-  openModalLocal = () => {
-    
+  openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
+    console.log('abrir modal LOCAL list');
+    const dialogRef = this.dialog.open( LocalListComponent, {
+      width: '800px',
+      height: '460px',
+      disableClose: true,
+    } );
+
+    dialogRef.afterClosed().subscribe( data => {
+      if( data == 'cancelar' ) return;
+      // console.log(data);
+      // console.log(this.localesSelect());
+
+      const locales = this.localesSelect().map( local => local.id );
+      const newPrograma: AsignarNuevoPrograma = {
+        idDecano: asignacion.idDecano,
+        idDirector: programa.idDirector,
+        idLocales: locales,
+        idPrograma: programa.idPrograma,
+        idSemestre: this.semestreSelect().id,
+        usuarioId: 1
+      }
+      this.agregarPrograma( newPrograma );
+    })
   }
+
+  agregarLocalAlProgramaConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
+
+    // this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea AG el programa?')
+    //   .then( isConfirm => {
+    //     if( !isConfirm ) return;
+        // this.agregarLocalesAlPrograma( asignacion, programa );
+      // });
+
+  }
+
+
   agregarProgramaConfirm = ( asignacion: Asignacion ) => {
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea GUARDAR el programa?')
       .then( isConfirm => {
         if( !isConfirm ) return;
-        this.agregarPrograma( asignacion );
-      })
+
+        const locales = this.localesSelect().map( local => local.id );
+
+        const newPrograma: AsignarNuevoPrograma = {
+          idDecano: asignacion.idDecano,
+          idDirector: this.directorSelect().id,
+          idLocales: locales,
+          idPrograma: this.programaSelect().id,
+          idSemestre: this.semestreSelect().id,
+          usuarioId: 1
+        }
+        // console.log(newPrograma);
+        this.agregarPrograma( newPrograma );
+
+
+
+      });
   }
 
-  agregarPrograma = ( asignacion: Asignacion ) => {
+  agregarPrograma = ( asignacion: AsignarNuevoPrograma ) => {
 
-    const locales = this.localesSelect().map( local => local.id );
-
-    const newPrograma: AsignarNuevoPrograma = {
-      idDecano: asignacion.idDecano,
-      idDirector: this.directorSelect().id,
-      idLocales: locales,
-      idPrograma: this.programaSelect().id,
-      idSemestre: this.semestreSelect().id,
-      usuarioId: 1
-    }
-
-    console.log(newPrograma);
-    
-    this.asignacionRepository.insertar( newPrograma ).subscribe({
+    this.asignacionRepository.insertar( asignacion ).subscribe({
       next: (data) => {
         console.log(data);
         this.alertService.sweetAlert('success', 'Correcto', 'Programas agregados correctamente');
