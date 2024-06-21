@@ -26,7 +26,7 @@ export class SemestreAcademicoDomainService {
     constructor() {}
 
     /* SIGNAL */
-    public setSemestreAcademico = ( senestres: SemestreAcademico[]) => {
+    public setSemestresAcademicos = ( senestres: SemestreAcademico[]) => {
         this.semestresAcademicos.set( senestres );        
     }
 

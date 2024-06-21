@@ -1,5 +1,5 @@
-import { AsignacionDTO, AsignacionLocalDTO, AsignacionProgramaDTO } from "../../infraestructure/dto/asignacion.dto";
-import { Asignacion, AsignacionLocal, AsignacionPrograma } from "../models/asignacion.model";
+import { AsignacionDTO, AsignacionLocalDTO, AsignacionProgramaDTO, AsignarNuevoProgramaDTO } from "../../infraestructure/dto/asignacion.dto";
+import { Asignacion, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from "../models/asignacion.model";
 
 export class AsignacionMapper {
     static fromApiToDomain( param: AsignacionDTO ): Asignacion {
@@ -67,5 +67,23 @@ export class AsignacionMapper {
             codigo: param.idLocal,
             nombre: param.nombreLocal
         }
+    }
+
+    static fromDomainToApiAsignarNuevoPrograma ( param: AsignarNuevoPrograma): AsignarNuevoProgramaDTO[] {
+        const programa =  param.idLocales.map( local => {
+            // const localid = local
+            return {
+                // ...param,
+                idLocales: local,
+                codigoDecano: param.idDecano,
+                codigoDirectorEscuela: param.idDirector,
+                codigoLocal: local,
+                codigoProgramaAcademico: param.idPrograma,
+                codigoSemestre: param.idSemestre,
+                usuario: param.usuarioId
+            }
+        })
+
+        return programa
     }
 }

@@ -23,3 +23,6 @@ export type FacultadCrear = Omit<Facultad, 'id'>
 
 
 export type FacultadEliminar = Pick< Facultad, 'id' | 'usuarioId'>
+
+
+// export type Facultad
