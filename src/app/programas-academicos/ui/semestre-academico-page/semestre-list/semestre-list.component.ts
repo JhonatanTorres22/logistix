@@ -108,7 +108,7 @@ export class SemestreListComponent {
           // semestres.forEach( semestre => {
 
           // })
-          this.semestreAcademicoDomainService.setSemestreAcademico(semestres);          
+          this.semestreAcademicoDomainService.setSemestresAcademicos(semestres);          
 
           // this.semestreSelect = {
           //   id: 0,
@@ -302,6 +302,8 @@ export class SemestreListComponent {
       if( !isConfirm ) return;
 
       this.semestreSignal.setSelectSemestre(  this.semestreSelect );
+      console.log( this.semestreSignal.semestreSelect());
+      
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     

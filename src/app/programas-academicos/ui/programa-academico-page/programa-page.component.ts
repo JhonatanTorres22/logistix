@@ -1,4 +1,4 @@
-import { Component, WritableSignal } from '@angular/core';
+import { Component, Input, WritableSignal } from '@angular/core';
 import { Programa, ProgramaFacultad } from '../../domain/models/programa.model';
 import { ProgramaRepository } from '../../domain/repositories/programa.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
+import { FacultadSignal } from '../../domain/signals/facultad.signal';
 
 @Component({
   selector: 'programa-page',
@@ -20,6 +21,7 @@ import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.comp
 export class ProgramaAcademicoPageComponent {
 
   programaSelect: WritableSignal<ProgramaFacultad> = this.programaSignal.programaSelect;
+  @Input() idFacultad: number;
 
 
   constructor(
@@ -27,13 +29,19 @@ export class ProgramaAcademicoPageComponent {
     private alertService: AlertService,
     private dialog: MatDialog,
     private programaSignal: ProgramaSignal,
-  ) {}
+    private facultadSignal: FacultadSignal
+  ) {
+  }
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
+    // this.facultadSignal.setIdFacultad( this.idFacultad )
+    // console.log(this.idFacultad);
+    
   }
 
   openModalPrograma = () => {
+    this.facultadSignal.setIdFacultad( this.idFacultad );
     console.log('abrir modal programa list');
     const dialogRef = this.dialog.open( ProgramaAcademicoListComponent, {
       width: '800px',

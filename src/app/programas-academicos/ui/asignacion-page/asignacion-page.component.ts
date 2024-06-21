@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, WritableSignal } from '@angular/core';
+import { Component, OnInit, WritableSignal, effect } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AsignacionRepository } from '../../domain/repositories/asignacion.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -24,6 +24,9 @@ import { FacultadPageComponent } from '../facultades-page/facultad-page.componen
 import { LocalPageComponent } from '../local-page/local-page.component';
 import { ProgramaAcademicoPageComponent } from '../programa-academico-page/programa-page.component';
 import { SemestreListComponent } from '../semestre-academico-page/semestre-list/semestre-list.component';
+import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { Asignacion, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
 
 @Component({
   selector: 'asignacion-page',
@@ -40,6 +43,7 @@ import { SemestreListComponent } from '../semestre-academico-page/semestre-list/
     DecanoPageComponent,
     DirectorPageComponent,
     AsignacionPageComponent,
+    UiButtonComponent
   ],
   templateUrl: './asignacion-page.component.html',
   styleUrl: './asignacion-page.component.scss'
@@ -50,6 +54,8 @@ export class AsignacionPageComponent implements OnInit {
     semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
     semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
+
+    asignaciones = this.asignacionSignal.asignaciones;
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
     facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
@@ -68,30 +74,93 @@ export class AsignacionPageComponent implements OnInit {
         private decanoSignal: DecanoSignal,
         private directorSignal: DirectorSignal,
         private localSignal: LocalSignal,
+        private asignacionSignal: AsignacionSignal,
         private asignacionRepository: AsignacionRepository,
-        private alertService: AlertService
-    ) {}
+        private alertService: AlertService,
+        
+    ) {
+      effect(() => {
+        console.log(`The current count is: ${this.semestreSelect()}`);
+        this.obtener( this.semestreSelect().id );
+      });
+    }
 
   ngOnInit(): void {
-    this.obtener( 31 );
+    // this.obtener( this.semestreSelect().id );
   }
 
-  obtener( idSemestre: number ) {
+  obtener = ( idSemestre: number ) => {
     this.asignacionRepository.obtener( idSemestre ).subscribe({
       next: ( programasAsignados ) => {
         console.log(programasAsignados);
-        const facultad = {
-          id: programasAsignados[0].idFacultad,
-          definicion: '',
-          nombre: programasAsignados[0].nombreFacultad,
-          usuarioId: 0
-        }
+        // const facultad = {
+        //   id: programasAsignados[0].idFacultad,
+        //   definicion: '',
+        //   nombre: programasAsignados[0].nombreFacultad,
+        //   usuarioId: 0
+        // }
 
         // const 
-        this.facultadSignal.facultadSelect.set( facultad )
+        this.asignacionSignal.setAsignaciones( programasAsignados );
       }, error: (error) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error', 'error');
+      }
+    })
+  }
+
+
+  openModalDecanos = () => {
+
+  }
+
+
+  openModalFacultad = () => {
+
+  }
+
+  openModalPrograma = () => {
+    
+  }
+
+  openModalDirector = () => {
+
+  }
+
+  abrirUbicacionLocal = () => {
+
+  }
+
+  openModalLocal = () => {
+    
+  }
+  agregarProgramaConfirm( asignacion: Asignacion ) {
+    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea GUARDAR el programa?')
+      .then( isConfirm => {
+        if( !isConfirm ) return;
+        this.agregarPrograma( asignacion );
+      })
+  }
+
+  agregarPrograma( asignacion: Asignacion ) {
+    const newPrograma: AsignarNuevoPrograma = {
+      idDecano: asignacion.idDecano,
+      idDirector: this.directorSelect().id,
+      idLocales: [this.localSelect().id],
+      idPrograma: this.programaSelect().id,
+      idSemestre: this.semestreSelect().id,
+      usuarioId: 1
+    }
+
+    this.asignacionRepository.insertar( newPrograma ).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.alertService.sweetAlert('success', 'Correcto', 'Programas agregados correctamente');
+        this.obtener( this.semestreSelect().id );
+      }, error: (error) => {
+        console.log(error);
+        this.alertService.showAlert('Ocurrió un error', 'error');
+
       }
     })
   }

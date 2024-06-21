@@ -20,4 +20,13 @@ export interface AsignacionPrograma {
 export interface AsignacionLocal {
     idLocal: number,
     nombreLocal: string
-}  
+}
+
+export interface AsignarNuevoPrograma {
+    idDirector: number,
+    idDecano: number,
+    idPrograma: number,
+    idSemestre: number,
+    idLocales: number[],
+    usuarioId: number
+}

@@ -1,7 +1,97 @@
-<facultad-page>
-    <decano-page decano-page class="flex align-items-center gap-2 "></decano-page>
-    <programa-page programa-page>
-      <app-director-page director-page class="flex align-items-center gap-2 bg-primary-50 text-gray-900 px-2 pt-2 border-round"></app-director-page>
-      <local-page local-page class="my-2"></local-page>
-    </programa-page>
-</facultad-page>
+@for (asignacion of asignaciones(); track asignacion) {
+<app-card headerClassTemplate="">
+    <ng-template #headerTitleTemplate class="align-items-center">
+      <div class="flex gap-2">
+        <div class="flex align-items-center gap-2">
+          <!-- CHANGE DECANO START  -->
+          <div class="user-upload wid-40" matTooltip="Cambiar de Decano" (click)="openModalDecanos()">
+              <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
+              <label for="uplfile" class="img-avatar-upload">
+                <i class="ti ti-refresh f-24 m-b-5"></i>
+              </label>
+          </div>
+          <!-- CHANGE DECANO END -->
+          
+          <!-- NAME FACULTAD AND DEDANO START -->
+          <div class="flex flex-column">
+              {{ asignacion.nombreFacultad }}
+              <span class="f-14 f-w-500"> {{ asignacion.nombreDecano }}</span>
+          </div>
+          <!-- NAME FACULTAD AND DEDANO END -->
+
+          <!-- CHANGE FACULTAD START -->
+          <!-- <button mat-flat-button color="primary" class="b-rad-50" matTooltip="Cambiar Facultad" (click)="openModalFacultad()">
+              <div class="flex align-item-center"><i class="ti ti-refresh f-18 m-r-5"></i></div>
+          </button> -->
+          <!-- CHANGE FACULTAD END -->
+
+        </div>
+      </div>
+
+    </ng-template>
+ 
+
+    <!-- PROGRAMA STAR -->
+    <div class="flex gap-3">
+      @for (programa of asignacion.programas; track programa) {
+        <app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem"> <!-- flex align-items-center gap-4 -->
+          <ng-template #headerTitleTemplate >
+              <div class="flex flex-column">
+                <div class="flex gap-2">
+                  {{ programa.nombrePrograma }}
+                  <!-- <button mat-flat-button color="primary" class="b-rad-50" matTooltip="Cambiar Programa" (click)="openModalPrograma()">
+                    <div class="flex align-item-center"><i class="ti ti-refresh f-18 m-r-5"></i></div>
+                  </button> -->
+                </div>
+              </div>
+          </ng-template>
+        
+          <!-- DIRECTOR DE ESCUELA START -->
+          <div class="text-center">
+            <div class="user-upload wid-40 m-auto mb-2" matTooltip="Cambiar de Director de Escuela" (click)="openModalDirector()">
+              <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
+              <label for="uplfile" class="img-avatar-upload">
+                <i class="ti ti-refresh f-24 m-b-5"></i>
+              </label>
+            </div>
+            <div class="flex align-items-center gap-2 bg-primary-50 text-gray-900 px-2 py-2 border-round justify-content-center">
+              <div class="flex flex-column">
+                  <!-- {{programaSelect().nombre}} -->
+                  <span class="f-14 f-w-500"> Director de Escuela</span>
+                  <span class="f-10 f-w-500"> {{ programa.nombreDirector }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- DIRECTOR DE ESCUELA END -->
+  
+          <!-- LOCAL COMPONENT -->
+          
+          <div class="flex my-2">
+            @for ( local of programa.locales; track local ) {
+                <div class="m-auto bg-primary-100 f-w-600 text-primary-500 px-4 py-2 border-round" (click)="abrirUbicacionLocal()" matTooltip="Ver Ubicación">
+                    <i class="ti ti-map-pin"></i>
+                  {{ local.nombreLocal }}
+                </div>
+            }
+          </div>  
+          <button mat-flat-button color="primary" class="b-rad-20 flex m-auto my-2" matTooltip="Agregar Local" (click)="openModalLocal()">
+              <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+          </button>
+
+            
+        </app-card>
+      }
+      <programa-page [idFacultad]="asignacion.idFacultad">
+        <app-director-page director-page class="flex align-items-center gap-2 bg-primary-50 text-gray-900 px-2 pt-2 border-round"></app-director-page>
+        <local-page local-page class="my-2"></local-page>
+        <ui-button ui-button-guardar label="Guardar" color="primary" class="text-center block" (click)="agregarProgramaConfirm(asignacion)"></ui-button>
+      </programa-page>
+      <!-- <programa-page programa-page>
+      </programa-page> -->
+    </div>
+  <!-- PROGRAMA END        -->
+    
+</app-card>
+}
+
+<!-- {{ semestreSelect() | json}} -->

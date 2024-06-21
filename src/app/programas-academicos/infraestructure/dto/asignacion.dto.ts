@@ -25,3 +25,12 @@ export interface AsignacionLocalDTO {
 export interface AsginacionDataArrayDTO {
     data: AsignacionDTO[]
 }
+
+export interface AsignarNuevoProgramaDTO {
+    codigoDirectorEscuela: number,
+    codigoDecano: number,
+    codigoProgramaAcademico: number,
+    codigoSemestre: number,
+    codigoLocal: number,
+    usuario: number
+}

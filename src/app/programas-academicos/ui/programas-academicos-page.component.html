@@ -1,6 +1,6 @@
 <semestre-academico-page></semestre-academico-page>
 
-@if ( semestreSelect().id != 0 ) {
+@if ( semestreSelect().id != 0 && asignaciones().length == 0 ) {
     <facultad-page>
       <decano-page decano-page class="flex align-items-center gap-2 "></decano-page>
       <programa-page programa-page>
@@ -8,13 +8,14 @@
         <local-page local-page class="my-2"></local-page>
       </programa-page>
     </facultad-page>
+} @else {
+  <asignacion-page> </asignacion-page>
 }
 
-<asignacion-page> </asignacion-page>
 
-{{ semestreSelect() | json}}
+<!-- {{ semestreSelect() | json}}
 {{ facultadSelect() | json }}
 {{ programaSelect() | json }}
 {{ decanoSelect() | json }}
 {{ directorSelect() | json }}
-{{ localSelect() | json }}
+{{ localSelect() | json }} -->
