@@ -35,14 +35,14 @@ export class LocalValidations {
     maxLengthLatitud = 20;
     minLengthLatitud = 6;
     expRegLatitud = /^[0-9-.,]*$/
-    expRegLatitudToLockInput = /^[0-9-.,]*$/;
+    expRegLatitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
 // FIN LATITUD
 
 // INICIO LONGITUD
     maxLengthLongitud = 20;
     minLengthLongitud = 6;
     expRegLongitud = /^[0-9-.,]*$/
-    expRegLongitudToLockInput = /^[0-9-.,]*$/;
+    expRegLongitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
 // FIN LONGITUD
 
     duplicadoNombreLocal(control: AbstractControl): { [key: string]: boolean } | null {
