@@ -31,18 +31,18 @@ export class FooterComponent implements OnInit {
     this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
 
     this.expiro = new Date( this.expirarToken ).getTime() < this.hoy
-    console.log(new Date( (new Date( this.expirarToken ).getTime() - this.hoy) ).getMinutes());
+    // console.log(new Date( (new Date( this.expirarToken ).getTime() - this.hoy) ).getMinutes());
     this.temporalidad = new Date( (new Date( this.expirarToken ).getTime() - this.hoy) ).getMinutes();
   }
 
   ngOnInit(): void {
-    this.expirarsesion();
+    // this.expirarsesion();
   }
 
-  expirarsesion( ) {
-    setTimeout(() => {
-      this.expiro ? this.router.navigate(['/auth/logout']) : ''
-    }, this.temporalidad);
-  }
+  // expirarsesion( ) {
+  //   setTimeout(() => {
+  //     this.expiro ? this.router.navigate(['/auth/logout']) : ''
+  //   }, this.temporalidad);
+  // }
 
 }

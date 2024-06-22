@@ -41,7 +41,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     private authDomainService: AuthDomainService
 
   ) {
-    console.log(this.currentRol());
+    // console.log(this.currentRol());
     
   }
 

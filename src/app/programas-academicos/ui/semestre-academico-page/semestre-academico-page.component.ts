@@ -35,7 +35,9 @@ export class SemestreAcademicoPageComponent {
     private semestreSignal: SemestreSignal,
     private alertService: AlertService
   ) {
-    
+      const semestre = JSON.parse(localStorage.getItem('currentSemestre')!);
+      console.log(semestre);
+      semestre ? this.semestreSignal.setSelectSemestre( semestre ) : ''
     // this.existeSemestreCreado = this.semestreAcademico ? true : false;
   }
 
@@ -54,7 +56,7 @@ export class SemestreAcademicoPageComponent {
           }
 
           semestres.forEach( semestre => {
-            console.log(semestre);
+            // console.log(semestre);
             if( semestre.condicion == 'APERTURADO') {
               this.semestreAcademicoDomainService.setSemestreAcademicoAperturado( semestre );
             }

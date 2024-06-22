@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, WritableSignal } from "@angular/core";
+import { Component, OnInit, WritableSignal, effect } from "@angular/core";
 import { SharedModule } from "src/app/demo/shared/shared.module";
 import { SemestreAcademicoRepository } from "../domain/repositories/semestre-academico.repository";
 import { SemestreAcademicoPageComponent } from "./semestre-academico-page/semestre-academico-page.component";
@@ -84,7 +84,12 @@ export class ProgramasAcademicosComponent implements OnInit {
         private localSignal: LocalSignal,
         private alertService: AlertService,
         private asignacionRepository: AsignacionRepository
-    ) {}
+    ) {
+      effect(() => {
+        console.log(`New semestre selected program: ${this.semestreSelect()}`);
+        this.obtener( this.semestreSelect().id );
+      }, );
+    }
 
     ngOnInit(): void {
 
