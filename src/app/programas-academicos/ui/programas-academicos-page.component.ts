@@ -98,7 +98,7 @@ export class ProgramasAcademicosComponent implements OnInit {
     obtener = ( idSemestre: number ) => {
         this.asignacionRepository.obtener( idSemestre ).subscribe({
           next: ( programasAsignados ) => {
-            console.log(programasAsignados);
+            // console.log(programasAsignados);
             this.localSignal.setSelectLocales( [] );
             this.facultadSignal.setIdFacultad( 0 );
             this.asignacionSignal.setAsignaciones( programasAsignados );
