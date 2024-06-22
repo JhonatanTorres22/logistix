@@ -47,7 +47,8 @@ export class UsuarioService {
 
     editarUsuario = ( usuario: Usuario ): Observable<void> => {
         const apiUsuarioEdit = UsuarioMapper.formDomainToApi( usuario );
-
+        console.log(apiUsuarioEdit);
+        
         console.log(apiUsuarioEdit);
 
         return this.http.put<void>(this.urlApi + this.urlEditarUsuario, apiUsuarioEdit)
