@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Inject, WritableSignal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -8,6 +8,8 @@ import { LocalRepository } from 'src/app/programas-academicos/domain/repositorie
 import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.signal';
 import { LocalAddComponent } from '../local-add/local-add.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
 
 @Component({
   selector: 'app-local-list',
@@ -18,7 +20,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 })
 export class LocalListComponent {
 
-  
+  localesAsignados:  AsignacionLocal[] = [];
 
   showFormAgregarPrograma: boolean = false;
   localEdit: Local;
@@ -35,7 +37,7 @@ export class LocalListComponent {
     usuarioId: 0
 };
 constructor(
-  
+  @Inject(MAT_DIALOG_DATA) public data: ListarLocalesAsignados,
   private signal: LocalSignal,
   private repository: LocalRepository,
   // private facultadSignal: LocalSignal,
@@ -47,12 +49,15 @@ constructor(
   }
   ngOnInit(): void {
     this.obtenerLocales();
+    if (this.data && this.data !== undefined) {
+      this.localesAsignados = this.data.locales;
+      // console.log(this.localesAsignados,'locales asignados');
+  }  
   }
 
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
 
     console.log(event);
-    
       switch( event ) {
         case 'Add': {
           console.log('Programa Creado');
@@ -113,13 +118,16 @@ constructor(
     this.repository.obtener().subscribe({
       next: ( locales ) => {
         console.log(locales);
-        this.signal.setLocalesList( locales );
-        
+        this.signal.setLocalesList( locales );        
       }, error: ( error ) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error, no se pudo listar los locales', 'error');
       }
     })
+  }
+
+  localAsignado(local: Local): boolean {
+    return this.localesAsignados.some(asignado => asignado.idLocal === local.id);
   }
 
   

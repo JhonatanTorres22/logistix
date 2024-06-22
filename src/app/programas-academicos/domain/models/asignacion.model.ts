@@ -40,3 +40,7 @@ export interface AsignacionEliminar {
     idLocales: number[],
     usuarioId: number
 }
+
+export interface ListarLocalesAsignados {
+    locales: AsignacionLocal[]
+}
