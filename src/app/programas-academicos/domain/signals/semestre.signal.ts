@@ -21,6 +21,7 @@ export class SemestreSignal {
 
     setSelectSemestre = ( semestre: SemestreAcademico) => {
         this.semestreSelect.set( semestre );
+        localStorage.setItem('currentSemestre', JSON.stringify(this.semestreSelect()))
     }
 
     

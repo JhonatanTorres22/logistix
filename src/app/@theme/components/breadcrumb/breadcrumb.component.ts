@@ -49,7 +49,7 @@ export class BreadcrumbComponent {
   ) {
     // this.navigations = menus;
     this.navigations = this.menu();
-    console.log(this.navigations);
+    // console.log(this.navigations);
     
     this.ComponentNavigations = componentMenus;
     this.type = 'theme1';

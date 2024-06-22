@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     // const currentUser = this.authenticationService.currentUserValue; template
     const currentUser = this.authDomainService.currentUserData;
     const expired = this.authDomainService.checkExpiredToken();
-    console.log(currentUser());
+    // console.log(currentUser());
     
     if (currentUser() && currentUser().serviceToken !== '' && !expired) {
       // logged in so return true
