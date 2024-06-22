@@ -83,10 +83,10 @@ export class AsignacionPageComponent implements OnInit {
         private alertService: AlertService,
         
     ) {
-      effect(() => {
-        console.log(`The current count is: ${this.semestreSelect()}`);
-        this.obtener( this.semestreSelect().id );
-      });
+      // effect(() => {
+      //   console.log(`New semestre selected: ${this.semestreSelect()}`);
+      //   this.obtener( this.semestreSelect().id );
+      // });
     }
 
   ngOnInit(): void {

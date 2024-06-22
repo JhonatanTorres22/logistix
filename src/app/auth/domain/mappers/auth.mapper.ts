@@ -22,7 +22,7 @@ export class AuthMapper {
     
 
     static fromApiToDomainMenu( param: MenuDTO): Navigation {
-        console.log(param);
+        // console.log(param);
         const subMenu = param.Sms.map( AuthMapper.fromApiToDomainSubMenu )
         return {
             id: param.Identificador,

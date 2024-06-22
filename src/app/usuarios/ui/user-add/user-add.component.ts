@@ -123,7 +123,7 @@ export class UserAddComponent {
 
     this.usuarioToEdit = this.data;
 
-    console.log(this.usuarioToEdit);
+    // console.log(this.usuarioToEdit);
     
   }
 
@@ -150,7 +150,7 @@ export class UserAddComponent {
       this.hayUsuarioExistente = this.usuarioToEdit.id == 0;
     } 
 
-    console.log(this.usuarioToEdit);
+    // console.log(this.usuarioToEdit);
     
     this.usuarioToEdit && this.usuarioToEdit?.id != 0 ? this.pathValueFormUserAdd() : ''
   }
