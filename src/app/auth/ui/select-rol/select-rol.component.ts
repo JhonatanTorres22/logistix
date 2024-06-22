@@ -30,7 +30,7 @@ export class SelectRolComponent {
   // }
 
   selectRol( rol: RolDTO) {
-    console.log( rol );
+    // console.log( rol );
 
     this.authService.selectedRol( [rol], this.token);
 

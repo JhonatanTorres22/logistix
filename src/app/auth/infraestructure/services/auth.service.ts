@@ -46,7 +46,7 @@ export class AuthService {
 
     login( login: Auth ) {
       const apiLogin = AuthMapper.fromDomainToApi( login );
-      console.log( apiLogin );
+      // console.log( apiLogin );
       
       return this.http.post<AccessTokenData>(`${ this.urlApi }${ this.urlLogin}`, apiLogin ).pipe(
         map( (apiResponse) => {
@@ -55,7 +55,7 @@ export class AuthService {
             ...jwtDecode<JwtPayload>(apiResponse.data.accessToken),
             serviceToken: apiResponse.data.accessToken
           };
-          console.log(decodedToken);
+          // console.log(decodedToken);
           
           // localStorage.setItem('currentUserData', JSON.stringify(decodedToken));
           // this.authDomainService.setCurrentUserData( JSON.parse(localStorage.getItem('currentUserData')!));

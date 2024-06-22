@@ -76,7 +76,7 @@ export class UserRolComponent implements OnInit {
 
       this.usuarioRolRepository.obtenerUsuariosRol().subscribe({
         next: ( data ) => {
-          console.log( data );
+          // console.log( data );
           this.usuariosRol = data;
           this.usuariosRol = this.usuariosRol.filter( usuario => usuario.usuario == (this.usuario.apellidoPaterno +' '+ this.usuario.apellidoMaterno + ', ' + this.usuario.nombres).toLocaleUpperCase())
           resolve( true )
@@ -98,7 +98,7 @@ export class UserRolComponent implements OnInit {
         const rol = roles.reduce( (roles: Rol[], rol: Rol) => {
 
           if( this.usuariosRol.findIndex( rolUser => rolUser.rol == rol.rol)  == -1 ) {
-            console.log(rol, ' - ');
+            // console.log(rol, ' - ');
             
             roles.push(rol)
           }
@@ -117,7 +117,7 @@ export class UserRolComponent implements OnInit {
         }, [])
 
         this.roles = rol
-        console.log(rol);
+        // console.log(rol);
         
       }, error: ( error ) => {
         console.log(error);
