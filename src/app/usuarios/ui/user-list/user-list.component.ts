@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -64,6 +64,7 @@ export class UserListComponent {
 
   ngOnInit(): void {
     this.obtenerUsuarios();
+    this.detectarAnchoPagina();
   }
 
   obtenerUsuarios = (): void => {
@@ -142,5 +143,10 @@ export class UserListComponent {
     this.dataSource.sort = this.sort;
   }
 
-
+  anchoPagina: boolean = true; // Inicialmente asumimos que es una vista de escritorio
+  
+  @HostListener('window:resize', ['$event'])
+  detectarAnchoPagina() {
+    this.anchoPagina = window.innerWidth >= 1025;
+  }
 }

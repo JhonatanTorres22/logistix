@@ -26,7 +26,7 @@ import { ProgramaAcademicoPageComponent } from '../programa-academico-page/progr
 import { SemestreListComponent } from '../semestre-academico-page/semestre-list/semestre-list.component';
 import { AsignacionSignal } from '../../domain/signals/asignacion.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
-import { Asignacion, AsignacionEliminar, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
+import { Asignacion, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
 import { LocalListComponent } from '../local-page/local-list/local-list.component';
 import { ThisReceiver } from '@angular/compiler';
 
@@ -139,10 +139,18 @@ export class AsignacionPageComponent implements OnInit {
 
   openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
     console.log('abrir modal LOCAL list');
+    let todosLosLocales: AsignacionLocal[] = [];
+    asignacion.programas.forEach(programa => {
+      programa.locales.forEach(local => {
+        todosLosLocales.push(local);
+      });
+    });
+    console.log(todosLosLocales); 
     const dialogRef = this.dialog.open( LocalListComponent, {
       width: '800px',
       height: '460px',
       disableClose: true,
+      data: { locales: todosLosLocales } 
     } );
 
     dialogRef.afterClosed().subscribe( data => {
@@ -150,7 +158,7 @@ export class AsignacionPageComponent implements OnInit {
       // console.log(data);
       // console.log(this.localesSelect());
 
-      const locales = this.localesSelect().map( local => local.id );
+      const locales = this.localesSelect().map( local => local.id );     
       const newPrograma: AsignarNuevoPrograma = {
         idDecano: asignacion.idDecano,
         idDirector: programa.idDirector,
