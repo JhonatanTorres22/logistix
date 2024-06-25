@@ -23,6 +23,7 @@ export class FacultadListComponent implements OnInit{
   showFormAgregarFacultad: boolean = false;
   facultadEdit: Facultad;
   facultades: WritableSignal<Facultad[]>= this.facultadSignal.facultadesList;
+  facultadSeleccionado = this.facultadSignal.facultadSelect
   // facultades: 
   facultadSelect: Facultad = {
     id: 0,
@@ -44,6 +45,15 @@ export class FacultadListComponent implements OnInit{
     this.obtenerFacultades();
   }
 
+  limpiarDatosFacultad = () => {
+    this.facultadEdit = {
+      id: 0,
+      definicion: '',
+      nombre: '',
+      usuarioId: 0
+    };
+  }
+
   openShowFormCrearFacultad = ( event?: EventEmitter<string> | string) => {
 
     console.log(event);
@@ -51,46 +61,26 @@ export class FacultadListComponent implements OnInit{
       switch( event ) {
         case 'Add': {
           console.log('Facultad Creado');
-          this.facultadEdit = {
-            id: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosFacultad()
           this.showFormAgregarFacultad = false;
          this.obtenerFacultades();
         } break;
 
         case 'Edit': {
           console.log('Facultad Editado');
-          this.facultadEdit = {
-            id: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosFacultad()
           this.showFormAgregarFacultad = false;
           this.obtenerFacultades();
         } break;
 
         case 'Open': {
           this.showFormAgregarFacultad = true;
-          this.facultadEdit = {
-            id: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosFacultad()
         } break;
 
         case 'Cancelar': {
           console.log('Cancelar');
-          this.facultadEdit = {
-            id: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosFacultad()
           this.showFormAgregarFacultad = false;
         }
       }
@@ -122,7 +112,7 @@ export class FacultadListComponent implements OnInit{
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editado');
+          console.log('Semestre Editadoooooooo');
           this.showFormAgregarFacultad = false;
           this.obtenerFacultades();
         } break;
@@ -163,13 +153,11 @@ export class FacultadListComponent implements OnInit{
       next: ( data ) => {
         console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'La facultad fue eliminada correctamente')
-        // this.alertService.showAlert('Facultad eliminado correctamente', 'success');
-        this.facultadSelect = {
-          id: 0,
-          definicion: '',
-          nombre: '',
-          usuarioId: 0
-      };
+        this.limpiarDatosFacultad();
+        if(facultad.id === this.facultadSeleccionado().id){
+          this.facultadSignal.setSelectFacultad(this.facultadSelect)
+          console.log(this.facultadSelect); 
+        }
         this.obtenerFacultades();
       }, error: ( error ) => {
         console.log( error );

@@ -25,10 +25,10 @@ export class LocalValidations {
 
 
 // INICIO CODIGO
-    maxLengthCodigo = 20;
-    minLengthCodigo = 3;
-    expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
-    expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    maxLengthDefinicion = 20;
+    minLengthDefinicion = 3;
+    expRegDefinicion = /[a-zA-Z0-9\- ]{0,40}/
+    expRegDefinicionToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
 // FIN CODIGO
 
 // INICIO LATITUD

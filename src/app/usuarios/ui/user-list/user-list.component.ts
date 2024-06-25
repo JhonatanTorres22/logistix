@@ -64,7 +64,6 @@ export class UserListComponent {
 
   ngOnInit(): void {
     this.obtenerUsuarios();
-    this.detectarAnchoPagina();
   }
 
   obtenerUsuarios = (): void => {
@@ -141,12 +140,5 @@ export class UserListComponent {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  anchoPagina: boolean = true; // Inicialmente asumimos que es una vista de escritorio
-  
-  @HostListener('window:resize', ['$event'])
-  detectarAnchoPagina() {
-    this.anchoPagina = window.innerWidth >= 1025;
   }
 }

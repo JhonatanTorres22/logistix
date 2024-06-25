@@ -34,10 +34,10 @@ export class LocalAddComponent {
   expRegNombre: RegExp;
   expRegNombreToLockInput: RegExp;
   
-  maxLengthCodigo: number;
-  minLengthCodigo: number;
-  expRegCodigo: RegExp;
-  expRegCodigoToLockInput: RegExp;
+  maxLengthDefinicion: number;
+  minLengthDefinicion: number;
+  expRegDefinicion: RegExp;
+  expRegDefinicionToLockInput: RegExp;
   
   maxLengthLatitud: number;
   minLengthLatitud: number;
@@ -77,10 +77,10 @@ export class LocalAddComponent {
     this.expRegNombre = this.validation.expRegNombre;
     this.expRegNombreToLockInput = this.validation.expRegNombreToLockInput;
 
-    this.maxLengthCodigo = this.validation.maxLengthCodigo;
-    this.minLengthCodigo = this.validation.minLengthCodigo;
-    this.expRegCodigo = this.validation.expRegCodigo;
-    this.expRegCodigoToLockInput = this.validation.expRegCodigoToLockInput;
+    this.maxLengthDefinicion = this.validation.maxLengthDefinicion;
+    this.minLengthDefinicion = this.validation.minLengthDefinicion;
+    this.expRegDefinicion = this.validation.expRegDefinicion;
+    this.expRegDefinicionToLockInput = this.validation.expRegDefinicionToLockInput;
 
     this.maxLengthLatitud = this.validation.maxLengthLatitud;
     this.minLengthLatitud = this.validation.minLengthLatitud;
@@ -94,7 +94,7 @@ export class LocalAddComponent {
 
     this.formLocal = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombre), validation.duplicarNombre]),
-      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthCodigo), Validators.minLength(this.minLengthCodigo), Validators.pattern(this.expRegCodigo)]),
+      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthDefinicion), Validators.minLength(this.minLengthDefinicion), Validators.pattern(this.expRegDefinicion)]),
       latitud: new FormControl('', [ Validators.required, Validators.maxLength(this.maxLengthLatitud), Validators.minLength(this.minLengthLatitud), Validators.pattern(this.expRegLatitud)]),
       longitud: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthLongitud), Validators.minLength(this.minLengthLongitud), Validators.pattern(this.expRegLongitud)])
      })

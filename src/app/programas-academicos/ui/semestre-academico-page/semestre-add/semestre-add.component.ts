@@ -15,6 +15,7 @@ import { SemestreAcademicoLocalService } from 'src/app/programas-academicos/infr
 import { SemestreAcademico } from '../../../domain/models/semestre-academico.model';
 import { SemestreAcademicoRepository } from 'src/app/programas-academicos/domain/repositories/semestre-academico.repository';
 import { SemestreAcademicoDomainService } from 'src/app/programas-academicos/domain/services/semestre-academico-domain.service';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 
 @Component({
   selector: 'semestre-add',
@@ -46,6 +47,7 @@ export class SemestreAddComponent implements OnInit {
 
 
   constructor(
+    private semestreSignal: SemestreSignal,
     public dialogRef: MatDialogRef<SemestreAddComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -164,6 +166,7 @@ export class SemestreAddComponent implements OnInit {
     this.semestreRepository.editarSemestre( editSemestre ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
+        this.semestreSignal.setSelectSemestre(editSemestre)
         // this.semestreAcademicoDomainService.setSemestreAcademico( data );
         // this.dialogRef.close( data );
         this.semestreEdit = {
