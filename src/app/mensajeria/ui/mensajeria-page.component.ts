@@ -8,6 +8,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MAX_WIDTH_1024PX, MAX_WIDTH_1399PX, MIN_WIDTH_1025PX, MIN_WIDTH_1400PX } from 'src/app/@theme/const';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaContentComponent } from './mensajeria-content/mensajeria-content.component';
+import { MensajeriaSignal } from '../signals/mensajeria.signal';
 
 @Component({
   selector: 'app-mensajeria-page',
@@ -21,15 +22,18 @@ export class MensajeriaPageComponent {
   // public props
   @ViewChild('email') email: MatDrawer;
   modeValue: MatDrawerMode = 'side';
-  status = 'true';
+  status = 'false';
   selectedTabIndex = 0;
-  mailListHight = false;
+  mailListHight = true;
 
   // constructor
   constructor(
     private breakpointObserver: BreakpointObserver,
-    public dialog: MatDialog
-  ) {}
+    public dialog: MatDialog,
+    private signal: MensajeriaSignal
+  ) {
+
+  }
 
   // life cycle event
   ngOnInit() {
@@ -42,11 +46,13 @@ export class MensajeriaPageComponent {
     });
     this.breakpointObserver.observe([MIN_WIDTH_1400PX, MAX_WIDTH_1399PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_1399PX]) {
-        this.status = 'false';
+        this.status = 'true'; //false
       } else if (result.breakpoints[MIN_WIDTH_1400PX]) {
         this.status = 'true';
       }
     });
+
+    // this.email.
   }
 
   // public method
@@ -62,5 +68,9 @@ export class MensajeriaPageComponent {
     // this.dialog.open(ComposeMailComponent, {
     //   width: '500px'
     // });
+  }
+
+  toggle() {
+    this.signal.setToggle();
   }
 }

@@ -74,7 +74,7 @@ export class SemestreAcademicoPageComponent {
     console.log('abrir modal semestre list');
     const dialogRef = this.dialog.open( SemestreListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 

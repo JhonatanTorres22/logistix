@@ -1,0 +1,39 @@
+<form [formGroup]="formCiclo" class="p-3">
+    <!-- {{ semestreEdit | json }} -->
+    <div class="flex gap-3">
+        <ui-input
+            class="w-full"
+            label="Ciclo en número"
+            formControlName="cicloNumero"
+            [maxlength]="MaxLengthCicloNumero"
+            [minlength]="MinLengthCicloNumero"
+            [expReg]="expRegCicloNumeroBlockToInput"
+            >
+        </ui-input>
+    </div>
+    <div class="flex gap-3">
+        <ui-input
+            class="w-full"
+            label="Ciclo en Letra"
+            formControlName="cicloLetra"
+            [maxlength]="MaxLengthCicloLetra"
+            [minlength]="MinLengthCicloLetra"
+            [expReg]='expRegCicloLetraBlockToInput'
+        >
+        </ui-input>
+    </div>
+    <div class="flex gap-3">
+        <ui-input
+            class="w-full"
+            label="Ciclo definición"
+            formControlName="definicion"
+            [maxlength]="MaxLengthDefinicion"
+            [minlength]="MinLengthDefinicion"
+            [expReg]='expRegDefinicionBlockToInput'
+        >
+        </ui-input>
+    </div>
+    <ui-button label="Cancelar" (click)="cancelar()"></ui-button>
+    <ui-button label="Guardar" color="primary" [disabled]="formCiclo.invalid" (click)="onSubmit()"></ui-button>
+
+</form>

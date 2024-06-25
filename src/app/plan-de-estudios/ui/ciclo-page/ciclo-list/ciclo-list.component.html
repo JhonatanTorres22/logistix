@@ -1,0 +1,92 @@
+<h2 class="f-20 f-w-600" mat-dialog-title >{{ !showForm ? 'Ciclo' : cicloEdit.id != 0 && showForm ? 'Editar' : 'Crear'}}</h2>
+
+    
+
+<mat-dialog-content>
+    @if ( showForm ) {
+        <ciclo-add (cerrarFormulario)="showFormCrearCiclo( $event )" [cicloEdit]="cicloEdit"></ciclo-add>
+    } @else {
+        <div class="flex flex-column md:flex-row m-3 gap-6">
+            <div class="w-full text-center">
+                <h4 class="f-w-500 text-left">Lista de ciclos:</h4>
+                @if ( cicloList().length == 0 ) {
+                    <i class="ti ti-archive f-60 text-gray-600"></i><br>
+                    <span class="text-gray-600">No hay ciclos creados</span>
+    
+                } @else {
+                    <!-- {{ cicloSelect | json }} -->
+                    <mat-radio-group >
+                        @for (ciclo of cicloList(); track ciclo) {
+                            <!-- <ul>
+                                <li class="">
+                                    {{ ciclo.nombre }}
+                                </li>
+                            </ul> -->
+                            <div class=" border-1 border-gray-400 border-round text-left my-2 px-2"  >
+                                    
+                                <div class="flex w-full">
+                                    <div class="flex justify-content-between">
+                                        <div class="m-3 w-full">
+                                            <div class="f-w-600"> {{ ciclo.definicion }} </div>
+                                            <div class="f-12"> {{ ciclo.cicloLetra + ' - ' + ciclo.cicloNumero }} </div>
+                                        </div>
+                 
+                                        <div class="top-0 right-0 m-2">
+                                            <button
+                                                mat-icon-button
+                                                [matMenuTriggerFor]="optionsCiclo"
+                                                aria-label="Example icon-button with a menu"
+                                            >
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #optionsCiclo="matMenu">
+                                                <button
+                                                    mat-menu-item
+                                                    (click)="showFormEditarCiclo(ciclo, 'Open')"
+                                                    class="text-primary">
+                                                        <i class="ti ti-edit f-18 text-primary"></i>
+                                                        <span class="f-w-600">Editar</span>
+                                                </button>
+    
+                                                <button
+                                                    mat-menu-item
+                                                    (click)="eliminarConfirm(ciclo)"
+                                                    class="text-red-500">
+                                                        <i class="ti ti-trash f-18 text-red-500"></i>
+                                                        <span class="f-w-600">Eliminar</span>
+                                                </button>
+                                                
+                                            </mat-menu>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </mat-radio-group>
+                }
+                
+            </div>
+            <div class="w-full md:w-8">
+                <h4 class="f-w-400 text-center block">¿No encuentras lo que buscas?</h4>
+                <div class="flex border-1 border-round border-gray-400 justify-content-center align-item-center">
+                    <button
+                        mat-flat-button color="primary"
+                        class="b-rad-20 my-6"
+                        matTooltip="Crear ciclo académico"
+                        (click)="showFormCrearCiclo( 'Open' )"
+                    >
+                        <div class="flex align-item-center">
+                            <i class="ti ti-plus f-18 m-r-5"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <!-- <button mat-button cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>
