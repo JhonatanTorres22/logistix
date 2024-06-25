@@ -32,7 +32,7 @@ export class FacultadValidations {
     // FIN CODIGO
     
      /* GENERAL INICIO */
-    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
+    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$';
     /* GENERAL FIN */
 
 /* INICIO DUPLICIDAD */
