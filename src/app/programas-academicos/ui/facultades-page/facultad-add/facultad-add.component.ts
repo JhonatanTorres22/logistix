@@ -163,6 +163,7 @@ export class FacultadAddComponent {
     this.facultadRepository.editarFacultad( editFacultad ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
+        this.facultadSignal.setSelectFacultad(editFacultad)
 
         this.facultadEdit = {
           id: 0,
