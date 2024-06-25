@@ -38,7 +38,7 @@ export class FacultadPageComponent implements OnInit {
     console.log('abrir modal facultad list');
     const dialogRef = this.dialog.open( FacultadListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 

@@ -1,1 +1,9 @@
-<button [disabled]="disabled" mat-flat-button [color]="color">{{ label }}</button>
+<button [disabled]="disabled" mat-flat-button [color]="color">
+    @if ( icon ) {
+       <i class="{{ icon }}"></i> 
+    }
+
+    @if ( label ) {
+        {{ label }} 
+    }
+</button>

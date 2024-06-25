@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MailData } from 'src/app/fake-data/mail';
+import { MensajeriaSignal } from '../../signals/mensajeria.signal';
 
 export interface PeriodicElement {
   images: string;
@@ -36,10 +37,16 @@ export class MensajeriaContentComponent {
   @Input() promotion = false;
   @Input() forums = false;
   @Input() common = true;
+  // @Input() status = 'true';
+
+  toggle = this.signal.toggle;
 
   displayedColumns: string[] = ['name']; //'select', 'text', 'symbol'
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
+
+
+  constructor( private signal: MensajeriaSignal) {}
 
   // public method
   isAllSelected() {

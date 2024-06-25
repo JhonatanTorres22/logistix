@@ -1,5 +1,5 @@
 // angular import
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AbleProConfig } from 'src/app/app-config';
 import { ThemeLayoutService } from 'src/app/@theme/services/theme-layout.service';
 import { HORIZONTAL, VERTICAL, COMPACT, RTL, LTR, LIGHT, DARK } from '../../const';
+import { RutasSignal } from 'src/app/core/signals/rutas.signal';
 
 @Component({
   selector: 'app-configuration',
@@ -30,12 +31,20 @@ export class ConfigurationComponent implements OnInit {
   // constructor
   constructor(
     private renderer: Renderer2,
-    private themeService: ThemeLayoutService
-  ) {}
+    private themeService: ThemeLayoutService,
+    private ruta: RutasSignal
+  ) {
+    effect(() => {
+      // console.log(`Nueva ruta: ${this.ruta.currentLayout()}`);
+      this.setMenuOrientation(this.ruta.currentLayout());
+
+    }, );
+  }
 
   // life cycle event
   ngOnInit() {
     this.layout = AbleProConfig.layout;
+    // this.layout = this.ruta.currentLayout();
     this.setMenuOrientation(this.layout);
     this.layoutType = AbleProConfig.isDarkMode;
     this.SetLayouts(this.layoutType);

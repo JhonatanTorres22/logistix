@@ -10,6 +10,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { menus } from 'src/app/demo/data/menu';
 import { componentMenus } from 'src/app/demo/data/component';
 import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
+import { RutasSignal } from 'src/app/core/signals/rutas.signal';
 
 interface titleType {
   // eslint-disable-next-line
@@ -44,8 +45,8 @@ export class BreadcrumbComponent {
   constructor(
     private route: Router,
     private titleService: Title,
-    private authDomainService: AuthDomainService
-
+    private authDomainService: AuthDomainService,
+    private rutaSignal: RutasSignal
   ) {
     // this.navigations = menus;
     this.navigations = this.menu();
@@ -61,6 +62,8 @@ export class BreadcrumbComponent {
     this.route.events.subscribe((router: Event) => {
       if (router instanceof NavigationEnd) {
         const activeLink = router.url;
+        // console.log(activeLink);
+        this.rutaSignal.setCurrentRuta(activeLink)
         const breadcrumbList = this.filterNavigation(this.navigations, activeLink);
         this.navigationList = breadcrumbList;
         this.componentList = this.filterNavigation(this.ComponentNavigations, activeLink);

@@ -63,15 +63,17 @@ export class AdminComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private themeService: ThemeLayoutService,
-    private authDomainService: AuthDomainService
+    private authDomainService: AuthDomainService,
   ) {
     this.currentLayout = AbleProConfig.layout;
+    // this.currentLayout = 'compact';
     this.rtlMode = AbleProConfig.isRtlLayout;
     this.windowWidth = window.innerWidth;
   }
 
   // life cycle event
   ngOnInit() {
+    
     // this.menus = this.authDomainService.currentMenuToRole;
     // console.log(this.menus());
     // this.menus = this.authDomainService.menusToRoleOfUsers()[0].menus

@@ -29,6 +29,9 @@ const routes: Routes = [
       {
         path: 'programas-academicos',
         loadChildren: () => import('./programas-academicos/programas-academicos.module').then( (m) => m.ProgramasAcademicosModule)
+      },{
+        path: 'plan-de-estudios',
+        loadChildren: () => import('./plan-de-estudios/plan-de-estudios.module').then( (m) => m.PlanDeEstudiosModule)
       },
       {
         path: 'mensajeria',

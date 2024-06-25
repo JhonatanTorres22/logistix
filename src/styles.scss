@@ -216,6 +216,11 @@
   }
   /* MAT RADIO BUTTON END */
 
+  /* COLOR TEXT MODAL - START */
+  .mat-mdc-dialog-container .mdc-dialog__content {
+    color: unset!important;
+  }
+  /* COLOR TEXT MODAL - END */
 /* CUSTOM STYLES END */
 
 :root {

@@ -14,5 +14,6 @@ export class UiButtonComponent {
   @Input() color: '';
   @Input() label: '';
   @Input() disabled: boolean = false;
+  @Input() icon: string;
 
 }

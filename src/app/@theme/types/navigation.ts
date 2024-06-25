@@ -13,7 +13,7 @@ export interface NavigationItem {
   external?: boolean;
   target?: boolean;
   breadcrumbs?: boolean;
-
+  layout?: string;
   children?: Navigation[];
 }
 
