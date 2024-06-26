@@ -1,3 +1,4 @@
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { FacultadCrearDTO, FacultadDTO, FacultadEliminarDTO } from "../../infraestructure/dto/facultad.dto";
 import { Facultad, FacultadCrear, FacultadEliminar } from "../models/facultad.model";
 
@@ -17,7 +18,7 @@ export class FacultadMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
             
         }
     }
@@ -26,14 +27,14 @@ export class FacultadMapper {
         return {
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static formDomainToApiEliminar( param: FacultadEliminar ): FacultadEliminarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario:RolUserId.currentIdRolUser
         }
     }
 }

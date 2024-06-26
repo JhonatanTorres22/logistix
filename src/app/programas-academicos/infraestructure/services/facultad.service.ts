@@ -49,13 +49,15 @@ export class FacultadService {
 
     editarFacultad = ( facutladEditar: Facultad ): Observable<void> => {
         const facultadEditAPI = FacultadMapper.fromDomainToApi( facutladEditar )
-
+        console.log(facultadEditAPI);
+        
         return this.http.put<void>( this.urlApi + this.urlEditarFacultad, facultadEditAPI );
     }
 
     eliminarFacultad = ( facultadEliminar: FacultadEliminar ): Observable<void> => {
         const facultadEliminarAPI = FacultadMapper.formDomainToApiEliminar( facultadEliminar );
-
+        console.log(facultadEliminarAPI);
+        
         return this.http.delete<void>( this.urlApi + this.urlEliminarFacultad, { body: facultadEliminarAPI});
     }
     
