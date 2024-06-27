@@ -153,6 +153,9 @@ export class ProgramasAcademicosComponent implements OnInit {
           next: (data) => {
             console.log(data);
             this.alertService.sweetAlert('success', 'Correcto', 'Programas agregados correctamente');
+            this.programaSignal.setSelectProgramaDefault();
+            this.localSignal.setSelectLocalesDefault();
+            this.directorSignal.setSelectDirectorDefault();
             this.obtener( this.semestreSelect().id );
           }, error: (error) => {
             console.log(error);

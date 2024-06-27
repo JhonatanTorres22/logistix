@@ -9,7 +9,8 @@ import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.s
 import { LocalAddComponent } from '../local-add/local-add.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 
 @Component({
   selector: 'app-local-list',
@@ -21,7 +22,8 @@ import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-acade
 export class LocalListComponent {
 
   localesAsignados:  AsignacionLocal[] = [];
-
+  programaConLocalesAsignados:  AsignacionLocal[] = [];
+  asignaciones = this.asignacionSignal.asignaciones;
   showFormAgregarPrograma: boolean = false;
   localEdit: Local;
   locales: WritableSignal<Local[]>= this.signal.localList;
@@ -37,6 +39,7 @@ export class LocalListComponent {
     usuarioId: 0
 };
 constructor(
+  private asignacionSignal: AsignacionSignal,
   @Inject(MAT_DIALOG_DATA) public data: ListarLocalesAsignados,
   private signal: LocalSignal,
   private repository: LocalRepository,
@@ -51,7 +54,8 @@ constructor(
     this.obtenerLocales();
     if (this.data && this.data !== undefined) {
       this.localesAsignados = this.data.locales;
-      // console.log(this.localesAsignados,'locales asignados');
+      this.programaConLocalesAsignados = this.data.programaConLocales;
+      console.log(this.localesAsignados,'locales asignados');
   } 
   }
 
@@ -113,6 +117,9 @@ constructor(
   localAsignado(local: Local): boolean {
     return this.localesAsignados.some(asignado => asignado.idLocal === local.id);
   }
+  programaConLocalAsignado(id: number): boolean {
+    return this.programaConLocalesAsignados.some(local => local.idLocal === id);
+}
 
   
   openShowFormEditarPrograma = ( programa: Local, event?: EventEmitter<string> | string) => {

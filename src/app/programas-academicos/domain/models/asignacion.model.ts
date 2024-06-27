@@ -42,5 +42,6 @@ export interface AsignacionEliminar {
 }
 
 export interface ListarLocalesAsignados {
-    locales: AsignacionLocal[]
+    locales: AsignacionLocal[];
+    programaConLocales:AsignacionLocal[]
 }

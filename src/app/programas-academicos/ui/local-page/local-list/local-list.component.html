@@ -2,6 +2,7 @@
     <local-add (cerrarFormulario)="openShowFormCrearPrograma( $event )" [localEdit]="localEdit"></local-add>
 }
 @else {
+    {{asignaciones() | json}}
     <app-card cardTitle="Locales" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
         <ng-template #headerOptionsTemplate>
             <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
@@ -22,27 +23,28 @@
                         @for (local of locales(); track local) {
 
                             <div class="w-full border-1 border-gray-400 border-round text-left my-2 px-2"  >
-                                    
-                                <mat-checkbox class="flex w-full" [disabled]="localAsignado(local)" (change)="onLocalChecked(local,$event.checked)" >
-                                    <div class="flex justify-content-between">
+                                <div class="flex justify-content-between">
+                                    <mat-checkbox [disabled]="programaConLocalAsignado(local.id)" (change)="onLocalChecked(local, $event.checked)">
                                         <div class="m-3 w-full">
-                                            <div class="f-w-600"> {{ local.nombre }} </div>
-                                            <div class="f-12"> {{ local.definicion }} </div>
+                                            <div class="f-w-600">{{ local.nombre }}</div>
+                                            <div class="f-12">{{ local.definicion }}</div>
                                         </div>
-
-                                        <div class="top-0 right-0 m-2">
-                                            <button mat-icon-button [matMenuTriggerFor]="optionPrograma" aria-label="Example icon-button with a menu">
-                                                <mat-icon>more_vert</mat-icon>
+                                    </mat-checkbox>
+                                    <div class="top-0 right-0 m-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="optionPrograma" aria-label="Example icon-button with a menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #optionPrograma="matMenu">
+                                            <button mat-menu-item (click)="openShowFormEditarPrograma(local, 'Open')" class="text-primary">
+                                                <i class="ti ti-edit f-18 text-primary"></i> <span class="f-w-600">Editar</span>
                                             </button>
-                                            <mat-menu #optionPrograma="matMenu">
-                                                <button mat-menu-item (click)="openShowFormEditarPrograma(local, 'Open')" class="text-primary"><i class="ti ti-edit f-18 text-primary"></i> <span class="f-w-600">Editar</span></button>
-                                                <button mat-menu-item (click)="eliminarProgramaConfirm(local)" class="text-red-500"><i class="ti ti-trash f-18 text-red-500"></i> <span class="f-w-600">Eliminar</span></button>
-                                        
-                                            </mat-menu>
-                                        </div>
-                                        
+                                            <button mat-menu-item *ngIf="!localAsignado(local)" (click)="eliminarProgramaConfirm(local)" class="text-red-500">
+                                                <i class="ti ti-trash f-18 text-red-500"></i> <span class="f-w-600">Eliminar</span>
+                                            </button>
+                                        </mat-menu>
                                     </div>
-                                </mat-checkbox>
+                                </div>
+                                
                             </div>
                         }
       
