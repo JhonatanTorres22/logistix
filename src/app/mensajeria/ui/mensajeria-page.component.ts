@@ -8,7 +8,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MAX_WIDTH_1024PX, MAX_WIDTH_1399PX, MIN_WIDTH_1025PX, MIN_WIDTH_1400PX } from 'src/app/@theme/const';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaContentComponent } from './mensajeria-content/mensajeria-content.component';
-import { MensajeriaSignal } from '../signals/mensajeria.signal';
+import { MensajeriaSignal } from '../domain/signals/mensajeria.signal';
 
 @Component({
   selector: 'app-mensajeria-page',

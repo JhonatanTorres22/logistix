@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthDomainService } from '../../auth/domain/services/auth-domain.service';
 import { Authenticated } from 'src/app/auth/domain/models/auth.model';
 import { MatDialog } from '@angular/material/dialog';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -25,6 +26,7 @@ export class AuthenticationService {
     private router: Router,
     private http: HttpClient,
     private authDomainService: AuthDomainService,
+    private mensajeriaSignal: MensajeriaSignal,
     private dialogs: MatDialog,
   ) {
 
@@ -33,6 +35,9 @@ export class AuthenticationService {
     authDomainService.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
     // const expToken = JSON.parse(localStorage.getItem('currentUserData')!).exp;
     authDomainService.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
+    
+    this.mensajeriaSignal.setMensajeriaDataAsignacion( JSON.parse( localStorage.getItem('mensajeriaData')!))
+
     const timer = new Date( new Date( this.authDomainService.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
     this.authDomainService.setCurrentTimer(timer)
     this.expiryTimer = setInterval(() => {
