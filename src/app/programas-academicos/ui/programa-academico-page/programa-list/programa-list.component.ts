@@ -14,6 +14,7 @@ import { Facultad } from 'src/app/programas-academicos/domain/models/facultad.mo
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { reject } from 'lodash';
 import { FacultadRepository } from 'src/app/programas-academicos/domain/repositories/facultad.repository';
+import { AsignacionPrograma } from 'src/app/programas-academicos/domain/models/asignacion.model';
 
 @Component({
   selector: 'programa-list',
@@ -24,12 +25,14 @@ import { FacultadRepository } from 'src/app/programas-academicos/domain/reposito
 })
 export class ProgramaAcademicoListComponent {
 
-
+  listaProgramasAsignadas: AsignacionPrograma[] = [];
+  programaSeleccionado = this.programaSignal.programaSelect;
   showFormAgregarPrograma: boolean = false;
   programaEdit: ProgramaFacultad;
   programas: WritableSignal<ProgramaFacultad[]>= this.programaSignal.programasList;
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
   idFacultad: WritableSignal<number> = this.facultadSignal.idFacultad;
+  asignaciones = this.asignacionSignal.asignaciones
   // programaes: 
   programaSelect: ProgramaFacultad = {
     id: 0,
@@ -52,9 +55,19 @@ export class ProgramaAcademicoListComponent {
   }
   ngOnInit(): void {
     // this.facultadSelect().id == 0 ? this.asi
-    this.obtenerProgramas()
+    this.obtenerProgramas();
+    this.programasAsignadas()
   }
 
+  limpiarDatosProgramaAcademico = () => {
+    this.programaEdit = {
+      id: 0,
+      // idFacultad: 0,
+      definicion: '',
+      nombre: '',
+      usuarioId: 0
+    }
+  }
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
 
     console.log(event);
@@ -62,59 +75,32 @@ export class ProgramaAcademicoListComponent {
       switch( event ) {
         case 'Add': {
           console.log('Programa Creado');
-          this.programaEdit = {
-            id: 0,
-            // idFacultad: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosProgramaAcademico();
           this.showFormAgregarPrograma = false;
          this.obtenerProgramas();
         } break;
 
         case 'Edit': {
           console.log('Programa Editado');
-          this.programaEdit = {
-            id: 0,
-            // idFacultad: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosProgramaAcademico();
           this.showFormAgregarPrograma = false;
           this.obtenerProgramas();
         } break;
 
         case 'Open': {
           this.showFormAgregarPrograma = true;
-          this.programaEdit = {
-            id: 0,
-            // idFacultad: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosProgramaAcademico();
         } break;
 
         case 'Cancelar': {
           console.log('Cancelar');
-          this.programaEdit = {
-            id: 0,
-            // idFacultad: 0,
-            definicion: '',
-            nombre: '',
-            usuarioId: 0
-          };
+          this.limpiarDatosProgramaAcademico();
           this.showFormAgregarPrograma = false;
         }
       }
   }
 
   obtenerProgramas = () => {
-    // console.log(this.idFacultad());
-    // console.log(this.facultadSelect().id);
-
     this.facultadSelectVerificar().then( suscess => {
       this.programaRepository.obtenerProgramas( this.facultadSelect().id ).subscribe({
         next: ( programas ) => {
@@ -148,7 +134,6 @@ export class ProgramaAcademicoListComponent {
       this.obtenerFacultades().then( isSuccss => {
         if( !isSuccss ) return
 
-        console.log(this.facultadSignal.facultadesList());
       
         const facultadSelectReconstruida = this.facultadSignal.facultadesList().filter( facultad => facultad.id == this.idFacultad() );
         this.facultadSignal.setSelectFacultad( facultadSelectReconstruida[0] );
@@ -234,12 +219,10 @@ export class ProgramaAcademicoListComponent {
       next: ( data ) => {
         console.log( data );
         this.alertService.sweetAlert('success', '¡CORRECTO!', 'Programa académico eliminado correctamente');
-        this.programaSelect = {
-          id: 0,
-          definicion: '',
-          nombre: '',
-          usuarioId: 0
-        };
+        this.limpiarDatosProgramaAcademico();
+        if(programa.id === this.programaSeleccionado().id){
+          this.programaSignal.setSelectPrograma( this.programaSelect )
+        }
         this.obtenerProgramas();
       }, error: ( error ) => {
         console.log( error );
@@ -261,5 +244,20 @@ export class ProgramaAcademicoListComponent {
     
     })
   }
+ /* MOSTRAR LA LISTA DE PROGRAMAS YA ASIGNADAS PARA BLOQUEARLAS */
+  programasAsignadas(){
+    this.listaProgramasAsignadas = []
+    this.asignaciones().forEach(facultad => {
+      facultad.programas.forEach(programa => {
+        this.listaProgramasAsignadas.push(programa)
+      })
+    })  
+  }
+
+  deshabilitarProgramaAsignado ( programa:ProgramaFacultad): boolean {
+    this.limpiarDatosProgramaAcademico();
+    return this.listaProgramasAsignadas.some(asignado => asignado.idPrograma === programa.id)
+  }
+
 
 }

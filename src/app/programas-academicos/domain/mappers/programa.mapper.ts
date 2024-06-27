@@ -1,3 +1,4 @@
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { ProgramaCrearDTO, ProgramaDTO, ProgramaEditarDTO, ProgramaEliminarDTO, ProgramaFacultadDTO } from "../../infraestructure/dto/programa.dto";
 import { Programa, ProgramaCrear, ProgramaEditar, ProgramaEliminar, ProgramaFacultad } from "../models/programa.model";
 
@@ -8,7 +9,7 @@ export class ProgramaMapper {
             codigoFacultad: param.idFacultad,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -27,7 +28,7 @@ export class ProgramaMapper {
             codigoFacultad: param.idFacultad,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -36,14 +37,14 @@ export class ProgramaMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiEliminar ( param: ProgramaEliminar ): ProgramaEliminarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -52,7 +53,7 @@ export class ProgramaMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 

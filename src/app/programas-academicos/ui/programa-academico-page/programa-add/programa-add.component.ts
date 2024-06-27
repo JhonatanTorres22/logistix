@@ -54,7 +54,7 @@ export class ProgramaAcademicoAddComponent {
     private validation: ProgramaValidations,
     private alertService: AlertService,
     private repository: ProgramaRepository,
-    private signal: ProgramaSignal,
+    private programaSignal: ProgramaSignal,
     private facultadSignal: FacultadSignal,
     private datePipe: DatePipe
   ) {
@@ -167,7 +167,7 @@ export class ProgramaAcademicoAddComponent {
     this.repository.editarPrograma( editPrograma ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
-
+        this.programaSignal.setSelectPrograma(editPrograma)
         this.programaEdit = {
           id: 0,
           definicion: '',
