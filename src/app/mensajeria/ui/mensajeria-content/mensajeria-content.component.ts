@@ -1,10 +1,14 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, WritableSignal } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MailData } from 'src/app/fake-data/mail';
-import { MensajeriaSignal } from '../../signals/mensajeria.signal';
+import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
+import { MensajeriaMessagesComponent } from '../mensajeria-messages/mensajeria-messages.component';
+import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-compose.component';
+import { MensajeriaDataAsignacion, MensajeriaSelectMensaje } from '../../domain/models/mensajeria.model';
+import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
 
 export interface PeriodicElement {
   images: string;
@@ -21,7 +25,13 @@ const ELEMENT_DATA: PeriodicElement[] = MailData;
 @Component({
   selector: 'mensajeria-content',
   standalone: true,
-  imports: [ CommonModule, SharedModule],
+  imports: [ 
+    CommonModule,
+    SharedModule,
+    MensajeriaMessagesComponent,
+    MensajeriaComposeComponent,
+    MensajeriaNoMessagesComponent
+  ],
   templateUrl: './mensajeria-content.component.html',
   styleUrl: './mensajeria-content.component.scss'
 })
@@ -42,10 +52,11 @@ export class MensajeriaContentComponent {
   toggle = this.signal.toggle;
 
   displayedColumns: string[] = ['name']; //'select', 'text', 'symbol'
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<any>(this.signal.mensajesList());
   selection = new SelectionModel<PeriodicElement>(true, []);
-
-
+  mensajeriaData: WritableSignal<MensajeriaDataAsignacion> = this.signal.mensajeriaInsertarDataAsignacion;
+  selectMensaje = this.signal.selectMensaje;
   constructor( private signal: MensajeriaSignal) {}
 
   // public method
@@ -71,9 +82,11 @@ export class MensajeriaContentComponent {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'}`;
   }
 
-  detailsContentShow() {
-    this.titleContent = !this.titleContent;
-    this.detailsContent = !this.detailsContent;
+  detailsContentShow( mail: MensajeriaSelectMensaje) {
+    console.log('Ver mensaje');
+    this.signal.setSeleccionarMensaje( mail )
+    // this.titleContent = !this.titleContent;
+    // this.detailsContent = !this.detailsContent;
   }
 
   backToMail() {

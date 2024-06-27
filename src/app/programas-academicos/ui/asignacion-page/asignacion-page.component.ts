@@ -29,6 +29,11 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { Asignacion, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
 import { LocalListComponent } from '../local-page/local-list/local-list.component';
 import { ThisReceiver } from '@angular/compiler';
+import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { MensajeriaDataAsignacion, MensajeriaInsertar } from 'src/app/mensajeria/domain/models/mensajeria.model';
+import { RolUserId } from 'src/app/core/mappers/rolUserId';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'asignacion-page',
@@ -46,7 +51,8 @@ import { ThisReceiver } from '@angular/compiler';
     DirectorPageComponent,
     AsignacionPageComponent,
     LocalListComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiButtonIconComponent
   ],
   templateUrl: './asignacion-page.component.html',
   styleUrl: './asignacion-page.component.scss'
@@ -81,7 +87,8 @@ export class AsignacionPageComponent implements OnInit {
         private asignacionSignal: AsignacionSignal,
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
-        
+        private mensajeriaSignal: MensajeriaSignal,
+        private router: Router
     ) {
       // effect(() => {
       //   console.log(`New semestre selected: ${this.semestreSelect()}`);
@@ -269,8 +276,27 @@ export class AsignacionPageComponent implements OnInit {
         this.alertService.showAlert('Ocurrió un error', 'error');
 
       }
-    })
+    });
     
+  }
+
+  enviarMensaje = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
+
+    const semestreData: SemestreAcademico = this.semestreSelect();
+    const asignacionData: Asignacion = {
+      ...asignacion,
+      programas: [programa],
+    }
+
+    const mensajeriaDataAsignacion: MensajeriaDataAsignacion = {
+      asignacion: asignacionData,
+      semestre: semestreData,
+      tipoMensaje: 'DAR ALTA A DIRECTOR DE ESCUELA'
+    }
+
+    localStorage.setItem('mensajeriaData', JSON.stringify(mensajeriaDataAsignacion));
+    this.mensajeriaSignal.setMensajeriaDataAsignacion( mensajeriaDataAsignacion );
+    this.router.navigate(['/mensajeria']);
   }
 
 }
