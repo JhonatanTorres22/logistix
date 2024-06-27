@@ -52,7 +52,18 @@ constructor(
     if (this.data && this.data !== undefined) {
       this.localesAsignados = this.data.locales;
       // console.log(this.localesAsignados,'locales asignados');
-  }  
+  } 
+  }
+
+  limpiarDatosLocales = () => {
+    this.localEdit = {
+      id: 0,
+      nombre: '',
+      definicion: '',
+      latitud: 0,
+      longitud: 0,
+      usuarioId: 0
+    };
   }
 
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
@@ -61,54 +72,27 @@ constructor(
       switch( event ) {
         case 'Add': {
           console.log('Programa Creado');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
          this.obtenerLocales();
         } break;
 
         case 'Edit': {
           console.log('Programa Editado');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
           this.obtenerLocales();
+          this.localesChecked.length = 0;
         } break;
 
         case 'Open': {
           this.showFormAgregarPrograma = true;
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
         } break;
 
         case 'Cancelar': {
           console.log('Cancelar');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
         }
       }
@@ -174,9 +158,9 @@ constructor(
   }
 
 
-  eliminarPrograma = ( local: LocalEliminar ) => {
+  eliminarPrograma = ( locales: LocalEliminar ) => {
     const localEliminar = {
-      id: local.id,
+      id: locales.id,
       usuarioId: 1
     }
 
@@ -185,14 +169,9 @@ constructor(
         console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'Local eliminado correctamente')
         this.localesChecked.length = 0;
-        this.localesChecked.forEach(local => {
-          local.id = 0;
-          local.nombre = '';
-          local.definicion = '';
-          local.latitud = 0;
-          local.longitud = 0;
-          local.usuarioId = 0;
-        });
+        const localesActualizados = this.localesSelect().filter(local => local.id !== locales.id);
+        this.signal.setSelectLocales(localesActualizados);
+        console.log(localesActualizados,'locales actualizados');
         this.obtenerLocales();
       }, error: ( error ) => {
         console.log( error );

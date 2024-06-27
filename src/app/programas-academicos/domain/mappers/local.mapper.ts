@@ -1,3 +1,4 @@
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { LocalCrearDTO, LocalDTO, LocalEliminarDTO } from "../../infraestructure/dto/local.dto";
 import { Local, LocalCrear, LocalEliminar } from "../models/local.model";
 
@@ -10,7 +11,7 @@ export class LocalMapper {
             definicion: param.definicion,
             latitud: param.latitud,
             longitud: param.longitud,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -33,14 +34,14 @@ export class LocalMapper {
              definicion: param.definicion,
              latitud: param.latitud,
              longitud: param.longitud,
-             usuario: param.usuarioId
+             usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiEliminar( param: LocalEliminar ): LocalEliminarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 

@@ -167,7 +167,10 @@ export class ProgramaAcademicoAddComponent {
     this.repository.editarPrograma( editPrograma ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
-        this.programaSignal.setSelectPrograma(editPrograma)
+        const selectedPrograma = this.programaSignal.programaSelect();
+        if (selectedPrograma.id === this.programaEdit.id) {
+            this.programaSignal.setSelectPrograma(editPrograma);
+        }
         this.programaEdit = {
           id: 0,
           definicion: '',

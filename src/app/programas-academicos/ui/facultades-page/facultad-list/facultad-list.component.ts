@@ -10,6 +10,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { UiInputFechaComponent } from 'src/app/core/components/ui-input-fecha/ui-input-fecha.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 
 @Component({
   selector: 'facultad-list',
@@ -33,6 +34,7 @@ export class FacultadListComponent implements OnInit{
 };
 
   constructor(
+    private programaSignal: ProgramaSignal,
     private facultadRepository: FacultadRepository,
     private facultadSignal: FacultadSignal,
     private alertService: AlertService,
@@ -67,10 +69,11 @@ export class FacultadListComponent implements OnInit{
         } break;
 
         case 'Edit': {
-          console.log('Facultad Editado');
-          this.limpiarDatosFacultad()
-          this.showFormAgregarFacultad = false;
+          console.log('Facultad Editadooooooooo');
           this.obtenerFacultades();
+          this.limpiarDatosFacultad();
+          this.facultadSelect = this.facultadEdit
+          this.showFormAgregarFacultad = false;
         } break;
 
         case 'Open': {
@@ -175,6 +178,7 @@ export class FacultadListComponent implements OnInit{
       if( !isConfirm ) return;
 
       this.facultadSignal.setSelectFacultad(  this.facultadSelect );
+      this.programaSignal.setSelectProgramaDefault()
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     

@@ -27,7 +27,7 @@ export class LocalAddComponent {
   @Input() localEdit: Local;
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
   localSelect: WritableSignal<Local> = this.signal.localSelect
-
+  localesSelect: WritableSignal<Local[]> = this.signal.localesSelect;
 
   maxLengthNombre: number;
   minLengthNombre: number;
@@ -182,11 +182,18 @@ export class LocalAddComponent {
     })
   }
 
-  editLocal = ( editLocal: Local ) => {
-    this.repository.editar( editLocal ).subscribe({
-      next: ( data ) => {
+  editLocal = (editLocal: Local) => {
+    this.repository.editar(editLocal).subscribe({
+      next: (data) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
 
+        const localIndex = this.localesSelect().findIndex(local => local.id === editLocal.id);
+        if (localIndex !== -1) {
+          // Actualizar el objeto en localesSelect()
+          this.localesSelect()[localIndex] = editLocal;
+          console.log(this.localesSelect(), '****');
+        } 
+        // Reinicia localEdit
         this.localEdit = {
           id: 0,
           definicion: '',
@@ -195,14 +202,15 @@ export class LocalAddComponent {
           longitud: 0,
           usuarioId: 0,
         };
-        this.cerrarFormulario.emit( 'Edit' );
-      }, error: ( error ) => {
-        console.log( error );
+        // Cierra el formulario
+        this.cerrarFormulario.emit('Edit');
+      },
+      error: (error) => {
+        console.log(error);
         this.alertService.sweetAlert('error', 'Error', error);
-        
       }
-    })
-  }
+    });
+  };
 
   pathValueFormLocalEdit = () => {
 

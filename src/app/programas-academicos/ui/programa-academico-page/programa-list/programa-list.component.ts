@@ -80,11 +80,12 @@ export class ProgramaAcademicoListComponent {
          this.obtenerProgramas();
         } break;
 
-        case 'Edit': {
-          console.log('Programa Editado');
-          this.limpiarDatosProgramaAcademico();
-          this.showFormAgregarPrograma = false;
-          this.obtenerProgramas();
+        case 'Edit': {       
+            console.log('Programa Editado');
+            this.limpiarDatosProgramaAcademico();
+            this.showFormAgregarPrograma = false;
+            this.obtenerProgramas();
+            this.programaSelect = this.programaEdit
         } break;
 
         case 'Open': {
