@@ -23,7 +23,7 @@
                                 <div class="flex align-item-center justify-content-between f-12">
                                   <i class="ti ti-inbox"></i> Entrada
                                 </div>
-                                <div class="avatar avatar-xs">4</div>
+                                <div class="avatar avatar-xs bg-primary-300 text-gray-900">{{ mensajesRecibidosTotal() }}</div>
                               </ng-template>
                             </mat-tab>
                             <mat-tab>
@@ -31,6 +31,7 @@
                                 <div class="flex align-item-center justify-content-between f-12">
                                   <i class="ti ti-send"></i> Enviados
                                 </div>
+                                <div class="avatar avatar-xs">{{ mensajesEnviadosTotal() }}</div>
                               </ng-template>
                             </mat-tab>
                             <mat-tab>
@@ -38,6 +39,7 @@
                                 <div class="flex align-item-center justify-content-between f-12">
                                   <i class="ti ti-file-text"></i> Archivados
                                 </div>
+                                <div class="avatar avatar-xs">{{ mensajesRecibidosTotal() }}</div>
                               </ng-template>
                             </mat-tab>
                   
@@ -88,10 +90,16 @@
                     </div>
                     <!-- TOOLBAR END -->
 
-                    @if (selectedTabIndex === 0) {
+                    <!-- @if (selectedTabIndex === 0) {
 
-                        <mensajeria-content class="flex"></mensajeria-content>
+                        <mensajeria-content class="flex" bandeja="recibidos"></mensajeria-content>
                         
+                    } -->
+
+                    @switch ( selectedTabIndex ) {
+                      @case ( 0 ) { <mensajeria-content class="flex" bandeja="Recibidos"></mensajeria-content> }
+                      @case ( 1 ) { <mensajeria-content class="flex" bandeja="Enviados"></mensajeria-content> }
+                      @case ( 2 ) { <mensajeria-content class="flex" bandeja="Archivados"></mensajeria-content> }
                     }
                   </mat-drawer-content>
                 <!-- CONTAINER END -->

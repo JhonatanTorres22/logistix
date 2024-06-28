@@ -7,7 +7,24 @@ export interface Mensajeria {
 }
 
 
-export type TipoMensaje = 'DAR ALTA A DIRECTOR DE ESCUELA' | 'VALIDAR PLAN DE ESTUDIOS' | 'NO SELECCIONADO'
+export type TipoMensaje = 'DAR ALTA A DIRECTOR DE ESCUELA' | 'VALIDAR PLAN DE ESTUDIOS' | 'NO SELECCIONADO';
+
+export interface MensajeriaRecibidos {
+    idMensaje: number,
+    idTipoMensaje: number,
+    tipoMensaje: TipoMensaje,
+    asunto: string,
+    mensajePreview: string,
+    rolEmisor: string,
+    emisor: string,
+    receptor: string,
+    fecha: string,
+}
+
+export type MensajeriaEnviados = MensajeriaRecibidos;
+export type MensajeriaArchivados = MensajeriaRecibidos;
+
+
 
 export interface MensajeriaInsertar {
     tipoMensaje: number,

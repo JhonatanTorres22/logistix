@@ -1,5 +1,5 @@
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
-import { MensajeriaInsertar, MensajeriaSelectMensaje, TipoMensaje } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaEnviados, MensajeriaInsertar, MensajeriaRecibidos, MensajeriaSelectMensaje, TipoMensaje } from "../models/mensajeria.model";
 import { AsignacionPrograma, Asignacion } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 
@@ -54,6 +54,10 @@ export const selectMensaje: MensajeriaSelectMensaje = {
     mensaje: 'sasdasdasd',
     fecha: '12/06/2024 08:23:00'
 }
+
+export const mensajesRecibidosDefault: MensajeriaRecibidos[] = [];
+export const mensajesEnviadosDefault: MensajeriaEnviados[] = [];
+export const mensajesArchivadosDefault: MensajeriaArchivados[] = [];
 
 export const mensajesEntrada = [
     { 
@@ -117,4 +121,5 @@ export const mensajesEntrada = [
         fecha: '23 Feb 24 08:23 AM',
         images: 'assets/images/user/avatar-4.jpg',
     },
-    ]
+]
+
