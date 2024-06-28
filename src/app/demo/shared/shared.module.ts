@@ -51,6 +51,7 @@ import { CardComponent } from 'src/app/@theme/components/card/card.component';
 import { SearchFilterPipe } from 'src/app/@theme/services/search-filter.pipe';
 import { DisabledControlDirective } from 'src/app/core/directives/disabled-control.directive';
 import { UpperCaseDirective } from 'src/app/core/directives/upper-case.directive';
+import { RemoveHtmlDirective } from 'src/app/core/directives/remove-html.directive';
 
 const MaterialModules = [
   MatToolbarModule,
@@ -92,7 +93,8 @@ const MaterialModules = [
 
 const Directives = [
   DisabledControlDirective,
-  UpperCaseDirective
+  UpperCaseDirective,
+  RemoveHtmlDirective
 
 
 ]

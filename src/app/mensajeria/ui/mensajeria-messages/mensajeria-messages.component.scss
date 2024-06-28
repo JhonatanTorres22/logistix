@@ -1,0 +1,137 @@
+.details-content {
+    @media (min-width: 576px) {
+      .title {
+        display: flex;
+      }
+    }
+  
+    .avatar {
+      &:hover {
+        background: var(--accent-200);
+      }
+    }
+  
+    .title {
+      ul {
+        &:first-child {
+          margin-right: auto;
+  
+          ::ng-deep.able-pro-rtl & {
+            margin-left: auto;
+            margin-right: 0px !important;
+          }
+  
+          li {
+            vertical-align: bottom;
+          }
+        }
+  
+        &:last-child {
+          margin-left: auto;
+  
+          ::ng-deep.able-pro-rtl & {
+            margin-right: auto;
+            margin-left: 0px !important;
+          }
+        }
+      }
+    }
+  
+    .mail-details {
+      .indent-text {
+        text-indent: 50px;
+      }
+  
+      hr {
+        opacity: 0.04;
+      }
+    }
+  
+    .user-details {
+      background: var(--accent-100);
+      padding: 15px;
+      margin: 15px 0px;
+  
+      .text-header {
+        color: var(--accent-900);
+      }
+    }
+  
+    .send-mail {
+      background: var(--primary-50);
+      border-radius: 20px;
+  
+      &:not(:last-child) {
+        margin-right: 10px;
+  
+        ::ng-deep.able-pro-rtl & {
+          margin-left: 10px;
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+
+  .pc-icon-checkbox {
+    position: relative;
+    padding: 0;
+    margin: 0 10px;
+  
+    .pc-icon-uncheck {
+      display: inline-block;
+      opacity: 0.35;
+    }
+  
+    .pc-icon-check {
+      display: none;
+    }
+  
+    .form-check-input {
+      position: absolute;
+      z-index: 9;
+      margin-left: 0;
+      left: 6px;
+      top: 6px;
+      opacity: 0;
+      cursor: pointer;
+      font-size: 20px;
+  
+      &:checked {
+        ~ .pc-icon-uncheck {
+          display: none;
+        }
+  
+        ~ .pc-icon-check {
+          display: inline-block;
+        }
+      }
+    }
+  
+    .material-icons-two-tone {
+      background-color: #131920;
+      -webkit-text-fill-color: transparent;
+      vertical-align: text-bottom;
+      -webkit-background-clip: text;
+  
+      &.text-warning {
+        background-color: var(--warning-500);
+      }
+  
+      &.text-secondary {
+        background-color: var(--accent-600);
+      }
+  
+      ::ng-deep.dark & {
+        background-color: var(--accent-600) !important;
+  
+        &.text-warning {
+          background-color: var(--warning-500) !important;
+        }
+  
+        &.text-secondary {
+          background-color: var(--accent-600) !important;
+        }
+      }
+    }
+  }
+  

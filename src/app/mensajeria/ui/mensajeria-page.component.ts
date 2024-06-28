@@ -8,7 +8,9 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MAX_WIDTH_1024PX, MAX_WIDTH_1399PX, MIN_WIDTH_1025PX, MIN_WIDTH_1400PX } from 'src/app/@theme/const';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaContentComponent } from './mensajeria-content/mensajeria-content.component';
-import { MensajeriaSignal } from '../signals/mensajeria.signal';
+import { MensajeriaSignal } from '../domain/signals/mensajeria.signal';
+import { MensajeriaRepository } from '../domain/repositories/mensajeria.repository';
+import { AlertService } from 'src/app/demo/services/alert.service';
 
 @Component({
   selector: 'app-mensajeria-page',
@@ -26,17 +28,25 @@ export class MensajeriaPageComponent {
   selectedTabIndex = 0;
   mailListHight = true;
 
+  mensajesRecibidosTotal = this.signal.mensajesRecibidosTotal;
+  mensajesEnviadosTotal = this.signal.mensajesEnviadosTotal;
+  mensajesArchivadosTotal = this.signal.mensajesArchivadosTotal;
   // constructor
   constructor(
     private breakpointObserver: BreakpointObserver,
     public dialog: MatDialog,
-    private signal: MensajeriaSignal
+    private signal: MensajeriaSignal,
+    private repository: MensajeriaRepository,
+    private alert: AlertService
   ) {
 
   }
 
   // life cycle event
   ngOnInit() {
+    this.obtenerMensajesRecibidos();
+    this.obtenerMensajesEnviados();
+    
     this.breakpointObserver.observe([MIN_WIDTH_1025PX, MAX_WIDTH_1024PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_1024PX]) {
         this.modeValue = 'over';
@@ -58,6 +68,8 @@ export class MensajeriaPageComponent {
   // public method
   tabChanged(index: number) {
     this.selectedTabIndex = index;
+    console.log(index);
+    
   }
 
   onClick() {
@@ -73,4 +85,46 @@ export class MensajeriaPageComponent {
   toggle() {
     this.signal.setToggle();
   }
+
+
+
+  obtenerMensajesRecibidos = () => {
+    this.repository.obtenerMensajesRecibidos().subscribe({
+      next: ( mensajesRecibidos ) => {
+        this.signal.setMensajesRecibidos( mensajesRecibidos );
+        // this.dataSource = new MatTableDataSource<MensajeriaRecibidos>(this.mensajesRecibidos());
+        this.alert.showAlert('Listando mensajes...', 'success')
+      }, error: ( error ) => {
+        console.log(error);
+        this.alert.showAlert('Ocurrio un error al obtener los mensajes: ' + error, 'error')
+      }
+    });
+  }
+
+  obtenerMensajesEnviados = () => {
+    this.repository.obtenerMensajesEnviados().subscribe({
+      next: ( mensajesEnviados ) => {
+        this.signal.setMensajesEnviados( mensajesEnviados );
+        console.log(mensajesEnviados);
+        
+      }, error: ( error ) => {
+        console.log(error);
+        this.alert.showAlert('Ocurrio un error al obtener los mensajes: ' + error, 'error')
+      }
+    })
+  }
+
+  obtenerMensajesArchivados = () => {
+    this.repository.obtenerMensajesArchivados().subscribe({
+      next: ( mensajesEnviados ) => {
+        this.signal.setMensajesEnviados( mensajesEnviados );
+        console.log(mensajesEnviados);
+        
+      }, error: ( error ) => {
+        console.log(error);
+        this.alert.showAlert('Ocurrio un error al obtener los mensajes: ' + error, 'error')
+      }
+    });
+  }
+
 }
