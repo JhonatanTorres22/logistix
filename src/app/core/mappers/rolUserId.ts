@@ -3,3 +3,4 @@ import { AuthDomainService } from "src/app/auth/domain/services/auth-domain.serv
 export class RolUserId {
     static currentIdRolUser: number = JSON.parse(localStorage.getItem('currentRol')!).id;
 }
+

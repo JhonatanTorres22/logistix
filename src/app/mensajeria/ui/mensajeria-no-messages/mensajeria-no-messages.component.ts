@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 
 @Component({
@@ -10,5 +10,8 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
   styleUrl: './mensajeria-no-messages.component.scss'
 })
 export class MensajeriaNoMessagesComponent {
+
+  @Input() text: string = 'Seleccione un mensaje';
+  @Input() icon: string = 'ti ti-mail-opened f-80';
 
 }

@@ -1,4 +1,6 @@
-<div class="text-center max-w-max m-auto h-20rem align-content-center text-gray-600">
-    <i class="ti ti-mail-opened f-80"></i>
-    <h4 class="f-20">Seleccione un mensaje</h4>
-</div>
+<app-card [showHeader]="false">
+    <div  class="text-center max-w-max m-auto h-30rem align-content-center text-gray-600">
+        <i class="{{ icon }}"></i>
+        <h4 class="f-20">{{ text }}</h4>
+    </div>
+</app-card>
