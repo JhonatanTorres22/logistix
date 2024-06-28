@@ -14,7 +14,7 @@ export interface MensajeriaRecibidos {
     idTipoMensaje: number,
     tipoMensaje: TipoMensaje,
     asunto: string,
-    mensajePreview: string,
+    mensaje: string,
     rolEmisor: string,
     emisor: string,
     receptor: string,
@@ -24,7 +24,10 @@ export interface MensajeriaRecibidos {
 export type MensajeriaEnviados = MensajeriaRecibidos;
 export type MensajeriaArchivados = MensajeriaRecibidos;
 
-
+export type MensajeriaHistorialMensajes = MensajeriaRecibidos & {
+    archivo: string,
+    rolReceptor: string,
+}
 
 export interface MensajeriaInsertar {
     tipoMensaje: number,
@@ -47,9 +50,9 @@ export interface MensajeriaDataAsignacion {
     tipoMensaje: TipoMensaje
 }
 
-export interface MensajeriaSelectMensaje {
-    id: number,
-    nombre: string,
-    mensaje: string,
-    fecha: string
-}
+// export interface MensajeriaSelectMensaje {
+//     id: number,
+//     nombre: string,
+//     mensaje: string,
+//     fecha: string
+// }

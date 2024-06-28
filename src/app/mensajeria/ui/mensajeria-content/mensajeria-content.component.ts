@@ -7,7 +7,7 @@ import { MailData } from 'src/app/fake-data/mail';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { MensajeriaMessagesComponent } from '../mensajeria-messages/mensajeria-messages.component';
 import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-compose.component';
-import { MensajeriaDataAsignacion, MensajeriaRecibidos, MensajeriaSelectMensaje } from '../../domain/models/mensajeria.model';
+import { MensajeriaDataAsignacion, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -71,8 +71,8 @@ export class MensajeriaContentComponent implements OnInit {
   // mensajesRecibidos 
   constructor( 
     private signal: MensajeriaSignal,
-    // private repository: MensajeriaRepository,
-    // private alert: AlertService
+    private repository: MensajeriaRepository,
+    private alert: AlertService
   ) {
     effect( () => {
       // console.log( this.bandeja );
@@ -150,11 +150,27 @@ export class MensajeriaContentComponent implements OnInit {
   //   return `${this.selection.isSelected(row) ? 'deselect' : 'select'}`;
   // }
 
-  detailsContentShow( mail: MensajeriaSelectMensaje) {
-    console.log('Ver mensaje');
+  //detailsContentShow
+  mostrarHistorialMensajes( mail: MensajeriaRecibidos ) {
+    console.log('Ver mensaje', mail);
+    this.obtenerHistorialMensajes( mail.idMensaje );
     this.signal.setSeleccionarMensaje( mail )
     // this.titleContent = !this.titleContent;
     // this.detailsContent = !this.detailsContent;
+  }
+
+  obtenerHistorialMensajes( idMensaje: number ) {
+    console.log(idMensaje);
+    
+    this.repository.obtenerMensajesHistorial( idMensaje ).subscribe({
+      next: ( mensajesHistorial ) => {
+        console.log(mensajesHistorial);
+        this.signal.setMensajesHistorial( mensajesHistorial );
+      }, error: ( error ) => {
+        console.log(error);
+        this.alert.showAlert('Ocurrio un error al abrir el mensaje: ' + error, 'error', 6);
+      }
+    })
   }
 
   backToMail() {
