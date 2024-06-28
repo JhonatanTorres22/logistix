@@ -1,3 +1,4 @@
+import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { SemestreAcademicoAperturarDTO, SemestreAcademicoCerrarDTO, SemestreAcademicoCrearDTO, SemestreAcademicoDTO, SemestreAcademicoEliminarDTO } from '../../infraestructure/dto/semestre-academico.dto';
 import { SemestreAcademico, SemestreAcademicoAperturar, SemestreAcademicoCerrar, SemestreAcademicoCrear, SemestreAcademicoEliminar } from "../models/semestre-academico.model";
 
@@ -25,7 +26,7 @@ export class SemestreAcademicoMapper {
             // fechaDeFin: param.fechaFin,
             // estado: param.estado,
             condicion: param.condicion,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -36,28 +37,28 @@ export class SemestreAcademicoMapper {
             // fechaDeInicio: param.fechaInicio,
             // fechaDeFin: param.fechaFin,
             // estado: param.estado,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiEliminar( param: SemestreAcademicoEliminar ): SemestreAcademicoEliminarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiAperturar( param: SemestreAcademicoAperturar ): SemestreAcademicoAperturarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiCerrar( param: SemestreAcademicoCerrar ): SemestreAcademicoCerrarDTO {
         return {
             codigo: param.id,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 }

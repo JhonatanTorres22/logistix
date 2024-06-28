@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Local, LocalCrear } from 'src/app/programas-academicos/domain/models/local.model';
 import { LocalRepository } from 'src/app/programas-academicos/domain/repositories/local.repository';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.signal';
 import { LocalValidations } from 'src/app/programas-academicos/domain/validations/local.validations';
 
@@ -27,7 +28,8 @@ export class LocalAddComponent {
   @Input() localEdit: Local;
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
   localSelect: WritableSignal<Local> = this.signal.localSelect
-
+  localesSelect: WritableSignal<Local[]> = this.signal.localesSelect;
+  asignaciones = this.asignacionSignal.asignaciones;
 
   maxLengthNombre: number;
   minLengthNombre: number;
@@ -57,6 +59,7 @@ export class LocalAddComponent {
 
   
   constructor(
+    private asignacionSignal: AsignacionSignal,
     private repository: LocalRepository,
     public dialogRef: MatDialogRef<LocalAddComponent>,
     public dialog: MatDialog,
@@ -182,11 +185,27 @@ export class LocalAddComponent {
     })
   }
 
-  editLocal = ( editLocal: Local ) => {
-    this.repository.editar( editLocal ).subscribe({
-      next: ( data ) => {
+  editLocal = (editLocal: Local) => {
+    this.repository.editar(editLocal).subscribe({
+      next: (data) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
 
+        const localIndex = this.localesSelect().findIndex(local => local.id === editLocal.id);
+        if (localIndex !== -1) {
+          this.localesSelect()[localIndex] = editLocal;
+          console.log(this.localesSelect(), '****');
+        } 
+        this.asignaciones().forEach(asignacion => {
+          asignacion.programas.forEach(programa => {
+            programa.locales.forEach(local => {
+              if(local.idLocal === editLocal.id){
+                local.nombreLocal = editLocal.nombre
+                console.log(local.nombreLocal,'**');
+              }
+            })
+          });
+        });
+        // Reinicia localEdit
         this.localEdit = {
           id: 0,
           definicion: '',
@@ -195,14 +214,15 @@ export class LocalAddComponent {
           longitud: 0,
           usuarioId: 0,
         };
-        this.cerrarFormulario.emit( 'Edit' );
-      }, error: ( error ) => {
-        console.log( error );
+        // Cierra el formulario
+        this.cerrarFormulario.emit('Edit');
+      },
+      error: (error) => {
+        console.log(error);
         this.alertService.sweetAlert('error', 'Error', error);
-        
       }
-    })
-  }
+    });
+  };
 
   pathValueFormLocalEdit = () => {
 

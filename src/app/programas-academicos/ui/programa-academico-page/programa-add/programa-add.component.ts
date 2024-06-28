@@ -10,6 +10,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Facultad } from 'src/app/programas-academicos/domain/models/facultad.model';
 import { ProgramaCrear, ProgramaEditar, ProgramaFacultad } from 'src/app/programas-academicos/domain/models/programa.model';
 import { ProgramaRepository } from 'src/app/programas-academicos/domain/repositories/programa.repository';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { ProgramaValidations } from 'src/app/programas-academicos/domain/validations/programa.validations';
@@ -28,6 +29,7 @@ export class ProgramaAcademicoAddComponent {
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect
 
+  asignaciones = this.asignacionSignal.asignaciones;
 
   maxLengthNombre: number;
   minLengthNombre: number;
@@ -47,6 +49,7 @@ export class ProgramaAcademicoAddComponent {
 
 
   constructor(
+    private asignacionSignal: AsignacionSignal,
     public dialogRef: MatDialogRef<ProgramaAcademicoAddComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -167,7 +170,17 @@ export class ProgramaAcademicoAddComponent {
     this.repository.editarPrograma( editPrograma ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
-        this.programaSignal.setSelectPrograma(editPrograma)
+        const selectedPrograma = this.programaSignal.programaSelect();
+        if (selectedPrograma.id === this.programaEdit.id) {
+            this.programaSignal.setSelectPrograma(editPrograma);
+        }
+        this.asignaciones().forEach(asignacion => {
+          asignacion.programas.forEach(programa => {
+            if (programa.idPrograma === editPrograma.id) {
+              programa.nombrePrograma = editPrograma.nombre;
+            }
+          });
+        });
         this.programaEdit = {
           id: 0,
           definicion: '',

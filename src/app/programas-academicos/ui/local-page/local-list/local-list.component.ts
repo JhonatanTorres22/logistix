@@ -9,7 +9,8 @@ import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.s
 import { LocalAddComponent } from '../local-add/local-add.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 
 @Component({
   selector: 'app-local-list',
@@ -21,7 +22,8 @@ import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-acade
 export class LocalListComponent {
 
   localesAsignados:  AsignacionLocal[] = [];
-
+  programaConLocalesAsignados:  AsignacionLocal[] = [];
+  asignaciones = this.asignacionSignal.asignaciones;
   showFormAgregarPrograma: boolean = false;
   localEdit: Local;
   locales: WritableSignal<Local[]>= this.signal.localList;
@@ -37,6 +39,7 @@ export class LocalListComponent {
     usuarioId: 0
 };
 constructor(
+  private asignacionSignal: AsignacionSignal,
   @Inject(MAT_DIALOG_DATA) public data: ListarLocalesAsignados,
   private signal: LocalSignal,
   private repository: LocalRepository,
@@ -51,8 +54,20 @@ constructor(
     this.obtenerLocales();
     if (this.data && this.data !== undefined) {
       this.localesAsignados = this.data.locales;
-      // console.log(this.localesAsignados,'locales asignados');
-  }  
+      this.programaConLocalesAsignados = this.data.programaConLocales;
+      console.log(this.localesAsignados,'locales asignados');
+  } 
+  }
+
+  limpiarDatosLocales = () => {
+    this.localEdit = {
+      id: 0,
+      nombre: '',
+      definicion: '',
+      latitud: 0,
+      longitud: 0,
+      usuarioId: 0
+    };
   }
 
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
@@ -61,54 +76,27 @@ constructor(
       switch( event ) {
         case 'Add': {
           console.log('Programa Creado');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
          this.obtenerLocales();
         } break;
 
         case 'Edit': {
           console.log('Programa Editado');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
           this.obtenerLocales();
+          this.localesChecked.length = 0;
         } break;
 
         case 'Open': {
           this.showFormAgregarPrograma = true;
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
         } break;
 
         case 'Cancelar': {
           console.log('Cancelar');
-          this.localEdit = {
-            id: 0,
-            nombre: '',
-            definicion: '',
-            latitud: 0,
-            longitud: 0,
-            usuarioId: 0
-          };
+          this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
         }
       }
@@ -129,6 +117,9 @@ constructor(
   localAsignado(local: Local): boolean {
     return this.localesAsignados.some(asignado => asignado.idLocal === local.id);
   }
+  programaConLocalAsignado(id: number): boolean {
+    return this.programaConLocalesAsignados.some(local => local.idLocal === id);
+}
 
   
   openShowFormEditarPrograma = ( programa: Local, event?: EventEmitter<string> | string) => {
@@ -174,9 +165,9 @@ constructor(
   }
 
 
-  eliminarPrograma = ( local: LocalEliminar ) => {
+  eliminarPrograma = ( locales: LocalEliminar ) => {
     const localEliminar = {
-      id: local.id,
+      id: locales.id,
       usuarioId: 1
     }
 
@@ -185,14 +176,9 @@ constructor(
         console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'Local eliminado correctamente')
         this.localesChecked.length = 0;
-        this.localesChecked.forEach(local => {
-          local.id = 0;
-          local.nombre = '';
-          local.definicion = '';
-          local.latitud = 0;
-          local.longitud = 0;
-          local.usuarioId = 0;
-        });
+        const localesActualizados = this.localesSelect().filter(local => local.id !== locales.id);
+        this.signal.setSelectLocales(localesActualizados);
+        console.log(localesActualizados,'locales actualizados');
         this.obtenerLocales();
       }, error: ( error ) => {
         console.log( error );

@@ -166,7 +166,9 @@ export class SemestreAddComponent implements OnInit {
     this.semestreRepository.editarSemestre( editSemestre ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
-        this.semestreSignal.setSelectSemestre(editSemestre)
+        if(this.semestreSignal.semestreSelect().id === this.semestreEdit.id){
+          this.semestreSignal.setSelectSemestre(editSemestre)
+        }
         // this.semestreAcademicoDomainService.setSemestreAcademico( data );
         // this.dialogRef.close( data );
         this.semestreEdit = {

@@ -31,8 +31,9 @@
     </ng-template>
  
 
-    <!-- PROGRAMA STAR -->
-    <div class="flex gap-3">
+   <!-- PROGRAMA STAR -->
+   <div class="flex  gap-3">
+    <div class="flex gap-3 flex-wrap">
       @for (programa of asignacion.programas; track programa) {
         <app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem"> <!-- flex align-items-center gap-4 -->
           <ng-template #headerTitleTemplate >
@@ -126,10 +127,11 @@
         <local-page local-page class="my-2"></local-page>
         <ui-button ui-button-guardar label="ASIGNAR PROGRAMA" color="primary" class="text-center block" (click)="agregarProgramaConfirm(asignacion)"></ui-button>        
       </programa-page>
-      <!-- <programa-page programa-page>
-      </programa-page> -->
     </div>
-  <!-- PROGRAMA END        -->
+    <!-- <programa-page programa-page>
+    </programa-page> -->
+  </div>
+<!-- PROGRAMA END        -->
     
 </app-card>
 }

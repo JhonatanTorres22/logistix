@@ -157,11 +157,11 @@ export class AsignacionPageComponent implements OnInit {
       width: '800px',
       height: '460px',
       disableClose: true,
-      data: { locales: todosLosLocales } 
+      data: { locales: todosLosLocales, programaConLocales: programa.locales } 
     } );
 
     dialogRef.afterClosed().subscribe( data => {
-      if( data == 'cancelar' ) return;
+      if( data !== 'seleccionado' ) return;
       // console.log(data);
       // console.log(this.localesSelect());
 
@@ -190,6 +190,13 @@ export class AsignacionPageComponent implements OnInit {
 
 
   agregarProgramaConfirm = ( asignacion: Asignacion ) => {
+    if ( 
+      !(this.programaSelect().id != 0 &&
+      this.directorSelect().id != 0 && 
+      this.localesSelect().length > 0)
+  ) {
+      this.alertService.showAlert('Verifique que exista DECANO, DIRECTOR DE ESCUELA Y LOCALES', 'info')
+      return} 
     this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea GUARDAR el programa?')
       .then( isConfirm => {
         if( !isConfirm ) return;
