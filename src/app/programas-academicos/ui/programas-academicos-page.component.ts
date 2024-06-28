@@ -156,6 +156,7 @@ export class ProgramasAcademicosComponent implements OnInit {
             this.programaSignal.setSelectProgramaDefault();
             this.localSignal.setSelectLocalesDefault();
             this.directorSignal.setSelectDirectorDefault();
+            this.decanoSignal.setSelectDecanoDefault()
             this.obtener( this.semestreSelect().id );
           }, error: (error) => {
             console.log(error);

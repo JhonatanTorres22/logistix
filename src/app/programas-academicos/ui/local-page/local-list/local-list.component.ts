@@ -53,9 +53,7 @@ constructor(
   ngOnInit(): void {
     this.obtenerLocales();
     if (this.data && this.data !== undefined) {
-      this.localesAsignados = this.data.locales;
       this.programaConLocalesAsignados = this.data.programaConLocales;
-      console.log(this.localesAsignados,'locales asignados');
   } 
   }
 
@@ -106,7 +104,15 @@ constructor(
     this.repository.obtener().subscribe({
       next: ( locales ) => {
         console.log(locales);
-        this.signal.setLocalesList( locales );        
+        this.signal.setLocalesList( locales ); 
+        this.asignaciones().forEach(asignacion => {
+          asignacion.programas.forEach(programa => {
+            programa.locales.forEach(local => {
+              this.localesAsignados.push(local);
+            })
+          });
+        });
+        console.log(this.localesAsignados,'lista de locales asignados');
       }, error: ( error ) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error, no se pudo listar los locales', 'error');
@@ -165,9 +171,9 @@ constructor(
   }
 
 
-  eliminarPrograma = ( locales: LocalEliminar ) => {
+  eliminarPrograma = ( local: LocalEliminar ) => {
     const localEliminar = {
-      id: locales.id,
+      id: local.id,
       usuarioId: 1
     }
 
@@ -176,7 +182,7 @@ constructor(
         console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'Local eliminado correctamente')
         this.localesChecked.length = 0;
-        const localesActualizados = this.localesSelect().filter(local => local.id !== locales.id);
+        const localesActualizados = this.localesSelect().filter(localFiltro => localFiltro.id !== local.id);
         this.signal.setSelectLocales(localesActualizados);
         console.log(localesActualizados,'locales actualizados');
         this.obtenerLocales();

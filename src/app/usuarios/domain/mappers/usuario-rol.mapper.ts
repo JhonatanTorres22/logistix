@@ -1,3 +1,4 @@
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { UsuarioRolAgregarDTO, UsuarioRolAltaDTO, UsuarioRolDTO, UsuarioRolEliminarDTO, UsuarioRolSuspenderDTO } from "../../infraestructure/dto/usuario-rol.dto";
 import { UsuarioRol, UsuarioRolAgregar, UsuarioRolAlta, UsuarioRolEliminar, UsuarioRolSuspender } from "../models/usuario-rol.model";
 
@@ -27,7 +28,7 @@ export class UsuarioRolMapper {
         return {
             codigoRol: param.idRol,
             codigoUsuario: param.idUsuario,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
             
         }
 
@@ -36,7 +37,7 @@ export class UsuarioRolMapper {
     static fromDomainToApiSuspenderRolUser( param: UsuarioRolSuspender ): UsuarioRolSuspenderDTO {
         return {
             codigo: param.idRol,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
@@ -44,14 +45,14 @@ export class UsuarioRolMapper {
     static fromDomainToApiEliminarRol( param: UsuarioRolEliminar ): UsuarioRolEliminarDTO {
         return {
             codigo: param.idRol,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 
     static fromDomainToApiDarAltaRol( param: UsuarioRolAlta ): UsuarioRolAltaDTO {
         return {
             codigo: param.idRol,
-            usuario: param.usuarioId
+            usuario: RolUserId.currentIdRolUser
         }
     }
 

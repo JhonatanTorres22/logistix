@@ -1,3 +1,4 @@
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { AsignacionDTO, AsignacionEliminarDTO, AsignacionLocalDTO, AsignacionProgramaDTO, AsignarNuevoProgramaDTO } from "../../infraestructure/dto/asignacion.dto";
 import { Asignacion, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from "../models/asignacion.model";
 
@@ -80,7 +81,7 @@ export class AsignacionMapper {
                 codigoLocal: local,
                 codigoProgramaAcademico: param.idPrograma,
                 codigoSemestre: param.idSemestre,
-                usuario: param.usuarioId
+                usuario: RolUserId.currentIdRolUser
             }
         })
 
@@ -97,7 +98,7 @@ export class AsignacionMapper {
                 codigoLocal: local,
                 codigoProgramaAcademico: param.idPrograma,
                 codigoSemestre: param.idSemestre,
-                usuario: param.usuarioId
+                usuario: RolUserId.currentIdRolUser
             }
         })
 

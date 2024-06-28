@@ -4,12 +4,12 @@ import { Usuario, UsuarioCrear } from "../models/usuario.model";
 import { UsuarioRol } from "../models/usuario-rol.model";
 import { WritableSignal } from "@angular/core";
 import { Rol } from "src/app/roles/domain/models/rol.model";
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 
 
 
 export class UsuarioMapper {
 
-    static currenUserRol: Rol = JSON.parse(localStorage.getItem('currentRol')!);
 
     static formApiToDomain( param: UsuarioDTO ): Usuario {
             return {
@@ -43,7 +43,7 @@ export class UsuarioMapper {
             correoInstitucional: param.correoInstitucional,
             nCelular: param.celular,
             foto: param.imagenPerfil,
-            usuario: this.currenUserRol.id,
+            usuario: RolUserId.currentIdRolUser,
             codigo: param.id
         }
     }
@@ -61,7 +61,7 @@ export class UsuarioMapper {
             correoInstitucional: param.correoInstitucional,
             nCelular: param.celular,
             foto: param.imagenPerfil,
-            usuario: param.usuario
+            usuario:RolUserId.currentIdRolUser
      
         }
     }
