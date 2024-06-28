@@ -57,7 +57,6 @@ import { Router } from '@angular/router';
     LocalListComponent,
     UiButtonComponent,
 
-    ProgramasAcademicosComponent,
 
     UiButtonIconComponent
 
