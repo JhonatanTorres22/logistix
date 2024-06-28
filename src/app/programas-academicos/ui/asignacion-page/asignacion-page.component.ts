@@ -29,6 +29,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { Asignacion, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from '../../domain/models/asignacion.model';
 import { LocalListComponent } from '../local-page/local-list/local-list.component';
 import { ThisReceiver } from '@angular/compiler';
+import { ProgramasAcademicosComponent } from '../programas-academicos-page.component';
 
 @Component({
   selector: 'asignacion-page',
@@ -46,7 +47,8 @@ import { ThisReceiver } from '@angular/compiler';
     DirectorPageComponent,
     AsignacionPageComponent,
     LocalListComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    ProgramasAcademicosComponent,
   ],
   templateUrl: './asignacion-page.component.html',
   styleUrl: './asignacion-page.component.scss'
@@ -139,18 +141,11 @@ export class AsignacionPageComponent implements OnInit {
 
   openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
     console.log('abrir modal LOCAL list');
-    let todosLosLocales: AsignacionLocal[] = [];
-    asignacion.programas.forEach(programa => {
-      programa.locales.forEach(local => {
-        todosLosLocales.push(local);
-      });
-    });
-    console.log(todosLosLocales); 
     const dialogRef = this.dialog.open( LocalListComponent, {
       width: '800px',
       height: '460px',
       disableClose: true,
-      data: { locales: todosLosLocales, programaConLocales: programa.locales } 
+      data: { programaConLocales: programa.locales } 
     } );
 
     dialogRef.afterClosed().subscribe( data => {

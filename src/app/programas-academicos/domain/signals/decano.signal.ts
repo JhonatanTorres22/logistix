@@ -29,4 +29,10 @@ export class DecanoSignal {
     setDecanosList = ( decanos: UsuarioRol[] ) => {
         this.decanosList.set( decanos );
     }
+
+    setSelectDecanoDefault = () => {
+        this.decanoSelect.set(this.decano)
+    }
+
+    
 }
