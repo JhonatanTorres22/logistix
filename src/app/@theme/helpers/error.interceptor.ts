@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
 import { ErrorService } from 'src/app/core/services/error.service';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     // private authenticationService: AuthenticationService,
     private authenticationService: AuthService,
-    
+    private dialogs: MatDialog,
     private errorService: ErrorService
   ) {}
 
@@ -26,6 +27,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         console.log(err);
         
         if (err.status === 401) {
+        this.dialogs.closeAll();
+
           // auto logout if 401 response returned from api
           this.authenticationService.logout();
         }

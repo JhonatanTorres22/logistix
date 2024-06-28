@@ -1,4 +1,4 @@
-<app-card [cardTitle]="semestreEdit.id ? 'Editar ' : 'Crear ' + entidad" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
+<app-card [cardTitle]="semestreEdit && semestreEdit.id ? 'Editar ' : 'Crear ' + entidad" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
     <ng-template #headerOptionsTemplate>
         <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
           <i class="ti ti-x f-20"></i>
@@ -37,7 +37,7 @@
         <div class="flex-grow-1 text-end">
 
           <ui-button color="secondary" label="Cancelar" (click)="cancelarAdd()" class="m-r-10"></ui-button>
-          <ui-button color="primary" [label]="semestreEdit.id != 0 ? 'Editar' : 'Crear'" [disabled]="formSemestre.invalid" (click)="onSubmit()"></ui-button>
+          <ui-button color="primary" [label]="semestreEdit && semestreEdit.id != 0 ? 'Editar' : 'Crear'" [disabled]="formSemestre.invalid" (click)="onSubmit()"></ui-button>
 
         </div>
       </div>
