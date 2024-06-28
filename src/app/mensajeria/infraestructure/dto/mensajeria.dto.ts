@@ -27,10 +27,19 @@ export interface MensajeriaRecibidosDTO {
 export type MensajeriaEnviadosDTO = MensajeriaRecibidosDTO;
 export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO;
 
+export type MensajeriaHistorialMensajesDTO = MensajeriaRecibidosDTO & {
+    archivo: string,
+    rolReceptor: string,
+}
+
 export interface MensajeriaRecibidosDataArrayDTO {
     data: MensajeriaRecibidosDTO[];
 }
 
 export interface MensajeriaEnviadosDataArrayDTO {
     data: MensajeriaEnviadosDTO[];
+}
+
+export interface MensajeriaHistorialMensajesDataArrayDTO {
+    data: MensajeriaHistorialMensajesDTO[];
 }

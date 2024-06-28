@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaInsertar, MensajeriaRecibidos, MensajeriaSelectMensaje, TipoMensaje } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
@@ -28,6 +28,8 @@ export class MensajeriaSignal {
         tipoMensaje: tipoMensaje
     }
 
+    mensajeriaHistorialMensajesDefault: MensajeriaHistorialMensajes[] = []
+
     toggle = signal( true );
     mensajeriaInsertar = signal( mensajeriaInsertarDefault );
     mensajeriaInsertarDataAsignacion = signal( this.mensajeriaAsignacionDefault );
@@ -45,7 +47,9 @@ export class MensajeriaSignal {
     mensajesNoLeidos = signal( 0);
     selectMensaje = signal ( selectMensaje );
 
-    setSeleccionarMensaje = ( mensaje: MensajeriaSelectMensaje) => {
+    mensajesHistorial = signal( this.mensajeriaHistorialMensajesDefault );
+
+    setSeleccionarMensaje = ( mensaje: MensajeriaRecibidos) => {
         this.selectMensaje.set( mensaje );
     }
 
@@ -66,6 +70,10 @@ export class MensajeriaSignal {
     setMensajesArchivados = ( mensajes: MensajeriaArchivados[] ) => {
         this.mensajesArchivados.set( mensajes );
         this.mensajesArchivadosTotal.set( mensajes.length );
+    }
+
+    setMensajesHistorial = ( mensajesHistorial: MensajeriaHistorialMensajes[] ) => {
+        this.mensajesHistorial.set( mensajesHistorial );
     }
 
     /* MENSAJES */

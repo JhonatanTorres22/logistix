@@ -1,5 +1,5 @@
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
-import { MensajeriaArchivados, MensajeriaEnviados, MensajeriaInsertar, MensajeriaRecibidos, MensajeriaSelectMensaje, TipoMensaje } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaEnviados, MensajeriaInsertar, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
 import { AsignacionPrograma, Asignacion } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 
@@ -48,11 +48,16 @@ export const asignacion: Asignacion = {
 export const tipoMensaje: TipoMensaje = 'NO SELECCIONADO';
 
 
-export const selectMensaje: MensajeriaSelectMensaje = { 
-    id: 0,
-    nombre: 'TORRES MENESES, JHONATAN JOEL',
-    mensaje: 'sasdasdasd',
-    fecha: '12/06/2024 08:23:00'
+export const selectMensaje: MensajeriaRecibidos = {
+    asunto: '',
+    emisor: '',
+    fecha: '',
+    idMensaje: 0,
+    idTipoMensaje: 0,
+    tipoMensaje: 'NO SELECCIONADO',
+    mensaje: "",
+    rolEmisor: "",
+    receptor: ""
 }
 
 export const mensajesRecibidosDefault: MensajeriaRecibidos[] = [];

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MensajeriaRepository } from "../../domain/repositories/mensajeria.repository";
 import { Observable } from "rxjs";
-import { MensajeriaArchivados, MensajeriaInsertar, MensajeriaRecibidos } from "../../domain/models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos } from "../../domain/models/mensajeria.model";
 import { MensajeriaService } from "../services/mensajeria.service";
 
 
@@ -24,9 +24,12 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
     obtenerMensajesEnviados(): Observable<MensajeriaRecibidos[]> {
         return this.service.obtenerMensajesEnviados();
     }
-
+    
     obtenerMensajesArchivados(): Observable<MensajeriaArchivados[]> {
         throw new Error("Method not implemented.");
     }
     
+    obtenerMensajesHistorial( idMensaje: number ): Observable<MensajeriaHistorialMensajes[]> {
+        return this.service.obtenerMensajesHistorial( idMensaje );
+    }
 }

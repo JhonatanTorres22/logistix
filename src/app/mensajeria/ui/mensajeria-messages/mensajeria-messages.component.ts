@@ -4,6 +4,7 @@ import { Component, Input, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
+import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -24,6 +25,11 @@ export class MensajeriaMessagesComponent {
   @Input() star = false;
   @Input() unStar = true;
   readonly panelOpenState = signal(false);
-
+  
+  mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
+  
+  constructor(
+    private mensajeriaSignal: MensajeriaSignal
+  ) {}
 
 }

@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { MensajeriaEnviados, MensajeriaInsertar, MensajeriaRecibidos } from "../../domain/models/mensajeria.model";
+import { MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos } from "../../domain/models/mensajeria.model";
 import { Observable, map } from "rxjs";
 import { MensajeriaMapper } from "../../domain/mappers/mensajeria.mapper";
-import { MensajeriaEnviadosDataArrayDTO, MensajeriaRecibidosDataArrayDTO } from "../dto/mensajeria.dto";
+import { MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaRecibidosDataArrayDTO } from "../dto/mensajeria.dto";
 import { RolUserId } from "src/app/core/mappers/rolUserId";
 
 
@@ -19,6 +19,8 @@ export class MensajeriaService {
     private urlInsertar: string;
     private urlRecibidos: string;
     private urlEnviados: string;
+    private urlArchivados: string;
+    private urlHistorialMensajes: string;
 
     constructor(
         private http: HttpClient
@@ -28,6 +30,8 @@ export class MensajeriaService {
         this.urlInsertar = 'api/Mensajeria/Insertar';
         this.urlRecibidos = 'api/Mensajeria/Recibidos?CodigoRolReceptor=';
         this.urlEnviados = 'api/Mensajeria/Enviados?CodigoRolEmisor=';
+        this.urlArchivados = '';
+        this.urlHistorialMensajes = 'api/Mensajeria/Historial?CodigoMensaje=';
     }
 
 
@@ -40,13 +44,21 @@ export class MensajeriaService {
     obtenerMensajesRecibidos(): Observable<MensajeriaRecibidos[]> {
         // RolUserId.currentIdRolUser
         return this.http.get<MensajeriaRecibidosDataArrayDTO>( this.urlApi + this.urlRecibidos + RolUserId.currentIdRolUser )
-            .pipe( map( api => api.data.map ( MensajeriaMapper.fromApiToDomainRecibidos )))
+            .pipe( map( api => api.data.map ( MensajeriaMapper.fromApiToDomainRecibidos )));
     }
 
     obtenerMensajesEnviados(): Observable<MensajeriaEnviados[]> {
         // RolUserId.currentIdRolUser
         return this.http.get<MensajeriaEnviadosDataArrayDTO>( this.urlApi + this.urlEnviados + RolUserId.currentIdRolUser )
-            .pipe( map( api => api.data.map ( MensajeriaMapper.fromApiToDomainEnviados )))
+            .pipe( map( api => api.data.map ( MensajeriaMapper.fromApiToDomainEnviados )));
+    }
+
+
+
+
+    obtenerMensajesHistorial( idMensaje: number ): Observable<MensajeriaHistorialMensajes[]> {
+        return this.http.get<MensajeriaHistorialMensajesDataArrayDTO>( this.urlApi + this.urlHistorialMensajes + idMensaje )
+            .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainHistorialMensajes )));
     }
 
 }
