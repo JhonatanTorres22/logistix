@@ -21,6 +21,9 @@ import { FacultadSignal } from '../../domain/signals/facultad.signal';
 export class ProgramaAcademicoPageComponent {
 
   programaSelect: WritableSignal<ProgramaFacultad> = this.programaSignal.programaSelect;
+
+  idFacultadYaAsignada = this.facultadSignal.idFacultadYaAsignada;
+  facultadSelect = this.facultadSignal.facultadSelect;
   @Input() idFacultad: number;
 
 
@@ -42,6 +45,7 @@ export class ProgramaAcademicoPageComponent {
 
   openModalPrograma = () => {
     this.facultadSignal.setIdFacultad( this.idFacultad );
+    this.facultadSignal.setIdFacultadYaAsignado( this.idFacultad );
     console.log('abrir modal programa list');
     const dialogRef = this.dialog.open( ProgramaAcademicoListComponent, {
       width: '800px',

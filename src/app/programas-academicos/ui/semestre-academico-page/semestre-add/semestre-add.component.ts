@@ -104,7 +104,7 @@ export class SemestreAddComponent implements OnInit {
 
   onSubmit = () => {
 
-    const tipoAccionForm = this.semestreEdit.id != 0 ? 'Editar' : 'Crear';
+    const tipoAccionForm = this.semestreEdit && this.semestreEdit.id != 0 ? 'Editar' : 'Crear';
 
     if( this.formSemestre.invalid ) {
       this.alertService.showAlert('El formulario está incompleto o no complen con los valores esperados')

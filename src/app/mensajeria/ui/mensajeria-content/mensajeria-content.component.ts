@@ -7,7 +7,7 @@ import { MailData } from 'src/app/fake-data/mail';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { MensajeriaMessagesComponent } from '../mensajeria-messages/mensajeria-messages.component';
 import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-compose.component';
-import { MensajeriaDataAsignacion, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
+import { MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -39,7 +39,7 @@ const ELEMENT_DATA: PeriodicElement[] = MailData;
 })
 export class MensajeriaContentComponent implements OnInit {
 
-  @Input() bandeja: 'Recibidos' | 'Enviados' | 'Archivados';
+  @Input() tipoBandeja: 'Recibidos' | 'Enviados' | 'Archivados';
 
   // public props
   titleContent = true;
@@ -64,7 +64,8 @@ export class MensajeriaContentComponent implements OnInit {
   selectMensaje = this.signal.selectMensaje;
   mensajesTotal = this.signal.mensajesRecibidosTotal;
   mensajesNoLeidos = this.signal.mensajesNoLeidos;
-  dataSource = new MatTableDataSource<MensajeriaRecibidos>();
+  // tipoBandeja = 
+  dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<MensajeriaRecibidos>(true, []);
   mensajeriaData: WritableSignal<MensajeriaDataAsignacion> = this.signal.mensajeriaInsertarDataAsignacion;
 
@@ -79,18 +80,26 @@ export class MensajeriaContentComponent implements OnInit {
       // console.log(this.mensajesEnviados());
       // localStorage.setItem('mensajeriaData', JSON.stringify(this.signal.mensajeriaAsignacionDefault))
       // this.mensajeriaData.update( () => this.signal.mensajeriaAsignacionDefault )
+      this.signal.tipoBandeja.set( this.tipoBandeja );
+      console.log(this.tipoBandeja);
+      
+      switch( this.tipoBandeja ) {
+        case 'Recibidos': { 
+          this.dataSource = new MatTableDataSource<MensajeriaRecibidos>(this.mensajesRecibidos());
+          this.signal.setSeleccionarMensajeDefault();
 
-      switch( this.bandeja ) {
-        case 'Recibidos': { this.dataSource = new MatTableDataSource(this.mensajesRecibidos()); }; break;
+        }; break;
         case 'Enviados': { 
-          this.dataSource = new MatTableDataSource(this.mensajesEnviados()); 
+          this.dataSource = new MatTableDataSource<MensajeriaEnviados>(this.mensajesEnviados()); 
           this.signal.setMensajeriaDataAsignacionDefault();
-
+          this.signal.setSeleccionarMensajeDefault();
           // this.signal.mensajeriaInsertarDataAsignacion.set( this.signal.mensajeriaAsignacionDefault);
         }; break;
         case 'Archivados': {
           this.dataSource = new MatTableDataSource(this.mensajesArchivados()); 
           this.signal.setMensajeriaDataAsignacionDefault();
+          this.signal.setSeleccionarMensajeDefault();
+
           // this.mensajeriaData.update( () => this.signal.mensajeriaAsignacionDefault )
 
         }; break;
@@ -102,6 +111,7 @@ export class MensajeriaContentComponent implements OnInit {
 
   ngOnInit(): void {
     // this.obtenerMensajesRecibidos();
+    this.signal.setSeleccionarMensajeDefault();
   }
 
   // obtenerMensajesRecibidos = () => {
@@ -151,7 +161,24 @@ export class MensajeriaContentComponent implements OnInit {
   // }
 
   //detailsContentShow
+  onLeido( mail: MensajeriaRecibidos ) {
+    const leerMensaje = {
+      idMensaje: mail.idMensaje
+    }
+    this.repository.leerMensaje( leerMensaje ).subscribe({
+      next: ( data ) => {
+        console.log(data, 'leido');
+        mail.leido = true;
+      }, error: ( error ) => {
+        console.log('No se pudo leer el mensaje', error);
+        this.alert.showAlert('No se pudo leer el mensaje: '+ error, 'error');
+      }
+    })
+  }
+
   mostrarHistorialMensajes( mail: MensajeriaRecibidos ) {
+
+    mail.leido ? '' : this.onLeido( mail );
     console.log('Ver mensaje', mail);
     this.obtenerHistorialMensajes( mail.idMensaje );
     this.signal.setSeleccionarMensaje( mail )

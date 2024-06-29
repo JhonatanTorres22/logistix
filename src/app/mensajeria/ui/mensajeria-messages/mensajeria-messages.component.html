@@ -1,9 +1,16 @@
 <div class="details-content w-100">
-    <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
-      <div class="f-w-600">DAR ALTA A DIRECTOR DE ESCUELA DE INGENIERÍA DE SISTEMAS 2024-1</div>
-    </app-card>
- 
-    @for (mensaje of mensajesHistorial() ; track mensaje) {
+    
+ <!-- <pre>
+   {{ mensajesHistorial() | json }}
+ </pre> -->
+    @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
+
+      @if ( isFirst ) {
+        <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
+          <div class="f-w-600">{{ mensaje.asunto }}</div>
+        </app-card>
+      }
+
       <div class="my-2">
         <mat-accordion>
           <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none">
@@ -12,6 +19,16 @@
                 <div class="title align-item-center">
                   <ul class="list-inline">
                     <li class="list-inline-item">
+                      <!-- <div class="flex align-item-center gap-2">
+                        <div class="w-3rem">
+                            Para:
+                        </div>
+                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
+                        <div class="flex-grow-1">
+                            <div class="f-14 f-w-600 text-truncate capitalize">{{ paraRolNombreArea.toLocaleLowerCase() }}</div>
+                            <div class="f-12 m-b-0 text-muted mat-small capitalize"> {{ paraRolNombrePersona.toLocaleLowerCase() }} </div>
+                        </div>
+                    </div> -->
                       <div class="flex align-item-start">
                         <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
                         <div class="flex-grow-1 m-l-10">
@@ -30,20 +47,39 @@
     
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
+            <!-- <app-card hea>
+              Codigo: 100001
+              Director: Torres Meneses Jhonatan
+            </app-card> -->
             <div class="m-3" [innerHTML]="mensaje.mensaje">
               <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
             </div>
-            <div class="flex justify-content-end">
-              <button mat-button color="primary" class="send-mail">
-                <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
-              </button>
-              <button mat-button color="primary" class="send-mail">
-                <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Reenviar </div>
-              </button>
-            </div>
+            @if ( isLast && tipoBandeja() == 'Recibidos' ) {
+              <div class="flex justify-content-end">
+                <button mat-button color="primary" class="send-mail" (click)="onResponder()">
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
+                </button>
+                <button mat-button color="primary" class="send-mail" (click)="onAltaConfirm( mensaje )">
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta </div>
+                </button>
+              </div>
+            }
+
+            @if ( isLast && tipoBandeja() == 'Archivados' ) {
+              <app-card [showHeader]="false" cardClass="bg-orange-200">
+                <p class="f-14 f-w-600">MENSAJE ARCHIVADO</p>
+              </app-card>
+            }
           </mat-expansion-panel>
         </mat-accordion>
       </div>
 
     }
+
+    <!-- <mensajeria-response></mensajeria-response> -->
+    
+    @if ( showFormCompose ) {
+      <mensajeria-response></mensajeria-response>
+    }
+
 </div>

@@ -1,6 +1,6 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { MensajeriaArchivadosDTO, MensajeriaEnviadosDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaRecibidosDTO } from "../../infraestructure/dto/mensajeria.dto";
-import { MensajeriaArchivados, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos } from "../models/mensajeria.model";
+import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO } from "../../infraestructure/dto/mensajeria.dto";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
 import { RemoveHTML } from "src/app/core/mappers/removeHTML";
 
 export class MensajeriaMapper {
@@ -12,7 +12,8 @@ export class MensajeriaMapper {
             codigoReceptorRol: param.receptorId,
             textoMensaje: param.menssage,
             leido: param.leido,
-            usuario: RolUserId.currentIdRolUser
+            informacionAdicional: param.informacionAdicional,
+            usuario: param.usuarioId
         }
     }
 
@@ -29,7 +30,8 @@ export class MensajeriaMapper {
             rolEmisor: param.rol,
             emisor: param.emisor,
             receptor: param.receptor,
-            fecha: param.fechaCreacion
+            fecha: param.fechaCreacion,
+            leido: param.leido
         }
     }
 
@@ -40,10 +42,11 @@ export class MensajeriaMapper {
             tipoMensaje: param.tipoMensaje,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
-            rolEmisor: param.rol,
+            rolReceptor: param.rol,
             emisor: param.emisor,
             receptor: param.receptor,
-            fecha: param.fechaCreacion
+            fecha: param.fechaCreacion,
+            leido: true
         }
     }
 
@@ -55,10 +58,13 @@ export class MensajeriaMapper {
             tipoMensaje: param.tipoMensaje,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
-            rolEmisor: param.rol,
+            rolEmisor: param.rolEmisor,
             emisor: param.emisor,
             receptor: param.receptor,
-            fecha: param.fechaCreacion
+            rolReceptor: param.rolReceptor,
+            fecha: param.fechaCreacion,
+            archivo: param.archivo,
+            leido: true
         }
     }
 
@@ -70,11 +76,37 @@ export class MensajeriaMapper {
             asunto: param.asunto,
             mensaje: param.contenido,
             archivo: param.archivo,
-            rolEmisor: param.rol,
+            rolEmisor: param.rolEmisor,
             emisor: param.emisor,
             receptor: param.receptor,
             rolReceptor: param.rolReceptor,
-            fecha: param.fechaCreacion
+            fecha: param.fechaCreacion,
+            leido: param.leido,
+            informacionAdicional: param.informacionAdicional,
+            idRolEmisor: param.codigoEmisorRol,
+            idRolReseptor: param.codigoReceptorRol
+        }
+    }
+
+    static fromDomainToApiResponder( param: MensajeriaResponder ): MensajeriaResponderDTO {
+        return {
+            codigoMensajeria: param.idMensaje,
+            codigoEmisorRol: RolUserId.currentIdRolUser,
+            codigoReceptorRol: param.idRolReceptor,
+            contenido: param.mensaje,
+            informacionAdicional: param.informacionAdicional
+        }
+    }
+
+    static fromDomainToApiLeerMensaje( param: MensajeriaLeerMensaje ): MensajeriaLeerMensajeDTO {
+        return {
+            codigoMensajeria: param.idMensaje
+        }
+    }
+
+    static fromDomainToApiCerrarArchivar( param: MensajeriaCerrarArchivar ): MensajeriaCerrarArchivarDTO {
+        return {
+            codigoMensajeria: param.idMensaje
         }
     }
 

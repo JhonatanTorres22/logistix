@@ -8,6 +8,10 @@ import { MensajeriaInsertar, TipoMensaje } from '../../domain/models/mensajeria.
 import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
+import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
+import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
+import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
 
 @Component({
   selector: 'mensajeria-compose',
@@ -41,10 +45,14 @@ export class MensajeriaComposeComponent implements OnInit {
   constructor( 
     private signal: MensajeriaSignal,
     private repository: MensajeriaRepository,
-    private alert: AlertService
+    private alert: AlertService,
+    private userRolRepository: UsuarioRolRepository,
+    private authDomainService: AuthDomainService
   ) {}
 
   ngOnInit(): void {
+    console.log(this.paraRolNombrePersona);
+    
     switch( this.tipoMensaje ) {
       case 'DAR ALTA A DIRECTOR DE ESCUELA': {
         this.paraRolNombreArea = `DECANO DE ${ this.facultad.toUpperCase() }`;
@@ -68,7 +76,7 @@ export class MensajeriaComposeComponent implements OnInit {
 
   enviarConfirm = () => {
 
-    this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea enviar el mensaje?')
+    this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de Alta al usuario ${ this.decano } con el Rol de DECANO DE FACULTAD, ¿Está seguro que desea enviar el mensaje?`)
       .then( isConfirm => {
         if( !isConfirm ) return
 
@@ -78,7 +86,9 @@ export class MensajeriaComposeComponent implements OnInit {
           emisorId: RolUserId.currentIdRolUser,
           receptorId: this.idDecano,
           leido: false,
-          menssage: this.mensaje.trim()
+          menssage: this.mensaje.trim(),
+          informacionAdicional: this.idDirector.toString(),
+          usuarioId: parseInt( this.authDomainService.currentRol().id )
         }
         // this.mensajeriaSignal.setMensajeriaInsertar( mensajeInsertar );
         // console.log(mensajeInsertar);
@@ -89,15 +99,73 @@ export class MensajeriaComposeComponent implements OnInit {
   }
 
   enviarMensaje( mensaje: MensajeriaInsertar ) {
+    console.log(mensaje);
+    // this.signal.renderizarMensajes.set( 'Enviados' );
+    
     this.repository.insertar( mensaje ).subscribe({
       next: ( data ) => {
         console.log(data);
         this.alert.showAlert('El mensaje se envió correctamente', 'success', 6);
-        this.signal.setMensajeriaDataAsignacionDefault();
+        const decano: UsuarioRolAlta = {
+          idRol: this.idDecano,
+          usuarioId: 1
+        }
         
+        this.isAlta( decano ).then( isAlta => {
+          if( isAlta ) {
+            this.signal.renderizarMensajes.set( 'Enviados' );
+            this.signal.setMensajeriaDataAsignacionDefault();    
+            return
+          }
+
+          this.darAltaDecano( decano );
+
+        });
       }, error: ( error ) => {
         console.log( error );
-        this.alert.showAlert('Ocurrió un error al enviar el mensaje: ' + error, 'error', 6)
+        this.alert.showAlert('Ocurrió un error al enviar el mensaje: ' + error, 'error', 2)
+      }
+    })
+  }
+
+
+  isAlta( decanoAlta: UsuarioRolAlta) {
+
+    return new Promise<boolean>( ( resolve, reject ) => {
+
+      this.userRolRepository.obtenerUsuariosRol().subscribe({
+        next: ( usuariosConRol ) => {
+          const decano = usuariosConRol.filter( rolDecano => rolDecano.id == this.idDecano );
+          if( decano[0].alta == 'ALTA' ) {
+
+            // this.alert.showAlert('El decano fué dado de ALTA', 'success');
+            console.log('Ya tenía Alta');
+            resolve( true )
+            return
+          }
+
+          resolve( false )
+  
+        }, error: ( error ) => {
+          console.log(error);
+          this.alert.showAlert('Ocurrió un error al consultar el rol del usuario: ' + error, 'error');
+        }
+      });
+
+    })
+  }
+  
+  darAltaDecano( userRol: UsuarioRolAlta) {
+    // console.log(userRol);
+    
+    this.userRolRepository.darAltaRolUser( userRol ).subscribe({
+      next: ( data ) => {
+        this.alert.showAlert('El decano fué dado de ALTA', 'success');
+        console.log('No tenía Alta, ahora si está dado de ALTA');
+        this.signal.renderizarMensajes.set( 'Enviados' );
+        this.signal.setMensajeriaDataAsignacionDefault();
+      }, error: ( error ) => {
+        this.alert.showAlert('Ocurrió un error al dar de alta al decano:' + error, 'error');
       }
     })
   }

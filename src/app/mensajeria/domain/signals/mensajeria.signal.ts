@@ -49,8 +49,16 @@ export class MensajeriaSignal {
 
     mensajesHistorial = signal( this.mensajeriaHistorialMensajesDefault );
 
+    renderizarMensajes = signal( '' );
+
+    tipoBandeja = signal( 'Recibidos' );
+
     setSeleccionarMensaje = ( mensaje: MensajeriaRecibidos) => {
         this.selectMensaje.set( mensaje );
+    }
+
+    setSeleccionarMensajeDefault = () => {
+        this.selectMensaje.set( selectMensaje );
     }
 
     setMensajesRecibidos = ( mensajes: MensajeriaRecibidos[] ) => {
@@ -74,6 +82,10 @@ export class MensajeriaSignal {
 
     setMensajesHistorial = ( mensajesHistorial: MensajeriaHistorialMensajes[] ) => {
         this.mensajesHistorial.set( mensajesHistorial );
+    }
+
+    setMensajesHistorialDefault = () => {
+        this.mensajesHistorial.set( this.mensajeriaHistorialMensajesDefault )
     }
 
     /* MENSAJES */

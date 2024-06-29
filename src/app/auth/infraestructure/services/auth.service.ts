@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable, signal } from "@angular/core";
+import { Injectable, effect, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable, map } from "rxjs";
 import { User } from "src/app/@theme/types/user";
@@ -10,6 +10,7 @@ import { AuthMapper } from "../../domain/mappers/auth.mapper";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { Usuario } from "src/app/usuarios/domain/models/usuario.model";
 import { AuthDomainService } from "../../domain/services/auth-domain.service";
+import { MensajeriaSignal } from "src/app/mensajeria/domain/signals/mensajeria.signal";
 
 
 @Injectable({
@@ -30,13 +31,19 @@ export class AuthService {
     constructor(
         private router: Router,
         private http: HttpClient,
-        private authDomainService: AuthDomainService
+        private authDomainService: AuthDomainService,
+        private mensajeriaSignal: MensajeriaSignal
       ) {
         this.urlApi = environment.EndPoint;
         this.urlLogin = 'api/Usuario/Autenticar';
 
         this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')!));
         this.currentUser = this.currentUserSubject.asObservable();
+
+        effect( () => {
+          console.log('algo cambi+o');
+          
+        })
       }
 
     public get currentUserValue(): Auth {
@@ -90,6 +97,7 @@ export class AuthService {
       const menu = AuthMapper.fromDomainToTemplateMenu(menusToRoleOfUsersDomain[0].menus)
       localStorage.setItem('currentMenu', JSON.stringify([menu]));
       localStorage.setItem('currentRol', JSON.stringify(menusToRoleOfUsersDomain[0]));
+      localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion));
 
       this.authDomainService.setCurrentMenu([menu]);
       this.authDomainService.setCurrentRol(menusToRoleOfUsersDomain[0]);

@@ -39,7 +39,7 @@
                                 <div class="flex align-item-center justify-content-between f-12">
                                   <i class="ti ti-file-text"></i> Archivados
                                 </div>
-                                <div class="avatar avatar-xs">{{ mensajesRecibidosTotal() }}</div>
+                                <div class="avatar avatar-xs">{{ mensajesArchivadosTotal() }}</div>
                               </ng-template>
                             </mat-tab>
                   
@@ -97,9 +97,9 @@
                     } -->
 
                     @switch ( selectedTabIndex ) {
-                      @case ( 0 ) { <mensajeria-content class="flex" bandeja="Recibidos"></mensajeria-content> }
-                      @case ( 1 ) { <mensajeria-content class="flex" bandeja="Enviados"></mensajeria-content> }
-                      @case ( 2 ) { <mensajeria-content class="flex" bandeja="Archivados"></mensajeria-content> }
+                      @case ( 0 ) { <mensajeria-content class="flex" tipoBandeja="Recibidos"></mensajeria-content> }
+                      @case ( 1 ) { <mensajeria-content class="flex" tipoBandeja="Enviados"></mensajeria-content> }
+                      @case ( 2 ) { <mensajeria-content class="flex" tipoBandeja="Archivados"></mensajeria-content> }
                     }
                   </mat-drawer-content>
                 <!-- CONTAINER END -->
