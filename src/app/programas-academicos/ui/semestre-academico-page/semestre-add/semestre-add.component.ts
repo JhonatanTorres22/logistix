@@ -104,6 +104,7 @@ export class SemestreAddComponent implements OnInit {
 
   onSubmit = () => {
 
+
     const tipoAccionForm = this.semestreEdit && this.semestreEdit.id != 0 ? 'Editar' : 'Crear';
 
     if( this.formSemestre.invalid ) {
