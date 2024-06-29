@@ -14,20 +14,20 @@
                   mat-cell
                   *matCellDef="let mail; let isLast = last; let isFirst = first"
                   (click)="mostrarHistorialMensajes( mail )"
-                  class="{{toggle() ? 'w-18rem' : 'w-22rem'}} mail-option bg-white"
+                  class="{{toggle() ? 'w-18rem' : 'w-22rem'}} mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}}"
                   style="height: 94px;"
                   [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}">
                   <div class="flex align-item-start {{toggle() ? 'w-16rem' : 'w-20rem'}}"> 
                     <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
-                    <div class="f-w-600 f-14 m-l-10 text-truncate w-full">
-                      <span class="capitalize">{{ mail.emisor.toLowerCase() }}</span>
+                    <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
+                      <span class="capitalize">{{ mail.emisor.toLowerCase() }} {{ mail.leido }}</span>
                       <div class="flex-grow-1 details">
-                        <p class="m-b-0 text-truncate f-14 f-w-400"  appRemoveHtml>
+                        <p class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} m-b-0 text-truncate f-14"  appRemoveHtml>
                           {{ mail.mensaje }}
                         </p>
 
                       </div>
-                      <span id="fecha" class="f-w-400 f-12 block text-right text-gray-700">
+                      <span id="fecha" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right text-gray-700">
                         {{ mail.fecha | date: 'dd MMM yyyy, h:mm a' }}
                       </span>
                     </div>

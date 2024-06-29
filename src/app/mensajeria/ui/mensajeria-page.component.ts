@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, effect } from '@angular/core';
 import { EmailComponent } from 'src/app/demo/pages/application/email/email.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaNavComponent } from './mensajeria-nav/mensajeria-nav.component';
@@ -39,13 +39,42 @@ export class MensajeriaPageComponent {
     private repository: MensajeriaRepository,
     private alert: AlertService
   ) {
+    effect( () => {
+      console.log( this.signal.renderizarMensajes() );
+      switch( this.signal.renderizarMensajes() ) {
+        case 'Enviados': {
+          this.obtenerMensajesEnviados();
 
+        }; break;
+
+        case 'Respuesta': {
+          this.obtenerMensajesRecibidos();
+          setTimeout(() => {
+            this.obtenerMensajesEnviados();
+          }, 1000);
+
+        } break;
+
+        case 'Alta': {
+          this.obtenerMensajesRecibidos();
+          this.obtenerMensajesEnviados();
+          this.obtenerMensajesArchivados();
+        }
+      }
+    })
   }
 
   // life cycle event
   ngOnInit() {
+
+    if( this.signal.mensajeriaInsertarDataAsignacion().asignacion.idDecano == 0  ) {
+      this.signal.setMensajeriaDataAsignacionDefault();
+      this.signal.setMensajesHistorialDefault();
+    }
+
     this.obtenerMensajesRecibidos();
     this.obtenerMensajesEnviados();
+    this.obtenerMensajesArchivados();
     
     this.breakpointObserver.observe([MIN_WIDTH_1025PX, MAX_WIDTH_1024PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_1024PX]) {
@@ -116,9 +145,9 @@ export class MensajeriaPageComponent {
 
   obtenerMensajesArchivados = () => {
     this.repository.obtenerMensajesArchivados().subscribe({
-      next: ( mensajesEnviados ) => {
-        this.signal.setMensajesEnviados( mensajesEnviados );
-        console.log(mensajesEnviados);
+      next: ( mensajesArchivados ) => {
+        this.signal.setMensajesArchivados( mensajesArchivados );
+        console.log(mensajesArchivados);
         
       }, error: ( error ) => {
         console.log(error);

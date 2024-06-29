@@ -1,6 +1,8 @@
 <app-card class="flex" headerClassTemplate="m-auto"> <!-- flex align-items-center gap-4 -->
     <ng-template #headerTitleTemplate >
-        @if ( programaSelect().id !== 0 ) {
+        <!-- {{ idFacultad }} - {{ facultadSelect().id }} - {{ idFacultadYaAsignada() }} -->
+          <!-- {{ 'Facultad Actual: ' + idFacultad + ' Facultad Seleccionada: ' }} {{ facultadSelect() | json}} -->
+        @if ( (programaSelect().id !== 0 && !idFacultad) || programaSelect().id !=0 && idFacultad == facultadSelect().id ) {
             <div class="flex flex-column">
                 <div class="flex gap-2">
                     {{programaSelect().nombre}}
@@ -19,16 +21,16 @@
         </button> -->
     </ng-template>
  
-    @if (programaSelect().id == 0) {
-        <button mat-flat-button color="primary" class="b-rad-20 flex m-auto" matTooltip="Agregar Programa" (click)="openModalPrograma()">
-            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
-        </button>
-    } @else {
+    @if ((programaSelect().id !== 0 && !idFacultad) || programaSelect().id !=0 && idFacultad == facultadSelect().id) {
         <!-- LOCAL COMPONENT -->
         <ng-content select="[director-page]"></ng-content>
         <ng-content select="[local-page]"></ng-content>
         <ng-content select="[ui-button-guardar]"></ng-content>
         <ng-content select="[asignarNewPrograma]"></ng-content>
+    } @else {
+        <button mat-flat-button color="primary" class="b-rad-20 flex m-auto" matTooltip="Agregar Programa" (click)="openModalPrograma()">
+            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-5"></i></div>
+        </button>
 
     }
 </app-card>

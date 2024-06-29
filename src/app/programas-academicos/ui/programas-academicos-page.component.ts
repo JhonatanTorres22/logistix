@@ -65,6 +65,7 @@ export class ProgramasAcademicosComponent implements OnInit {
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
     facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
+    idFacultadYaAsignada = this.facultadSignal.idFacultadYaAsignada;
     programaSelect: WritableSignal<ProgramaFacultad> = this.programaSignal.programaSelect;
     decanoSelect: WritableSignal<UsuarioRol> = this.decanoSignal.decanoSelect;
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
@@ -156,8 +157,10 @@ export class ProgramasAcademicosComponent implements OnInit {
             this.programaSignal.setSelectProgramaDefault();
             this.localSignal.setSelectLocalesDefault();
             this.directorSignal.setSelectDirectorDefault();
-            this.decanoSignal.setSelectDecanoDefault()
+            this.decanoSignal.setSelectDecanoDefault();
+            this.facultadSignal.setSelectFacultadDefault();
             this.obtener( this.semestreSelect().id );
+
           }, error: (error) => {
             console.log(error);
             this.alertService.showAlert('Ocurrió un error', 'error');

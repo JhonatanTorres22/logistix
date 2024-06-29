@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MensajeriaRepository } from "../../domain/repositories/mensajeria.repository";
 import { Observable } from "rxjs";
-import { MensajeriaArchivados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos } from "../../domain/models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaRecibidos, MensajeriaResponder } from "../../domain/models/mensajeria.model";
 import { MensajeriaService } from "../services/mensajeria.service";
 
 
@@ -21,15 +21,27 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
         return this.service.obtenerMensajesRecibidos();
     }
     
-    obtenerMensajesEnviados(): Observable<MensajeriaRecibidos[]> {
+    obtenerMensajesEnviados(): Observable<MensajeriaEnviados[]> {
         return this.service.obtenerMensajesEnviados();
     }
     
     obtenerMensajesArchivados(): Observable<MensajeriaArchivados[]> {
-        throw new Error("Method not implemented.");
+        return this.service.obtenerMensajesArchivados();
     }
     
     obtenerMensajesHistorial( idMensaje: number ): Observable<MensajeriaHistorialMensajes[]> {
         return this.service.obtenerMensajesHistorial( idMensaje );
+    }
+    
+    responderMensaje(mensaje: MensajeriaResponder): Observable<void> {
+        return this.service.responderMensaje( mensaje );
+    }
+    
+    leerMensaje(mensaje: MensajeriaLeerMensaje): Observable<void> {
+        return this.service.leerMensaje( mensaje );
+    }
+
+    cerrarArchivarMensaje(mensaje: MensajeriaCerrarArchivar): Observable<void> {
+        return this.service.cerrarArchivarMensaje( mensaje );
     }
 }

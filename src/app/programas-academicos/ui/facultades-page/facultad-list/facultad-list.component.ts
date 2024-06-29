@@ -178,7 +178,7 @@ export class FacultadListComponent implements OnInit{
       if( !isConfirm ) return;
 
       this.facultadSignal.setSelectFacultad(  this.facultadSelect );
-      this.programaSignal.setSelectProgramaDefault()
+      this.programaSignal.setSelectProgramaDefault();
       this.dialogRef.close('seleccionado');
       // this.aperturarSemestre();
     

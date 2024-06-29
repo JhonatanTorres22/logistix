@@ -22,9 +22,14 @@ export class FacultadSignal {
     facultadesList = signal( this.facultades );
     facultadEdit = signal (this.facultad);
     idFacultad = signal( 0 );
+    idFacultadYaAsignada = signal( 0 );
 
     setSelectFacultad = ( facultad: Facultad) => {
         this.facultadSelect.set( facultad );
+    }
+
+    setSelectFacultadDefault = () => {
+        this.facultadSelect.set( this.facultad );
     }
 
     setFacultadesList = ( facultades: Facultad[] ) => {
@@ -41,5 +46,9 @@ export class FacultadSignal {
 
     setIdFacultad = ( id: number ) => {
         this.idFacultad.set( id )
+    }
+
+    setIdFacultadYaAsignado = ( id: number ) => {
+        this.idFacultadYaAsignada.set( id )
     }
 }

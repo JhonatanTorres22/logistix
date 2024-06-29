@@ -10,6 +10,8 @@ export const mensajeriaInsertarDefault: MensajeriaInsertar = {
         menssage: '',
         receptorId: 0,
         tipoMensaje: 0,
+        informacionAdicional: '',
+        usuarioId: 0
     }
     
 export const locales: Local = {
@@ -57,7 +59,8 @@ export const selectMensaje: MensajeriaRecibidos = {
     tipoMensaje: 'NO SELECCIONADO',
     mensaje: "",
     rolEmisor: "",
-    receptor: ""
+    receptor: "",
+    leido: false
 }
 
 export const mensajesRecibidosDefault: MensajeriaRecibidos[] = [];
