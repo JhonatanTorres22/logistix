@@ -4,7 +4,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AsignacionRepository } from '../../domain/repositories/asignacion.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
-import { UsuarioRol } from 'src/app/usuarios/domain/models/usuario-rol.model';
+import { UsuarioRol, UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { Facultad } from '../../domain/models/facultad.model';
 import { Local } from '../../domain/models/local.model';
 import { ProgramaFacultad } from '../../domain/models/programa.model';
@@ -37,6 +37,7 @@ import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.s
 import { MensajeriaDataAsignacion, MensajeriaInsertar } from 'src/app/mensajeria/domain/models/mensajeria.model';
 import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { Router } from '@angular/router';
+import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 
 
 @Component({
@@ -75,6 +76,7 @@ export class AsignacionPageComponent implements OnInit {
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
     facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
+    idFacultadYaAsignada = this.facultadSignal.idFacultadYaAsignada;
     programaSelect: WritableSignal<ProgramaFacultad> = this.programaSignal.programaSelect;
     decanoSelect: WritableSignal<UsuarioRol> = this.decanoSignal.decanoSelect;
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
@@ -95,7 +97,8 @@ export class AsignacionPageComponent implements OnInit {
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
         private mensajeriaSignal: MensajeriaSignal,
-        private router: Router
+        private router: Router,
+        
     ) {
       // effect(() => {
       //   console.log(`New semestre selected: ${this.semestreSelect()}`);
@@ -136,7 +139,18 @@ export class AsignacionPageComponent implements OnInit {
 
 
   openModalFacultad = () => {
+    console.log('abrir modal facultad list');
+    const dialogRef = this.dialog.open( FacultadListComponent, {
+      width: '800px',
+      // height: '460px',
+      disableClose: true,
+    } );
 
+    dialogRef.afterClosed().subscribe( data => {
+      if( data == 'cancelar' ) return;
+
+      // this.obtenerSemestres();
+    })
   }
 
   openModalPrograma = () => {
@@ -305,5 +319,7 @@ export class AsignacionPageComponent implements OnInit {
     this.mensajeriaSignal.setMensajeriaDataAsignacion( mensajeriaDataAsignacion );
     this.router.navigate(['/mensajeria']);
   }
+
+  
 
 }

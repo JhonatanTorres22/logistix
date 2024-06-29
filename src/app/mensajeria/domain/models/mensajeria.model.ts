@@ -3,7 +3,7 @@ import { SemestreAcademico } from "src/app/programas-academicos/domain/models/se
 
 
 export interface Mensajeria {
-
+    idMensaje: number
 }
 
 
@@ -19,14 +19,29 @@ export interface MensajeriaRecibidos {
     emisor: string,
     receptor: string,
     fecha: string,
+    leido: boolean
 }
 
-export type MensajeriaEnviados = MensajeriaRecibidos;
-export type MensajeriaArchivados = MensajeriaRecibidos;
+export type MensajeriaEnviados = Omit<MensajeriaRecibidos, 'rolEmisor'> & {
+    rolReceptor: string
+};
+export type MensajeriaArchivados = MensajeriaRecibidos & {
+    rolReceptor: string,
+    archivo: string,
+};
+
+export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'>
 
 export type MensajeriaHistorialMensajes = MensajeriaRecibidos & {
     archivo: string,
     rolReceptor: string,
+    informacionAdicional: string,
+    idRolEmisor: number,
+    idRolReseptor: number
+}
+
+export interface MensajeriaLeerMensaje {
+    idMensaje: number
 }
 
 export interface MensajeriaInsertar {
@@ -36,6 +51,17 @@ export interface MensajeriaInsertar {
     receptorId: number,
     menssage: string,
     leido: boolean,
+    informacionAdicional: string,
+    usuarioId: number
+}
+
+export interface MensajeriaResponder {
+    idMensaje: number,
+    idRolEmisor: number,
+    idRolReceptor: number,
+    mensaje: string,
+    informacionAdicional: string,
+    // usuarioId: number
 }
 
 export interface MensajeriaInsertarData {

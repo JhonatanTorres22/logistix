@@ -61,7 +61,7 @@ export class UsuarioMapper {
             correoInstitucional: param.correoInstitucional,
             nCelular: param.celular,
             foto: param.imagenPerfil,
-            usuario:RolUserId.currentIdRolUser
+            usuario: RolUserId.currentIdRolUser
      
         }
     }

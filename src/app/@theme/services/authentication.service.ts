@@ -36,7 +36,9 @@ export class AuthenticationService {
     // const expToken = JSON.parse(localStorage.getItem('currentUserData')!).exp;
     authDomainService.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
     
-    this.mensajeriaSignal.setMensajeriaDataAsignacion( JSON.parse( localStorage.getItem('mensajeriaData')!))
+    // const data = localStorage.getItem('mensajeriaData') ? localStorage.getItem('mensajeriaData') : this.mensajeriaSignal.mensajeriaInsertarDataAsignacion;
+
+    this.mensajeriaSignal.setMensajeriaDataAsignacion( JSON.parse( localStorage.getItem('mensajeriaData')! ))
 
     const timer = new Date( new Date( this.authDomainService.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
     this.authDomainService.setCurrentTimer(timer)

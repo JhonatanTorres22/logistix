@@ -5,6 +5,8 @@ import { MensajeriaRoutingModule } from './mensajeria-routing.module';
 import { interceptorProviders } from '../core/interceptors/interceptor';
 import { MensajeriaRepository } from './domain/repositories/mensajeria.repository';
 import { MensajeriaRepositoryImpl } from './infraestructure/repositories/mensajeria.repository.impl';
+import { UsuarioRolRepository } from '../usuarios/domain/repositories/usuario-rol.repository';
+import { UsuarioRolRepositoryImp } from '../usuarios/infraestructure/repositories/usuario-rol.repository.impl';
 
 
 @NgModule({
@@ -15,7 +17,8 @@ import { MensajeriaRepositoryImpl } from './infraestructure/repositories/mensaje
   ],
   providers: [
     interceptorProviders, [
-      { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl}
+      { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
+      { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp }
     ]
   ]
 })

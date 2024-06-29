@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
 import { Observable } from "rxjs";
 
 
@@ -10,7 +10,9 @@ export abstract class MensajeriaRepository {
     abstract obtenerMensajesEnviados(): Observable<MensajeriaEnviados[]>
     abstract obtenerMensajesArchivados(): Observable<MensajeriaArchivados[]>
     abstract obtenerMensajesHistorial( idMensaje: number ): Observable<MensajeriaHistorialMensajes[]>
-
+    abstract responderMensaje( mensaje: MensajeriaResponder ): Observable<void>
+    abstract leerMensaje( mensaje: MensajeriaLeerMensaje ): Observable<void>
+    abstract cerrarArchivarMensaje( mensaje: MensajeriaCerrarArchivar ): Observable<void>
     // abstract
 
 
