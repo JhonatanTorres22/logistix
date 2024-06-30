@@ -64,7 +64,7 @@
                     class="example-list"
                     (cdkDropListDropped)="drop($event, 'asignar')">
                     @for (userRol of usuariosRol; track userRol) {
-                    <div (click)="setRol(userRol)" class="example-box flex" cdkDrag [cdkDragDisabled]="userRol.estado == 'ACTIVO'">
+                    <div (click)="setRol(userRol)" class="example-box flex" cdkDrag>
                     <span class="font-bold mx-4">{{ userRol.rol }}</span>
                         
                         <div class="flex flex-column w-full">
@@ -77,7 +77,7 @@
                                         >
                                             {{ userRol.estado }}
                                 </mat-slide-toggle>
-                                <mat-slide-toggle
+                                <!-- <mat-slide-toggle
                                                 class="f-w-500"
                                                 color="primary"
                                                 [checked]="userRol.alta == 'ALTA'"
@@ -85,7 +85,7 @@
                                                 
                                             >
                                                 {{ userRol.alta }}
-                                </mat-slide-toggle>
+                                </mat-slide-toggle> -->
                             }
                         </div>
                         <!-- {{userRol.rol}} -->
