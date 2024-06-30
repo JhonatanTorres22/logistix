@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, effect } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Rol } from '../../domain/models/auth.model';
 import { RolDTO } from '../../infraestructure/dto/auth.dto';
 import { Router } from '@angular/router';
 import { AuthService } from '../../infraestructure/services/auth.service';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 
 @Component({
   selector: 'select-rol',
@@ -17,12 +18,20 @@ export class SelectRolComponent {
 
   @Input() roles: RolDTO[] = [];
   @Input() token: string = '';
+
   imgRol: string = '';
   isSpinnerVisible: boolean = true;
+  
+
   constructor(
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private mensajeria: MensajeriaSignal
+  ) {
+    effect( () => {
+      'c'
+    })
+  }
   // getImgRol = ( rol: string ) => {
   //   switch( rol ) {
   //     case 'Administrador': this.imgRol = ''
@@ -33,6 +42,9 @@ export class SelectRolComponent {
     // console.log( rol );
 
     this.authService.selectedRol( [rol], this.token);
+    this.mensajeria.setMensajeriaDataAsignacionDefault();
+    // localStorage.setItem('current')
+    localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeria.mensajeriaAsignacionDefault));
 
     this.router.navigate(['/dashboard']);
     
