@@ -246,7 +246,7 @@ export class ProgramaAcademicoListComponent {
     })
   }
  /* MOSTRAR LA LISTA DE PROGRAMAS YA ASIGNADAS PARA BLOQUEARLAS */
-  programasAsignadas(){
+  programasAsignadas = () => {
     this.listaProgramasAsignadas = []
     this.asignaciones().forEach(facultad => {
       facultad.programas.forEach(programa => {
@@ -255,7 +255,7 @@ export class ProgramaAcademicoListComponent {
     })  
   }
 
-  deshabilitarProgramaAsignado ( programa:ProgramaFacultad): boolean {
+  deshabilitarProgramaAsignado = ( programa:ProgramaFacultad): boolean => {
     this.limpiarDatosProgramaAcademico();
     return this.listaProgramasAsignadas.some(asignado => asignado.idPrograma === programa.id)
   }

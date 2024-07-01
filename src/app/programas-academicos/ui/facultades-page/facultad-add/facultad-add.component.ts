@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Facultad, FacultadCrear } from 'src/app/programas-academicos/domain/models/facultad.model';
 import { FacultadRepository } from 'src/app/programas-academicos/domain/repositories/facultad.repository';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { FacultadValidations } from 'src/app/programas-academicos/domain/validations/facultad.validations';
 
@@ -24,6 +25,7 @@ import { FacultadValidations } from 'src/app/programas-academicos/domain/validat
 })
 export class FacultadAddComponent {
 
+  asignaciones = this.asignacionSignal.asignaciones;
   @Input() facultadEdit: Facultad;
 
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
@@ -45,6 +47,7 @@ export class FacultadAddComponent {
 
 
   constructor(
+    private asignacionSignal: AsignacionSignal,
     public dialogRef: MatDialogRef<FacultadAddComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -166,6 +169,11 @@ export class FacultadAddComponent {
         if( this.facultadSignal.facultadSelect().id === this.facultadEdit.id ){
           this.facultadSignal.setSelectFacultad(editFacultad)
         }
+        this.asignaciones().forEach(facultad => {
+          if(facultad.idFacultad === editFacultad.id){
+            facultad.nombreFacultad === editFacultad.nombre
+          }
+        })
         this.facultadEdit = {
           id: 0,
           definicion: '',

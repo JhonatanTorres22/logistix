@@ -23,7 +23,7 @@
     
                                 <div class="w-full border-1 border-gray-400 border-round text-left my-2 px-2"  >
                                         
-                                    <mat-radio-button class="flex w-full" [value]="facultad">
+                                    <mat-radio-button class="flex w-full" [value]="facultad" [disabled]="deshabilitarFacultadAsignada(facultad)">
                                         <div class="flex justify-content-between">
                                             <div class="m-3 w-full">
                                                 <div class="f-w-600"> {{ facultad.nombre }} </div>
@@ -36,7 +36,9 @@
                                                 </button>
                                                 <mat-menu #optionFacultad="matMenu">
                                                     <button mat-menu-item (click)="openShowFormEditarFacultad(facultad, 'Open')" class="text-primary"><i class="ti ti-edit f-18 text-primary"></i> <span class="f-w-600">Editar</span></button>
-                                                    <button mat-menu-item (click)="eliminarFacultadConfirm(facultad)" class="text-red-500"><i class="ti ti-trash f-18 text-red-500"></i> <span class="f-w-600">Eliminar</span></button>
+                                                    @if (!deshabilitarFacultadAsignada(facultad)) {
+                                                        <button mat-menu-item (click)="eliminarFacultadConfirm(facultad)" class="text-red-500"><i class="ti ti-trash f-18 text-red-500"></i> <span class="f-w-600">Eliminar</span></button>
+                                                    }
                                             
                                                 </mat-menu>
                                             </div>

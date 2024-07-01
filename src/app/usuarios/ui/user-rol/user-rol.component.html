@@ -77,15 +77,21 @@
                                         >
                                             {{ userRol.estado }}
                                 </mat-slide-toggle>
-                                <!-- <mat-slide-toggle
-                                                class="f-w-500"
-                                                color="primary"
-                                                [checked]="userRol.alta == 'ALTA'"
-                                                (change)="changeAltaRol($event, userRol)"
-                                                
-                                            >
-                                                {{ userRol.alta }}
-                                </mat-slide-toggle> -->
+                                @if (userRol.rol !== 'Decano de Facultad' && userRol.rol !== 'Director de Escuela') {
+                                    <mat-slide-toggle
+                                                    class="f-w-500"
+                                                    color="primary"
+                                                    [checked]="userRol.alta == 'ALTA'"
+                                                    (change)="changeAltaRol($event, userRol)"
+                                                    
+                                                >
+                                                    {{ userRol.alta }}
+                                    </mat-slide-toggle>
+                                }
+
+                                @else {
+                                    <div class="mt-2 ml-5 p-1">{{userRol.alta}}</div> 
+                                }
                             }
                         </div>
                         <!-- {{userRol.rol}} -->
