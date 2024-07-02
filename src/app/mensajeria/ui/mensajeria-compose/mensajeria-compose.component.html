@@ -31,50 +31,17 @@
         </ul>
     </div>
 </app-card>
-<!-- <quill-editor class="w-100 h-10rem">
-    <div quill-editor-toolbar>
-      <span class="ql-formats">
-        <select class="ql-header" [title]="'header'">
-          <option value="1"></option>
-          <option value="2"></option>
-          <option value="3"></option>
-          <option value="4"></option>
-          <option value="5"></option>
-          <option value="6"></option>
-          <option selected="selected"></option>
-        </select>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-bold" [title]="'Bold'"></button>
-        <button class="ql-italic" [title]="'Italic'"></button>
-        <button class="ql-underline" [title]="'Italic'"></button>
-        <button class="ql-italic" [title]="'strike'"></button>
-        <button class="ql-link" [title]="'link'"></button>
-        <button class="ql-image" [title]="'image'"></button>
-        <button class="ql-color" [title]="'color'"></button>
-        <button class="ql-background" [title]="'background'"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-list" value="ordered"></button>
-        <button class="ql-list" value="bullet"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-clean"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-clean"></button>
-      </span>
-    </div>
-</quill-editor> -->
-<!-- {{ mensaje | json }} -->
+
 <quill-editor class="w-100 h-13rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
 
-<ui-button
+<div class="flex justify-content-end my-2">
+  <ui-button
     label="Enviar"
     tooltip="Enviar mensaje"
     color="primary"
-    class="absolute right-0 bottom-0 mb-8"
+    class=""
     (click)="enviarConfirm()"
     >
 
 </ui-button>
+</div>

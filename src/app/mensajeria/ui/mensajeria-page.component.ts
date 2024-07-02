@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, effect } from '@angular/core';
+import { Component, ViewChild, effect, signal } from '@angular/core';
 import { EmailComponent } from 'src/app/demo/pages/application/email/email.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaNavComponent } from './mensajeria-nav/mensajeria-nav.component';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { MAX_WIDTH_1024PX, MAX_WIDTH_1399PX, MIN_WIDTH_1025PX, MIN_WIDTH_1400PX } from 'src/app/@theme/const';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MAX_WIDTH_1024PX, MAX_WIDTH_1399PX, MAX_WIDTH_767PX, MIN_WIDTH_1025PX, MIN_WIDTH_1400PX, MIN_WIDTH_768PX } from 'src/app/@theme/const';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaContentComponent } from './mensajeria-content/mensajeria-content.component';
 import { MensajeriaSignal } from '../domain/signals/mensajeria.signal';
 import { MensajeriaRepository } from '../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-mensajeria-page',
@@ -24,6 +25,7 @@ export class MensajeriaPageComponent {
   // public props
   @ViewChild('email') email: MatDrawer;
   modeValue: MatDrawerMode = 'side';
+  modoTablet = this.signal.mensajeriaModoTablet
   status = 'false';
   selectedTabIndex = 0;
   mailListHight = true;
@@ -37,13 +39,36 @@ export class MensajeriaPageComponent {
     public dialog: MatDialog,
     private signal: MensajeriaSignal,
     private repository: MensajeriaRepository,
-    private alert: AlertService
+    private alert: AlertService,
   ) {
+
+    /* BREAKING POINTS ANGULAR */
+    // breakpointObserver
+    //   .observe([
+    //     Breakpoints.XSmall,
+    //     Breakpoints.Small,
+    //     Breakpoints.Medium,
+    //     Breakpoints.Large,
+    //     Breakpoints.XLarge,
+    //   ])
+    //   .pipe(takeUntil(this.destroyed))
+    //   .subscribe(result => {
+    //     for (const query of Object.keys(result.breakpoints)) {
+    //       if (result.breakpoints[query]) {
+    //         this.currentScreenSize = this.displayNameMap.get(query) ?? 'Unknown';
+    //       }
+    //     }
+    //   });
+    /* BREAKING POINTS ANGULAR */
+
     effect( () => {
       console.log( this.signal.renderizarMensajes() );
       switch( this.signal.renderizarMensajes() ) {
         case 'Enviados': {
           this.obtenerMensajesEnviados();
+        this.signal.setMensajesHistorialDefault();
+        this.signal.renderizarMensajes.set('');
+
 
         }; break;
 
@@ -51,7 +76,10 @@ export class MensajeriaPageComponent {
           this.obtenerMensajesRecibidos();
           setTimeout(() => {
             this.obtenerMensajesEnviados();
-          }, 1000);
+            this.signal.setMensajesHistorialDefault();
+            this.signal.renderizarMensajes.set('');
+
+          }, 800);
 
         } break;
 
@@ -59,9 +87,12 @@ export class MensajeriaPageComponent {
           this.obtenerMensajesRecibidos();
           this.obtenerMensajesEnviados();
           this.obtenerMensajesArchivados();
+          this.signal.setMensajesHistorialDefault();
+          this.signal.renderizarMensajes.set('');
+
         }
       }
-    })
+    }, { allowSignalWrites: true})
   }
 
   // life cycle event
@@ -90,11 +121,24 @@ export class MensajeriaPageComponent {
         this.status = 'true';
       }
     });
+    this.breakpointObserver.observe([MIN_WIDTH_768PX, MAX_WIDTH_767PX]).subscribe((result) => {
+      if (result.breakpoints[MAX_WIDTH_767PX]) {
+        this.modoTablet.set( true );
+        // this.signal.setSeleccionarMensajeDefault();
+        // this.signal.setMensajesHistorialDefault();
 
-    // this.email.
+
+      } else if (result.breakpoints[MIN_WIDTH_768PX]) {
+        this.modoTablet.set( false );
+      //   this.signal.setSeleccionarMensajeDefault();
+      // this.signal.setMensajesHistorialDefault();
+
+      }
+    });
+
+
   }
 
-  // public method
   tabChanged(index: number) {
     this.selectedTabIndex = index;
     console.log(index);
@@ -106,9 +150,7 @@ export class MensajeriaPageComponent {
   }
 
   composeMail() {
-    // this.dialog.open(ComposeMailComponent, {
-    //   width: '500px'
-    // });
+
   }
 
   toggle() {
@@ -121,7 +163,6 @@ export class MensajeriaPageComponent {
     this.repository.obtenerMensajesRecibidos().subscribe({
       next: ( mensajesRecibidos ) => {
         this.signal.setMensajesRecibidos( mensajesRecibidos );
-        // this.dataSource = new MatTableDataSource<MensajeriaRecibidos>(this.mensajesRecibidos());
         this.alert.showAlert('Listando mensajes...', 'success')
       }, error: ( error ) => {
         console.log(error);
@@ -155,5 +196,24 @@ export class MensajeriaPageComponent {
       }
     });
   }
+
+
+  // destroyed = new Subject<void>();
+  // currentScreenSize: string;
+
+  // displayNameMap = new Map([
+  //   [Breakpoints.XSmall, 'XSmall'],
+  //   [Breakpoints.Small, 'Small'],
+  //   [Breakpoints.Medium, 'Medium'],
+  //   [Breakpoints.Large, 'Large'],
+  //   [Breakpoints.XLarge, 'XLarge'],
+  // ]);
+
+
+
+  // ngOnDestroy() {
+  //   this.destroyed.next();
+  //   this.destroyed.complete();
+  // }
 
 }

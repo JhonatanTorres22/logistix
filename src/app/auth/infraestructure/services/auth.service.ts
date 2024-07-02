@@ -11,6 +11,7 @@ import { JwtPayload, jwtDecode } from "jwt-decode";
 import { Usuario } from "src/app/usuarios/domain/models/usuario.model";
 import { AuthDomainService } from "../../domain/services/auth-domain.service";
 import { MensajeriaSignal } from "src/app/mensajeria/domain/signals/mensajeria.signal";
+import { RolUserId } from "src/app/core/mappers/rolUserId";
 
 
 @Injectable({
@@ -87,6 +88,8 @@ export class AuthService {
         serviceToken: token
       };
       localStorage.setItem('currentUserData', JSON.stringify(decodedToken));
+      // console.log(RolUserId.currentIdRolUser);
+      
       this.authDomainService.setCurrentUserData( JSON.parse(localStorage.getItem('currentUserData')!));
       const menusToRoleOfUsersDTO: RolDTO[] = rol;
       const menusToRoleOfUsersDomain: Rol[] = menusToRoleOfUsersDTO.map( AuthMapper.fromApiToDomainRol );

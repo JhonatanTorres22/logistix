@@ -38,7 +38,7 @@
    <div class="flex gap-3">
     <div class="flex gap-3 flex-wrap justify-content-center">
       @for (programa of asignacion.programas; track programa) {
-        <app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem"> <!-- flex align-items-center gap-4 -->
+        <app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem bg-primary-100"> <!-- flex align-items-center gap-4 -->
           <ng-template #headerTitleTemplate >
               <div class="flex flex-column">
                 <div class="flex gap-2 text-sm">
@@ -58,7 +58,7 @@
                 <i class="ti ti-refresh f-24 m-b-5"></i>
               </label>
             </div>
-            <div class="flex align-items-center gap-2 bg-primary-50 text-gray-900 px-2 py-2 border-round justify-content-center">
+            <div class="flex align-items-center gap-2 bg-accent-200 text-gray-900 px-2 py-2 border-round justify-content-center">
               <div class="flex flex-column">
                   <!-- {{programaSelect().nombre}} -->
                   <span class="f-14 f-w-500"> Director de Escuela</span>
@@ -73,7 +73,7 @@
           <div class="flex flex-wrap my-2 gap-2">
             @for ( local of programa.locales; track local ) {
                 <div 
-                  class="m-auto f-10 bg-primary-100 f-w-600 text-primary-500 px-4 py-2 border-round flex align-item-center gap-2"
+                  class="m-auto f-10 bg-accent-100 f-w-600 text-primary-500 px-4 py-2 border-round flex align-item-center gap-2 cursor-pointer"
                   (click)="abrirUbicacionLocal()"
                   matTooltip="Ver Ubicación"
                 >
