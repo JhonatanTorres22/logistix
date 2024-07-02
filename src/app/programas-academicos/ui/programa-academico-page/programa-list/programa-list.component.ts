@@ -108,6 +108,13 @@ export class ProgramaAcademicoListComponent {
           console.log(programas);
           this.programaSignal.setProgramaesList( programas );
           
+
+          if(this.programas().length > 0){
+            let programaSeleccionada = this.programas().find(programa => programa.id === this.programaSeleccionado().id)
+            if(programaSeleccionada){
+              this.programaSelect = programaSeleccionada;
+            }
+          }
         }, error: ( error ) => {
           console.log(error);
           

@@ -49,7 +49,7 @@ export class ProgramaAcademicoPageComponent {
     console.log('abrir modal programa list');
     const dialogRef = this.dialog.open( ProgramaAcademicoListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 

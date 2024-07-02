@@ -120,12 +120,16 @@ constructor(
     })
   }
 
-  localAsignado(local: Local): boolean {
+  localAsignado = (local: Local): boolean => {
     return this.localesAsignados.some(asignado => asignado.idLocal === local.id);
   }
-  programaConLocalAsignado(id: number): boolean {
-    return this.programaConLocalesAsignados.some(local => local.idLocal === id);
-}
+  programaConLocalAsignado = (idLocal: number): boolean => {
+    return this.programaConLocalesAsignados.some(local => local.idLocal === idLocal);
+  }
+
+  marcarCheckBoxLocales = (idLocal:number) => {
+    return this.programaConLocalAsignado(idLocal) || (this.localesSelect().length > 0 && this.localesSelect().some(local => local.id === idLocal));
+  }
 
   
   openShowFormEditarPrograma = ( programa: Local, event?: EventEmitter<string> | string) => {

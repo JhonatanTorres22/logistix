@@ -22,6 +22,7 @@ export class DecanoListComponent {
   showFormAgregarDecano: boolean = false;
   decanoEdit: UsuarioRol;
   decanos: WritableSignal<UsuarioRol[]>= this.signal.decanosList;
+  decanoSeleccionado = this.signal.decanoSelect;
   // programaes: 
   decanoSelect: UsuarioRol = {
     id: 0,
@@ -107,6 +108,12 @@ constructor(
         console.log(decanos);
         const decanosList = decanos.filter( usuario => usuario.rol.toUpperCase() == 'DECANO DE FACULTAD')  // && usuario.estado == 'ACTIVO'
         this.signal.setDecanosList( decanosList );
+        if(this.decanos().length > 0){
+          let decanoSeleccionado = this.decanos().find(decano => decano.id === this.decanoSeleccionado().id)
+          if(decanoSeleccionado){
+            this.decanoSelect = decanoSeleccionado;
+          }
+        }
         
       }, error: ( error ) => {
         console.log(error);

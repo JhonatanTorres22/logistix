@@ -171,7 +171,7 @@ export class FacultadAddComponent {
         }
         this.asignaciones().forEach(facultad => {
           if(facultad.idFacultad === editFacultad.id){
-            facultad.nombreFacultad === editFacultad.nombre
+            facultad.nombreFacultad = editFacultad.nombre;
           }
         })
         this.facultadEdit = {

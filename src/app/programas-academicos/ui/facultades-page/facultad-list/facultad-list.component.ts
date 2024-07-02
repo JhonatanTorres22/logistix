@@ -101,6 +101,12 @@ export class FacultadListComponent implements OnInit{
         console.log(facultades);
         this.facultadSignal.setFacultadesList( facultades );
         
+        if (this.facultades().length > 0) {
+          const facultadSeleccionada = this.facultades().find(facultad => facultad.id === this.facultadSeleccionado().id);
+          if (facultadSeleccionada) {
+            this.facultadSelect = facultadSeleccionada;
+          }
+        }
       }, error: ( error ) => {
         console.log(error);
         
