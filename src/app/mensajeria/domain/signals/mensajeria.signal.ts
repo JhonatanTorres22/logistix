@@ -33,6 +33,7 @@ export class MensajeriaSignal {
     toggle = signal( true );
     mensajeriaInsertar = signal( mensajeriaInsertarDefault );
     mensajeriaInsertarDataAsignacion = signal( this.mensajeriaAsignacionDefault );
+    mensajeriaModoTablet = signal( false );
 
     /* MENSAJES */
     mensajesRecibidos = signal ( mensajesRecibidosDefault );

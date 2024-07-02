@@ -1,7 +1,8 @@
 @import 'src/app/@theme/styles/theme-palette-colors.scss';
 
 ::ng-deep.mail-content-table {
-  width: 19.2rem;
+  // width: 19.2rem;
+  table-layout: fixed!important;
   .mat-mdc-header-row {
     display: none;
   }
@@ -143,6 +144,11 @@
       height: 100%;
     }
   }
+}
+
+::ng-deep.mat-mdc-table {
+  table-layout: fixed!important;
+
 }
 
 .pc-icon-checkbox {

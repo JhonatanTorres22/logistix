@@ -7,7 +7,14 @@
 
       @if ( isFirst ) {
         <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
-          <div class="f-w-600">{{ mensaje.asunto }}</div>
+          <div class="f-w-600">
+            @if ( modoTablet() ) {
+              <a (click)="onBackToMail()" class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
+                <i class="ti ti-chevron-left f-18"></i>
+              </a>
+            }
+            {{ mensaje.asunto }}
+          </div>
         </app-card>
       }
 

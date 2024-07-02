@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, Input, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
@@ -38,9 +38,11 @@ export class MensajeriaMessagesComponent {
 
   @Input() star = false;
   @Input() unStar = true;
+  @Output() backToMail: EventEmitter<boolean> = new EventEmitter();
   showFormCompose: boolean = false;
   readonly panelOpenState = signal(false);
   
+  modoTablet = this.mensajeriaSignal.mensajeriaModoTablet;
   mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
   tipoBandeja = this.mensajeriaSignal.tipoBandeja;  
 
@@ -86,11 +88,20 @@ export class MensajeriaMessagesComponent {
         const mensajeCerrar: MensajeriaCerrarArchivar = {
           idMensaje: mensaje.idMensaje
         }
-        this.cerrarArchivar( mensajeCerrar );
-        this.alert.showAlert('El Director fué dado de ALTA, y el Mensaje fué CERRADO y ARCHIVADO.', 'success');
-        console.log('No tenía Alta, ahora si está dado de ALTA');
-        this.mensajeriaSignal.renderizarMensajes.set( 'Alta' );
-        this.mensajeriaSignal.setMensajeriaDataAsignacionDefault();
+        this.cerrarArchivar( mensajeCerrar ).then( completedSuccessfully => {
+          if (!completedSuccessfully) {
+            console.log('Hubo un error al archivar')
+          }
+          
+          this.alert.showAlert('El Director fué dado de ALTA, y el Mensaje fué CERRADO y ARCHIVADO.', 'success');
+          // console.log('No tenía Alta, ahora si está dado de ALTA');
+          this.mensajeriaSignal.setMensajeriaDataAsignacionDefault();
+          // this.mensajesHistorial
+          setTimeout(() => {
+            this.mensajeriaSignal.renderizarMensajes.set( 'Alta' );
+          }, 200);
+
+        });
       }, error: ( error ) => {
         this.alert.showAlert('Ocurrió un error al dar de alta al decano:' + error, 'error');
       }
@@ -98,16 +109,25 @@ export class MensajeriaMessagesComponent {
   }
 
   cerrarArchivar( mensaje: MensajeriaCerrarArchivar ) {
-    this.repository.cerrarArchivarMensaje( mensaje ).subscribe({
-      next: ( data ) => {
-        console.log(data);
-        console.log('Mensaje CERRADO Y ARCHIVADO.');
-        
-      }, error: ( error ) => {
-        console.log( error );
-        this.alert.showAlert('Ocurrió un error al ARCHIVAR el mensaje: ' + error, 'error');
-      }
+    
+    return new Promise<boolean>( ( resolve, reject ) => {
+      this.repository.cerrarArchivarMensaje( mensaje ).subscribe({
+        next: ( data ) => {
+          console.log(data);
+          console.log('Mensaje CERRADO Y ARCHIVADO.');
+          resolve( true )
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al ARCHIVAR el mensaje: ' + error, 'error');
+          resolve( false )
+        }
+      });
     })
+
+  }
+
+  onBackToMail() {
+    this.backToMail.emit( true );
   }
 
 }

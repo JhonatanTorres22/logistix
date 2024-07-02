@@ -91,7 +91,7 @@ export class MensajeriaMapper {
     static fromDomainToApiResponder( param: MensajeriaResponder ): MensajeriaResponderDTO {
         return {
             codigoMensajeria: param.idMensaje,
-            codigoEmisorRol: RolUserId.currentIdRolUser,
+            codigoEmisorRol: param.idRolEmisor,
             codigoReceptorRol: param.idRolReceptor,
             contenido: param.mensaje,
             informacionAdicional: param.informacionAdicional
