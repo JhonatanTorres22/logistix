@@ -22,6 +22,7 @@ export class DirectorListComponent {
   showFormAgregarDirector: boolean = false;
   directorEdit: UsuarioRol;
   directores: WritableSignal<UsuarioRol[]>= this.signal.directoresList;
+  directorSeleccionado = this.signal.directorSelect;
   // programaes: 
   directorSelect: UsuarioRol = {
     id: 0,
@@ -107,6 +108,13 @@ constructor(
         console.log(directores);
         const directorList = directores.filter( usuario => usuario.rol.toUpperCase() == 'DIRECTOR DE ESCUELA')  // && usuario.estado == 'ACTIVO'
         this.signal.setDirectoresList( directorList );
+
+        if(this.directores().length > 0){
+          let directorSeleccionado = this.directores().find(director => director.id === this.directorSeleccionado().id )
+          if(directorSeleccionado){
+            this.directorSelect = directorSeleccionado;
+          }
+        } 
         
       }, error: ( error ) => {
         console.log(error);

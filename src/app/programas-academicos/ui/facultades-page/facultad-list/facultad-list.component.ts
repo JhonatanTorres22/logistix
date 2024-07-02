@@ -11,6 +11,8 @@ import { UiInputFechaComponent } from 'src/app/core/components/ui-input-fecha/ui
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
 
 @Component({
   selector: 'facultad-list',
@@ -20,6 +22,8 @@ import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/prog
   styleUrl: './facultad-list.component.scss'
 })
 export class FacultadListComponent implements OnInit{
+  listaFacultadesAsignadas: Asignacion[] = [];
+  asignaciones = this.asignacionSignal.asignaciones
 
   showFormAgregarFacultad: boolean = false;
   facultadEdit: Facultad;
@@ -34,6 +38,7 @@ export class FacultadListComponent implements OnInit{
 };
 
   constructor(
+    private asignacionSignal: AsignacionSignal,
     private programaSignal: ProgramaSignal,
     private facultadRepository: FacultadRepository,
     private facultadSignal: FacultadSignal,
@@ -45,6 +50,7 @@ export class FacultadListComponent implements OnInit{
   }
   ngOnInit(): void {
     this.obtenerFacultades();
+    this.facultadesAsignadas()
   }
 
   limpiarDatosFacultad = () => {
@@ -95,6 +101,12 @@ export class FacultadListComponent implements OnInit{
         console.log(facultades);
         this.facultadSignal.setFacultadesList( facultades );
         
+        if (this.facultades().length > 0) {
+          const facultadSeleccionada = this.facultades().find(facultad => facultad.id === this.facultadSeleccionado().id);
+          if (facultadSeleccionada) {
+            this.facultadSelect = facultadSeleccionada;
+          }
+        }
       }, error: ( error ) => {
         console.log(error);
         
@@ -183,6 +195,19 @@ export class FacultadListComponent implements OnInit{
       // this.aperturarSemestre();
     
     })
+  }
+  
+  facultadesAsignadas = () => {
+    this.listaFacultadesAsignadas = [];
+    this.asignaciones().forEach(facultad => {
+      console.log(facultad.nombreFacultad);
+      this.listaFacultadesAsignadas.push(facultad)
+    })
+  }
+
+  deshabilitarFacultadAsignada = ( facultad: Facultad): boolean => {
+    this.limpiarDatosFacultad()
+    return this.listaFacultadesAsignadas.some(asignado => asignado.idFacultad === facultad.id)
   }
 
 }

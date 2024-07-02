@@ -108,6 +108,13 @@ export class ProgramaAcademicoListComponent {
           console.log(programas);
           this.programaSignal.setProgramaesList( programas );
           
+
+          if(this.programas().length > 0){
+            let programaSeleccionada = this.programas().find(programa => programa.id === this.programaSeleccionado().id)
+            if(programaSeleccionada){
+              this.programaSelect = programaSeleccionada;
+            }
+          }
         }, error: ( error ) => {
           console.log(error);
           
@@ -246,7 +253,7 @@ export class ProgramaAcademicoListComponent {
     })
   }
  /* MOSTRAR LA LISTA DE PROGRAMAS YA ASIGNADAS PARA BLOQUEARLAS */
-  programasAsignadas(){
+  programasAsignadas = () => {
     this.listaProgramasAsignadas = []
     this.asignaciones().forEach(facultad => {
       facultad.programas.forEach(programa => {
@@ -255,7 +262,7 @@ export class ProgramaAcademicoListComponent {
     })  
   }
 
-  deshabilitarProgramaAsignado ( programa:ProgramaFacultad): boolean {
+  deshabilitarProgramaAsignado = ( programa:ProgramaFacultad): boolean => {
     this.limpiarDatosProgramaAcademico();
     return this.listaProgramasAsignadas.some(asignado => asignado.idPrograma === programa.id)
   }

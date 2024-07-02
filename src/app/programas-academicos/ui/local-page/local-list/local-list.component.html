@@ -23,7 +23,7 @@
 
                             <div class="w-full border-1 border-gray-400 border-round text-left my-2 px-2"  >
                                 <div class="flex justify-content-between">
-                                    <mat-checkbox [disabled]="programaConLocalAsignado(local.id)" (change)="onLocalChecked(local, $event.checked)">
+                                    <mat-checkbox [checked]="marcarCheckBoxLocales(local.id)"  [disabled]="programaConLocalAsignado(local.id)" (change)="onLocalChecked(local, $event.checked)">
                                         <div class="m-3 w-full">
                                             <div class="f-w-600">{{ local.nombre }}</div>
                                             <div class="f-12">{{ local.definicion }}</div>
