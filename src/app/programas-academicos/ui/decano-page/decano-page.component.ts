@@ -44,7 +44,7 @@ export class DecanoPageComponent {
     console.log('abrir modal decanos list');
     const dialogRef = this.dialog.open( DecanoListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 
