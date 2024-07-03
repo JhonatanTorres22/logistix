@@ -21,12 +21,7 @@ export class CicloListComponent implements OnInit {
   cicloList: WritableSignal<Ciclo[]> = this.signal.cicloList;
   showForm: boolean = false;
   cerrarFormCiclo = this.signal.cerrarFormCiclo;
-  cicloEdit: Ciclo = {
-    id: 0,
-    cicloLetra: '',
-    cicloNumero: '',
-    definicion: ''
-  };
+  cicloEdit: Ciclo
   constructor(
     private repository: CicloRepository,
     private signal: CicloSingal,
@@ -50,6 +45,14 @@ export class CicloListComponent implements OnInit {
     })
   }
 
+  limpiarDatosCiclo = () => {
+    this.cicloEdit = {
+      id: 0,
+      cicloLetra: '',
+      cicloNumero: '',
+      definicion: ''
+    };
+  }
   onSubmit() {
 
   }
@@ -67,12 +70,7 @@ export class CicloListComponent implements OnInit {
         case 'Add': {
           
           console.log('Semestre Creado');
-          this.cicloEdit = {
-            id: 0,
-            cicloLetra: '',
-            cicloNumero: '',
-            definicion: ''
-          };
+          this.limpiarDatosCiclo();
           this.showForm = false;
          this.obtener();
         } break;
@@ -81,12 +79,7 @@ export class CicloListComponent implements OnInit {
           console.log('editar');
           
           console.log('Semestre Editado');
-          this.cicloEdit = {
-            id: 0,
-            cicloLetra: '',
-            cicloNumero: '',
-            definicion: ''
-          };
+          this.limpiarDatosCiclo();
           this.showForm = false;
          this.obtener();
         } break;
@@ -95,23 +88,13 @@ export class CicloListComponent implements OnInit {
           console.log('open');
           
           this.showForm = true;
-          this.cicloEdit = {
-            id: 0,
-            cicloLetra: '',
-            cicloNumero: '',
-            definicion: ''
-          };
+          this.limpiarDatosCiclo();
              
         } break;
 
         case 'Cancelar': {
           console.log('Cancelar');
-          this.cicloEdit = {
-            id: 0,
-            cicloLetra: '',
-            cicloNumero: '',
-            definicion: ''
-          };
+          this.limpiarDatosCiclo();
           this.showForm = false;
         }
       }
@@ -125,6 +108,7 @@ export class CicloListComponent implements OnInit {
           this.showForm = true;
           this.cicloEdit = ciclo;
 
+          this.signal.setCicloEdit(ciclo)
         } break;
 
       }
