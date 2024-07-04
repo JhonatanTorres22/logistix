@@ -68,7 +68,7 @@ export class MensajeriaContentComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<MensajeriaRecibidos>(true, []);
   mensajeriaData: WritableSignal<MensajeriaDataAsignacion> = this.signal.mensajeriaInsertarDataAsignacion;
-
+  modoTablet = this.signal.mensajeriaModoTablet;
   // mensajesRecibidos 
   constructor( 
     private signal: MensajeriaSignal,
@@ -76,6 +76,12 @@ export class MensajeriaContentComponent implements OnInit {
     private alert: AlertService
   ) {
     effect( () => {
+
+      console.log( 'uhmm',  );
+      if( !this.modoTablet() ) {
+        this.titleContent = true;
+        this.detailsContent = false;
+      }
       // console.log( this.bandeja );
       // console.log(this.mensajesEnviados());
       // localStorage.setItem('mensajeriaData', JSON.stringify(this.signal.mensajeriaAsignacionDefault))
@@ -181,9 +187,14 @@ export class MensajeriaContentComponent implements OnInit {
     mail.leido ? '' : this.onLeido( mail );
     console.log('Ver mensaje', mail);
     this.obtenerHistorialMensajes( mail.idMensaje );
-    this.signal.setSeleccionarMensaje( mail )
-    // this.titleContent = !this.titleContent;
-    // this.detailsContent = !this.detailsContent;
+    this.signal.setSeleccionarMensaje( mail );
+
+    if( this.modoTablet() ) {
+      this.titleContent = !this.titleContent;
+      this.detailsContent = !this.detailsContent;
+
+      return;
+    }
   }
 
   obtenerHistorialMensajes( idMensaje: number ) {

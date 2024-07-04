@@ -83,7 +83,7 @@ export class MensajeriaComposeComponent implements OnInit {
         const mensajeInsertar: MensajeriaInsertar = {
           tipoMensaje: 1,
           asunto: this.asunto,
-          emisorId: RolUserId.currentIdRolUser,
+          emisorId: parseInt( this.authDomainService.currentRol().id ),
           receptorId: this.idDecano,
           leido: false,
           menssage: this.mensaje.trim(),
@@ -113,8 +113,10 @@ export class MensajeriaComposeComponent implements OnInit {
         
         this.isAlta( decano ).then( isAlta => {
           if( isAlta ) {
-            this.signal.renderizarMensajes.set( 'Enviados' );
-            this.signal.setMensajeriaDataAsignacionDefault();    
+            this.signal.setMensajeriaDataAsignacionDefault();
+            setTimeout(() => {
+              this.signal.renderizarMensajes.set( 'Enviados' );
+            }, 200);  
             return
           }
 

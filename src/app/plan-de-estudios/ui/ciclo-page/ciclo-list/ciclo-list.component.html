@@ -1,6 +1,9 @@
-<!-- <h2 class="f-20 f-w-600" mat-dialog-title >{{ !showForm ? 'Ciclo' : cicloEdit.id != 0 && showForm ? 'Editar' : 'Crear'}}</h2> -->
 
-    
+<div class="flex justify-content-between">
+    <div class="f-20 f-w-600" mat-dialog-title >{{ !showForm ? 'Ciclo' : cicloEdit.id != 0 && showForm ? 'Editar' : 'Crear'}}</div>
+    <a class="flex justify-content-center m-2 avatar avatar-s modal-close" mat-dialog-close><i class="ti ti-x f-20"></i></a>
+</div>
+
 
 <!-- <mat-dialog-content> -->
     @if ( showForm ) {

@@ -9,7 +9,7 @@
     </mat-card-header>
   }
   @if (showContent) {
-    <mat-card-content [style.padding.px]="padding">
+    <mat-card-content [style.padding.px]="padding" [ngClass]="cardContentClass">
       <ng-content></ng-content>
     </mat-card-content>
   }

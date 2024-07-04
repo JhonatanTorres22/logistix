@@ -7,13 +7,20 @@
 
       @if ( isFirst ) {
         <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
-          <div class="f-w-600">{{ mensaje.asunto }}</div>
+          <div class="f-w-600">
+            @if ( modoTablet() ) {
+              <a (click)="onBackToMail()" class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
+                <i class="ti ti-chevron-left f-18"></i>
+              </a>
+            }
+            {{ mensaje.asunto }}
+          </div>
         </app-card>
       }
 
       <div class="my-2">
         <mat-accordion>
-          <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none">
+          <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
             <mat-expansion-panel-header class="py-3">
               <mat-panel-title class="block mx-0">
                 <div class="title align-item-center">

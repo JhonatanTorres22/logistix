@@ -17,6 +17,7 @@ export class CardComponent {
    * Class to be applied at card level
    */
   @Input() cardClass!: string;
+  @Input() cardContentClass!: string;
 
   /**
    * To hide header from card

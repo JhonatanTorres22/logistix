@@ -1,26 +1,25 @@
 @if (titleContent) {
-    <div class="mail-content-table w-4 mx-2">
-       
-        
-        <ng-scrollbar style="height: calc(100vh - 210px); min-width: auto;" visibility="hover" track="all">
+    <div class="mail-content-table col-12 col-sm-12 col-md-4">
+
+        <ng-scrollbar style="height: calc(100vh - 210px); min-width: auto;" visibility="hover" track="all" class="w-full">
           @if( dataSource.data.length == 0 ) {
             <mensajeria-no-messages text="No hay mensajes" icon="ti ti-mailbox f-60"></mensajeria-no-messages>
           
           } @else {
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100 w-full">
               <ng-container matColumnDef="name" >
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td
                   mat-cell
                   *matCellDef="let mail; let isLast = last; let isFirst = first"
                   (click)="mostrarHistorialMensajes( mail )"
-                  class="{{toggle() ? 'w-18rem' : 'w-22rem'}} mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}}"
+                  class=" mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}} w-full"
                   style="height: 94px;"
-                  [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}">
-                  <div class="flex align-item-start {{toggle() ? 'w-16rem' : 'w-20rem'}}"> 
+                  [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+                  <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
                     <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
                     <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
-                      <span class="capitalize">{{ mail.emisor.toLowerCase() }} {{ mail.leido }}</span>
+                      <span class="capitalize">{{ mail.emisor.toLowerCase() }}</span>
                       <div class="flex-grow-1 details">
                         <p class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} m-b-0 text-truncate f-14"  appRemoveHtml>
                           {{ mail.mensaje }}
@@ -50,21 +49,21 @@
           }
         </ng-scrollbar>
       
-      
     </div>
     <!-- <mensajeria-messages class="w-9"></mensajeria-messages> -->
      
-
-    @if ( mensajeriaData().asignacion.idFacultad != 0) {
-      <mensajeria-compose class="w-9"></mensajeria-compose>
-    } @else { 
-
-      @if ( selectMensaje().idMensaje == 0 ) {
-        <mensajeria-no-messages class="w-9"></mensajeria-no-messages>
-      } @else {
-        
-        <mensajeria-messages class="w-9"></mensajeria-messages>
-
+    @if ( !modoTablet() ) {
+      @if ( mensajeriaData().asignacion.idFacultad != 0 ) {
+        <mensajeria-compose class="col-12 col-sm-12 col-md-8"></mensajeria-compose>
+      } @else { 
+  
+        @if ( selectMensaje().idMensaje == 0 ) {
+          <mensajeria-no-messages class="col-12 col-sm-12 col-md-8"></mensajeria-no-messages>
+        } @else {
+          
+          <mensajeria-messages class="col-12 col-sm-12 col-md-8"></mensajeria-messages>
+  
+        }
       }
     }
 
@@ -72,7 +71,13 @@
      
   }
   @if (detailsContent) {
-    <div class="details-content">
+
+
+    <mensajeria-messages class="col-12 col-sm-12 col-md-8" (backToMail)="backToMail()"></mensajeria-messages>
+
+ 
+
+    <!-- <div class="details-content col-12 ">
       <app-card [showHeader]="false" [padding]="16">
         <div class="title align-item-center">
           <ul class="list-inline">
@@ -139,6 +144,6 @@
       <div class="mail-details">
         <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p>
       </div>
-    </div>
+    </div> -->
 }
   
