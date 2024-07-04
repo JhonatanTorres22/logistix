@@ -9,6 +9,8 @@ import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuar
 
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.component';
+import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 
 @Component({
   selector: 'app-decano-list',
@@ -19,6 +21,8 @@ import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.componen
 })
 export class DecanoListComponent {
 
+  asignaciones = this.asignacionSignal.asignaciones
+  listaDecanosAsignados: Asignacion[] = [];
   showFormAgregarDecano: boolean = false;
   decanoEdit: UsuarioRol;
   decanos: WritableSignal<UsuarioRol[]>= this.signal.decanosList;
@@ -32,7 +36,7 @@ export class DecanoListComponent {
     rol: '0',
 };
 constructor(
-  
+  private asignacionSignal: AsignacionSignal,
   private signal: DecanoSignal,
   private repository: UsuarioRolRepository,
   // private facultadSignal: LocalSignal,
@@ -44,6 +48,7 @@ constructor(
   }
   ngOnInit(): void {
     this.obtenerDecanos();
+    this.decanosAsignados();
   }
 
   openShowFormCrearDecano = ( event?: EventEmitter<string> | string) => {
@@ -198,4 +203,14 @@ constructor(
     })
   }
 
+  decanosAsignados = () => {
+    this.listaDecanosAsignados = [];
+    this.asignaciones().forEach(facultad => {
+      this.listaDecanosAsignados.push(facultad)
+    })
+  }
+
+  deshabilitarDecanoAsignado = (decano: UsuarioRol): boolean => {   
+    return this.listaDecanosAsignados.some(decanoAsignado => decanoAsignado.idDecano === decano.id )
+  }
 }

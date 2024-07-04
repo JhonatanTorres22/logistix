@@ -169,7 +169,7 @@ export class AsignacionPageComponent implements OnInit {
     console.log('abrir modal LOCAL list');
     const dialogRef = this.dialog.open( LocalListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
       data: { programaConLocales: programa.locales } 
     } );

@@ -124,6 +124,12 @@ export class SemestreListComponent {
           // this.semestreSelect = semestres.find(semestre => semestre.id === this.semestreSeleccionado().id)
           this.semestreAcademicoDomainService.setSemestresAcademicos(semestres);
 
+          if(this.semestresAcademicos().length > 0){
+            let semestreMarcado = this.semestresAcademicos().find(semestre => semestre.id === this.semestreSeleccionado().id)
+            if(semestreMarcado){
+              this.semestreSelect = semestreMarcado;            
+            }            
+          }
           // this.semestreSelect = {
           //   id: 0,
           //   codigo: '',

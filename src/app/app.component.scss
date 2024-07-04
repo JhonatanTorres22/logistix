@@ -5,3 +5,7 @@
   position: fixed;
   z-index: 9999;
 }
+
+::ng-deep .alturaModal {
+  height: calc(100vh - 300px) !important;
+}

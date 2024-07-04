@@ -22,6 +22,7 @@ export class CicloAddComponent implements OnInit {
 
   @Input() cicloEdit: Ciclo;
   formCiclo: FormGroup;
+  entidad: string = 'Ciclo';
 
   /* VALIDATIONS */
   MaxLengthCicloNumero = this.validations.MaxLengthCicloNumero;
@@ -49,7 +50,7 @@ export class CicloAddComponent implements OnInit {
     this.formCiclo = new FormGroup({
       cicloLetra: new FormControl('', [Validators.required]),
       cicloNumero: new FormControl('', [Validators.required]),
-      definicion: new FormControl('', [Validators.required])
+      definicion: new FormControl('', [Validators.required, validations.duplicado])
     })
 
     this.cicloEdit ? this.pathValueForm() : '';

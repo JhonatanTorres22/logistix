@@ -1,39 +1,56 @@
-<form [formGroup]="formCiclo" class="p-3">
-    <!-- {{ semestreEdit | json }} -->
-    <div class="flex gap-3">
-        <ui-input
-            class="w-full"
-            label="Ciclo en número"
-            formControlName="cicloNumero"
-            [maxlength]="MaxLengthCicloNumero"
-            [minlength]="MinLengthCicloNumero"
-            [expReg]="expRegCicloNumeroBlockToInput"
+<app-card [cardTitle]="cicloEdit.id ? 'Editar' : 'Crear' + entidad" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
+    {{cicloEdit | json}}
+    <ng-template #headerOptionsTemplate>
+        <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
+          <i class="ti ti-x f-20"></i>
+        </a>
+    </ng-template>
+    <form [formGroup]="formCiclo" class="p-3">
+        <!-- {{ semestreEdit | json }} -->
+        <div class="flex gap-3">
+            <ui-input
+                class="w-full"
+                label="Ciclo en número"
+                formControlName="cicloNumero"
+                [maxlength]="MaxLengthCicloNumero"
+                [minlength]="MinLengthCicloNumero"
+                [expReg]="expRegCicloNumeroBlockToInput"
+                >
+            </ui-input>
+        </div>
+        <div class="flex gap-3">
+            <ui-input
+                class="w-full"
+                label="Ciclo en Letra"
+                formControlName="cicloLetra"
+                [maxlength]="MaxLengthCicloLetra"
+                [minlength]="MinLengthCicloLetra"
+                [expReg]='expRegCicloLetraBlockToInput'
             >
-        </ui-input>
-    </div>
-    <div class="flex gap-3">
-        <ui-input
-            class="w-full"
-            label="Ciclo en Letra"
-            formControlName="cicloLetra"
-            [maxlength]="MaxLengthCicloLetra"
-            [minlength]="MinLengthCicloLetra"
-            [expReg]='expRegCicloLetraBlockToInput'
-        >
-        </ui-input>
-    </div>
-    <div class="flex gap-3">
-        <ui-input
-            class="w-full"
-            label="Ciclo definición"
-            formControlName="definicion"
-            [maxlength]="MaxLengthDefinicion"
-            [minlength]="MinLengthDefinicion"
-            [expReg]='expRegDefinicionBlockToInput'
-        >
-        </ui-input>
-    </div>
-    <ui-button label="Cancelar" (click)="cancelar()"></ui-button>
-    <ui-button label="Guardar" color="primary" [disabled]="formCiclo.invalid" (click)="onSubmit()"></ui-button>
-
-</form>
+            </ui-input>
+        </div>
+        <div class="flex gap-3">
+            <ui-input
+                class="w-full"
+                label="Ciclo definición"
+                formControlName="definicion"
+                [maxlength]="MaxLengthDefinicion"
+                [minlength]="MinLengthDefinicion"
+                [expReg]='expRegDefinicionBlockToInput'
+            >
+            </ui-input>
+        </div>
+        <!-- <ui-button label="Cancelar" (click)="cancelar()"></ui-button>
+        <ui-button label="Guardar" color="primary" [disabled]="formCiclo.invalid" (click)="onSubmit()"></ui-button> -->
+        <ng-template #actionTemplate>
+            <div class="flex align-item-center justify-content-between">
+              <div class="flex-grow-1 text-end">
+      
+                <ui-button color="secondary" label="Cancelar" (click)="cancelar()" class="m-r-10"></ui-button>
+                <ui-button label="Guardar" color="primary" [disabled]="formCiclo.invalid" (click)="onSubmit()"></ui-button>
+      
+              </div>
+            </div>
+          </ng-template>
+    </form>
+</app-card>

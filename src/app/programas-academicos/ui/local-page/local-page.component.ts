@@ -35,7 +35,7 @@ export class LocalPageComponent {
     console.log('abrir modal programa list');
     const dialogRef = this.dialog.open( LocalListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 
