@@ -42,7 +42,7 @@ export class UserDetailsComponent {
         text: this.usuario.celular
       },
       {
-        icon: 'ti ti-map-pin',
+        icon: 'ti ti-calendar',
         text: this.datePipe.transform(this.usuario.fechaNacimiento, 'dd/MM/yyyy')
       }
     ];

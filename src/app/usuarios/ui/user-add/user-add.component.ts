@@ -350,7 +350,7 @@ export class UserAddComponent {
   openModalDetalleUsuario = () => {
     this.dialog.open( UserDetailsComponent, {
       width: '800px',
-      height: '600px',
+      // height: '600px',
       disableClose: true,
       data: {usuario: this.usuarioExistente, component: 'user-existente'}
     })

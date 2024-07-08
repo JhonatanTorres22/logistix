@@ -57,7 +57,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-sm-6">
+          <div class="col-sm-6" [ngClass]="{'sm:pt-4': usuarioExistente && formUserAdd.value.numeroDocumento === usuarioExistente.numeroDocumento}">
 
             <ui-input class="w-full" label="Apellido Paterno" formControlName="apellidoPaterno" [readonly]="isReadonly('case1')"  [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"></ui-input>
 
@@ -85,7 +85,7 @@
               }
             </mat-form-field> -->
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6" [ngClass]="{'sm:pt-4': usuarioExistente && formUserAdd.value.numeroDocumento === usuarioExistente.numeroDocumento}">
 
             <ui-input class="w-full" label="apellidoMaterno" formControlName="apellidoMaterno" 
             [readonly]="isReadonly('case1')" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"> </ui-input>
