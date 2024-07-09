@@ -5,13 +5,11 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { MensajeriaInsertar, TipoMensaje } from '../../domain/models/mensajeria.model';
-import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
-import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'mensajeria-compose',
@@ -26,16 +24,16 @@ export class MensajeriaComposeComponent implements OnInit {
   mensajeriaInsert = this.signal.mensajeriaInsertar;
   mensajeriaDataAsignacion = this.signal.mensajeriaInsertarDataAsignacion;
 
-  decano: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion.nombreDecano;
-  idDecano: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion.idDecano;
-  facultad: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion.nombreFacultad;
-  idFacultad: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion.idFacultad;
-  programa: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion.programas[0].nombrePrograma;
-  idPrograma: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion.programas[0].idPrograma;
-  director: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion.programas[0].nombreDirector;
-  idDirector: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion.programas[0].idDirector;
-  semestre: string = this.signal.mensajeriaInsertarDataAsignacion().semestre.codigo;
-  tipoMensaje: TipoMensaje = this.signal.mensajeriaInsertarDataAsignacion().tipoMensaje;
+  decano: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.nombreDecano;
+  idDecano: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.idDecano;
+  facultad: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.nombreFacultad;
+  idFacultad: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.idFacultad;
+  programa: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.programas[0].nombrePrograma;
+  idPrograma: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.programas[0].idPrograma;
+  director: string = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.programas[0].nombreDirector;
+  idDirector: number = this.signal.mensajeriaInsertarDataAsignacion().asignacion?.programas[0].idDirector;
+  semestre: string = this.signal.mensajeriaInsertarDataAsignacion().semestre?.codigo;
+  tipoMensaje: TipoMensaje = this.signal.mensajeriaInsertarDataAsignacion()?.tipoMensaje;
 
   paraRolNombreArea: string;
   paraRolNombrePersona: string;
@@ -47,7 +45,7 @@ export class MensajeriaComposeComponent implements OnInit {
     private repository: MensajeriaRepository,
     private alert: AlertService,
     private userRolRepository: UsuarioRolRepository,
-    private authDomainService: AuthDomainService
+    private auth: AuthSignal
   ) {}
 
   ngOnInit(): void {
@@ -83,12 +81,12 @@ export class MensajeriaComposeComponent implements OnInit {
         const mensajeInsertar: MensajeriaInsertar = {
           tipoMensaje: 1,
           asunto: this.asunto,
-          emisorId: parseInt( this.authDomainService.currentRol().id ),
+          emisorId: parseInt( this.auth.currentRol().id ),
           receptorId: this.idDecano,
           leido: false,
           menssage: this.mensaje.trim(),
           informacionAdicional: this.idDirector.toString(),
-          usuarioId: parseInt( this.authDomainService.currentRol().id )
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         // this.mensajeriaSignal.setMensajeriaInsertar( mensajeInsertar );
         // console.log(mensajeInsertar);

@@ -76,6 +76,27 @@ export interface MensajeriaDataAsignacion {
     tipoMensaje: TipoMensaje
 }
 
+export interface MensajeriaNuevoMensajeList {
+    idTipoMensajeRol: number,
+    idUsuarioRol: number,
+    responder: string,
+    apellidosYnombres: string,
+    descripcion: string,
+    temporalidad: number,
+    iniciaProceso: boolean,
+    cierraProceso: boolean
+}
+
+
+export interface MensajeriaTipoGrupo {
+    id: number,
+    tipo: string
+}
+
+
+export interface MensajeriaEnviarNuevoMensaje {
+    // idTipoMensaje: 
+}
 // export interface MensajeriaSelectMensaje {
 //     id: number,
 //     nombre: string,

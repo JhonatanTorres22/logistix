@@ -88,6 +88,7 @@ export class ProgramasAcademicosComponent implements OnInit {
     ) {
       effect(() => {
         console.log(`New semestre selected program: ${this.semestreSelect()}`);
+        localStorage.setItem('currentSemestre', JSON.stringify( this.semestreSelect() ));
         this.obtener( this.semestreSelect().id );
       }, );
     }

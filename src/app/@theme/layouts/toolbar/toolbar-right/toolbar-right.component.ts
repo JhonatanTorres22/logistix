@@ -7,10 +7,9 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 // project import
-import { AuthenticationService } from 'src/app/@theme/services/authentication.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AuthService } from '../../../../auth/infraestructure/services/auth.service';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'app-nav-right',
@@ -23,16 +22,16 @@ export class NavRightComponent {
   // public props
   @Output() HeaderBlur = new EventEmitter();
 
-  currentUser = this.authDomainService.currentUserData;
-  currentRol = this.authDomainService.currentRol;
-  timer = this.authDomainService.currentTimer;
+  currentUser = this.auth.currentUserData;
+  currentRol = this.auth.currentRol;
+  timer = this.auth.currentTimer;
   // constructor
   constructor(
     private translate: TranslateService,
     private router: Router,
     // private authenticationService: AuthenticationService,
     private authenticationService: AuthService,
-    private authDomainService: AuthDomainService
+    private auth: AuthSignal
   ) {
     translate.setDefaultLang('en');
   }

@@ -3,11 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 import packageInfo from '../../package.json';
+import '../mocks/browser';
 
 export const environment = {
   appVersion: packageInfo.version,
   production: false,
   apiUrl: 'https://mock-data-api-nextjs.vercel.app',
+  EnpPointMSW: 'https://mock.com/',
   EndPoint: 'https://pruebas2024.somee.com/Academico/',
   // EndPoint: 'http://192.168.100.167/',
   

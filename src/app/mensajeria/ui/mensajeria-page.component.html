@@ -7,9 +7,12 @@
                     <app-card [showHeader]="false" [padding]="0">
                       <div class="p-x-20 p-t-20 p-b-15">
                         <div class="grid">
-                          <button mat-flat-button color="primary" (click)="composeMail()">
+                          <!-- <ui-button-split label="Nuevo Mensaje" size="sm" classButton="z" (onClick)="onClickNewMessage( $event )"></ui-button-split> -->
+                          <!-- <button mat-button [matMenuTriggerFor]="animals">Animal index</button> -->
+                          <button mat-flat-button color="primary" (click)="nuevoMensaje()">
                             <div class="flex align-item-center"> <i class="ti ti-circle-plus f-18 m-r-10"></i> Mensaje Nuevo </div>
                           </button>
+                          
                         </div>
                       </div>
                       <!-- <img class="border-circle  fadeinleft animation-duration-500 w-5rem m-auto block mb-3" src="./assets/images/mensajeria/icons-gif/correo-electronico-red.gif"> -->

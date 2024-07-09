@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 
 @Component({
@@ -16,5 +16,5 @@ export class UiButtonIconComponent {
   @Input() tooltip: '';
   @Input() disabled: boolean = false;
   @Input() icon: string;
-
+  @Output() onClick = new EventEmitter();
 }

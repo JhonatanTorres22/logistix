@@ -1,0 +1,84 @@
+<app-card [showHeader]="false" [padding]="16">
+    <div class="title align-item-center" [formGroup]="tipoMensajeForm">
+        <ul class="list-inline mb-3">
+            <li class="list-inline-item w-full">
+                <div class="flex align-item-center gap-2">
+                    <div class="w-8rem">
+                        <ui-button label="Mensajería" color="accent-200"></ui-button>
+                    </div>
+                    <ui-select classInput="small" class="w-full" [options]="tiposMensajesGrupo()" formControlName="tipoMensajeGrupo" (onChange)="obtenerTipoMensaje( $event )"></ui-select>
+                </div>
+                <div class="flex align-item-center gap-2">
+                    <div class="w-8rem">
+                        <ui-button label="Tipo" color="accent-200"></ui-button>
+                    </div>
+                    <ui-select classInput="small" class="w-full" [options]="tiposMensajes()" formControlName="tipoMensaje" (onChange)="obtenerDestinatarios( $event )"></ui-select>
+                </div>
+                <div class="flex align-item-center gap-2">
+                    <div class="w-8rem">
+                        <ui-button label="Para" color="accent-200"></ui-button>
+                    </div>
+                    <!-- <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" /> -->
+                    <!-- <ui-select classInput="" class="w-full" [options]="listaDestinatarios()" formControlName="destinatario"  (onChange)="showCompose( $event )"></ui-select> -->
+
+                    <mat-form-field appearance="outline" class="w-100 m-t-5 small">
+                        <mat-select name="assign" formControlName="destinatario">
+                          @for (destinatario of listaDestinatarios(); track destinatario) {
+                            <mat-option [value]="destinatario.idUsuarioRol">
+                              <div class="flex align-item-center">
+                                <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                                {{ destinatario.apellidosYnombres }}
+                              </div>
+                            </mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                </div>
+            </li>
+        </ul>
+        <mat-divider></mat-divider>
+        <ul class="list-inline mt-3">
+            <li class="list-inline-item">
+                <div class="flex align-item-start gap-2">
+                    <div class="w-4rem">
+                        <ui-button label="Asunto" color="accent-200"></ui-button>
+                    </div>
+                    <div class="flex-grow-1 m-l-5">
+                        <div class="f-14 f-w-600 uppercase">
+                            @if ( getAsunto( tipoMensajeForm.value.tipoMensaje ) ) {
+                                <ui-button [label]="getAsunto( tipoMensajeForm.value.tipoMensaje )?.text" color="accent-200" (onClick)="showCardPrograma( templateProgramaCard )"></ui-button>
+                            }
+                            <!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje )?.text }} -->
+                        </div>
+                        <!-- <div class="m-b-0 text-muted mat-small"> From: &lt;tazeanu&#64;company.com&gt; </div> -->
+                    </div>
+                </div>
+              
+            </li>
+        </ul>
+    </div>
+    
+</app-card>
+
+<!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje  ) | json }} -->
+<quill-editor class="w-100 h-13rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+
+<div class="flex justify-content-end my-2">
+  <ui-button
+    label="Enviar"
+    tooltip="Enviar mensaje"
+    color="primary"
+    class=""
+    (click)="enviarConfirm()"
+    >
+
+</ui-button>
+</div>
+
+
+<ng-template #templateProgramaCard let-data>
+    <mat-dialog-content>
+        <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
+         <!-- <p>asdasd</p> -->
+    </mat-dialog-content>
+</ng-template>

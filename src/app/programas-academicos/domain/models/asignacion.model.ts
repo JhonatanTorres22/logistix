@@ -45,3 +45,5 @@ export interface ListarLocalesAsignados {
     locales: AsignacionLocal[];
     programaConLocales:AsignacionLocal[]
 }
+
+export type AsignacionRenderizar = 'Obtener' | ''

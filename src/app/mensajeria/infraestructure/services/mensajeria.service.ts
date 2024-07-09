@@ -1,12 +1,21 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaRecibidos, MensajeriaResponder } from "../../domain/models/mensajeria.model";
+import { 
+    MensajeriaArchivados,
+    MensajeriaCerrarArchivar,
+    MensajeriaEnviados,
+    MensajeriaHistorialMensajes,
+    MensajeriaInsertar,
+    MensajeriaLeerMensaje,
+    MensajeriaNuevoMensajeList,
+    MensajeriaRecibidos,
+    MensajeriaResponder } from "../../domain/models/mensajeria.model";
 import { Observable, map } from "rxjs";
 import { MensajeriaMapper } from "../../domain/mappers/mensajeria.mapper";
-import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaRecibidosDataArrayDTO } from "../dto/mensajeria.dto";
-import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { AuthDomainService } from "src/app/auth/domain/services/auth-domain.service";
+import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
+import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
+import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
 
 @Injectable({
@@ -25,12 +34,15 @@ export class MensajeriaService {
     private urlResponder: string;
     private urlLeer: string;
     private urlCerrarArchivar: string;
+    private urlTipoMensajeGrupo: string;
+    private urlTipoMensaje: string;
+    private urlNuevoMensajeA: string;
 
     private rol = this.signal.currentRol
     
     constructor(
         private http: HttpClient,
-        private signal: AuthDomainService
+        private signal: AuthSignal
     ) {
         this.urlApi = environment.EndPoint;
 
@@ -42,6 +54,10 @@ export class MensajeriaService {
         this.urlResponder = 'api/Mensajeria/Responder';
         this.urlLeer = 'api/Mensajeria/Leido';
         this.urlCerrarArchivar = 'api/Mensajeria/CerrarArchivar';
+        this.urlTipoMensajeGrupo = 'api/TipoMensajeGrupo/Listar?CodigoUsuarioRol='
+        this.urlTipoMensaje = 'api/TipoMensaje/Listar?CodigoUsuarioRol='
+        this.urlNuevoMensajeA = 'api/Mensajeria/NuevoA?'
+
     }
 
 
@@ -100,4 +116,26 @@ export class MensajeriaService {
         return this.http.put<void>( this.urlApi + this.urlCerrarArchivar, mensajeAPI );
     }
 
+    
+    obtenerTipoMensajeGrupo():Observable<UiSelect[]> {
+        const urlApi = `${ this.urlTipoMensajeGrupo}${ this.rol().id }`
+        return this.http.get<MensajeriaTipoGrupoDataArrayDTO>( this.urlApi + urlApi )
+        .pipe( map ( api => api.data.map ( MensajeriaMapper.fromApiToDomainTipoMensajeGrupo )))
+    }
+    
+    obtenerTipoMensaje( idTipoMensajeGrupo: number ): Observable<UiSelect[]> {
+        const urlAPI = `${ this.urlTipoMensaje}${ this.rol().id }&CodigoTipoMensajeGrupo=${idTipoMensajeGrupo}`;
+        
+        return this.http.get<MensajeriaTipoDataArrayDTO>( this.urlApi + urlAPI)
+        .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainTipoMensaje )))
+    }
+    
+    nuevoMensajeA( idTipoMensaje: number ): Observable<MensajeriaNuevoMensajeList[]> {
+        const urlApi = `${this.urlNuevoMensajeA}CodigoTipoMensaje=${idTipoMensaje}&CodigoUsuarioRol=${ this.rol().id }`;
+        
+        return this.http.get<MensajeriaNuevoMensajeListDataArrayDTO>( this.urlApi + urlApi )
+            .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainNuevoMensajeList )))
+    }
+
+    
 }

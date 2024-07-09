@@ -20,7 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -52,6 +52,9 @@ import { SearchFilterPipe } from 'src/app/@theme/services/search-filter.pipe';
 import { DisabledControlDirective } from 'src/app/core/directives/disabled-control.directive';
 import { UpperCaseDirective } from 'src/app/core/directives/upper-case.directive';
 import { RemoveHtmlDirective } from 'src/app/core/directives/remove-html.directive';
+
+//PrimeNg
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 const MaterialModules = [
   MatToolbarModule,
@@ -91,6 +94,10 @@ const MaterialModules = [
   MatSnackBarModule
 ];
 
+const PrimeNgModules = [
+  SplitButtonModule
+]
+
 const Directives = [
   DisabledControlDirective,
   UpperCaseDirective,
@@ -119,6 +126,7 @@ const Directives = [
   ],
   exports: [
     MaterialModules,
+    PrimeNgModules,
     Directives,
     FormsModule,
     ReactiveFormsModule,
@@ -127,6 +135,14 @@ const Directives = [
     TranslateModule,
     CardComponent,
     SearchFilterPipe
+  ],
+  providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: 
+      {
+        appearance: 'outline',
+        subscriptSizing: 'dynamic'
+      }
+    }
   ]
 })
 export class SharedModule {}

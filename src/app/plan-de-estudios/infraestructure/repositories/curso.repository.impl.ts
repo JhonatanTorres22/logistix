@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CursoRepository } from "../../domain/repositories/curso.repository";
 import { Observable } from "rxjs";
-import { Curso, CursoCrear, CursoEliminar } from "../../domain/models/curso.model";
+import { Curso, CursoCrear, CursoEditar, CursoEliminar } from "../../domain/models/curso.model";
 import { CursoService } from "../services/curso.service";
 
 
@@ -23,7 +23,7 @@ import { CursoService } from "../services/curso.service";
         return this.service.agregar( curso );
      }
 
-     editar(curso: Curso): Observable<void> {
+     editar(curso: CursoEditar): Observable<void> {
         return this.service.editar( curso );
      }
      

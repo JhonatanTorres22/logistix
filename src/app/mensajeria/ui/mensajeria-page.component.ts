@@ -12,11 +12,12 @@ import { MensajeriaSignal } from '../domain/signals/mensajeria.signal';
 import { MensajeriaRepository } from '../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { Subject, takeUntil } from 'rxjs';
+import { UiButtonSplitComponent } from 'src/app/core/components/ui-button-split/ui-button-split.component';
 
 @Component({
   selector: 'app-mensajeria-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, MensajeriaContentComponent],
+  imports: [ CommonModule, SharedModule, MensajeriaContentComponent, UiButtonSplitComponent],
   templateUrl: './mensajeria-page.component.html',
   styleUrl: './mensajeria-page.component.scss'
 })
@@ -33,6 +34,8 @@ export class MensajeriaPageComponent {
   mensajesRecibidosTotal = this.signal.mensajesRecibidosTotal;
   mensajesEnviadosTotal = this.signal.mensajesEnviadosTotal;
   mensajesArchivadosTotal = this.signal.mensajesArchivadosTotal;
+  showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
+
   // constructor
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -98,7 +101,7 @@ export class MensajeriaPageComponent {
   // life cycle event
   ngOnInit() {
 
-    if( this.signal.mensajeriaInsertarDataAsignacion().asignacion.idDecano == 0  ) {
+    if( this.signal.mensajeriaInsertarDataAsignacion().asignacion?.idDecano == 0  ) {
       this.signal.setMensajeriaDataAsignacionDefault();
       this.signal.setMensajesHistorialDefault();
     }
@@ -147,6 +150,11 @@ export class MensajeriaPageComponent {
 
   onClick() {
     this.mailListHight = !this.mailListHight;
+  }
+
+  nuevoMensaje = ( ) => {
+    // this.repository.nuevoMensajeA()
+    this.showFormNuevoMensaje.set( true );
   }
 
   composeMail() {
