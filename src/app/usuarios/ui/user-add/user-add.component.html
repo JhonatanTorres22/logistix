@@ -38,12 +38,12 @@
                
               />
               
-              @if (usuarioExistente && formUserAdd.value.numeroDocumento == usuarioExistente.numeroDocumento ) {
-                <mat-hint class="text-red-500 absolute">Número de documento ya existe
+              @if (formUserAdd.get('numeroDocumento')?.hasError('existingDocument') ) {
+                <mat-error>Número de documento ya existe
                   <span (click)="openModalDetalleUsuario()" matTooltip="Ver información del usuario" class=" px-2 text-gray-700 cursor-pointer p-1 bg-gray-200 vertical-align-sub">
                     <mat-icon>remove_red_eye</mat-icon>
                   </span>
-                </mat-hint>
+                </mat-error>
               } @else {
                 <mat-hint align="end">{{ formUserAdd.get('numeroDocumento')?.value.length }}/ {{ maxLengthNumeroDocumento() }}</mat-hint>
               }
@@ -57,9 +57,14 @@
             </mat-form-field>
           </div>
 
-          <div class="col-sm-6" [ngClass]="{'sm:pt-4': usuarioExistente && formUserAdd.value.numeroDocumento === usuarioExistente.numeroDocumento}">
-
-            <ui-input class="w-full" label="Apellido Paterno" formControlName="apellidoPaterno" [readonly]="isReadonly('case1')"  [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"></ui-input>
+          <div class="flex col-sm-6" >
+            <!-- <div class="row pt-2">
+              <mat-slide-toggle color="primary" class="-mb-8 ml-4"></mat-slide-toggle>
+              <h5>¿Compuesto?</h5>
+            </div> -->
+            <ui-input class="w-full" label="Apellido Paterno" 
+            formControlName="apellidoPaterno" [readonly]="isReadonly('case1')"  [maxlength]="maxLengthApellidos" 
+            [minlength]="minLengthApellidos" [expReg]="expRegApellidosYNombres" [patternErrorMessage]="mensajeBloquearEspacio"></ui-input>
 
 
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
@@ -85,10 +90,14 @@
               }
             </mat-form-field> -->
           </div>
-          <div class="col-sm-6" [ngClass]="{'sm:pt-4': usuarioExistente && formUserAdd.value.numeroDocumento === usuarioExistente.numeroDocumento}">
-
-            <ui-input class="w-full" label="apellidoMaterno" formControlName="apellidoMaterno" 
-            [readonly]="isReadonly('case1')" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos"> </ui-input>
+          <div class=" flex col-sm-6" >
+            <!-- <div class="row pt-2">
+              <mat-slide-toggle color="primary" class="-mb-8 ml-4"></mat-slide-toggle>
+              <h5>¿Compuesto?</h5>
+            </div> -->
+            <ui-input class="w-full" label="Apellido Materno" formControlName="apellidoMaterno" 
+            [readonly]="isReadonly('case1')" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos" [expReg]="expRegApellidosYNombres"
+            [patternErrorMessage]="mensajeBloquearEspacio"> </ui-input>
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Apellido Materno</mat-label>
               <input [readonly]="isReadonly('case1')" 
@@ -112,10 +121,14 @@
             </mat-form-field> -->
           </div>
 
-          <div class="col-sm-6">
-
-            <ui-input label="Nombres" formControlName="nombres" [readonly]="isReadonly('case1')"
-            [maxlength]="maxLengthNombres" [minlength]="minLengthNombres"></ui-input>
+          <div class="flex col-sm-6">
+            <!-- <div class="row pt-2">
+              <mat-slide-toggle color="primary" class="-mb-8 ml-4"></mat-slide-toggle>
+              <h5>¿Compuesto?</h5>
+            </div> -->
+            <ui-input class="w-full" label="Nombres" formControlName="nombres" [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthNombres" [minlength]="minLengthNombres" [expReg]="expRegApellidosYNombres"
+            [patternErrorMessage]="mensajeBloquearEspacio"></ui-input>
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Nombres</mat-label>
               <input [readonly]="isReadonly('case1')" 
@@ -155,8 +168,8 @@
           
 
           <div class="col-sm-6">
-            <ui-input label="Correo Insitucional" formControlName="correoInstitucional"  [readonly]="isReadonly('case1')"
-            [maxlength]="maxLengthCorreo"></ui-input>
+            <ui-input (input)="bloquearInputCorreoInstitucional($event)"  [(ngModel)]="correoInstitucional" placeholder="@autonomadeica.edu.pe" label="Correo Insitucional" formControlName="correoInstitucional"  [readonly]="isReadonly('case1')"
+            [maxlength]="maxLengthCorreo" [patternErrorMessage]="mensajeFormatoCorreo + 'AUTONOMADEICA.EDU.PE'" [expReg]="expRegSinEspacio"></ui-input>
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Correo Institucional</mat-label>
               <input [readonly]="isReadonly('case1')"  formControlName="correoInstitucional" type="text" matInput placeholder="Correo institucional" autocomplete="off" />
@@ -170,7 +183,7 @@
           </div>
           <div class="col-sm-6">
             <ui-input label="Correo Personal" formControlName="correoPersonal" [readonly]="isReadonly('case1')"
-            [maxlength]="maxLengthCorreo"></ui-input>
+            [maxlength]="maxLengthCorreo" [expReg]="expRegSinEspacio" [patternErrorMessage]="mensajeFormatoCorreo + 'GMAIL.COM'"></ui-input>
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Correo Personal</mat-label>
               <input [readonly]="isReadonly('case1')"
@@ -192,7 +205,8 @@
 
           <div class="col-sm-6">
             <ui-input label="Número de Celular" formControlName="celular" [readonly]="isReadonly('case1')"
-            [maxlength]="maxLengthCelular"></ui-input>
+            [maxlength]="maxLengthCelular" [expReg]="expRegCelular"
+            patternErrorMessage="El número de celular debe empezar siempre en 9"></ui-input>
             <!-- <mat-form-field appearance="outline" class="w-100 m-t-5">
               <mat-label>Número de Celular</mat-label>
               <input [readonly]="isReadonly('case1')" 
@@ -214,15 +228,25 @@
           </div>
 
           <div class="col-sm-6">
-            <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!isReadonly('case3') ? '' : picker.open()">
+            <ui-input-fecha label="Fecha Nacimiento"  formControlName="fechaNacimiento" [readonly]="isReadonly('case4')"
+            [expReg]="expRegFechaNacimiento" [maxlength]="maxLengthFechaNacimiento" [datepickerFilter]="filtrarFechaNacimiento"
+            aria-placeholder="DD/MM/YYYY"></ui-input-fecha>
+            <!-- <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!isReadonly('case3') ? '' : picker.open()">
               <mat-label>Fecha de Nacimiento</mat-label>
-              <input readonly="true" formControlName="fechaNacimiento" matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY" autocomplete="off" />
+              <input [readonly]="isReadonly('case4')" [matDatepickerFilter]="filtrarFechaNacimiento" formControlName="fechaNacimiento" 
+              matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY" autocomplete="off"/>
               @if (formUserAdd.get('fechaNacimiento')?.hasError('required')) {
                 <mat-error>Este campo es obligatorio</mat-error>
               }
+              @if(formUserAdd.get('fechaNacimiento')?.hasError('matDatepickerFilter')){
+                <mat-error >
+                  La fecha ingresada indica que el usuario es menor de 18 años
+                </mat-error>
+              }
+
               <mat-datepicker-toggle [disabled]="isReadonly('case4')" matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
         </div>
       </div>

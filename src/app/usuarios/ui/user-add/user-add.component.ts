@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, Output, WritableSignal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipListboxChange } from '@angular/material/chips';
 import { DateAdapter, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
@@ -15,6 +15,9 @@ import { UsuariosDomainValidacionesService } from '../../domain/services/usuario
 import { UsuarioRepository } from '../../domain/repositories/usuario.repository';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
+import { UiInputFechaComponent } from 'src/app/core/components/ui-input-fecha/ui-input-fecha.component';
 export interface Sexo {
   name: string;
   color: ThemePalette;
@@ -24,17 +27,29 @@ export interface Sexo {
 @Component({
   selector: 'user-add',
   standalone: true,
-  imports: [CommonModule, SharedModule, UiInputComponent],
+  imports: [CommonModule, SharedModule, UiInputComponent, UiInputFechaComponent],
   templateUrl: './user-add.component.html',
   styleUrl: './user-add.component.scss',
-
 })
 export class UserAddComponent {
+  listaCamposFormulario: string[] = [
+    'tipoDocumento',
+    'numeroDocumento',
+    'apellidoPaterno',
+    'apellidoMaterno',
+    'nombres',
+    'sexo',
+    'correoInstitucional',
+    'correoPersonal',
+    'celular',
+    'fechaNacimiento',
+    'imagenPerfil'
+  ];
   formUserAdd: FormGroup;
   @Input() usuarioToEdit: Usuario;
   @Input() component: string = '';
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
-  
+  correoInstitucional: string = '';
   usuarioExistente: Usuario;
 
   maxLengthNumeroDocumento: WritableSignal<number>;
@@ -48,7 +63,21 @@ export class UserAddComponent {
 
   maxLengthCorreo: number;
   maxLengthCelular:number;
+  expRegApellidosYNombres: RegExp;
+
+  mensajeBloquearEspacio: string = 'No se debe incluir espacios al término de la palabra'
+  mensajeFormatoCorreo: string = "El correo no tiene el formato adecuado. Ej. XXXXX.YYYYY@"
+  /* celular */
   expRegCelular: RegExp ;
+  patternCelular:RegExp;
+
+  /* correo */
+  expRegCorreo: RegExp;
+  expRegSinEspacio: RegExp;
+
+  /* fecha nacimiento */
+  expRegFechaNacimiento: RegExp;
+  maxLengthFechaNacimiento: number
 
   hayUsuarioExistente: boolean;
 
@@ -61,6 +90,7 @@ export class UserAddComponent {
 
   sexoSelected: Sexo;
   constructor( 
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     public dialogRef: MatDialogRef<UserAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Usuario,
     public dialog: MatDialog,
@@ -80,30 +110,43 @@ export class UserAddComponent {
     this.minLengthNumeroDocumento = this.usuarioDomainValidacionService.getMinLength;
     this.maxLengthApellidos = this.usuarioDomainValidacionService.maxLengthApellidos;
     this.minLengthApellidos = this.usuarioDomainValidacionService.minLengthApellidos;
+    this.expRegApellidosYNombres = usuarioDomainValidacionService.EXP_REG_APELLIDO_AND_NOMBRES
 
     this.maxLengthNombres = this.usuarioDomainValidacionService.maxLengthNombres;
     this.minLengthNombres = this.usuarioDomainValidacionService.minLengthNombres;
 
     this.maxLengthCorreo = this.usuarioDomainValidacionService.maxLengthCorreo;
 
+    /* celular */
+    this.patternCelular = usuarioDomainValidacionService.pattern_celular
     this.maxLengthCelular = this.usuarioDomainValidacionService.maxLengthCelular;
-    this.expRegCelular = usuarioDomainValidacionService.EXP_REG_CELULAR
+    this.expRegCelular = this.usuarioDomainValidacionService.EXP_REG_CELULAR;
+
+    /* correo electrónico */
+    this.expRegCorreo = this.usuarioDomainValidacionService.EXP_REG_CORREO;
+    this.expRegSinEspacio = this.usuarioDomainValidacionService.EXP_REG_SIN_ESPACIO;
+
+    /* fecha nacimiento */
+    this.expRegFechaNacimiento = this.usuarioDomainValidacionService.EXP_REG_FECHA_NACIMIENTO
+    this.maxLengthFechaNacimiento = this.usuarioDomainValidacionService.maxLengthFechaNacimiento
 
     this.expRegBlockNumeroAndEspacio = usuarioDomainValidacionService.EXP_REG_SIN_NUMERO
 
      this.formUserAdd = new FormGroup ({
       tipoDocumento       : new FormControl ('', [ Validators.required ]),
-      numeroDocumento     : new FormControl ('', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this) ]),
+      numeroDocumento     : new FormControl ('', [ Validators.required, this.usuarioDomainValidacionService.numeroDocumentoIsValid.bind(this),usuarioDomainValidacionService.dniExistenteValidator.bind(this) ]),
       apellidoPaterno     : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
       apellidoMaterno     : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthApellidos), Validators.minLength(this.minLengthApellidos), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
       nombres             : new FormControl ('', [ Validators.required, Validators.maxLength(this.maxLengthNombres), Validators.minLength(this.minLengthNombres), Validators.pattern(this.expRegBlockNumeroAndEspacio)]),
       sexo                : new FormControl ('', [ Validators.required ]),
       correoInstitucional : new FormControl ('', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo)]),
       correoPersonal      : new FormControl ('', [ Validators.required, Validators.pattern(this.usuarioDomainValidacionService.EXP_REG_CORREO), Validators.maxLength(this.maxLengthCorreo)]),
-      celular             : new FormControl('', [ Validators.required, Validators.pattern(this.expRegCelular), Validators.maxLength(this.maxLengthCelular)]),
+      celular             : new FormControl('', [ Validators.required, Validators.pattern(this.patternCelular), Validators.maxLength(this.maxLengthCelular)]),
       fechaNacimiento     : new FormControl (new Date(''), [ Validators.required]),
       imagenPerfil        : new FormControl(''),
     });
+    this.deshabilitarInputsFormService.inicializarInputs(this.formUserAdd, this.listaCamposFormulario,0);
+    this.deshabilitarInputsFormService.controlarInputs(this.formUserAdd, this.listaCamposFormulario)
 
     this.usuarioToEdit = {
       id: 0,
@@ -153,8 +196,11 @@ export class UserAddComponent {
     // console.log(this.usuarioToEdit);
     
     this.usuarioToEdit && this.usuarioToEdit?.id != 0 ? this.pathValueFormUserAdd() : ''
-  }
 
+    this.usuarioToEdit && this.usuarioToEdit.id != 0 ? this.correoInstitucional = this.usuarioToEdit.correoInstitucional : 
+    this.correoInstitucional =  '@AUTONOMADEICA.EDU.PE'
+
+  }
   pathValueFormUserAdd = () => {
     console.log(this.usuarioToEdit);
     this.usuarioToEdit.sexo = this.usuarioToEdit.sexo.substring(0,1);
@@ -317,6 +363,8 @@ export class UserAddComponent {
     
         if( this.formUserAdd.value.numeroDocumento.length < this.minLengthNumeroDocumento ) {
           this.hayUsuarioExistente = true
+          // this.formUserAdd.get('numeroDocumento')?.setErrors({ invalidMinLength: true });
+
           return;
         };
         this.usuarioRepository.buscarNumeroDocumento( this.formUserAdd.value.numeroDocumento ).subscribe({
@@ -329,21 +377,13 @@ export class UserAddComponent {
             this.usuarioExistente = data;
             this.usuarioDomainValidacionService.setUsuarioExistente = data;
             this.usuarioDomainValidacionService.dniExistente(this.formUserAdd.value.numeroDocumento)
-            // this.alertService.sweetAlert('question', `${data.apellidoPaterno} ${data.apellidoMaterno} ${data.nombres}`, 'Usuario encontrado, ¿Desea actualizar los datos?')
-            // .then( result => {
-            //   if( !result ) {
-            //     this.formUserAdd.reset();
-            //     return;
-            //   }
-            //     this.usuarioToEdit = data;
-            //     this.pathValueFormUserAdd();
-            //   })
+            this.formUserAdd.get('numeroDocumento')?.setErrors({ existingDocument: true });
           }, error: ( error ) => {
             console.log(error);
             this.hayUsuarioExistente = false;
           }
         })
-      }, 400);
+      }, 200);
     });
   }
 
@@ -395,5 +435,28 @@ export class UserAddComponent {
   isDisabled = (campo: string): boolean => {
     return true;  // Siempre devuelve true para que el campo esté deshabilitado.
   };
-  
+
+  bloquearInputCorreoInstitucional(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const domain = '@AUTONOMADEICA.EDU.PE';
+    if (!input.value.endsWith(domain)) {
+      input.value = domain;
+      this.correoInstitucional = domain;
+    } else {
+      this.correoInstitucional = input.value;
+    }
+  }
+
+  filtrarFechaNacimiento = (d: Date | null): boolean => {
+    if (!d) return false;
+    const today = new Date();
+    const birthDate = new Date(d);
+    // Calcula la diferencia en años entre la fecha de hoy y la fecha seleccionada
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }  
+    return age >= 18;
+  };
 }
