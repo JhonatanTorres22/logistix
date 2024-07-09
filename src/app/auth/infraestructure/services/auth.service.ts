@@ -4,14 +4,13 @@ import { Router } from "@angular/router";
 import { BehaviorSubject, Observable, map } from "rxjs";
 import { User } from "src/app/@theme/types/user";
 import { environment } from "src/environments/environment";
-import { AuthDTO, RolDTO } from "../dto/auth.dto";
-import { AccessToken, AccessTokenData, Auth, AuthLogin, Authenticated, Rol } from "../../domain/models/auth.model";
+import { RolDTO } from "../dto/auth.dto";
+import { AccessTokenData, Auth, Rol } from "../../domain/models/auth.model";
 import { AuthMapper } from "../../domain/mappers/auth.mapper";
 import { JwtPayload, jwtDecode } from "jwt-decode";
-import { Usuario } from "src/app/usuarios/domain/models/usuario.model";
-import { AuthDomainService } from "../../domain/services/auth-domain.service";
+
 import { MensajeriaSignal } from "src/app/mensajeria/domain/signals/mensajeria.signal";
-import { RolUserId } from "src/app/core/mappers/rolUserId";
+import { AuthSignal } from "../../domain/signals/auth.signal";
 
 
 @Injectable({
@@ -32,7 +31,7 @@ export class AuthService {
     constructor(
         private router: Router,
         private http: HttpClient,
-        private authDomainService: AuthDomainService,
+        private auth: AuthSignal,
         private mensajeriaSignal: MensajeriaSignal
       ) {
         this.urlApi = environment.EndPoint;
@@ -66,11 +65,11 @@ export class AuthService {
           // console.log(decodedToken);
           
           // localStorage.setItem('currentUserData', JSON.stringify(decodedToken));
-          // this.authDomainService.setCurrentUserData( JSON.parse(localStorage.getItem('currentUserData')!));
-          // const menusToRoleOfUsersDTO: RolDTO[] = JSON.parse(this.authDomainService.currentUserData().Roles);
+          // this.auth.setCurrentUserData( JSON.parse(localStorage.getItem('currentUserData')!));
+          // const menusToRoleOfUsersDTO: RolDTO[] = JSON.parse(this.auth.currentUserData().Roles);
           // const menusToRoleOfUsersDomain: Rol[] = menusToRoleOfUsersDTO.map( AuthMapper.fromApiToDomainRol );
-          // const menusToRoleOfUsers = this.authDomainService.currentMenuToRole;
-          // this.authDomainService.setMenusToRoleOfUsers( menusToRoleOfUsersDomain );
+          // const menusToRoleOfUsers = this.auth.currentMenuToRole;
+          // this.auth.setMenusToRoleOfUsers( menusToRoleOfUsersDomain );
           // localStorage.setItem('menusToRoleOfUsers', JSON.stringify(menusToRoleOfUsers()));
           // const menu = AuthMapper.fromDomainToTemplateMenu(menusToRoleOfUsersDomain[0].menus)
           // localStorage.setItem('currentMenu', JSON.stringify([menu]));
@@ -89,22 +88,31 @@ export class AuthService {
       };
       localStorage.setItem('currentUserData', JSON.stringify(decodedToken));
       // console.log(RolUserId.currentIdRolUser);
+      const currentUserData = JSON.parse(localStorage.getItem('currentUserData')!)
+      console.log( currentUserData );
       
-      this.authDomainService.setCurrentUserData( JSON.parse(localStorage.getItem('currentUserData')!));
+      let currentUserDataJSON = {
+        ...currentUserData,
+        Roles: currentUserData ? JSON.parse( currentUserData.Roles ) : ''
+      }
+      this.auth.setCurrentUserData( currentUserDataJSON );
       const menusToRoleOfUsersDTO: RolDTO[] = rol;
       const menusToRoleOfUsersDomain: Rol[] = menusToRoleOfUsersDTO.map( AuthMapper.fromApiToDomainRol );
       
-      // const menusToRoleOfUsers = this.authDomainService.currentMenuToRole;
-      // this.authDomainService.setMenusToRoleOfUsers( menusToRoleOfUsersDomain );
+      // const menusToRoleOfUsers = this.auth.currentMenuToRole;
+      // this.auth.setMenusToRoleOfUsers( menusToRoleOfUsersDomain );
       // localStorage.setItem('menusToRoleOfUsers', JSON.stringify(menusToRoleOfUsers()));
       const menu = AuthMapper.fromDomainToTemplateMenu(menusToRoleOfUsersDomain[0].menus)
       localStorage.setItem('currentMenu', JSON.stringify([menu]));
       localStorage.setItem('currentRol', JSON.stringify(menusToRoleOfUsersDomain[0]));
-      localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion));
+      console.log(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion);
+      // if(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion != 'undefined') {
+        localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion()));
+      // }
 
-      this.authDomainService.setCurrentMenu([menu]);
-      this.authDomainService.setCurrentRol(menusToRoleOfUsersDomain[0]);
-      this.authDomainService.setCurrentExpirarToken( parseInt(this.authDomainService.currentUserData().exp + '000') );
+      this.auth.setCurrentMenu([menu]);
+      this.auth.setCurrentRol(menusToRoleOfUsersDomain[0]);
+      this.auth.setCurrentExpirarToken( parseInt(this.auth.currentUserData().exp + '000') );
       
       // console.log(menusToRoleOfUsers);
     }
@@ -139,7 +147,7 @@ export class AuthService {
         localStorage.removeItem('currentRol');
         localStorage.removeItem('currentMenu');
 
-        this.authDomainService.setCurrentUserDefault();
+        this.auth.setCurrentUserDefault();
         this.router.navigate(['/auth/login']); ///authentication-1/login
     }
 }

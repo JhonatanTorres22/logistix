@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
@@ -15,6 +15,7 @@ import {
     mensajesEnviadosDefault,
     mensajesArchivadosDefault,
 } from "./mensajeria-default"
+import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +30,21 @@ export class MensajeriaSignal {
     }
 
     mensajeriaHistorialMensajesDefault: MensajeriaHistorialMensajes[] = []
+
+    listaDestinatariosDefault: MensajeriaNuevoMensajeList[] = [];
+    destinatarioSelectDefault: MensajeriaNuevoMensajeList = {
+        apellidosYnombres: '',
+        cierraProceso: false,
+        descripcion: '',
+        idTipoMensajeRol: 0,
+        idUsuarioRol: 0,
+        iniciaProceso: false,
+        responder: '',
+        temporalidad: 0,
+    }
+
+    tiposMensajeDefault: UiSelect[] = []
+    tiposMensajeGrupoDefault: UiSelect[] = []
 
     toggle = signal( true );
     mensajeriaInsertar = signal( mensajeriaInsertarDefault );
@@ -54,6 +70,13 @@ export class MensajeriaSignal {
 
     tipoBandeja = signal( 'Recibidos' );
 
+    showFormNuevoMensaje = signal( false );
+
+    listaDestinatarios = signal ( this.listaDestinatariosDefault );
+    selectDestinatario = signal ( this.destinatarioSelectDefault );
+    tiposMensajes = signal( this.tiposMensajeDefault )
+    tiposMensajesGrupo = signal( this.tiposMensajeGrupoDefault )
+
     setSeleccionarMensaje = ( mensaje: MensajeriaRecibidos) => {
         this.selectMensaje.set( mensaje );
     }
@@ -69,6 +92,10 @@ export class MensajeriaSignal {
         //     return mensajes.
         // },0 )
         // this.mensajesNoLeidos.set();
+    }
+
+    setListaDestinatariosDefault() {
+        this.listaDestinatarios.set( this.listaDestinatariosDefault )
     }
 
     setMensajesEnviados = ( mensajes: MensajeriaEnviados[] ) => {

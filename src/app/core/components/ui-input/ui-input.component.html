@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" class="w-100 m-t-5">
+<mat-form-field appearance="outline" class="w-100 m-t-5" [ngClass]="classInput">
   <mat-label>{{ label }}</mat-label>
   <input
   (input)="onInput($event)"
@@ -10,13 +10,15 @@
     [maxlength]="maxlength"
     autocomplete="off"
     UpperCase
-  />
+    />
+    <!-- [(ngModel)]="model" -->
   @if ( type == 'password') {
     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
       <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
   }
   <mat-hint align="end">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
+  
   @if (formControl?.hasError('maxlength')) {
     <mat-error>Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
   }
@@ -33,6 +35,7 @@
     <mat-error>Esta campo está siendo duplicado</mat-error>
   }
 </mat-form-field>
+
 
 <!-- <mat-form-field appearance="outline" class="w-100 m-t-5" (click)="!hayUsuarioExistente && formUserAdd.value.numeroDocumento.length >= minLengthNumeroDocumento ? picker.open() : ''">
   <mat-label>Fecha de Nacimiento</mat-label>

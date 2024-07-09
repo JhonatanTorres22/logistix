@@ -1,4 +1,4 @@
-<button [disabled]="disabled" mat-flat-button [color]="color" [matTooltip]="tooltip">
+<button [disabled]="disabled" mat-flat-button [color]="color" [matTooltip]="tooltip" [ngClass]="classButton" (click)="onClick.emit( $event )">
     @if ( icon ) {
        <i class="{{ icon }}"></i> 
     }

@@ -1,3 +1,3 @@
-<button [disabled]="disabled" mat-mini-fab [color]="color" [matTooltip]="tooltip">
+<button [disabled]="disabled" mat-mini-fab [color]="color" [matTooltip]="tooltip" (click)="onClick.emit( $event )">
        <i class="{{ icon }}"></i> 
 </button>

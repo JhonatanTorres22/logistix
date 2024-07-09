@@ -144,7 +144,11 @@
 @import './app/@theme/styles/grid';
 
 /* CUSTOM STYLES START */
-.mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper {
+  /* PRIMENG START */
+  // @import "primeng/resources/themes/lara-light-blue/theme.css";
+  // @import "primeng/resources/primeng.css";
+  /* PRIMENG END */
+  .mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper {
   position: relative!important;
   margin-top: -1.5rem!important;
   margin-bottom: 1rem!important;

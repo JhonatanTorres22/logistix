@@ -1,6 +1,6 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { CursoCrearDTO, CursoDTO, CursoEditarDTO, CursoEliminarDTO } from "../../infraestructure/dto/curso.dto";
-import { Curso, CursoCrear, CursoEliminar } from "../models/curso.model";
+import { Curso, CursoByCiclo, CursoCrear, CursoEditar, CursoEliminar } from "../models/curso.model";
 
 export class CursoMapper {
     static fromApiToDomain( param: CursoDTO ): Curso {
@@ -8,6 +8,7 @@ export class CursoMapper {
             id: param.id,
             programa: param.programa,
             ciclo: param.ciclo,
+            idCiclo: param.idCiclo,
             codigoCurso: param.codigoCurso,
             nombreCurso: param.nombreCurso,
             tipoEstudio: param.tipoEstudio,
@@ -21,41 +22,47 @@ export class CursoMapper {
         }
     }
 
+    static fromApiToDomainByCiclo( param: Curso[] ) {
+
+        const cursoByCiclo = param.reduce( ( a, b) => a.ciclo == b.ciclo ? a : b )
+
+        // console.log();
+        
+       
+    }
+
     static fromDomainToApiAgregar( param: CursoCrear ): CursoCrearDTO {
         return {
-            programa: param.programa,
-            ciclo: param.ciclo,
+
             codigoCurso: param.codigoCurso,
             nombreCurso: param.nombreCurso,
-            tipoEstudio: param.tipoEstudio,
-            tipoCurso: param.tipoCurso,
-            competencia: param.competencia,
+            idCiclo: param.idCiclo,
+            idTipoCurso: param.idTipoCurso,
+            idTipoEstudio: param.idTipoEstudio,
+            idCompetencia: param.idCompetencia,
             horasTeoricas: param.horasTeoricas,
             horasPracticas: param.horasPracticas,
             totalHoras: param.totalHoras,
             totalCreditos: param.totalCreditos,
-            preRequisito: param.preRequisito,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         
         }
     }
 
-    static fromDomainToApiEditar( param: Curso ): CursoEditarDTO {
+    static fromDomainToApiEditar( param: CursoEditar ): CursoEditarDTO {
         return {
             id: param.id,
-            programa: param.programa,
-            ciclo: param.ciclo,
             codigoCurso: param.codigoCurso,
             nombreCurso: param.nombreCurso,
-            tipoEstudio: param.tipoEstudio,
-            tipoCurso: param.tipoCurso,
-            competencia: param.competencia,
+            idCiclo: param.idCiclo,
+            idTipoCurso: param.idTipoCurso,
+            idTipoEstudio: param.idTipoEstudio,
+            idCompetencia: param.idCompetencia,
             horasTeoricas: param.horasTeoricas,
             horasPracticas: param.horasPracticas,
             totalHoras: param.totalHoras,
             totalCreditos: param.totalCreditos,
-            preRequisito: param.preRequisito,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 

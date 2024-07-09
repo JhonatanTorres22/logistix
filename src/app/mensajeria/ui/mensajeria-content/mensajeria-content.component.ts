@@ -11,6 +11,7 @@ import { MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaRecibidos } fro
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { MensajeriaNewComponent } from '../mensajeria-new/mensajeria-new.component';
 
 export interface PeriodicElement {
   images: string;
@@ -32,7 +33,8 @@ const ELEMENT_DATA: PeriodicElement[] = MailData;
     SharedModule,
     MensajeriaMessagesComponent,
     MensajeriaComposeComponent,
-    MensajeriaNoMessagesComponent
+    MensajeriaNoMessagesComponent,
+    MensajeriaNewComponent
   ],
   templateUrl: './mensajeria-content.component.html',
   styleUrl: './mensajeria-content.component.scss'
@@ -64,6 +66,7 @@ export class MensajeriaContentComponent implements OnInit {
   selectMensaje = this.signal.selectMensaje;
   mensajesTotal = this.signal.mensajesRecibidosTotal;
   mensajesNoLeidos = this.signal.mensajesNoLeidos;
+  showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
   // tipoBandeja = 
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<MensajeriaRecibidos>(true, []);

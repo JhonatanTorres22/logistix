@@ -9,8 +9,8 @@ import { NavigationItem } from '../../types/navigation';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { menus } from 'src/app/demo/data/menu';
 import { componentMenus } from 'src/app/demo/data/component';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
 import { RutasSignal } from 'src/app/core/signals/rutas.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 interface titleType {
   // eslint-disable-next-line
@@ -35,7 +35,7 @@ export class BreadcrumbComponent {
   @Input() dashboard = true;
 
   navigations: NavigationItem[];
-  menu: WritableSignal <NavigationItem[]> = this.authDomainService.currentMenu;
+  menu: WritableSignal <NavigationItem[]> = this.auth.currentMenu;
   ComponentNavigations: NavigationItem[];
   breadcrumbList: Array<string> = [];
   navigationList: titleType[];
@@ -45,7 +45,7 @@ export class BreadcrumbComponent {
   constructor(
     private route: Router,
     private titleService: Title,
-    private authDomainService: AuthDomainService,
+    private auth: AuthSignal,
     private rutaSignal: RutasSignal
   ) {
     // this.navigations = menus;

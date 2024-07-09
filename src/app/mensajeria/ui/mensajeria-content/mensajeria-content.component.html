@@ -53,6 +53,11 @@
     <!-- <mensajeria-messages class="w-9"></mensajeria-messages> -->
      
     @if ( !modoTablet() ) {
+
+      @if ( showFormNuevoMensaje() ) {
+        <mensajeria-new class="col-12 col-sm-12 col-md-8"></mensajeria-new>
+      }
+      <!-- {{ mensajeriaData() | json }} -->
       @if ( mensajeriaData().asignacion.idFacultad != 0 ) {
         <mensajeria-compose class="col-12 col-sm-12 col-md-8"></mensajeria-compose>
       } @else { 

@@ -1,4 +1,5 @@
 import { Navigation } from "src/app/@theme/types/navigation";
+import { RolDTO } from "../../infraestructure/dto/auth.dto";
 
 export class Auth {
     constructor (
@@ -32,7 +33,7 @@ export interface Authenticated {
     CorreoInstitucional: string,
     Celular: string,
     ImagenPerfil: string,
-    Roles: string,
+    Roles: RolDTO[],
     nbf: number,
     exp: number,
     iat: number,
