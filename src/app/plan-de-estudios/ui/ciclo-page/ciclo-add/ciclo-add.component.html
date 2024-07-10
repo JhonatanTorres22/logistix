@@ -1,5 +1,5 @@
 <app-card [cardTitle]="cicloEdit.id ? 'Editar' : 'Crear' + entidad" padding="0" cardClass="customer-edit-card m-b-0" headerClass="p-15" actionClass="card-footer block">
-    {{cicloEdit | json}}
+    <!-- {{cicloEdit | json}} -->
     <ng-template #headerOptionsTemplate>
         <a class="avatar avatar-s customer-edit-header" mat-dialog-close>
           <i class="ti ti-x f-20"></i>
@@ -15,6 +15,7 @@
                 [maxlength]="MaxLengthCicloNumero"
                 [minlength]="MinLengthCicloNumero"
                 [expReg]="expRegCicloNumeroBlockToInput"
+                patternErrorMessage="El ciclo solo permite números del 1 al 12"
                 >
             </ui-input>
         </div>
@@ -26,17 +27,20 @@
                 [maxlength]="MaxLengthCicloLetra"
                 [minlength]="MinLengthCicloLetra"
                 [expReg]='expRegCicloLetraBlockToInput'
+                patternErrorMessage="El ciclo no puede concluir con un espacio"
             >
             </ui-input>
         </div>
         <div class="flex gap-3">
             <ui-input
+                [(ngModel)]="cicloDescripcion"
                 class="w-full"
                 label="Ciclo definición"
                 formControlName="definicion"
                 [maxlength]="MaxLengthDefinicion"
                 [minlength]="MinLengthDefinicion"
-                [expReg]='expRegDefinicionBlockToInput'
+                [expReg]="expRegDefinicionBlockToInput"
+                patternErrorMessage="La descripcion no puede concluir con un espacio"
             >
             </ui-input>
         </div>

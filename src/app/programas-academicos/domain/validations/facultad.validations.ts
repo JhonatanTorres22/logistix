@@ -19,7 +19,7 @@ export class FacultadValidations {
     maxLengthNombre = 60;
     minLengthNombre = 5;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
-    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g ;
+    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g ; // VALIDACION DE LETRAS, COMA Y GUION
     duplicado = this.duplicadoNombreFacultad.bind(this);
     // FIN NOMBRE
     
@@ -28,7 +28,7 @@ export class FacultadValidations {
     maxLengthCodigo = 150;
     minLengthCodigo = 6;
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
-    expRegCodigoToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-.:;]/g;
+    expRegCodigoToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-.:;]/g; // VALIDACION DE LETRAS, COMA, GUION, PUNTO,DOS PUNTOS Y PUNTO Y COMA
     // /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g
     // FIN CODIGO
     

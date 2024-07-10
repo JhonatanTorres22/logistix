@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, WritableSignal } from '
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
@@ -24,6 +25,9 @@ export class CicloAddComponent implements OnInit {
   formCiclo: FormGroup;
   entidad: string = 'Ciclo';
 
+  cicloDescripcion: string = '';
+  listaCamposFormulario: string[] = ['cicloNumero', 'cicloLetra', 'definicion']
+
   /* VALIDATIONS */
   MaxLengthCicloNumero = this.validations.MaxLengthCicloNumero;
   MinLengthCicloNumero = this.validations.MinLengthCicloNumero;
@@ -32,32 +36,37 @@ export class CicloAddComponent implements OnInit {
 
   MaxLengthCicloLetra = this.validations.MaxLengthCicloLetra;
   MinLengthCicloLetra = this.validations.MinLengthCicloLetra;
-  expRegCicloLetra = this.validations.expRegCicloLetra;
   expRegCicloLetraBlockToInput = this.validations.expRegCicloLetraBlockToInput;
 
   MaxLengthDefinicion = this.validations.MaxLengthDefinicion;
   MinLengthDefinicion = this.validations.MinLengthDefinicion;
-  expRegDefinicion = this.validations.expRegDefinicion;
   expRegDefinicionBlockToInput = this.validations.expRegDefinicionBlockToInput;
 
+  expRegSinNumero = this.validations.expRegSinNumero
   /* VALIDATIONS */ 
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private signal: CicloSingal,
     private validations: CicloValidation,
     private alert: AlertService,
     private repository: CicloRepository
   ) {
     this.formCiclo = new FormGroup({
-      cicloLetra: new FormControl('', [Validators.required]),
-      cicloNumero: new FormControl('', [Validators.required]),
-      definicion: new FormControl('', [Validators.required, validations.duplicado])
+      cicloNumero: new FormControl('', [Validators.required,  Validators.pattern(this.expRegCicloNumero)]),
+      cicloLetra: new FormControl('', [Validators.required, Validators.pattern(this.expRegSinNumero)]),
+      definicion: new FormControl('', [Validators.required, validations.duplicado, Validators.pattern(this.expRegSinNumero)])
     })
+
+     this.deshabilitarInputsFormService.inicializarInputs(this.formCiclo, this.listaCamposFormulario,0);
+     this.deshabilitarInputsFormService.controlarInputs(this.formCiclo, this.listaCamposFormulario)
 
     this.cicloEdit ? this.pathValueForm() : '';
   }
   ngOnInit(): void {
     this.cicloEdit ? this.pathValueForm() : '';
 
+    this.cicloEdit && this.cicloEdit.id !== 0 ? this.cicloDescripcion = this.cicloEdit.definicion:
+    this.cicloDescripcion = 'CICLO'
   }
 
 
