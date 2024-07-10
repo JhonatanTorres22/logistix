@@ -38,6 +38,7 @@ import { MensajeriaDataAsignacion, MensajeriaInsertar } from 'src/app/mensajeria
 import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { Router } from '@angular/router';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
+import { ProgramaCardComponent } from '../programa-academico-page/programa-card/programa-card.component';
 
 
 @Component({
@@ -57,7 +58,7 @@ import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuar
     AsignacionPageComponent,
     LocalListComponent,
     UiButtonComponent,
-
+    ProgramaCardComponent,
 
     UiButtonIconComponent
 
@@ -65,14 +66,14 @@ import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuar
   templateUrl: './asignacion-page.component.html',
   styleUrl: './asignacion-page.component.scss'
 })
-export class AsignacionPageComponent implements OnInit {
+export class AsignacionPageComponent {
 
 
     semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
     semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
 
-    asignaciones = this.asignacionSignal.asignaciones;
+    asignaciones = this.signal.asignaciones;
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
     facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
@@ -82,6 +83,7 @@ export class AsignacionPageComponent implements OnInit {
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
     localSelect: WritableSignal<Local> = this.localSignal.localSelect;
     localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
+    renderizarAsignaciones = this.signal.renderizarAsignaciones;
     // decanoSelect: 
     constructor( 
         
@@ -93,22 +95,26 @@ export class AsignacionPageComponent implements OnInit {
         private decanoSignal: DecanoSignal,
         private directorSignal: DirectorSignal,
         private localSignal: LocalSignal,
-        private asignacionSignal: AsignacionSignal,
+        private signal: AsignacionSignal,
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
         private mensajeriaSignal: MensajeriaSignal,
         private router: Router,
         
     ) {
-      // effect(() => {
-      //   console.log(`New semestre selected: ${this.semestreSelect()}`);
-      //   this.obtener( this.semestreSelect().id );
-      // });
+      effect(() => {
+        // console.log(`New semestre selected: ${this.semestreSelect()}`);
+        switch( this.renderizarAsignaciones() ) {
+          case 'Obtener' : {
+            console.log('Listando....');
+            this.obtener( this.semestreSelect().id );
+            this.renderizarAsignaciones.set('')
+          }; break;
+        }
+      }, { allowSignalWrites: true });
     }
 
-  ngOnInit(): void {
-    // this.obtener( this.semestreSelect().id );
-  }
+
 
   obtener = ( idSemestre: number ) => {
     this.asignacionRepository.obtener( idSemestre ).subscribe({
@@ -116,15 +122,7 @@ export class AsignacionPageComponent implements OnInit {
         console.log(programasAsignados);
         this.localSignal.setSelectLocales( [] );
         this.facultadSignal.setIdFacultad( 0 );
-        // const facultad = {
-        //   id: programasAsignados[0].idFacultad,
-        //   definicion: '',
-        //   nombre: programasAsignados[0].nombreFacultad,
-        //   usuarioId: 0
-        // }
-
-        // const 
-        this.asignacionSignal.setAsignaciones( programasAsignados );
+        this.signal.setAsignaciones( programasAsignados );
       }, error: (error) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error', 'error');
@@ -161,48 +159,6 @@ export class AsignacionPageComponent implements OnInit {
 
   }
 
-  abrirUbicacionLocal = () => {
-
-  }
-
-  openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
-    console.log('abrir modal LOCAL list');
-    const dialogRef = this.dialog.open( LocalListComponent, {
-      width: '800px',
-      // height: '460px',
-      disableClose: true,
-      data: { programaConLocales: programa.locales } 
-    } );
-
-    dialogRef.afterClosed().subscribe( data => {
-      if( data !== 'seleccionado' ) return;
-      // console.log(data);
-      // console.log(this.localesSelect());
-
-      const locales = this.localesSelect().map( local => local.id );     
-      const newPrograma: AsignarNuevoPrograma = {
-        idDecano: asignacion.idDecano,
-        idDirector: programa.idDirector,
-        idLocales: locales,
-        idPrograma: programa.idPrograma,
-        idSemestre: this.semestreSelect().id,
-        usuarioId: 1
-      }
-      this.agregarPrograma( newPrograma );
-    })
-  }
-
-  agregarLocalAlProgramaConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
-
-    // this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea AG el programa?')
-    //   .then( isConfirm => {
-    //     if( !isConfirm ) return;
-        // this.agregarLocalesAlPrograma( asignacion, programa );
-      // });
-
-  }
-
-
   agregarProgramaConfirm = ( asignacion: Asignacion ) => {
     if ( 
       !(this.programaSelect().id != 0 &&
@@ -228,8 +184,6 @@ export class AsignacionPageComponent implements OnInit {
         // console.log(newPrograma);
         this.agregarPrograma( newPrograma );
 
-
-
       });
   }
 
@@ -252,74 +206,5 @@ export class AsignacionPageComponent implements OnInit {
     });
   }
 
-  eliminarProgramaConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma) => {
-    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea ELIMINAR el programa?')
-      .then( isConfirm => {
-        if( !isConfirm ) return;
-        this.eliminarPrograma( asignacion, programa );
-    });
-  }
-
-  eliminarProgramaIndividualConfirm = ( asignacion: Asignacion, programa: AsignacionPrograma, idLocal: number ) => {
-    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea ELIMINAR el programa?')
-      .then( isConfirm => {
-        if( !isConfirm ) return;
-        this.eliminarPrograma( asignacion, programa, idLocal );
-    });
-  }
-
-
-  eliminarPrograma = ( asignacion: Asignacion, programa: AsignacionPrograma, idLocal?:number ) => {
-    console.log(asignacion);
-    console.log(idLocal);
-    
-    const locales = idLocal ? [idLocal] : programa.locales.map( local => local.idLocal);
-    const eliminarPrograma: AsignacionEliminar = {
-      idDecano: asignacion.idDecano,
-      idDirector: programa.idDirector,
-      idLocales: locales,
-      idPrograma: programa.idPrograma,
-      idSemestre: this.semestreSelect().id,
-      usuarioId: 1
-    }
-    console.log(eliminarPrograma);
-    
-    this.asignacionRepository.eliminar( eliminarPrograma ).subscribe({
-      next: (data) => {
-        console.log(data);
-        this.alertService.sweetAlert('success', 'Correcto', 'Se eliminó correctamente');
-        this.programaSignal.setSelectProgramaDefault();
-        this.localSignal.setSelectLocalesDefault();
-        this.directorSignal.setSelectDirectorDefault();
-        this.obtener( this.semestreSelect().id );
-      }, error: (error) => {
-        console.log(error);
-        this.alertService.showAlert('Ocurrió un error', 'error');
-
-      }
-    });
-    
-  }
-
-  enviarMensaje = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
-
-    const semestreData: SemestreAcademico = this.semestreSelect();
-    const asignacionData: Asignacion = {
-      ...asignacion,
-      programas: [programa],
-    }
-
-    const mensajeriaDataAsignacion: MensajeriaDataAsignacion = {
-      asignacion: asignacionData,
-      semestre: semestreData,
-      tipoMensaje: 'DAR ALTA A DIRECTOR DE ESCUELA'
-    }
-
-    localStorage.setItem('mensajeriaData', JSON.stringify(mensajeriaDataAsignacion));
-    this.mensajeriaSignal.setMensajeriaDataAsignacion( mensajeriaDataAsignacion );
-    this.router.navigate(['/mensajeria']);
-  }
-
-  
 
 }

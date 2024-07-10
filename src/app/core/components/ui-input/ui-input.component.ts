@@ -29,7 +29,13 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   @Input() minlength = 0;
   @Input() expReg = '';
   @Input() duplicado: boolean = false;
+
   @Input() patternErrorMessage: string = ''
+
+  //@Input() classInput: string = '';
+  // @Input() model: number
+
+
   formControl!: FormControl
   
   ngOnInit(): void {

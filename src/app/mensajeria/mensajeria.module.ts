@@ -7,6 +7,8 @@ import { MensajeriaRepository } from './domain/repositories/mensajeria.repositor
 import { MensajeriaRepositoryImpl } from './infraestructure/repositories/mensajeria.repository.impl';
 import { UsuarioRolRepository } from '../usuarios/domain/repositories/usuario-rol.repository';
 import { UsuarioRolRepositoryImp } from '../usuarios/infraestructure/repositories/usuario-rol.repository.impl';
+import { AsignacionRepository } from '../programas-academicos/domain/repositories/asignacion.repository';
+import { AsignacionRepositoryImpl } from '../programas-academicos/infraestructure/repositories/asignacion.repository.impl';
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import { UsuarioRolRepositoryImp } from '../usuarios/infraestructure/repositorie
   providers: [
     interceptorProviders, [
       { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
-      { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp }
+      { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
+      { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl }
     ]
   ]
 })

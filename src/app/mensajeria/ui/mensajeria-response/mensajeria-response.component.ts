@@ -7,7 +7,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { MensajeriaResponder } from '../../domain/models/mensajeria.model';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'mensajeria-response',
@@ -25,7 +25,7 @@ export class MensajeriaResponseComponent {
     private alert: AlertService,
     private repository: MensajeriaRepository,
     private signal: MensajeriaSignal,
-    private authDomainService: AuthDomainService
+    private auth: AuthSignal
 
   ) {}
   enviarConfirm = () => {
@@ -37,7 +37,7 @@ export class MensajeriaResponseComponent {
         const mensajeResponder: MensajeriaResponder = {
          
           idMensaje: this.mensajesHistorial()[this.mensajesHistorial().length -1].idMensaje,
-          idRolEmisor: parseInt( this.authDomainService.currentRol().id ),
+          idRolEmisor: parseInt( this.auth.currentRol().id ),
           idRolReceptor: this.mensajesHistorial()[this.mensajesHistorial().length -1].idRolEmisor, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
           mensaje: this.mensaje.trim(),
           informacionAdicional: ''

@@ -1,0 +1,24 @@
+<mat-form-field [appearance]="appearance" class="w-100 m-t-5 m-b-5" [ngClass]="classInput">
+    @if ( label ) {
+      <mat-label>{{ label }}</mat-label>
+    }
+    <mat-select [formControl]="formControl" (valueChange)="onChange.emit( $event )" [disabled]="readonly">
+        @for (option of options; track option) {
+
+          <mat-option [disabled]="option.disabled" [value]="option.value">
+            <div class="flex align-item-center">
+              @if ( image ) {
+                <img src="image" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+              }
+              {{ option.text }}
+            </div>
+          </mat-option>
+
+            <!-- <mat-option [disabled]="option.disabled" [value]="option.value">{{ option.text }}</mat-option> -->
+        }
+    </mat-select>
+    @if (formControl?.hasError('required')) {
+      <mat-error>Este campo es obligatorio</mat-error>
+    }
+
+  </mat-form-field>

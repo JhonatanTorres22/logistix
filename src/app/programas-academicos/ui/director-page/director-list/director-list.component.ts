@@ -5,6 +5,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { DirectorSignal } from 'src/app/programas-academicos/domain/signals/director.signal';
+import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { UsuarioRol } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.component';
@@ -23,6 +24,7 @@ export class DirectorListComponent {
   directorEdit: UsuarioRol;
   directores: WritableSignal<UsuarioRol[]>= this.signal.directoresList;
   directorSeleccionado = this.signal.directorSelect;
+  programaSelected = this.programaSignal.programaSelect;
   // programaes: 
   directorSelect: UsuarioRol = {
     id: 0,
@@ -34,6 +36,7 @@ export class DirectorListComponent {
 constructor(
   
   private signal: DirectorSignal,
+  private programaSignal: ProgramaSignal,
   private repository: UsuarioRolRepository,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
@@ -106,7 +109,9 @@ constructor(
     this.repository.obtenerUsuariosRol().subscribe({
       next: ( directores ) => {
         console.log(directores);
-        const directorList = directores.filter( usuario => usuario.rol.toUpperCase() == 'DIRECTOR DE ESCUELA')  // && usuario.estado == 'ACTIVO'
+        const decanosRol = ['DIRECTOR DE ESCUELA DE INGENIERÍA DE SISTEMAS']
+
+        const directorList = directores.filter( usuario =>  usuario.rol.toUpperCase() == `DIRECTOR DE ESCUELA DE ${ this.programaSelected().nombre}`)  // && usuario.estado == 'ACTIVO'
         this.signal.setDirectoresList( directorList );
 
         if(this.directores().length > 0){

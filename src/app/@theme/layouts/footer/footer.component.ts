@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 
 // project import
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
 import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'app-footer',
@@ -17,13 +17,13 @@ import { Router } from '@angular/router';
 })
 export class FooterComponent implements OnInit {
 
-  expirarToken = this.authDomainService.currentExpirarToken();
+  expirarToken = this.auth.currentExpirarToken();
   hoy = new Date().getTime();
   temporalidad: number;
   expiro: boolean = false
 
   constructor( 
-    private authDomainService: AuthDomainService,
+    private auth: AuthSignal,
     private dateAdapter: DateAdapter<Date>,
     private router: Router
 

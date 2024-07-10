@@ -1,25 +1,42 @@
-<div class="flex flex-column gap-2 my-2">
-    <div class="flex align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-        CICLO I
-    </div>
+
+<div class="row" cdkDropListGroup>
+    @for (ciclo of cursosByCiclos(); track ciclo) {
+        <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
+    
+            <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
+                <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
+                    {{ ciclo.ciclo}}
+                </div>
+            </div>
+            <div class="flex flex-column gap-2 example-list"
+                cdkDropList
+                [cdkDropListData]="ciclo.cursos"
+                (cdkDropListDropped)="drop($event)">
+                @for ( curso of ciclo.cursos; track curso) {
+                    
+                    <div
+                        (click)="openCurso( template1, ciclo, curso )"
+                        cdkDrag
+                        [cdkDragStartDelay]="1000"
+                        class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
+                        style="min-height: 5rem; max-height: 5rem;">
+                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                        <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500">{{ curso.codigoCurso }}</div>
+                        <div class="f-8 m-0 capitalize text-center">{{ curso.nombreCurso }}</div>
+                        <div class="flex">
+                            <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
+                            <ui-button color="accent" tooltip="Agregar Pre Requisito" icon="ti ti-shield-lock f-12" classButton="h-1rem"></ui-button>
+                        </div>
+                    </div>
+    
+                }
+            </div>
+    
+            <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openCurso( template1, ciclo )"></ui-button-icon>
+        </div>
+
+    }
 </div>
-<div class="flex flex-column gap-2">
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-    <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-        <p class="f-10 m-0">Matemática I</p>
-    </div>
-</div>
+<ng-template #template1 let-data>
+    <curso-add></curso-add>
+</ng-template>

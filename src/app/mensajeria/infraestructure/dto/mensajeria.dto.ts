@@ -76,3 +76,36 @@ export interface MensajeriaArchivadosDataArrayDTO {
 export interface MensajeriaHistorialMensajesDataArrayDTO {
     data: MensajeriaHistorialMensajesDTO[];
 }
+
+export interface MensajeriaNuevoMensajeListDTO {
+    codigoTipoMensajeRol: number,
+    codigoUsuarioRol: number,
+    responder: string,
+    apellidosyNombres: string,
+    descripcion: string,
+    temporalidad: number,
+    iniciaProceso: boolean,
+    cierraProceso: boolean
+}
+
+export interface MensajeriaNuevoMensajeListDataArrayDTO {
+    data: MensajeriaNuevoMensajeListDTO[]
+}
+
+export interface MensajeriaTipoGrupoDTO {
+    codigoTipoMensajeGrupo: number,
+    nombre: string
+}
+
+export interface MensajeriaTipoDTO {
+    codigoTipoMensaje: number,
+    nombre: string
+}
+
+export interface MensajeriaTipoGrupoDataArrayDTO {
+    data: MensajeriaTipoGrupoDTO[]
+}
+
+export interface MensajeriaTipoDataArrayDTO {
+    data: MensajeriaTipoDTO[]
+}

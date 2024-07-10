@@ -26,7 +26,7 @@ import { environment } from 'src/environments/environment';
 
 // rxjs
 import { Subscription } from 'rxjs';
-import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'app-admin',
@@ -49,7 +49,7 @@ import { AuthDomainService } from 'src/app/auth/domain/services/auth-domain.serv
 export class AdminComponent implements OnInit, OnDestroy {
   // public props
   @ViewChild('sidebar') sidebar: MatDrawer;
-  menus = this.authDomainService.currentMenu;
+  menus = this.auth.currentMenu;
   modeValue: MatDrawerMode = 'side';
   direction: string;
   currentApplicationVersion = environment.appVersion;
@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private themeService: ThemeLayoutService,
-    private authDomainService: AuthDomainService,
+    private auth: AuthSignal,
   ) {
     this.currentLayout = AbleProConfig.layout;
     // this.currentLayout = 'compact';
@@ -74,9 +74,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   // life cycle event
   ngOnInit() {
     
-    // this.menus = this.authDomainService.currentMenuToRole;
+    // this.menus = this.auth.currentMenuToRole;
     // console.log(this.menus());
-    // this.menus = this.authDomainService.menusToRoleOfUsers()[0].menus
+    // this.menus = this.auth.menusToRoleOfUsers()[0].menus
     this.breakpointObserver.observe([MIN_WIDTH_1025PX, MAX_WIDTH_1024PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_1024PX]) {
         this.modeValue = 'over';

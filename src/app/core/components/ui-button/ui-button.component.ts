@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 
 @Component({
@@ -16,11 +16,16 @@ export class UiButtonComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() icon: string;
   @Input() tooltip: string;
+  @Input() classButton: string = '';
+
+  @Output() onClick = new EventEmitter();
 
   ngOnInit(): void {
     // this.tooltip = this.label;
   }
 
+
+  
 
   
 }

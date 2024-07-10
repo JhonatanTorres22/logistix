@@ -11,10 +11,9 @@ import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.comp
 import { AuthValidations } from '../../domain/validations/auth.validations';
 import { AuthRepository } from '../../domain/repositories/auth.repository';
 import { JwtPayload, jwtDecode } from "jwt-decode";
-import { AuthDomainService } from '../../domain/services/auth-domain.service';
-import { Authenticated, Rol } from '../../domain/models/auth.model';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SelectRolComponent } from '../select-rol/select-rol.component';
+import { AuthSignal } from '../../domain/signals/auth.signal';
 
 @Component({
   selector: 'app-login',
@@ -46,7 +45,7 @@ export class LoginComponent {
 
     messageErrorLogin = '';
 
-    userData = this.authDomainService.currentUserData;
+    userData = this.auth.currentUserData;
 
     roles = [];
     token: string = '';
@@ -60,7 +59,7 @@ export class LoginComponent {
       private authValidations: AuthValidations,
       private authService: AuthService,
       private authRepository: AuthRepository,
-      private authDomainService: AuthDomainService,
+      private auth: AuthSignal,
       private alertService: AlertService
     ) {
 
@@ -76,14 +75,14 @@ export class LoginComponent {
       this.expRegPasswordToLockInput = this.authValidations.expRegPasswordToLockInput;
 
       this.formLogin = new FormGroup({
-        userName: new FormControl('44369835', [
+        userName: new FormControl('', [
           Validators.required,
           Validators.maxLength(this.maxLengthUserName),
           Validators.minLength(this.minLengthUserName),
           Validators.pattern(this.expRegUsername)
         ]
         ),
-        password: new FormControl('44369835', [
+        password: new FormControl('', [
           Validators.required,
           Validators.maxLength(this.maxLengthPassword),
           Validators.minLength(this.minLengthPassword)
@@ -91,7 +90,7 @@ export class LoginComponent {
         )
       })
       // redirect to home if already logged in
-      if (this.authDomainService.currentUserData()?.NumeroDocumento != '') {
+      if (this.auth.currentUserData()?.NumeroDocumento != '') {
         this.router.navigate(['/dashboard']); // '/dashboard/default'
       }
     }
@@ -149,7 +148,7 @@ export class LoginComponent {
           // console.log();
           
           this.roles = JSON.parse(userData.Roles);
-          // this.authDomainService.user;
+          // this.auth.user;
           // console.log(this.userData());
           // console.log(JSON.parse(this.userData().Roles));
           

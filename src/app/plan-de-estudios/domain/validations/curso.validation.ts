@@ -1,3 +1,10 @@
+import { Injectable } from "@angular/core";
+import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
+
+@Injectable({
+    providedIn: 'root'
+})
+
 export class CursoValidation {
 
     // maxLengthPrograma:string
@@ -36,8 +43,27 @@ export class CursoValidation {
     
     // maxLengthPreRequisito: number[]
 
+    optionsTipoEstudio: UiSelect[] = [
+        { value: 'General', text: 'General', disabled: false },
+        { value: 'Específico', text: 'Específico', disabled: false },
+        { value: 'Especialidad', text: 'De Especialidad', disabled: false },
+      ]
+    
+    optionsTipoCurso: UiSelect[] = [
+    { value: 'Obligatorio', text: 'Obligatorio', disabled: false },
+    { value: 'Electivo', text: 'Electivo', disabled: false },
+    ]
 
-
+    optionsCompetencia: UiSelect[] = [
+        { value: 'CG1', text: 'Competencia General 1', disabled: false },
+        { value: 'CG2', text: 'Competencia General 2', disabled: false },
+        { value: 'CG3', text: 'Competencia General 3', disabled: false },
+        { value: 'CE1', text: 'Competencia Específica 1', disabled: false },
+        { value: 'CE2', text: 'Competencia Específica 2', disabled: false },
+        { value: 'CT1', text: 'Competencia de Especialidad 1', disabled: false },
+        { value: 'CT2', text: 'Competencia de Especialidad 2', disabled: false },
+        { value: 'CT3', text: 'Competencia de Especialidad 3', disabled: false },
+    ]
 
 
 }

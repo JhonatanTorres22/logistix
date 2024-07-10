@@ -1,5 +1,5 @@
 // Angular import
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, effect } from '@angular/core';
 import { Location, LocationStrategy } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
@@ -9,10 +9,12 @@ import { ThemeLayoutService } from 'src/app/@theme/services/theme-layout.service
 import { HORIZONTAL, VERTICAL, COMPACT } from 'src/app/@theme/const';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MenuGroupVerticalComponent } from './menu-group/menu-group.component';
-import { AuthenticationService } from 'src/app/@theme/services/authentication.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
-import { AuthDomainService } from '../../../../auth/domain/services/auth-domain.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { UsuarioRol } from 'src/app/usuarios/domain/models/usuario-rol.model';
+import { RolDTO } from 'src/app/auth/infraestructure/dto/auth.dto';
+import { AlertService } from 'src/app/demo/services/alert.service';
 
 @Component({
   selector: 'app-vertical-menu',
@@ -28,8 +30,8 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   showContent = true;
   themeLayout = new Subscription();
 
-  currentUser = this.authDomainService.currentUserData;
-  currentRol = this.authDomainService.currentRol;
+  currentUser = this.auth.currentUserData;
+  currentRol = this.auth.currentRol;
   // Constructor
   constructor(
     private location: Location,
@@ -38,11 +40,16 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     private themeService: ThemeLayoutService,
     // private authenticationService: AuthenticationService,
     private authenticationService: AuthService,
-    private authDomainService: AuthDomainService
+    private auth: AuthSignal,
+    private authService: AuthService,
+    private alert: AlertService
 
   ) {
     // console.log(this.currentRol());
-    
+    effect( () => {
+      console.log('Current User', this.currentUser().Roles);
+      
+    })
   }
 
   // public method
@@ -87,6 +94,13 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.themeLayout.unsubscribe();
+  }
+
+  changeRol( rol: RolDTO ) {
+    console.log( rol );
+    const token = JSON.parse(localStorage.getItem('token')!)
+    this.authService.selectedRol( [rol], token.accessToken);
+    this.alert.showAlert(`Se ha cambiado al rol ${ rol.Nombre }`, 'success', 5)
   }
 
   // user Logout

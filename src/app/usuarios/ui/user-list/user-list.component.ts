@@ -14,6 +14,7 @@ import { CustomerDetailsEditComponent } from 'src/app/demo/pages/application/cus
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UsuariosDomainService } from '../../domain/services/usuarios-domain.service';
 import { UserDetailsComponent } from '../user-details/user-details.component';
+import { UsuarioLocalService } from '../../infraestructure/services/usuario-local.service';
 
 export interface PeriodicElement {
   id: number;
@@ -59,12 +60,29 @@ export class UserListComponent {
   constructor(
     private usuarioRepository: UsuarioRepository,
     public dialog: MatDialog,
-    private usuarioDomainService: UsuariosDomainService 
+    private usuarioDomainService: UsuariosDomainService,
+    private mock: UsuarioLocalService
   ) {}
 
   ngOnInit(): void {
     this.obtenerUsuarios();
+    // this.getUserMock();
   }
+
+  // getUserMock() {
+  //   this.mock.getUser().subscribe({
+  //     next: (data) => {
+  //       console.log('MOCK WEB SERVICES INIT');
+        
+  //       console.log(data);
+        
+  //     }, error: (error) => {
+  //       console.log('MOCK WEB SERVICES ERROR');
+  //       console.log(error);
+        
+  //     }
+  //   })
+  // }
 
   obtenerUsuarios = (): void => {
     this.usuarioRepository.obtenerUsuarios().subscribe({

@@ -1,6 +1,6 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, WritableSignal, signal } from "@angular/core";
 import { UsuarioRol } from "src/app/usuarios/domain/models/usuario-rol.model";
-import { Asignacion } from "../models/asignacion.model";
+import { Asignacion, AsignacionRenderizar } from "../models/asignacion.model";
 
 
 
@@ -10,10 +10,13 @@ import { Asignacion } from "../models/asignacion.model";
 
 
 export class AsignacionSignal {
-    asignacionesDefault: Asignacion[] = []
+    asignacionesDefault: Asignacion[] = [];
+    // renderizarAsignacionDefault: AsignacionRenderizar = '';
 
     
     asignaciones = signal( this.asignacionesDefault );
+    renderizarAsignaciones: WritableSignal<AsignacionRenderizar> = signal( '' );
+
 
     setAsignaciones = ( asignaciones: Asignacion[] ) => {
         this.asignaciones.set( asignaciones );

@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { environment } from 'src/environments/environment';
-import { User } from '../types/user';
 import { Router } from '@angular/router';
-import { AuthDomainService } from '../../auth/domain/services/auth-domain.service';
-import { Authenticated } from 'src/app/auth/domain/models/auth.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -21,43 +17,55 @@ export class AuthenticationService {
   contador: number = 0;
 
 
-  public currentUser = this.authDomainService.currentUserData;
+  public currentUser = this.auth.currentUserData;
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authDomainService: AuthDomainService,
+    private auth: AuthSignal,
     private mensajeriaSignal: MensajeriaSignal,
+    private semestreSignal: SemestreSignal,
     private dialogs: MatDialog,
   ) {
 
-    authDomainService.currentUserData.set(JSON.parse(localStorage.getItem('currentUserData')!));
-    authDomainService.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
-    authDomainService.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
+    const currentUserData = JSON.parse(localStorage.getItem('currentUserData')!)
+    console.log( currentUserData );
+    
+    let currentUserDataJSON = {
+      ...currentUserData,
+      Roles: currentUserData ? JSON.parse( currentUserData.Roles ) : ''
+    }
+
+    auth.currentUserData.set(currentUserDataJSON);
+    auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
+    auth.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
+    semestreSignal.setSelectSemestre( JSON.parse( localStorage.getItem('currentSemestre')! ))
     // const expToken = JSON.parse(localStorage.getItem('currentUserData')!).exp;
-    authDomainService.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
+    auth.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
     
     // const data = localStorage.getItem('mensajeriaData') ? localStorage.getItem('mensajeriaData') : this.mensajeriaSignal.mensajeriaInsertarDataAsignacion;
 
-    this.mensajeriaSignal.setMensajeriaDataAsignacion( JSON.parse( localStorage.getItem('mensajeriaData')! ))
+    const mensajeriaData = localStorage.getItem('mensajeriaData') ? JSON.parse(localStorage.getItem('mensajeriaData')!) : this.mensajeriaSignal.mensajeriaAsignacionDefault;
 
-    const timer = new Date( new Date( this.authDomainService.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
-    this.authDomainService.setCurrentTimer(timer)
+    this.mensajeriaSignal.setMensajeriaDataAsignacion( mensajeriaData )
+
+    const timer = new Date( new Date( this.auth.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
+    this.auth.setCurrentTimer(timer)
     this.expiryTimer = setInterval(() => {
 
-      if( this.authDomainService.checkExpiredToken() ) {
+      if( this.auth.checkExpiredToken() ) {
 
         this.dialogs.closeAll();
-        if(this.authDomainService.currentTimer() == 0 && this.contador == 1) {
+        if(this.auth.currentTimer() == 0 && this.contador == 1) {
           return
         }
         this.router.navigate(['/auth/logout']);
         this.contador++;
-        console.log('if', this.authDomainService.currentTimer());
+        console.log('if', this.auth.currentTimer());
         
       } else {
-          const timer = new Date( new Date( this.authDomainService.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
-          this.authDomainService.setCurrentTimer(timer);
-          console.log('else', this.authDomainService.currentTimer());
+          const timer = new Date( new Date( this.auth.currentExpirarToken() ).getTime() - new Date().getTime() ).getMinutes();
+          this.auth.setCurrentTimer(timer);
+          console.log('else', this.auth.currentTimer());
 
         }
       ; }, 60000);

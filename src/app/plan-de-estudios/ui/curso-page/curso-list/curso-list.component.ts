@@ -1,14 +1,122 @@
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
+import { Curso, CursoByCiclo } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
+import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { CursoService } from 'src/app/plan-de-estudios/infraestructure/services/curso.service';
+import { CursoAddComponent } from '../curso-add/curso-add.component';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { UiModalTemplateComponent } from 'src/app/core/components/ui-modal-template/ui-modal-template.component';
+import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
+
 
 @Component({
   selector: 'curso-list',
   standalone: true,
-  imports: [ CommonModule, SharedModule ],
+  imports: [ CommonModule, SharedModule, UiButtonIconComponent, UiButtonComponent, CursoAddComponent, UiModalTemplateComponent ],
   templateUrl: './curso-list.component.html',
   styleUrl: './curso-list.component.scss'
 })
-export class CursoListComponent {
+export class CursoListComponent implements OnInit {
+
+  cursosByCiclos = this.signal.cursosByCiclos;
+  
+  constructor( 
+    private repository: CursoRepository,
+    private service: CursoService,
+    private alert: AlertService,
+    private signal: CursoSingal,
+    private modal: UiModalService
+
+  ) {}
+
+  ngOnInit(): void {
+    this.obtener();
+  }
+
+
+  obtener() {
+    this.repository.obtener().subscribe({
+      next: ( cursos ) => {
+        // console.log( cursos );
+        const cursoByCiclo = cursos.reduce( ( a: CursoByCiclo[], b: Curso ) => {
+
+          const existeCiclo = a.findIndex( a => a.ciclo == b.ciclo);
+            if( existeCiclo == -1 ) {
+
+              const newCiclo: CursoByCiclo = {
+                ciclo: b.ciclo,
+                idCiclo: b.idCiclo,
+                cursos: [b]
+              }
+              a.push( newCiclo )
+              return a
+            }
+
+            a[existeCiclo].cursos.push( b );
+
+
+          return a
+        }, [] )
+        console.log( cursoByCiclo );
+        this.cursosByCiclos.set( cursoByCiclo.sort( ( a, b) => parseInt( a.ciclo ) - parseInt( b.ciclo ) ) )
+        console.log();
+      }, error: ( error ) => {
+        console.log(error);
+        
+      }
+    })
+  }
+
+  obtenerMSW() {
+    this.service.obtenerMSW().subscribe({
+      next: ( data ) => {
+        console.log(data);
+        
+      }, error: ( error ) => {
+        console.log( error );
+        
+      }
+    })
+  }
+
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+
+
+  openCurso( template: TemplateRef<any>, ciclo: CursoByCiclo, curso?: Curso, ) {
+    console.log( curso );
+    let titleModal = 'Editar Curso';
+    this.signal.cursoCicloSelect.set( ciclo );
+    curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
+    this.modal.openTemplate( {
+      template,
+      titulo: titleModal
+    } ).afterClosed().subscribe( resp => {
+      console.log(resp);
+      if( resp == 'cancelar') {
+        this.signal.setCursoSelectDefault();
+        return
+      }
+
+    });
+  }
+
 
 }

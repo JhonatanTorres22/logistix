@@ -9,8 +9,10 @@ import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuar
 
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.component';
-import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
+
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
+
 
 @Component({
   selector: 'app-decano-list',
@@ -27,6 +29,7 @@ export class DecanoListComponent {
   decanoEdit: UsuarioRol;
   decanos: WritableSignal<UsuarioRol[]>= this.signal.decanosList;
   decanoSeleccionado = this.signal.decanoSelect;
+  facultadSelected = this.facultadSignal.facultadSelect;
   // programaes: 
   decanoSelect: UsuarioRol = {
     id: 0,
@@ -38,6 +41,7 @@ export class DecanoListComponent {
 constructor(
   private asignacionSignal: AsignacionSignal,
   private signal: DecanoSignal,
+  private facultadSignal: FacultadSignal,
   private repository: UsuarioRolRepository,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
@@ -111,7 +115,8 @@ constructor(
     this.repository.obtenerUsuariosRol().subscribe({
       next: ( decanos ) => {
         console.log(decanos);
-        const decanosList = decanos.filter( usuario => usuario.rol.toUpperCase() == 'DECANO DE FACULTAD')  // && usuario.estado == 'ACTIVO'
+        // const decanosRol = ['DECANO DE FACULTAD DE INGENIERÍA CIENCIAS Y ADMINISTRACIÓN', 'DECANO DE FACULTAD DE CIENCIAS DE LA SALUD']
+        const decanosList = decanos.filter( usuario => usuario.rol.toUpperCase() == `DECANO DE ${ this.facultadSelected().nombre.replace(',', '') }` )  // && usuario.estado == 'ACTIVO'
         this.signal.setDecanosList( decanosList );
         if(this.decanos().length > 0){
           let decanoSeleccionado = this.decanos().find(decano => decano.id === this.decanoSeleccionado().id)

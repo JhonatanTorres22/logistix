@@ -1,7 +1,8 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO } from "../../infraestructure/dto/mensajeria.dto";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
+import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaNuevoMensajeListDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO, MensajeriaTipoDTO, MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
 import { RemoveHTML } from "src/app/core/mappers/removeHTML";
+import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
 export class MensajeriaMapper {
     static fromDomainToApiInsertar( param: MensajeriaInsertar ): MensajeriaInsertarDTO {
@@ -110,5 +111,45 @@ export class MensajeriaMapper {
         }
     }
 
+
+    static fromApiToDomainNuevoMensajeList( param: MensajeriaNuevoMensajeListDTO ): MensajeriaNuevoMensajeList {
+        return {
+            idTipoMensajeRol: param.codigoTipoMensajeRol,
+            idUsuarioRol: param.codigoUsuarioRol,
+            apellidosYnombres: param.apellidosyNombres,
+            descripcion: param.descripcion,
+            iniciaProceso: param.iniciaProceso,
+            cierraProceso: param.cierraProceso,
+            responder: param.responder,
+            temporalidad: param.temporalidad
+
+        }
+    }
+
+
+    // static fromApiToDomainTipoMensaje( param: MensajeriaTipoDTO ): MensajeriaTipo {
+    //     return {
+    //         id: param.codigo,
+    //         tipo: param.nombre
+    //     }
+    // }
+
+    static fromApiToDomainTipoMensajeGrupo( param: MensajeriaTipoGrupoDTO ): UiSelect {
+        return {
+            value: param.codigoTipoMensajeGrupo.toString(),
+            text: param.nombre,
+            disabled: false
+        }
+    }
+
+    static fromApiToDomainTipoMensaje( param: MensajeriaTipoDTO ): UiSelect {
+        return {
+            value: param.codigoTipoMensaje.toString(),
+            text: param.nombre,
+            disabled: false
+        }
+    }
+
+    
     
 }
