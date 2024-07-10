@@ -1,14 +1,14 @@
-<ng-scrollbar style="height: calc(100vh - 164px)" visibility="hover">
+<ng-scrollbar style="height: calc(100vh - 155px)" visibility="hover">
     <div class="customer-details-card p-20">
       <div class="row">
             <div class="col-12">
             <app-card [showHeader]="false" padding="5" cardClass="mb-0">
               <div class="personal-info">
-                <div class="text-center m-t-4 flex justify-content-left">
+                <div class="text-center m-t-4 flex justify-content-left w-full overflow-hidden " style="box-sizing: border-box;">
                   <img src="assets/images/user/avatar-5.jpg" class="img-fluid wid-60 border-50" alt="avatar" />
                   <div class="flex flex-column text-left ml-3 align-self-center">
                     <div class="f-16 f-w-600">{{ usuario.apellidoPaterno +' '+ usuario.apellidoMaterno +' '+ usuario.nombres}}</div>
-                    <p class="text-muted text-xs">{{ usuario.correoInstitucional}}</p>
+                    <p class="text-muted text-xs" >{{ usuario.correoInstitucional}}</p>
                   </div>
                 </div>
               </div>
@@ -64,10 +64,10 @@
                     class="example-list"
                     (cdkDropListDropped)="drop($event, 'asignar')">
                     @for (userRol of usuariosRol; track userRol) {
-                    <div (click)="setRol(userRol)" class="example-box flex" cdkDrag>
+                    <div (click)="setRol(userRol)" class="example-box flex flex-column lg:flex-row" cdkDrag>
                     <span class="font-bold mx-4">{{ userRol.rol }}</span>
                         
-                        <div class="flex flex-column w-full">
+                        <div class="flex flex-column w-full sm:ml-6">
                             @if ( userRol.usuario ) {
                                 <mat-slide-toggle
                                             class="f-w-500 "

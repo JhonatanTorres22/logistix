@@ -1,18 +1,27 @@
 <mat-form-field appearance="outline" class="w-100 m-t-5">
     <mat-label>{{ label }}</mat-label>
     <input
+      (input)="onInput($event)"
+      [expReg]="expReg"
       [readonly]="readonly" 
       [formControl]="formControl"
-      [type]="type"
       matInput
       [maxlength]="maxlength"
       autocomplete="off"
       [matDatepicker]="picker"
+      [matDatepickerFilter]="datepickerFilter"
+      UpperCase
     />
+    <mat-hint>DD/MM/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
     @if (formControl?.hasError('required')) {
         <mat-error>Este campo es obligatorio</mat-error>
+    }
+    @if(formControl?.hasError('matDatepickerFilter')){
+      <mat-error >
+        La fecha ingresada indica que el usuario es menor de 18 años
+      </mat-error>
     }
 
 </mat-form-field>

@@ -8,10 +8,13 @@
         <form [formGroup]="formSemestre" class="p-3">
           <!-- {{ semestreEdit | json }} -->
           <div class="flex gap-3">
-            <ui-input class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput"></ui-input>
+            <ui-input [(ngModel)]="preFijoSemestre" class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" 
+            [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput" patternErrorMessage="El nombre no puede concluir con un espacio o guion"></ui-input>
           </div>
           <div class="flex gap-3">
-            <ui-input class="w-full" label="Codigo" formControlName="codigo" [maxlength]="maxLengthCodigo" [minlength]="minLengthCodigo" [expReg]='expRegCodigoToLockInput'></ui-input>
+            <ui-input class="w-full" label="Codigo" formControlName="codigo" [maxlength]="maxLengthCodigo"
+             [minlength]="minLengthCodigo" [expReg]="expRegCodigoToLockInput"
+             patternErrorMessage="El código no puede terminar con un guion o espacio. Ej.: 2024-1"></ui-input>
             <!-- {{ formSemestre.value.fechaInicio }} -->
             
 

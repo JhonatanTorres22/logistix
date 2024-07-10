@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { TipoDocumento, Usuario } from "../models/usuario.model";
-import { AbstractControl } from "@angular/forms";
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 
 
 @Injectable({
@@ -64,21 +64,29 @@ export class UsuariosDomainValidacionesService {
         
         return numeroDocumento != this.usuarioExistente?.numeroDocumento ? null : { numedoDocumentoExistente: true }
     }
+    dniExistenteValidator: ValidatorFn = (control: AbstractControl): { [key: string]: any } | null => {
+        const numeroDocumento = control.value;
+        if (numeroDocumento !== this.usuarioExistente?.numeroDocumento) {
+          return null; // El número de documento es válido
+        } else {
+          return { numedoDocumentoExistente: true }; // El número de documento ya existe
+        }
+      }
     /* FIN NÚMERO DE DOCUMENTO */
 
 
     /* APELLIDOS */
-    maxLengthApellidos: number = 40;
-    maxLengthNombres: number = 40;
+    maxLengthApellidos: number = 25;
+    maxLengthNombres: number = 25;
     minLengthApellidos: number = 3;
     minLengthNombres: number = 3;
     /* FECHA NACIMIENTO */
-
+    EXP_REG_APELLIDO_AND_NOMBRES = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
 
     /* GENERAL */
     EXP_REG_SOLO_NUMEROS = /^[0-9]*$/;
-    
-    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
+    EXP_REG_SIN_ESPACIO = /\s/g
+    EXP_REG_SIN_NUMERO = '^[a-zA-ZñÑáÁéÉíÍóÓúÚ\u00C0-\u017F ]*[a-zA-ZñÑáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
 
     /* CORREOS */
     EXP_REG_CORREO = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -86,8 +94,14 @@ export class UsuariosDomainValidacionesService {
     // minLengthCorreo: number = 7;
 
     /* NUMERO DE CELULAR */
-    EXP_REG_CELULAR = /^9\d{8}$/
+    pattern_celular = /^9\d{8}$/
+    EXP_REG_CELULAR = /[^0-9]/g;
     maxLengthCelular = 9
+
+    /* FECHA NACIMIENTO */
+    EXP_REG_FECHA_NACIMIENTO = /[^0-9\/]/g;
+    maxLengthFechaNacimiento = 10
+
 
     
 

@@ -4,13 +4,13 @@ import { DefaultValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Directive({
   selector: '[UpperCase]',
   standalone: true,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef( () => UpperCaseDirective),
-    }
-  ]
+  // providers: [
+  //   {
+  //     provide: NG_VALUE_ACCESSOR,
+  //     multi: true,
+  //     useExisting: forwardRef( () => UpperCaseDirective),
+  //   }
+  // ]
 })
 export class UpperCaseDirective extends DefaultValueAccessor{
 

@@ -16,6 +16,7 @@ import { SemestreAcademico } from '../../../domain/models/semestre-academico.mod
 import { SemestreAcademicoRepository } from 'src/app/programas-academicos/domain/repositories/semestre-academico.repository';
 import { SemestreAcademicoDomainService } from 'src/app/programas-academicos/domain/services/semestre-academico-domain.service';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
 @Component({
   selector: 'semestre-add',
@@ -29,6 +30,7 @@ export class SemestreAddComponent implements OnInit {
 
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
 
+  preFijoSemestre: string = ''
   maxLengthNombre: number;
   minLengthNombre: number;
   expRegNombre: RegExp;
@@ -39,7 +41,7 @@ export class SemestreAddComponent implements OnInit {
   expRegCodigoToLockInput: RegExp;
   formSemestre: FormGroup;
 
-
+  listaCamposFormulario: string[] = ['nombre', 'codigo']
 
   @Input() semestreEdit: SemestreAcademico;
   @Input() listaCodigoSemestre : string[] = []
@@ -47,6 +49,7 @@ export class SemestreAddComponent implements OnInit {
 
 
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private semestreSignal: SemestreSignal,
     public dialogRef: MatDialogRef<SemestreAddComponent>,
     public dialog: MatDialog,
@@ -80,11 +83,16 @@ export class SemestreAddComponent implements OnInit {
       fechaFin: new FormControl('', []), // Validators.required
      })
 
+     this.deshabilitarInputsFormService.inicializarInputs(this.formSemestre, this.listaCamposFormulario,0);
+     this.deshabilitarInputsFormService.controlarInputs(this.formSemestre, this.listaCamposFormulario)
+
     // this.semestreEdit = data;
     this.semestreEdit ? this.pathValueFormSemestreEdit() : '';
+    
   }
   ngOnInit(): void {
-    this.semestreEdit ? this.pathValueFormSemestreEdit() : '';    
+    this.semestreEdit ? this.pathValueFormSemestreEdit() : '';  
+    this.semestreEdit && this.semestreEdit.id !== 0 ? this.preFijoSemestre = this.semestreEdit.nombre : this.preFijoSemestre = 'SEMESTRE '  
   }
 
   

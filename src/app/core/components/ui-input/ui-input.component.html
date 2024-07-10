@@ -29,7 +29,7 @@
     <mat-error>Este campo es obligatorio</mat-error>
   }
   @if (formControl?.hasError('pattern')) {
-    <mat-error>Este campo no cumple con el formato establecido</mat-error>
+    <mat-error>{{ patternErrorMessage }}</mat-error>
   }
   @if (formControl?.hasError('codigoDuplicado')) {
     <mat-error>Esta campo está siendo duplicado</mat-error>

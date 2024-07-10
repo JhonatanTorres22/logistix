@@ -20,21 +20,23 @@
               <div class="text-center m-t-16">
                 <img src="assets/images/user/avatar-5.jpg" class="img-fluid wid-60 border-50" alt="avatar" />
                 <div class="f-16 f-w-600">{{ usuario.apellidoPaterno +' '+ usuario.apellidoMaterno +' '+ usuario.nombres}}</div>
-                <p class="text-muted text-xs">{{ usuario.correoInstitucional}}</p>
+                  <p class="text-muted text-xs w-full" style="overflow-wrap: break-word;">
+                    {{ usuario.correoInstitucional }}
+                  </p>
                 <mat-divider class="m-t-15 divider m-b-15"></mat-divider>
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-6">
                     <div class="f-16 f-w-500">{{ edad }}</div>
                     <div class="text-muted">Edad</div>
                   </div>
-                  <div class="col-4 border-side">
+                  <div class="col-6 border-side">
                     <div class="f-16 f-w-500">1</div>
                     <div class="text-muted">Roles</div>
                   </div>
-                  <div class="col-4">
+                  <!-- <div class="col-4">
                     <div class="f-16 f-w-500">7634</div>
                     <div class="text-muted">Visits</div>
-                  </div>
+                  </div> -->
                 </div>
                 <mat-divider class="m-y-15 divider"></mat-divider>
                 @for (task of userDetails; track task) {
@@ -43,12 +45,6 @@
                     <div>{{ task.text }}</div>
                   </div>
                 }
-                <!-- <div class="flex-inline align-item-center justify-content-between w-100 m-b-15">
-                  <i class="ti ti-link"></i>
-                  <a href="javascript:" class="text-primary-500">
-                    <div>https://anshan.dh.url</div>
-                  </a>
-                </div> -->
               </div>
             </div>
           </app-card>

@@ -18,7 +18,9 @@
                   @for (breadcrumb of navigationList; track breadcrumb) {
                     @if (breadcrumb.url !== false) {
                       <li class="breadcrumb-item">
-                        <a [routerLink]="breadcrumb.url">{{ breadcrumb.title }}</a>
+                        <a [routerLink]="breadcrumb.title === 'Configuracion' ? ['/dashboard/default'] : breadcrumb.url">
+                          {{ breadcrumb.title }}
+                        </a>
                       </li>
                     }
                     @if (breadcrumb.url === false && breadcrumb.type !== 'group') {

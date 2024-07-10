@@ -19,32 +19,34 @@ export class LocalValidations {
     maxLengthNombre = 40;
     minLengthNombre = 3;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
-    expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
-    duplicarNombre = this.duplicadoNombreLocal.bind(this)
+    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]/g;
+    duplicarNombre = this.duplicadoNombreLocal.bind(this);
 // FIN NOMBRE
 
 
 // INICIO CODIGO
     maxLengthDefinicion = 20;
     minLengthDefinicion = 3;
-    expRegDefinicion = /[a-zA-Z0-9\- ]{0,40}/
-    expRegDefinicionToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegDefinicion = /[a-zA-Z0-9\- ]{0,40}/;
+    expRegDefinicionToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9 \-]/g;
 // FIN CODIGO
 
 // INICIO LATITUD
     maxLengthLatitud = 20;
     minLengthLatitud = 6;
-    expRegLatitud = /^[0-9-.,]*$/
-    expRegLatitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegLatitud = /^[\d\-][\d\- ]*\d+$/;
+    expRegLatitudToLockInput = /[^0-9\-]|(?!^)-/g;
 // FIN LATITUD
 
 // INICIO LONGITUD
     maxLengthLongitud = 20;
     minLengthLongitud = 6;
-    expRegLongitud = /^[0-9-.,]*$/
-    expRegLongitudToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegLongitud = /^[\d\-][\d\- ]*\d+$/;
+    expRegLongitudToLockInput = /[^0-9\-]|(?!^)-/g;
 // FIN LONGITUD
 
+/* GENERAL */
+EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:()"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$';
     duplicadoNombreLocal(control: AbstractControl): { [key: string]: boolean } | null {
         const listaLocales = this.signal.localList();
         const editarLocales = this.signal.localEdit();

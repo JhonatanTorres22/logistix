@@ -5,6 +5,7 @@ import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Facultad, FacultadCrear } from 'src/app/programas-academicos/domain/models/facultad.model';
@@ -30,6 +31,7 @@ export class FacultadAddComponent {
 
   @Output() cerrarFormulario: EventEmitter<string> = new EventEmitter();
 
+  mensajeBloquearEspacio: string = 'No se debe incluir espacios al término de la palabra'
   maxLengthNombre: number;
   minLengthNombre: number;
   expRegNombre: RegExp;
@@ -41,12 +43,14 @@ export class FacultadAddComponent {
   expRegCodigoToLockInput: RegExp;
   formFacultad: FormGroup;
 
+  listaCamposFormulario: string [] = ['nombre', 'definicion']
 
 
   // semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos;
 
 
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private asignacionSignal: AsignacionSignal,
     public dialogRef: MatDialogRef<FacultadAddComponent>,
     public dialog: MatDialog,
@@ -81,6 +85,8 @@ export class FacultadAddComponent {
 
      })
 
+     this.deshabilitarInputsFormService.inicializarInputs(this.formFacultad, this.listaCamposFormulario,0);
+     this.deshabilitarInputsFormService.controlarInputs(this.formFacultad, this.listaCamposFormulario)
     // this.semestreEdit = data;
     this.facultadEdit ? this.pathValueFormFacultadEdit() : '';
   }
