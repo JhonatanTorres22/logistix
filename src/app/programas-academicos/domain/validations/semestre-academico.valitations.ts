@@ -17,18 +17,19 @@ export class SemestreAcademicoValidations {
     ) { }
 
     // INICIO NOMBRE    
-    maxLengthNombre = 40;
+    maxLengthNombre = 18;
     minLengthNombre = 5;
-    expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
-    expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegNombre = /^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F].*\d$/;
+    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9 \-]/g;
     // FIN NOMBRE
 
 
     // INICIO CODIGO
     maxLengthCodigo = 6;
     minLengthCodigo = 6;
-    expRegCodigo = /[0-9\-]{5}/;
-    expRegCodigoToLockInput = /^((?![0-9\-]).)*$/;
+    expRegCodigo = /^\d{4}-\d{1,2}$/
+
+    expRegCodigoToLockInput =/[^0-9-]/g;
     duplicado = this.duplicadoNombreSemestre.bind(this)
     // FIN CODIGO
 

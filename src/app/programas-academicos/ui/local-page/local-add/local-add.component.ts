@@ -5,6 +5,7 @@ import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Local, LocalCrear } from 'src/app/programas-academicos/domain/models/local.model';
@@ -50,15 +51,19 @@ export class LocalAddComponent {
   minLengthLongitud: number;
   expRegLongitud: RegExp;
   expRegLongitudToLockInput: RegExp;
+
+  expRegNombreBlockNumeroAndEspacio: string;
   
   formLocal: FormGroup;
 
+  listaCamposFormulario: string[] = ['nombre', 'definicion', 'latitud', 'longitud']
 
 
   // semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos;
 
   
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private asignacionSignal: AsignacionSignal,
     private repository: LocalRepository,
     public dialogRef: MatDialogRef<LocalAddComponent>,
@@ -95,13 +100,17 @@ export class LocalAddComponent {
     this.expRegLongitud = this.validation.expRegLongitud;
     this.expRegLongitudToLockInput = this.validation.expRegLongitudToLockInput;
 
+    this.expRegNombreBlockNumeroAndEspacio = this.validation.EXP_REG_SIN_NUMERO;
+
     this.formLocal = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombre), validation.duplicarNombre]),
-      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthDefinicion), Validators.minLength(this.minLengthDefinicion), Validators.pattern(this.expRegDefinicion)]),
-      latitud: new FormControl('', [ Validators.required, Validators.maxLength(this.maxLengthLatitud), Validators.minLength(this.minLengthLatitud), Validators.pattern(this.expRegLatitud)]),
+      nombre: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthNombre), Validators.minLength(this.minLengthNombre), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio), validation.duplicarNombre]),
+      definicion: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthDefinicion), Validators.minLength(this.minLengthDefinicion), Validators.pattern(this.expRegNombreBlockNumeroAndEspacio)]),
+      latitud: new FormControl('', [ Validators.required, Validators.maxLength(this.maxLengthLatitud), Validators.minLength(this.minLengthLatitud), Validators.pattern(this.expRegLongitud)]),
       longitud: new FormControl('', [Validators.required, Validators.maxLength(this.maxLengthLongitud), Validators.minLength(this.minLengthLongitud), Validators.pattern(this.expRegLongitud)])
      })
 
+     this.deshabilitarInputsFormService.inicializarInputs(this.formLocal, this.listaCamposFormulario,0);
+     this.deshabilitarInputsFormService.controlarInputs(this.formLocal, this.listaCamposFormulario)
     this.localEdit ? this.pathValueFormLocalEdit() : '';
   }
   ngOnInit(): void {

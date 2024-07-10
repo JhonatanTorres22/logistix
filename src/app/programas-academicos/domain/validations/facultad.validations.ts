@@ -19,7 +19,7 @@ export class FacultadValidations {
     maxLengthNombre = 60;
     minLengthNombre = 5;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
-    expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g ;
     duplicado = this.duplicadoNombreFacultad.bind(this);
     // FIN NOMBRE
     
@@ -28,11 +28,12 @@ export class FacultadValidations {
     maxLengthCodigo = 150;
     minLengthCodigo = 6;
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
-    expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegCodigoToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-.:;]/g;
+    // /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g
     // FIN CODIGO
     
      /* GENERAL INICIO */
-    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$';
+    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:()"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$';
     /* GENERAL FIN */
 
 /* INICIO DUPLICIDAD */
