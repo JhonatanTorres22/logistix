@@ -159,7 +159,6 @@ export class AsignacionPageComponent {
 
   }
 
-
   agregarProgramaConfirm = ( asignacion: Asignacion ) => {
     if ( 
       !(this.programaSelect().id != 0 &&

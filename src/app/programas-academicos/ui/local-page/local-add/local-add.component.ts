@@ -229,8 +229,8 @@ export class LocalAddComponent {
     this.formLocal.patchValue({
       definicion: this.localEdit.definicion,
       nombre: this.localEdit.nombre,
-      latitud: this.localEdit.latitud,
-      longitud: this.localEdit.longitud
+      latitud: this.localEdit.latitud === 0 ? '' : this.localEdit.latitud ,
+      longitud: this.localEdit.longitud === 0 ? '' : this.localEdit.longitud
 
     });
 

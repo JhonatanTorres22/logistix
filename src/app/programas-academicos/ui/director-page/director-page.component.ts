@@ -39,7 +39,7 @@ export class DirectorPageComponent {
     console.log('abrir modal director list');
     const dialogRef = this.dialog.open( DirectorListComponent, {
       width: '800px',
-      height: '460px',
+      // height: '460px',
       disableClose: true,
     } );
 

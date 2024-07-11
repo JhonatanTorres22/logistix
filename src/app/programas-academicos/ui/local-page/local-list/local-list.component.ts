@@ -55,6 +55,7 @@ constructor(
     if (this.data && this.data !== undefined) {
       this.programaConLocalesAsignados = this.data.programaConLocales;
   } 
+  this.localesChecked = this.localesSelect()
   }
 
   limpiarDatosLocales = () => {
@@ -127,8 +128,13 @@ constructor(
     return this.programaConLocalesAsignados.some(local => local.idLocal === idLocal);
   }
 
-  marcarCheckBoxLocales = (idLocal:number) => {
-    return this.programaConLocalAsignado(idLocal) || (this.localesSelect().length > 0 && this.localesSelect().some(local => local.id === idLocal));
+  marcarCheckBoxLocales = (idLocal: number): boolean => {
+    if(this.programaConLocalesAsignados.length > 0){
+      return this.programaConLocalAsignado(idLocal)
+    }
+    else{
+      return this.localesChecked.some(local => local.id === idLocal);
+    }
   }
 
   
