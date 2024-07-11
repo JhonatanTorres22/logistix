@@ -10,11 +10,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AuthService } from '../../../../auth/infraestructure/services/auth.service';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { RolDTO } from 'src/app/auth/infraestructure/dto/auth.dto';
+import { AlertService } from 'src/app/demo/services/alert.service';
+import { UiUserOptionsComponent } from 'src/app/core/components/ui-user-options/ui-user-options.component';
 
 @Component({
   selector: 'app-nav-right',
   standalone: true,
-  imports: [SharedModule, CommonModule, RouterModule],
+  imports: [SharedModule, CommonModule, RouterModule, UiUserOptionsComponent],
   templateUrl: './toolbar-right.component.html',
   styleUrls: ['./toolbar-right.component.scss']
 })
@@ -30,8 +33,10 @@ export class NavRightComponent {
     private translate: TranslateService,
     private router: Router,
     // private authenticationService: AuthenticationService,
-    private authenticationService: AuthService,
-    private auth: AuthSignal
+    // private authenticationService: AuthService,
+    private auth: AuthSignal,
+    private authService: AuthService,
+    private alert: AlertService
   ) {
     translate.setDefaultLang('en');
   }
@@ -55,6 +60,8 @@ export class NavRightComponent {
   upgrade() {
     window.open('https://1.envato.market/XYAZnb', '_blank');
   }
+
+  
 
   cards = [
     {

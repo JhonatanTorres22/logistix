@@ -1,6 +1,6 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaNuevoMensajeListDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO, MensajeriaTipoDTO, MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
+import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaEnviarNuevoMensajeDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaNuevoMensajeListDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO, MensajeriaTipoDTO, MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaEnviarNuevoMensaje, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
 import { RemoveHTML } from "src/app/core/mappers/removeHTML";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -24,8 +24,8 @@ export class MensajeriaMapper {
 
         return {
             idMensaje: param.codigoMensajeria,
-            idTipoMensaje: param.codigoTipoMensajeria,
-            tipoMensaje: param.tipoMensaje,
+            nombreTipoMensaje: param.nombreTipoMensaje,
+            nombreTipoMensajeGrupo: param.nombreTipoMensajeGrupo,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
             rolEmisor: param.rol,
@@ -39,8 +39,8 @@ export class MensajeriaMapper {
     static fromApiToDomainEnviados ( param: MensajeriaEnviadosDTO ): MensajeriaEnviados {
         return {
             idMensaje: param.codigoMensajeria,
-            idTipoMensaje: param.codigoTipoMensajeria,
-            tipoMensaje: param.tipoMensaje,
+            nombreTipoMensaje: param.nombreTipoMensaje,
+            nombreTipoMensajeGrupo: param.nombreTipoMensajeGrupo,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
             rolReceptor: param.rol,
@@ -55,8 +55,8 @@ export class MensajeriaMapper {
     static fromApiToDomainArchivados ( param: MensajeriaArchivadosDTO ): MensajeriaArchivados {
         return {
             idMensaje: param.codigoMensajeria,
-            idTipoMensaje: param.codigoTipoMensajeria,
-            tipoMensaje: param.tipoMensaje,
+            nombreTipoMensaje: param.nombreTipoMensaje,
+            nombreTipoMensajeGrupo: param.nombreTipoMensajeGrupo,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
             rolEmisor: param.rolEmisor,
@@ -72,8 +72,6 @@ export class MensajeriaMapper {
     static fromApiToDomainHistorialMensajes( param: MensajeriaHistorialMensajesDTO ): MensajeriaHistorialMensajes {
         return {
             idMensaje: param.codigoMensajeria,
-            idTipoMensaje: param.codigoTipoMensajeria,
-            tipoMensaje: param.tipoMensaje,
             asunto: param.asunto,
             mensaje: param.contenido,
             archivo: param.archivo,
@@ -82,10 +80,8 @@ export class MensajeriaMapper {
             receptor: param.receptor,
             rolReceptor: param.rolReceptor,
             fecha: param.fechaCreacion,
-            leido: param.leido,
             informacionAdicional: param.informacionAdicional,
-            idRolEmisor: param.codigoEmisorRol,
-            idRolReseptor: param.codigoReceptorRol
+
         }
     }
 
@@ -150,6 +146,17 @@ export class MensajeriaMapper {
         }
     }
 
-    
+    static fromDomainToApiNuevoMensaje( param: MensajeriaEnviarNuevoMensaje ): MensajeriaEnviarNuevoMensajeDTO {
+        return {
+            asunto: param.asunto,
+            codigoEmisorRol: param.idRolEmisor,
+            codigoReceptorRol: param.idRolReceptor,
+            codigoTipoMensajeRol: param.idTipoMensajeRol,
+            flujoNavegacion: param.flujoNavegacion,
+            informacionAdicional: param.informacionAdicional,
+            textoMensaje: param.mensaje,
+            usuario: param.usuarioId
+        }
+    }
     
 }

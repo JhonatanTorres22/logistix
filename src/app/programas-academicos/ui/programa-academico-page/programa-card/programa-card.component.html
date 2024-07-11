@@ -51,7 +51,7 @@
           <ui-button
             ui-button-guardar
             tooltip="Eliminar Programa"
-            color="warn"
+            color="red"
             icon="ti ti-trash f-18"
             (click)="eliminarProgramaConfirm(asignacion, programa)">
           </ui-button>   
@@ -61,7 +61,7 @@
           <ui-button
             ui-button-guardar
             tooltip="Eliminar"
-            color="warn"
+            color="red"
             icon="ti ti-trash f-18"
             [matMenuTriggerFor]="optionsLocal"
 
@@ -75,7 +75,7 @@
             <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
           </mat-menu>
         }
-        <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="primary" (click)="openModalLocal( asignacion, programa )"></ui-button>
+        <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="blue" (click)="openModalLocal( asignacion, programa )"></ui-button>
         <ui-button icon="ti ti-mail-forward f-18" tooltip="Enviar mensaje" color="primary" (click)="enviarMensaje( asignacion, programa )"></ui-button>
 
       </div>

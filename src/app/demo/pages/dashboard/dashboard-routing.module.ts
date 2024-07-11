@@ -1,11 +1,13 @@
 // angular import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PathGuard } from 'src/app/core/guards/path.guard';
 
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent)
+    loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent),
+    // canMatch: [ PathGuard]
 
     // children: [
     //   {

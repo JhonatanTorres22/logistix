@@ -41,8 +41,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     // private authenticationService: AuthenticationService,
     private authenticationService: AuthService,
     private auth: AuthSignal,
-    private authService: AuthService,
-    private alert: AlertService
+    
 
   ) {
     // console.log(this.currentRol());
@@ -96,12 +95,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     this.themeLayout.unsubscribe();
   }
 
-  changeRol( rol: RolDTO ) {
-    console.log( rol );
-    const token = JSON.parse(localStorage.getItem('token')!)
-    this.authService.selectedRol( [rol], token.accessToken);
-    this.alert.showAlert(`Se ha cambiado al rol ${ rol.Nombre }`, 'success', 5)
-  }
+  
 
   // user Logout
   logout() {

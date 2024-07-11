@@ -68,8 +68,10 @@ export class MensajeriaPageComponent {
       console.log( this.signal.renderizarMensajes() );
       switch( this.signal.renderizarMensajes() ) {
         case 'Enviados': {
+          this.showFormNuevoMensaje.set( false );
           this.obtenerMensajesEnviados();
         this.signal.setMensajesHistorialDefault();
+
         this.signal.renderizarMensajes.set('');
 
 

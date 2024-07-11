@@ -1,1 +1,20 @@
-<p>ui-user-options works!</p>
+@if ( currentUser().Roles.length > 1 ) {
+    <button mat-button [matMenuTriggerFor]="listRol" aria-label="mode" class="header-item" matTooltip="Cambiar de Rol">
+        <a class="pc-head-link">
+          <svg class="pc-icon">
+            <use [attr.xlink:href]="icon"></use>
+          </svg>
+        </a>
+    </button>
+}
+
+<mat-menu #listRol="matMenu" xPosition="before">
+    @for (rol of currentUser().Roles; let isLast = $last; track rol) {
+      @if ( rol.Nombre != currentRol()?.rol ) {
+        <!-- <button mat-menu-item (click)="changeRol(rol)">{{ rol.Nombre }}</button> -->
+        <button mat-menu-item>
+          <div class="mat-body" (click)="changeRol(rol)">{{ rol.Nombre }}</div>
+        </button>
+      }
+    }
+</mat-menu>

@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
@@ -12,6 +12,12 @@ import { UsuarioRol, UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuar
 import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes } from '../../domain/models/mensajeria.model';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { Asignacion, AsignacionPrograma } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionRepository } from 'src/app/programas-academicos/domain/repositories/asignacion.repository';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-academico-page/programa-card/programa-card.component';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -22,7 +28,9 @@ import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repos
     MatExpansionModule,
     MensajeriaNoMessagesComponent,
     MensajeriaComposeComponent,
-    MensajeriaResponseComponent  
+    MensajeriaResponseComponent,
+    UiButtonComponent,
+    ProgramaCardComponent
   ],
   templateUrl: './mensajeria-messages.component.html',
   styleUrl: './mensajeria-messages.component.scss',
@@ -39,27 +47,37 @@ export class MensajeriaMessagesComponent {
   @Input() star = false;
   @Input() unStar = true;
   @Output() backToMail: EventEmitter<boolean> = new EventEmitter();
-  showFormCompose: boolean = false;
+  showFormResponse = this.mensajeriaSignal.showFormResponse;
   readonly panelOpenState = signal(false);
   
   modoTablet = this.mensajeriaSignal.mensajeriaModoTablet;
   mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
-  tipoBandeja = this.mensajeriaSignal.tipoBandeja;  
+  tipoBandeja = this.mensajeriaSignal.tipoBandeja;
+  semestreSelect = this.semestreSignal.semestreSelect;  
+
+  programaForAlta: Asignacion;
 
   constructor(
     private mensajeriaSignal: MensajeriaSignal,
     private userRolRepository: UsuarioRolRepository,
     private repository: MensajeriaRepository,
-    private alert: AlertService
+    private alert: AlertService,
+    private repositoryAsignacion: AsignacionRepository,
+    private semestreSignal: SemestreSignal,
+    private modal: UiModalService
   ) {}
 
-  onResponder() {
-    this.showFormCompose = true;
+  onResponder = () => {
+    this.showFormResponse.set(true);
     console.log('mostrar');
     
   }
 
-  onAltaConfirm( mensaje: MensajeriaHistorialMensajes ) {
+  onAltaConfirm = ( mensaje: MensajeriaHistorialMensajes ) => {
+
+    if( this.showFormResponse() ) {
+      return;
+    }
 
     this.alert.sweetAlert( 'question', 'Confirmación', `¿Está seguro que desea DAR DE ALTA al Director de Escuela?`)
       .then( isConfirm => {
@@ -79,7 +97,7 @@ export class MensajeriaMessagesComponent {
   }
 
 
-  onAlta( userAlta: UsuarioRolAlta, mensaje: MensajeriaHistorialMensajes ) {
+  onAlta = ( userAlta: UsuarioRolAlta, mensaje: MensajeriaHistorialMensajes ) => {
     // console.log(userRol);
     
     
@@ -108,7 +126,7 @@ export class MensajeriaMessagesComponent {
     })
   }
 
-  cerrarArchivar( mensaje: MensajeriaCerrarArchivar ) {
+  cerrarArchivar = ( mensaje: MensajeriaCerrarArchivar ) => {
     
     return new Promise<boolean>( ( resolve, reject ) => {
       this.repository.cerrarArchivarMensaje( mensaje ).subscribe({
@@ -126,8 +144,76 @@ export class MensajeriaMessagesComponent {
 
   }
 
-  onBackToMail() {
+  onBackToMail = () => {
     this.backToMail.emit( true );
+  }
+
+  showCardPrograma = ( template: TemplateRef<any> ) => {
+    this.obtenerProgramaForAlta()
+      .then( programaForAlta => {
+        console.log(programaForAlta);
+        
+        if( programaForAlta == '' ) {
+          // console.log('No hay programa encontrado');
+          this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          throw('No hay programa encontrado');
+        }
+
+        console.log( programaForAlta );
+        this.programaForAlta = programaForAlta;
+       
+    
+          this.modal.openTemplate( {
+            template,
+            titulo: 'Programa Académico'
+          } )
+  
+
+      } )
+  }
+
+  obtenerProgramaForAlta() {
+    let programaAsignado: AsignacionPrograma[];
+    const asunto = this.mensajesHistorial()[0].asunto;
+    let nombrePrograma = asunto.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');
+    nombrePrograma = nombrePrograma.substring(0, nombrePrograma.length - 7);
+
+    // console.log(nombrePrograma);
+  
+    return new Promise<Asignacion | ''>( resolve => {
+      
+      this.repositoryAsignacion.obtener( this.semestreSelect().id ).subscribe({
+        next: ( programasAsignados ) => {
+
+
+          const asignacionFacultad = programasAsignados.filter( asignacionItem => {
+            const asignacionPrograma = asignacionItem.programas.filter( programaItem => programaItem.nombrePrograma == nombrePrograma );
+            
+            if( asignacionPrograma.length > 0 ) {
+              programaAsignado = asignacionPrograma
+              return asignacionPrograma
+            }
+            return
+          });
+
+          if( asignacionFacultad.length == 0 ) {
+            resolve('');
+            
+          }
+          const data: Asignacion = {
+            ...asignacionFacultad[0],
+            programas: programaAsignado ? programaAsignado : []
+          }
+          
+          resolve( data );
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al listar las programasAsignados: ' + error, 'error', 6);
+          resolve( '' );
+        }
+      });
+    })
+
   }
 
 }

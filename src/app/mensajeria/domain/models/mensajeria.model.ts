@@ -11,8 +11,9 @@ export type TipoMensaje = 'DAR ALTA A DIRECTOR DE ESCUELA' | 'VALIDAR PLAN DE ES
 
 export interface MensajeriaRecibidos {
     idMensaje: number,
-    idTipoMensaje: number,
-    tipoMensaje: TipoMensaje,
+    nombreTipoMensajeGrupo: string,
+    nombreTipoMensaje: string,
+    // tipoMensaje: TipoMensaje,
     asunto: string,
     mensaje: string,
     rolEmisor: string,
@@ -32,12 +33,12 @@ export type MensajeriaArchivados = MensajeriaRecibidos & {
 
 export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'>
 
-export type MensajeriaHistorialMensajes = MensajeriaRecibidos & {
+export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'leido'> & {
     archivo: string,
     rolReceptor: string,
     informacionAdicional: string,
-    idRolEmisor: number,
-    idRolReseptor: number
+    // idRolEmisor: number,
+    // idRolReseptor: number
 }
 
 export interface MensajeriaLeerMensaje {
@@ -94,9 +95,20 @@ export interface MensajeriaTipoGrupo {
 }
 
 
-export interface MensajeriaEnviarNuevoMensaje {
-    // idTipoMensaje: 
+export interface MensajeriaEnviarNuevoMensaje  {
+
+    idTipoMensajeRol: number,
+    flujoNavegacion: string,
+    asunto: string,
+    idRolEmisor: number,
+    idRolReceptor: number,
+    mensaje: string,
+    informacionAdicional: string,
+    usuarioId: number
+
 }
+
+
 // export interface MensajeriaSelectMensaje {
 //     id: number,
 //     nombre: string,

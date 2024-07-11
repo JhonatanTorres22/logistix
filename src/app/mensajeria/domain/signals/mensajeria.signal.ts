@@ -71,6 +71,7 @@ export class MensajeriaSignal {
     tipoBandeja = signal( 'Recibidos' );
 
     showFormNuevoMensaje = signal( false );
+    showFormResponse = signal( false );
 
     listaDestinatarios = signal ( this.listaDestinatariosDefault );
     selectDestinatario = signal ( this.destinatarioSelectDefault );

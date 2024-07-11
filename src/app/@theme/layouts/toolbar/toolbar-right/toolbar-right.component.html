@@ -1,12 +1,6 @@
 <span class="f-16 text-gray-50" style="vertical-align: middle;">{{ timer() }}</span>
 <div class="header-button">
-  <button mat-button [matMenuTriggerFor]="languages" aria-label="mode" class="header-item">
-    <a class="pc-head-link">
-      <svg class="pc-icon">
-        <use xlink:href="assets/fonts/custom-icon.svg#custom-global"></use>
-      </svg>
-    </a>
-  </button>
+  <ui-user-options></ui-user-options>
   <button mat-button [matMenuTriggerFor]="setting" aria-label="mode" class="header-item">
     <a class="pc-head-link">
       <svg class="pc-icon">
@@ -35,20 +29,7 @@
 
     </a>
   </button>
-  <mat-menu #languages="matMenu" xPosition="before">
-    <button mat-menu-item>
-      <div class="mat-body" (click)="useLanguage('en')">English (uk)</div>
-    </button>
-    <button mat-menu-item>
-      <div class="mat-body" (click)="useLanguage('fr')">français</div>
-    </button>
-    <button mat-menu-item>
-      <div class="mat-body" (click)="useLanguage('ro')">Română</div>
-    </button>
-    <button mat-menu-item>
-      <div class="mat-body" (click)="useLanguage('cn')">中国人</div>
-    </button>
-  </mat-menu>
+
   <mat-menu #setting="matMenu" xPosition="before">
     <button mat-menu-item [routerLink]="['/application/profile/account/account']">
       <div class="dropdown-item">

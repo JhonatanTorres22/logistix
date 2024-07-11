@@ -6,15 +6,21 @@
     @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
 
       @if ( isFirst ) {
-        <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
-          <div class="f-w-600">
+        <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" cardContentClass="flex" headerClassTemplate="title align-item-center">
+
             @if ( modoTablet() ) {
-              <a (click)="onBackToMail()" class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
+              <ui-button color="secondary" tooltip="Volver" (onClick)="onBackToMail()">
                 <i class="ti ti-chevron-left f-18"></i>
-              </a>
+              </ui-button>
+              <!-- <a  class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
+                
+              </a> -->
             }
-            {{ mensaje.asunto }}
-          </div>
+            <!-- {{ mensaje.asunto }} -->
+ 
+          <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard )">
+            {{mensaje.asunto}}
+          </ui-button>
         </app-card>
       }
 
@@ -62,13 +68,18 @@
               <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
             </div>
             @if ( isLast && tipoBandeja() == 'Recibidos' ) {
-              <div class="flex justify-content-end">
-                <button mat-button color="primary" class="send-mail" (click)="onResponder()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
-                </button>
-                <button mat-button color="primary" class="send-mail" (click)="onAltaConfirm( mensaje )">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta </div>
-                </button>
+              <div class="flex justify-content-end gap-2">
+                <ui-button color="orange" borde="3xl" type="sweet" (onClick)="onResponder()">
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Pedir Cambio de Director </div>
+                </ui-button>
+                <!-- <button mat-button color="primary" class="send-mail" >
+                  <div class="flex align-item-center">  </div>
+                </button> -->
+                <ui-button color="primary" borde="3xl" type="sweet" [disabled]="showFormResponse()" (onClick)="showCardPrograma( templateProgramaCard )">
+                  <div class="flex align-item-center">
+                    <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta
+                  </div>
+                </ui-button>
               </div>
             }
 
@@ -85,8 +96,21 @@
 
     <!-- <mensajeria-response></mensajeria-response> -->
     
-    @if ( showFormCompose ) {
+    @if ( showFormResponse() ) {
       <mensajeria-response></mensajeria-response>
     }
 
 </div>
+
+<ng-template #templateProgramaCard let-data>
+  <mat-dialog-content>
+      <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea der de Alta al Director de Escuela?</p>
+      <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
+       <!-- <p>asdasd</p> -->
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse()" (click)="onAltaConfirm( mensaje )"></ui-button>
+  </mat-dialog-actions>
+  
+</ng-template>

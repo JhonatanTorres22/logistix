@@ -8,7 +8,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
-import { MensajeriaNuevoMensajeList } from '../../domain/models/mensajeria.model';
+import { MensajeriaEnviarNuevoMensaje, MensajeriaNuevoMensajeList } from '../../domain/models/mensajeria.model';
 import { QuillModule } from 'ngx-quill';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-academico-page/programa-card/programa-card.component';
@@ -18,6 +18,10 @@ import { AsignacionRepository } from 'src/app/programas-academicos/domain/reposi
 import { SemestreAcademico } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { Asignacion, AsignacionPrograma } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { UsuarioRepository } from 'src/app/usuarios/domain/repositories/usuario.repository';
+import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
+import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 
 @Component({
@@ -54,7 +58,9 @@ export class MensajeriaNewComponent implements OnInit {
     private modal: UiModalService,
     private repositoryAsignacion: AsignacionRepository,
     private asignacionSignal: AsignacionSignal,
-    private semestreSignal: SemestreSignal
+    private semestreSignal: SemestreSignal,
+    private usuarioRolRepository: UsuarioRolRepository,
+    private authSignal: AuthSignal,
   ) {
     this.tipoMensajeForm = new FormGroup({
       tipoMensajeGrupo: new FormControl('', Validators.required ),
@@ -133,15 +139,114 @@ export class MensajeriaNewComponent implements OnInit {
     return asuntoSelected[0];
   }
 
+  getDestinatario = ( id: number ): MensajeriaNuevoMensajeList => {
+    const decanoSelected = this.listaDestinatarios().filter( decano => decano.idUsuarioRol == id );
+
+    return decanoSelected[0]
+  }
+
 
   showCompose = ( id: number ) => {
-
+    
   }
 
   enviarConfirm = () => {
 
-    // this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de Alta al usuario ${ this.decano } con el Rol de DECANO DE FACULTAD, ¿Está seguro que desea enviar el mensaje?`)
+    //TODO: VERIFICAR ALTA DEL DECANO
+    // const decano = this.getDestinatario( this.tipoMensajeForm.value.destinatario );
+    this.isRolAlta().then( isRolAlta => {
+
+      const destinatario = this.getDestinatario( this.tipoMensajeForm.value.destinatario )
+
+            const mensaje: MensajeriaEnviarNuevoMensaje = {
+              idTipoMensajeRol: destinatario.idTipoMensajeRol,
+              flujoNavegacion: 'Avanzar',
+              asunto: this.getAsunto( this.tipoMensajeForm.value.tipoMensaje ).text + ' ' + this.semestreSelect().codigo,
+              idRolEmisor: parseInt( this.authSignal.currentRol().id ),
+              idRolReceptor: destinatario.idUsuarioRol,
+              mensaje: this.mensaje,
+              informacionAdicional: this.programaForAlta.programas[0].idDirector.toString(),
+              usuarioId: parseInt( this.authSignal.currentRol().id ),
+            }
+
+      if( !isRolAlta ) {
+        this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ destinatario.apellidosYnombres } con el Rol de ${ destinatario.descripcion }, ¿Está seguro que desea enviar el mensaje?`)
+          .then( isConfirm => {
+            if( !isConfirm ) {
+              return
+            }
+
+            
+            this.enviarMensaje( mensaje );
+            this.darAltaDecano();
+          })
+      }
+
+      this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea enviar el mensaje?`)
+        .then( isConfirm => {
+          if( !isConfirm ) {
+            return
+          }
+          this.enviarMensaje( mensaje );
+          
+        })
+
+    })
   
+  }
+
+  enviarMensaje( mensaje: MensajeriaEnviarNuevoMensaje ) {
+    console.log( mensaje);
+    this.repository.enviarNuevoMensaje( mensaje ).subscribe({
+      
+      next: ( data ) => {
+        console.log( data );
+        this.alert.showAlert('Mensaje enviado correctamente', 'success', 6);
+        this.signal.renderizarMensajes.set( 'Enviados' );
+        this.signal.setMensajeriaDataAsignacionDefault();
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al enviar e mensaje', 'error', 5);
+        
+      }
+    })
+  }
+
+  isRolAlta() {
+    return new Promise<boolean>( resolve => {
+      this.usuarioRolRepository.obtenerUsuariosRol().subscribe({
+        next: ( usuarios ) => {
+          const decanoRolIsAlta = usuarios.filter( usuario => usuario.id == this.tipoMensajeForm.value.destinatario );
+
+          if( decanoRolIsAlta.length == 0 ) {
+            resolve( false )
+          }
+          decanoRolIsAlta[0].alta == 'ALTA' ? resolve( true ) : resolve( false )
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al verificar el estado de ALTA del DECANO', 'error', 6);
+          resolve( false )
+        }
+      });
+
+
+    });
+
+  }
+
+  darAltaDecano() {
+    // console.log(userRol);
+    
+    this.usuarioRolRepository.darAltaRolUser( this.tipoMensajeForm.value.destinatario ).subscribe({
+      next: ( data ) => {
+        this.alert.showAlert('El decano fué dado de ALTA', 'success');
+        console.log('No tenía Alta, ahora si está dado de ALTA', data);
+        this.signal.renderizarMensajes.set( 'Enviados' );
+        this.signal.setMensajeriaDataAsignacionDefault();
+      }, error: ( error ) => {
+        this.alert.showAlert('Ocurrió un error al dar de alta al decano:' + error, 'error');
+      }
+    })
   }
 
   obtenerProgramaForAlta() {
