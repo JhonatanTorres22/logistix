@@ -29,7 +29,7 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   @Input() minlength = 0;
   @Input() expReg = '';
   @Input() duplicado: boolean = false;
-
+  @Input() classInput: string = ''
   @Input() patternErrorMessage: string = ''
 
   //@Input() classInput: string = '';
