@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, WritableSignal } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiSelectComponent } from 'src/app/core/components/ui-select/ui-select.component';
 import { UiSelect } from 'src/app/core/components/ui-select/ui-select.interface';
@@ -22,12 +22,13 @@ import { UsuarioRepository } from 'src/app/usuarios/domain/repositories/usuario.
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { UiInputComponent } from "../../../core/components/ui-input/ui-input.component";
 
 
 @Component({
   selector: 'mensajeria-new',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiSelectComponent, UiButtonComponent, QuillModule, ProgramaCardComponent ],
+  imports: [CommonModule, SharedModule, UiSelectComponent, UiButtonComponent, QuillModule, ProgramaCardComponent, UiInputComponent, UiInputComponent],
   templateUrl: './mensajeria-new.component.html',
   styleUrl: './mensajeria-new.component.scss'
 })
@@ -40,6 +41,7 @@ export class MensajeriaNewComponent implements OnInit {
   tiposMensajes = this.signal.tiposMensajes;
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
   programaForAlta: Asignacion;
+  existeProgramaForAlta: boolean = false;
 
   // selectDestinatario = this.signal.selectDestinatario;
   selectDestinatario: MensajeriaNuevoMensajeList;
@@ -61,11 +63,13 @@ export class MensajeriaNewComponent implements OnInit {
     private semestreSignal: SemestreSignal,
     private usuarioRolRepository: UsuarioRolRepository,
     private authSignal: AuthSignal,
+    private fb: FormBuilder
   ) {
-    this.tipoMensajeForm = new FormGroup({
-      tipoMensajeGrupo: new FormControl('', Validators.required ),
-      tipoMensaje: new FormControl('', Validators.required ),
-      destinatario: new FormControl('', Validators.required )
+    this.tipoMensajeForm = this.fb.group({
+      tipoMensajeGrupo: ['', [Validators.required] ],
+      tipoMensaje: ['', [Validators.required] ],
+      destinatario: ['', [Validators.required] ],
+      // programaExistente:['', Validators.required ]
     })
   }
   ngOnInit(): void {
@@ -95,7 +99,9 @@ export class MensajeriaNewComponent implements OnInit {
       this.repository.obtenerTipoMensajeGrupo().subscribe({
         next: ( tiposMensajesGrupo ) => {
           console.log( tiposMensajesGrupo );
-          this.tiposMensajesGrupo.set( tiposMensajesGrupo )
+          this.tiposMensajesGrupo.set( tiposMensajesGrupo );
+          // this.tiposMensajes.set([])
+          // this.tipoMensajeForm.reset();
           resolve( true );
         }, error: ( error ) => {
           console.log( error );
@@ -110,9 +116,17 @@ export class MensajeriaNewComponent implements OnInit {
     this.repository.obtenerTipoMensaje( idTipoMensajeGrupo ).subscribe({
       next: ( tiposMensajes ) => {
         console.log( tiposMensajes );
-        this.signal.setListaDestinatariosDefault();
-        this.tipoMensajeForm.value.destinatario = '';
+        this.tipoMensajeForm.patchValue({
+          destinatario: '',
+          tipoMensaje: ''
+        })
+        // this.signal.setListaDestinatariosDefault();
+        // this.tipoMensajeForm.value.tipoMensaje = null;
+        // this.tipoMensajeForm.value.destinatario = null;
+        // this.existeProgramaForAlta = false;
+
         this.tiposMensajes.set( tiposMensajes )
+        // this.listaDestinatarios.set([])
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al listar los tipos de mensajes: ' + error, 'error', 6);
@@ -127,6 +141,12 @@ export class MensajeriaNewComponent implements OnInit {
       next: ( destinatarios ) => {
         console.log( destinatarios );
         this.signal.listaDestinatarios.set( destinatarios );
+        this.tipoMensajeForm.patchValue({
+          destinatario: '',
+
+        })
+        // this.tipoMensajeForm.value.destinatario = null;
+
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al listar los destinatarios: ' + error, 'error', 6);
@@ -169,6 +189,9 @@ export class MensajeriaNewComponent implements OnInit {
               usuarioId: parseInt( this.authSignal.currentRol().id ),
             }
 
+            console.log(mensaje);
+            
+
       if( !isRolAlta ) {
         this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ destinatario.apellidosYnombres } con el Rol de ${ destinatario.descripcion }, ¿Está seguro que desea enviar el mensaje?`)
           .then( isConfirm => {
@@ -203,6 +226,8 @@ export class MensajeriaNewComponent implements OnInit {
         console.log( data );
         this.alert.showAlert('Mensaje enviado correctamente', 'success', 6);
         this.signal.renderizarMensajes.set( 'Enviados' );
+      this.signal.showFormNuevoMensaje.set( false );
+
         this.signal.setMensajeriaDataAsignacionDefault();
       }, error: ( error ) => {
         console.log( error );
@@ -290,27 +315,49 @@ export class MensajeriaNewComponent implements OnInit {
 
   }
 
-  showCardPrograma = ( template: TemplateRef<any> ) => {
-    this.obtenerProgramaForAlta()
-      .then( programaForAlta => {
+  searchPrograma = () => {
+    setTimeout(() => {
+      this.obtenerProgramaForAlta().then( programaForAlta => {
         
         if( programaForAlta == '' ) {
           // console.log('No hay programa encontrado');
           this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          this.existeProgramaForAlta = false;
+          // this.tipoMensajeForm.value.programaExistente = ""
+
           throw('No hay programa encontrado');
         }
-
-        console.log( programaForAlta );
-        this.programaForAlta = programaForAlta;
-       
-    
-          this.modal.openTemplate( {
-            template,
-            titulo: ''
-          } )
   
+        this.programaForAlta = programaForAlta;
+        this.existeProgramaForAlta = true;
+        // this.tipoMensajeForm.value.programaExistente = 'true'
 
-      } )
+      })
+    }, 200);
+  } 
+
+  showCardPrograma = ( template: TemplateRef<any> ) => {
+
+    if( !this.existeProgramaForAlta ) {
+      this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+      return
+    }
+
+    this.modal.openTemplate( {
+      template,
+      titulo: 'Programa Académico'
+    } );
+
+  }
+
+  cancelar = () => {
+    this.tipoMensajeForm.patchValue({
+      tipoMensajeGrupo: '',
+      tipoMensaje: '',
+      destinatario: ''
+    });
+
+    this.signal.showFormNuevoMensaje.set( false );
   }
 
 }

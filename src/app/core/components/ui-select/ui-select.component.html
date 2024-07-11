@@ -2,7 +2,7 @@
     @if ( label ) {
       <mat-label>{{ label }}</mat-label>
     }
-    <mat-select [formControl]="formControl" (valueChange)="onChange.emit( $event )" [disabled]="readonly">
+    <mat-select [formControl]="formControl" (selectionChange)="onSelectionChange( $event )" [disabled]="readonly">
         @for (option of options; track option) {
 
           <mat-option [disabled]="option.disabled" [value]="option.value">
@@ -13,8 +13,8 @@
               {{ option.text }}
             </div>
           </mat-option>
+          {{ formControl.value }}
 
-            <!-- <mat-option [disabled]="option.disabled" [value]="option.value">{{ option.text }}</mat-option> -->
         }
     </mat-select>
     @if (formControl?.hasError('required')) {
@@ -22,3 +22,5 @@
     }
 
   </mat-form-field>
+
+{{ formControl.value | json }}

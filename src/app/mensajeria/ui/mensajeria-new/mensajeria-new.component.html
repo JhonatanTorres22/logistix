@@ -1,76 +1,137 @@
 <app-card [showHeader]="false" [padding]="16">
-    <div class="title align-item-center" [formGroup]="tipoMensajeForm">
-        <ul class="list-inline mb-3">
-            <li class="list-inline-item w-full">
-                <div class="flex align-item-center gap-2">
-                    <div class="w-8rem">
-                        <ui-button label="Mensajería" color="secondary"></ui-button>
-                    </div>
-                    <ui-select classInput="small" class="w-full" [options]="tiposMensajesGrupo()" formControlName="tipoMensajeGrupo" (onChange)="obtenerTipoMensaje( $event )"></ui-select>
-                </div>
-                <div class="flex align-item-center gap-2">
-                    <div class="w-8rem">
-                        <ui-button label="Tipo" color="secondary"></ui-button>
-                    </div>
-                    <ui-select classInput="small" class="w-full" [options]="tiposMensajes()" formControlName="tipoMensaje" (onChange)="obtenerDestinatarios( $event )"></ui-select>
-                </div>
-                <div class="flex align-item-center gap-2">
-                    <div class="w-8rem">
-                        <ui-button label="Para" color="secondary"></ui-button>
-                    </div>
-                    <!-- <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" /> -->
-                    <!-- <ui-select classInput="" class="w-full" [options]="listaDestinatarios()" formControlName="destinatario"  (onChange)="showCompose( $event )"></ui-select> -->
+    <form [formGroup]="tipoMensajeForm">
 
+        <div class="title align-item-center" >
+            <ul class="list-inline mb-3">
+                <li class="list-inline-item w-full">
+                    <div class="flex align-item-center gap-2">
+                        <div class="w-8rem">
+                            <ui-button label="Mensajería" color="secondary"></ui-button>
+                    </div>
                     <mat-form-field appearance="outline" class="w-100 m-t-5 small">
-                        <mat-select name="assign" formControlName="destinatario">
-                          @for (destinatario of listaDestinatarios(); track destinatario) {
-                            <mat-option [value]="destinatario.idUsuarioRol">
-                              <div class="flex align-item-center">
-                                <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
-                                {{ destinatario.apellidosYnombres }}
-                              </div>
+                        <mat-select name="assign" formControlName="tipoMensajeGrupo" (valueChange)="obtenerTipoMensaje( $event)">
+                          @for (tipoGrupo of tiposMensajesGrupo(); track tipoGrupo) {
+                            <mat-option [value]="tipoGrupo.value">
+
+                                {{ tipoGrupo.text }}
+                                
                             </mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-                </div>
-            </li>
-        </ul>
-        <mat-divider></mat-divider>
-        <ul class="list-inline mt-3">
-            <li class="list-inline-item">
-                <div class="flex align-item-start gap-2">
-                    <div class="w-4rem">
-                        <ui-button label="Asunto" color="secondary"></ui-button>
-                    </div>
-                    <div class="flex-grow-1 m-l-5">
-                        <div class="f-14 f-w-600 uppercase">
-                            @if ( getAsunto( tipoMensajeForm.value.tipoMensaje ) ) {
-                                <ui-button [label]="getAsunto( tipoMensajeForm.value.tipoMensaje )?.text" color="secondary" (onClick)="showCardPrograma( templateProgramaCard )"></ui-button>
-                            }
-                            <!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje )?.text }} -->
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <!-- <ui-select
+                classInput="small"
+                class="w-full"
+                [options]="tiposMensajesGrupo()"
+                formControlName="tipoMensajeGrupo"
+                (selectionChange)="obtenerTipoMensaje( $event.value )"
+                >
+            </ui-select> -->
+        </div>
+        <div class="flex align-item-center gap-2">
+            <div class="w-8rem">
+                <ui-button label="Tipo" color="secondary"></ui-button>
+            </div>
+            <!-- <ui-select
+            classInput="small"
+            class="w-full"
+            [options]="tiposMensajes()"
+            formControlName="tipoMensaje"
+            (selectionChange)="obtenerDestinatarios( $event.value ); searchPrograma()">
+        </ui-select> -->
+        <mat-form-field appearance="outline" class="w-100 m-t-5 small">
+            <mat-select name="assign" formControlName="tipoMensaje" (valueChange)="obtenerDestinatarios( $event ); searchPrograma()">
+                @for (tipo of tiposMensajes(); track tipo) {
+                    <mat-option [value]="tipo.value">
+                        
+                        {{ tipo.text }}
+                        
+                    </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="flex align-item-center gap-2">
+        <div class="w-8rem">
+            <ui-button label="Para" color="secondary"></ui-button>
+        </div>
+        
+        <!-- <ui-input formControlName="programaExistente" label="programaExistente"></ui-input> -->
+        <mat-form-field appearance="outline" class="w-100 m-t-5 small">
+            <mat-select name="assign" formControlName="destinatario">
+                @for (destinatario of listaDestinatarios(); track destinatario) {
+                    <mat-option [value]="destinatario.idUsuarioRol">
+                        <div class="flex align-item-center">
+                            <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                            {{ destinatario.apellidosYnombres }}
                         </div>
-                        <!-- <div class="m-b-0 text-muted mat-small"> From: &lt;tazeanu&#64;company.com&gt; </div> -->
-                    </div>
-                </div>
-              
-            </li>
-        </ul>
+                    </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+</li>
+</ul>
+<mat-divider></mat-divider>
+<!-- {{tipoMensajeForm.value.tipoMensaje}} -->
+<ul class="list-inline mt-3">
+    <li class="list-inline-item">
+        <div class="flex align-item-start gap-2">
+            <div class="w-4rem">
+                <ui-button label="Asunto" color="secondary"></ui-button>
+            </div>
+            <div class="flex-grow-1 m-l-5">
+                <div class="f-14 f-w-600 uppercase">
+                    @if ( getAsunto( tipoMensajeForm.value.tipoMensaje ) ) {
+                        <ui-button
+                        [label]="getAsunto( tipoMensajeForm.value.tipoMensaje )?.text"
+                        color="{{ existeProgramaForAlta ? 'green' : 'red'}}"
+                        type="sweet"
+                        tooltip="{{ existeProgramaForAlta ? 'Ver Información' : 'No se encontró el Programa'}}"
+                        (onClick)="showCardPrograma( templateProgramaCard )">
+                        
+                    </ui-button>
+                }
+                <!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje )?.text }} -->
+            </div>
+            <!-- <div class="m-b-0 text-muted mat-small"> From: &lt;tazeanu&#64;company.com&gt; </div> -->
+        </div>
     </div>
     
+</li>
+</ul>
+</div>
+</form>
+    
 </app-card>
+<!-- <pre>
+{{ tipoMensajeForm.value | json }}
+{{ 'Form Valido: ' + tipoMensajeForm.valid }} 
+{{'Existe Programa: ' + existeProgramaForAlta }}
+{{ 'Mensaje: ' + mensaje }}
+</pre> -->
 
 <!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje  ) | json }} -->
 <quill-editor class="w-100 h-13rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
 
 <div class="flex justify-content-end my-2">
   <ui-button
-    label="Enviar"
-    tooltip="Enviar mensaje"
-    color="primary"
-    class=""
-    (click)="enviarConfirm()"
+    label="Cancelar"
+    tooltip="Cancelar"
+    color="secondary"
+    (onClick)="cancelar()"
     >
+
+</ui-button>
+
+<ui-button
+label="Enviar"
+tooltip="Enviar mensaje"
+color="primary"
+[disabled]="tipoMensajeForm.invalid || mensaje == null || mensaje == '' || !existeProgramaForAlta"
+class=""
+(onClick)="enviarConfirm()"
+>
 
 </ui-button>
 </div>
