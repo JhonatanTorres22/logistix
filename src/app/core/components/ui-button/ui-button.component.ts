@@ -11,17 +11,21 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 })
 export class UiButtonComponent implements OnInit {
 
-  @Input() color: '';
+
+  @Input() color: string = 'secondary';
   @Input() label: '';
   @Input() disabled: boolean = false;
   @Input() icon: string;
   @Input() tooltip: string;
   @Input() classButton: string = '';
+  @Input() borde: string = 'none';
+  @Input() type: 'sweet' | 'default' = 'default';
 
   @Output() onClick = new EventEmitter();
 
   ngOnInit(): void {
     // this.tooltip = this.label;
+    this.type = this.type ? this.type : 'default'; 
   }
 
 

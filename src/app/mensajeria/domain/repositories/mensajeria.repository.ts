@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaEnviarNuevoMensaje, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
 import { Observable } from "rxjs";
 import { MensajeriaTipoDataArrayDTO } from "../../infraestructure/dto/mensajeria.dto";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
@@ -18,7 +18,7 @@ export abstract class MensajeriaRepository {
     abstract obtenerTipoMensajeGrupo(): Observable<UiSelect[]>
     abstract obtenerTipoMensaje( idTipoMensajeGrupo: number ): Observable<UiSelect[]>
     abstract nuevoMensajeA( tipoMensaje: number ): Observable< MensajeriaNuevoMensajeList[]>
-    // abstract enviarNuevoMensaje(  )
+    abstract enviarNuevoMensaje( mensaje: MensajeriaEnviarNuevoMensaje ): Observable<void>
     // abstract
 
 

@@ -12,6 +12,7 @@ import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.componen
 
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
+import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
 
 
 @Component({

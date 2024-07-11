@@ -5,6 +5,7 @@ import {
     MensajeriaArchivados,
     MensajeriaCerrarArchivar,
     MensajeriaEnviados,
+    MensajeriaEnviarNuevoMensaje,
     MensajeriaHistorialMensajes,
     MensajeriaInsertar,
     MensajeriaLeerMensaje,
@@ -37,6 +38,7 @@ export class MensajeriaService {
     private urlTipoMensajeGrupo: string;
     private urlTipoMensaje: string;
     private urlNuevoMensajeA: string;
+    private urlNuevoMensaje: string;
 
     private rol = this.signal.currentRol
     
@@ -57,6 +59,7 @@ export class MensajeriaService {
         this.urlTipoMensajeGrupo = 'api/TipoMensajeGrupo/Listar?CodigoUsuarioRol='
         this.urlTipoMensaje = 'api/TipoMensaje/Listar?CodigoUsuarioRol='
         this.urlNuevoMensajeA = 'api/Mensajeria/NuevoA?'
+        this.urlNuevoMensaje = 'api/Mensajeria/Nuevo';
 
     }
 
@@ -135,6 +138,14 @@ export class MensajeriaService {
         
         return this.http.get<MensajeriaNuevoMensajeListDataArrayDTO>( this.urlApi + urlApi )
             .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainNuevoMensajeList )))
+    }
+
+
+    enviarNuevoMensaje( mensaje: MensajeriaEnviarNuevoMensaje ): Observable<void> {
+        const mensajeAPI = MensajeriaMapper.fromDomainToApiNuevoMensaje( mensaje );
+
+        return this.http.post<void>( this.urlApi + this.urlNuevoMensaje, mensajeAPI )
+
     }
 
     

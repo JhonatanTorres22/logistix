@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { NavigationItem } from '../types/navigation';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -35,7 +36,9 @@ export class AuthenticationService {
       Roles: currentUserData ? JSON.parse( currentUserData.Roles ) : ''
     }
 
-    auth.currentUserData.set(currentUserDataJSON);
+    if( currentUserData ) {
+      auth.currentUserData.set(currentUserDataJSON);
+    }
     auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
     auth.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
     semestreSignal.setSelectSemestre( JSON.parse( localStorage.getItem('currentSemestre')! ))
@@ -95,4 +98,22 @@ export class AuthenticationService {
   //   this.currentUserSubject.next(null);
   //   this.router.navigate(['/auth/login']); ///authentication-1/login
   // }
+
+  isAuthorized(ruta: ActivatedRouteSnapshot) {
+    //  console.log(ruta.url[0].path); 
+    const menus = this.auth.currentMenu()[0].children!;
+    // console.log(menus[0].url?.substring(1));
+    
+
+    const authorided = menus.find( (menu: NavigationItem) => menu.url?.substring(1) == ruta.url[0].path);
+    // menus.forEach( menuItem => {
+    //   console.log(menuItem.url?.substring(1))
+      
+    // })
+    console.log(authorided);
+
+    return authorided ? true : false;
+    // return true;
+  }
+
 }

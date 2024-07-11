@@ -23,6 +23,10 @@ export class AuthGuard implements CanActivate {
     
     if (currentUser() && currentUser().serviceToken !== '' && !expired) {
       // logged in so return true
+      // console.log(currentUser());
+      // console.log( currentUser().serviceToken);
+      
+      
       return true;
     }
 

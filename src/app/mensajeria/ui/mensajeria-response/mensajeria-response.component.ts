@@ -20,7 +20,7 @@ export class MensajeriaResponseComponent {
 
   mensaje: string = '';
   mensajesHistorial = this.signal.mensajesHistorial;
-
+  showFormResponse = this.signal.showFormResponse;
   constructor(
     private alert: AlertService,
     private repository: MensajeriaRepository,
@@ -34,17 +34,16 @@ export class MensajeriaResponseComponent {
       .then( isConfirm => {
         if( !isConfirm ) return
 
-        const mensajeResponder: MensajeriaResponder = {
+        // const mensajeResponder: MensajeriaResponder = {
          
-          idMensaje: this.mensajesHistorial()[this.mensajesHistorial().length -1].idMensaje,
-          idRolEmisor: parseInt( this.auth.currentRol().id ),
-          idRolReceptor: this.mensajesHistorial()[this.mensajesHistorial().length -1].idRolEmisor, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
-          mensaje: this.mensaje.trim(),
-          informacionAdicional: ''
-        }
-        // this.signal.setMensajeriaInsertar( mensajeResponder );
-        // console.log(mensajeResponder);
-        this.enviarMensaje( mensajeResponder );
+        //   idMensaje: this.mensajesHistorial()[this.mensajesHistorial().length -1].idMensaje,
+        //   idRolEmisor: parseInt( this.auth.currentRol().id ),
+        //   idRolReceptor: this.mensajesHistorial()[this.mensajesHistorial().length -1].idRolEmisor, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
+        //   mensaje: this.mensaje.trim(),
+        //   informacionAdicional: ''
+        // }
+
+        // this.enviarMensaje( mensajeResponder );
       });
 
     
@@ -68,5 +67,10 @@ export class MensajeriaResponseComponent {
     })
   }
 
+
+  cancelar = () => {
+    this.mensaje = '';
+    this.showFormResponse.set( false );
+  }
 
 }

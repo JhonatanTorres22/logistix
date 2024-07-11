@@ -17,8 +17,10 @@ export interface MensajeriaInsertarDTO {
 
 export interface MensajeriaRecibidosDTO {
     codigoMensajeria: number,
-    codigoTipoMensajeria: number,
-    tipoMensaje: TipoMensaje,
+    nombreTipoMensajeGrupo: string,
+    nombreTipoMensaje: string,
+    // codigoTipoMensajeria: number,
+    // tipoMensaje: TipoMensaje,
     asunto: string,
     contenido: string,
     rol: string,
@@ -38,13 +40,13 @@ export type MensajeriaArchivadosDTO = Omit<MensajeriaRecibidosDTO, 'rol'> & {
 
 };
 
-export type MensajeriaHistorialMensajesDTO = MensajeriaRecibidosDTO & {
+export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido'> & {
     archivo: string,
     rolReceptor: string,
     rolEmisor: string,
     informacionAdicional: string,
-    codigoEmisorRol: number,
-    codigoReceptorRol: number
+    // codigoEmisorRol: number,
+    // codigoReceptorRol: number
 }
 
 export interface MensajeriaResponderDTO {
@@ -108,4 +110,16 @@ export interface MensajeriaTipoGrupoDataArrayDTO {
 
 export interface MensajeriaTipoDataArrayDTO {
     data: MensajeriaTipoDTO[]
+}
+
+
+export interface MensajeriaEnviarNuevoMensajeDTO {
+    codigoTipoMensajeRol: number,
+    flujoNavegacion: string,
+    asunto: string,
+    codigoEmisorRol: number,
+    codigoReceptorRol: number,
+    textoMensaje: string,
+    informacionAdicional: string,
+    usuario: number
 }
