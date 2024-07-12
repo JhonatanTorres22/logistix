@@ -1,4 +1,45 @@
-<quill-editor class="w-100 h-13rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+<app-card [showHeader]="false" [padding]="16">
+    <form [formGroup]="paraRemitenteForm">
+
+        <div class="title align-item-center" >
+            <ul class="list-inline mb-3">
+                <li class="list-inline-item w-full">
+                    <div class="flex align-item-center gap-2">
+                        <div class="w-8rem">
+                            <ui-button label="Para" color="secondary"></ui-button>
+                        </div>
+                        
+                        <!-- <ui-input formControlName="programaExistente" label="programaExistente"></ui-input> -->
+                        <mat-form-field appearance="outline" class="w-100 m-t-5 small">
+                            <mat-select name="assign" formControlName="destinatario">
+                                @for (destinatario of listaDestinatariosResponderA(); track destinatario) {
+                                    <mat-option [value]="destinatario">
+                                        <div class="flex align-item-center">
+                                            <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                                            <div class="flex flex-column">
+                                                {{ destinatario.apellidosYnombres }}
+                                                <span class="f-w-600">{{ destinatario.descripcion }}</span>
+                                            </div>
+                                        </div>
+                                    </mat-option>
+                                    <!-- <pre>
+                                       {{ destinatario  | json }}
+                                    </pre> -->
+                                }
+                            </mat-select>
+                        </mat-form-field>
+       
+                    </div>
+
+                </li>
+            </ul>
+            <mat-divider></mat-divider>
+        </div>
+    </form>
+    <quill-editor class="w-100 h-13rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+    
+</app-card>
+
 
 
 <div class="flex justify-content-end my-2 gap-2">
@@ -13,6 +54,7 @@
         label="Enviar"
         tooltip="Enviar mensaje"
         color="primary"
+        [disabled]="paraRemitenteForm.invalid || mensaje == null || mensaje == ''"
         (onClick)="enviarConfirm()"
         >
     

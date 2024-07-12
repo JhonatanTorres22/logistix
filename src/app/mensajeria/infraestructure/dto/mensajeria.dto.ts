@@ -82,7 +82,7 @@ export interface MensajeriaHistorialMensajesDataArrayDTO {
 export interface MensajeriaNuevoMensajeListDTO {
     codigoTipoMensajeRol: number,
     codigoUsuarioRol: number,
-    responder: string,
+    flujoNavegacion: string,
     apellidosyNombres: string,
     descripcion: string,
     temporalidad: number,
@@ -122,4 +122,20 @@ export interface MensajeriaEnviarNuevoMensajeDTO {
     textoMensaje: string,
     informacionAdicional: string,
     usuario: number
+}
+
+export type MensajeriaResponderAListDTO = MensajeriaNuevoMensajeListDTO & {
+    codigoMensajeria: number,
+}
+
+export interface MensajeriaResponderAListDataArrayDTO {
+    data: MensajeriaResponderAListDTO[]
+}
+
+
+export type MensajeriaResponderAltaDTO = Pick<MensajeriaResponderAListDTO, 'codigoMensajeria' | 'codigoTipoMensajeRol'> & {
+    codigoEmisorRol: number,
+    codigoReceptorRol: number,
+    contenido: string,
+    informacionAdicional: string
 }

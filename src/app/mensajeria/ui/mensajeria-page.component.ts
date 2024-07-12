@@ -157,6 +157,8 @@ export class MensajeriaPageComponent {
   nuevoMensaje = ( ) => {
     // this.repository.nuevoMensajeA()
     this.showFormNuevoMensaje.set( true );
+    this.signal.setSeleccionarMensajeDefault();
+    
   }
 
   composeMail() {

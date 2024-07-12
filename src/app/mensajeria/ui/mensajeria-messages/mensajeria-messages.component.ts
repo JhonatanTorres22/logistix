@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, TemplateRef, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
@@ -18,6 +18,7 @@ import { AsignacionRepository } from 'src/app/programas-academicos/domain/reposi
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-academico-page/programa-card/programa-card.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -42,7 +43,7 @@ import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-
     ])
   ]
 })
-export class MensajeriaMessagesComponent {
+export class MensajeriaMessagesComponent implements OnInit {
 
   @Input() star = false;
   @Input() unStar = true;
@@ -53,10 +54,14 @@ export class MensajeriaMessagesComponent {
   modoTablet = this.mensajeriaSignal.mensajeriaModoTablet;
   mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
   tipoBandeja = this.mensajeriaSignal.tipoBandeja;
-  semestreSelect = this.semestreSignal.semestreSelect;  
-
+  semestreSelect = this.semestreSignal.semestreSelect;
+  semestresAcademicos = this.semestreSignal.semestresAcademicos;
+  listaDestinatariosResponderA = this.mensajeriaSignal.listaDestinatariosResponderA;
+  currentRol = this.authSignal.currentRol;
   programaForAlta: Asignacion;
-
+  esConforme: boolean = false;
+  showButtons: boolean = false;
+  mensajeHistorialSelect: MensajeriaHistorialMensajes;
   constructor(
     private mensajeriaSignal: MensajeriaSignal,
     private userRolRepository: UsuarioRolRepository,
@@ -64,8 +69,18 @@ export class MensajeriaMessagesComponent {
     private alert: AlertService,
     private repositoryAsignacion: AsignacionRepository,
     private semestreSignal: SemestreSignal,
-    private modal: UiModalService
+    private modal: UiModalService,
+    private authSignal: AuthSignal
   ) {}
+  ngOnInit(): void {
+    this.obtenerDestinatariosReponderA(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje );
+    console.log(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje);
+    
+  }
+
+  onObservacion() {
+
+  }
 
   onResponder = () => {
     this.showFormResponse.set(true);
@@ -73,8 +88,13 @@ export class MensajeriaMessagesComponent {
     
   }
 
-  onAltaConfirm = ( mensaje: MensajeriaHistorialMensajes ) => {
+  onForzarCierre = () => {
+    this.alert.sweetAlert('info', 'IMPLEMENTACIÓN PENDIENTE' ,'Falta Implementar, paciencia por favor....  :)')
+  }
 
+  onAltaConfirm = ( mensaje: MensajeriaHistorialMensajes ) => {
+    console.log( mensaje );
+    
     if( this.showFormResponse() ) {
       return;
     }
@@ -114,6 +134,7 @@ export class MensajeriaMessagesComponent {
           this.alert.showAlert('El Director fué dado de ALTA, y el Mensaje fué CERRADO y ARCHIVADO.', 'success');
           // console.log('No tenía Alta, ahora si está dado de ALTA');
           this.mensajeriaSignal.setMensajeriaDataAsignacionDefault();
+          this.modal.getRefModal().close();
           // this.mensajesHistorial
           setTimeout(() => {
             this.mensajeriaSignal.renderizarMensajes.set( 'Alta' );
@@ -148,11 +169,12 @@ export class MensajeriaMessagesComponent {
     this.backToMail.emit( true );
   }
 
-  showCardPrograma = ( template: TemplateRef<any> ) => {
+  showCardPrograma = ( template: TemplateRef<any>, mensaje: MensajeriaHistorialMensajes, showButtons: boolean ) => {
     this.obtenerProgramaForAlta()
       .then( programaForAlta => {
         console.log(programaForAlta);
-        
+        this.mensajeHistorialSelect = mensaje;
+        this.showButtons = showButtons
         if( programaForAlta == '' ) {
           // console.log('No hay programa encontrado');
           this.alert.showAlert(`No se encontró el programa`, 'error', 6);
@@ -172,17 +194,27 @@ export class MensajeriaMessagesComponent {
       } )
   }
 
+  getSemestre = ( codigo: string ) => {
+    const semestre = this.semestresAcademicos().find( semestre => semestre.codigo == codigo );
+
+    return semestre ? semestre : this.semestreSelect();
+  }
+
   obtenerProgramaForAlta() {
     let programaAsignado: AsignacionPrograma[];
     const asunto = this.mensajesHistorial()[0].asunto;
     let nombrePrograma = asunto.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');
+    const semestreCodigo = asunto.substring( asunto.length - 6)
+
+    const semestre = this.getSemestre( semestreCodigo );
+    
     nombrePrograma = nombrePrograma.substring(0, nombrePrograma.length - 7);
 
     // console.log(nombrePrograma);
   
     return new Promise<Asignacion | ''>( resolve => {
       
-      this.repositoryAsignacion.obtener( this.semestreSelect().id ).subscribe({
+      this.repositoryAsignacion.obtener( semestre.id ).subscribe({
         next: ( programasAsignados ) => {
 
 
@@ -214,6 +246,19 @@ export class MensajeriaMessagesComponent {
       });
     })
 
+  }
+
+  obtenerDestinatariosReponderA( idMensaje: number ) {
+    this.repository.responderMensajeA( idMensaje ).subscribe({
+      next: ( destinatarioResponderA ) => {
+        console.log( destinatarioResponderA );
+        this.listaDestinatariosResponderA.set( destinatarioResponderA );
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al listar los destnatarios: ' + error, 'error', 6);
+
+      }
+    })
   }
 
 }

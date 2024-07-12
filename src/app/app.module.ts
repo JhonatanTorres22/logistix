@@ -11,12 +11,14 @@ import { BasicAuthInterceptor } from 'src/app/@theme/helpers/basic-auth.intercep
 // project import
 import { SharedModule } from './demo/shared/shared.module';
 import { GuestModule } from './demo/layout/front';
+import { ProvidersModule } from './core/Providers/providers.module';
 
 @NgModule({
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  imports: [AppRoutingModule, SharedModule, BrowserAnimationsModule, BrowserModule, GuestModule, HttpClientModule],
+  imports: [AppRoutingModule, SharedModule, BrowserAnimationsModule, BrowserModule, GuestModule, HttpClientModule, ProvidersModule],
   providers: [
+    
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ]

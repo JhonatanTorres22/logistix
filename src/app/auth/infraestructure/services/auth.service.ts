@@ -41,7 +41,7 @@ export class AuthService {
         this.currentUser = this.currentUserSubject.asObservable();
 
         effect( () => {
-          console.log('algo cambi+o');
+          console.log('algo cambió');
           
         })
       }

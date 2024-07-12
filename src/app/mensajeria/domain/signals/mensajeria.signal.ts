@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
+import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponderAList, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
@@ -32,6 +32,7 @@ export class MensajeriaSignal {
     mensajeriaHistorialMensajesDefault: MensajeriaHistorialMensajes[] = []
 
     listaDestinatariosDefault: MensajeriaNuevoMensajeList[] = [];
+    listaDestinatariosResponderADefault: MensajeriaResponderAList[] = [];
     destinatarioSelectDefault: MensajeriaNuevoMensajeList = {
         apellidosYnombres: '',
         cierraProceso: false,
@@ -39,7 +40,7 @@ export class MensajeriaSignal {
         idTipoMensajeRol: 0,
         idUsuarioRol: 0,
         iniciaProceso: false,
-        responder: '',
+        flujoNavegacion: '',
         temporalidad: 0,
     }
 
@@ -74,6 +75,7 @@ export class MensajeriaSignal {
     showFormResponse = signal( false );
 
     listaDestinatarios = signal ( this.listaDestinatariosDefault );
+    listaDestinatariosResponderA = signal ( this.listaDestinatariosResponderADefault );
     selectDestinatario = signal ( this.destinatarioSelectDefault );
     tiposMensajes = signal( this.tiposMensajeDefault )
     tiposMensajesGrupo = signal( this.tiposMensajeGrupoDefault )

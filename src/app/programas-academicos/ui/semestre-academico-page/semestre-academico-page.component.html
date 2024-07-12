@@ -7,3 +7,6 @@
 <div class="flex justify-content-end">
     <ui-button class="my-2" color="primary" [label]="semestreSelect().id == 0 ? 'Seleccionar Semestre' : semestreSelect().codigo" (click)="openModalSemestre()"></ui-button>
 </div>
+@if ( semestreSelect().id == 0 ) {
+    <ui-card-not-items text="DEBE SELECCIONAR UN SEMESTRE"></ui-card-not-items>
+}

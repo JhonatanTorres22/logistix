@@ -1,6 +1,32 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { MensajeriaArchivadosDTO, MensajeriaCerrarArchivarDTO, MensajeriaEnviadosDTO, MensajeriaEnviarNuevoMensajeDTO, MensajeriaHistorialMensajesDTO, MensajeriaInsertarDTO, MensajeriaLeerMensajeDTO, MensajeriaNuevoMensajeListDTO, MensajeriaRecibidosDTO, MensajeriaResponderDTO, MensajeriaTipoDTO, MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaEnviarNuevoMensaje, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../models/mensajeria.model";
+import {
+    MensajeriaArchivadosDTO,
+    MensajeriaCerrarArchivarDTO,
+    MensajeriaEnviadosDTO,
+    MensajeriaEnviarNuevoMensajeDTO,
+     MensajeriaHistorialMensajesDTO,
+     MensajeriaInsertarDTO,
+     MensajeriaLeerMensajeDTO,
+     MensajeriaNuevoMensajeListDTO,
+     MensajeriaRecibidosDTO,
+     MensajeriaResponderAListDTO,
+     MensajeriaResponderAltaDTO,
+     MensajeriaResponderDTO,
+     MensajeriaTipoDTO,
+     MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
+import { 
+    MensajeriaArchivados,
+    MensajeriaCerrarArchivar,
+    MensajeriaEnviados,
+    MensajeriaEnviarNuevoMensaje,
+    MensajeriaHistorialMensajes,
+    MensajeriaInsertar,
+    MensajeriaLeerMensaje,
+    MensajeriaNuevoMensajeList,
+    MensajeriaRecibidos,
+    // MensajeriaResponder,
+    MensajeriaResponderAList, 
+    MensajeriaResponderAlta} from "../models/mensajeria.model";
 import { RemoveHTML } from "src/app/core/mappers/removeHTML";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -85,15 +111,15 @@ export class MensajeriaMapper {
         }
     }
 
-    static fromDomainToApiResponder( param: MensajeriaResponder ): MensajeriaResponderDTO {
-        return {
-            codigoMensajeria: param.idMensaje,
-            codigoEmisorRol: param.idRolEmisor,
-            codigoReceptorRol: param.idRolReceptor,
-            contenido: param.mensaje,
-            informacionAdicional: param.informacionAdicional
-        }
-    }
+    // static fromDomainToApiResponder( param: MensajeriaResponder ): MensajeriaResponderDTO {
+    //     return {
+    //         codigoMensajeria: param.idMensaje,
+    //         codigoEmisorRol: param.idRolEmisor,
+    //         codigoReceptorRol: param.idRolReceptor,
+    //         contenido: param.mensaje,
+    //         informacionAdicional: param.informacionAdicional
+    //     }
+    // }
 
     static fromDomainToApiLeerMensaje( param: MensajeriaLeerMensaje ): MensajeriaLeerMensajeDTO {
         return {
@@ -116,7 +142,7 @@ export class MensajeriaMapper {
             descripcion: param.descripcion,
             iniciaProceso: param.iniciaProceso,
             cierraProceso: param.cierraProceso,
-            responder: param.responder,
+            flujoNavegacion: param.flujoNavegacion,
             temporalidad: param.temporalidad
 
         }
@@ -159,4 +185,30 @@ export class MensajeriaMapper {
         }
     }
     
+
+    static fromApiToDomainResponderAList( param: MensajeriaResponderAListDTO ): MensajeriaResponderAList {
+        return {
+            apellidosYnombres: param.apellidosyNombres,
+            cierraProceso: param.cierraProceso,
+            descripcion: param.descripcion,
+            flujoNavegacion: param.flujoNavegacion,
+            idTipoMensajeRol: param.codigoTipoMensajeRol,
+            idUsuarioRol: param.codigoUsuarioRol,
+            iniciaProceso: param.iniciaProceso,
+            temporalidad: param.temporalidad,
+            idMensaje: param.codigoMensajeria
+        }
+    }
+
+
+    static fromDomainToApiResponderAlta( param: MensajeriaResponderAlta ): MensajeriaResponderAltaDTO {
+        return {
+            codigoMensajeria: param.idMensaje,
+            codigoTipoMensajeRol: param.idTipoMensajeRol,
+            codigoEmisorRol: param.idRolEmisor,
+            codigoReceptorRol: param.idRolReceptor,
+            contenido: param.mensaje,
+            informacionAdicional: param.informacionAdicional,
+        }
+    }
 }

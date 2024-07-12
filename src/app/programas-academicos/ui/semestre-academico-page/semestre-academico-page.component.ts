@@ -6,24 +6,24 @@ import { ModalComponent } from '../components/modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SemestreAddComponent } from './semestre-add/semestre-add.component';
 import { SemestreAcademico, SemestreAcademicoEliminar } from '../../domain/models/semestre-academico.model';
-import { SemestreAcademicoDomainService } from '../../domain/services/semestre-academico-domain.service';
 import { SemestreAcademicoRepository } from '../../domain/repositories/semestre-academico.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreListComponent } from './semestre-list/semestre-list.component';
 import { SemestreSignal } from '../../domain/signals/semestre.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-items/ui-card-not-items.component';
 
 @Component({
   selector: 'semestre-academico-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiButtonComponent],
+  imports: [ CommonModule, SharedModule, UiButtonComponent, UiCardNotItemsComponent],
   templateUrl: './semestre-academico-page.component.html',
   styleUrl: './semestre-academico-page.component.scss'
 })
 export class SemestreAcademicoPageComponent {
 
-  semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
-  semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
+  semestresAcademicos = this.semestreSignal.semestresAcademicos;
+  semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
   existeSemestreCreado: boolean;
 
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
@@ -31,7 +31,6 @@ export class SemestreAcademicoPageComponent {
   constructor(
     private semestreAcademicoRepository: SemestreAcademicoRepository,
     private dialog: MatDialog,
-    private semestreAcademicoDomainService: SemestreAcademicoDomainService,
     private semestreSignal: SemestreSignal,
     private alertService: AlertService
   ) {
@@ -46,23 +45,25 @@ export class SemestreAcademicoPageComponent {
   }
 
   obtenerSemestres = () => {
+    console.log('Obteniendo semestres', this.semestreSelect());
+    
     this.semestreAcademicoRepository.obtenerSemestres().subscribe({
       next: ( semestres ) => {
           // console.log(semestres);
           this.existeSemestreCreado = semestres.length > 0;
           if( semestres.length == 0 ) {
-            this.semestreAcademicoDomainService.setSemestreAcademicoDefault();
+            this.semestreSignal.setSemestreAcademicoDefault();
             return;
           }
 
           semestres.forEach( semestre => {
             // console.log(semestre);
             if( semestre.condicion == 'APERTURADO') {
-              this.semestreAcademicoDomainService.setSemestreAcademicoAperturado( semestre );
+              this.semestreSignal.setSemestreAcademicoAperturado( semestre );
             }
             
           })
-          this.semestreAcademicoDomainService.setSemestresAcademicos(semestres);
+          this.semestreSignal.setSemestresAcademicos(semestres);
       }, error: ( error ) => {
           console.log(error);
           
