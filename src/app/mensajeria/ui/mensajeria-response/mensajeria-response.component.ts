@@ -5,9 +5,10 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
-import { MensajeriaResponder } from '../../domain/models/mensajeria.model';
+import { MensajeriaResponderAList, MensajeriaResponderAlta } from '../../domain/models/mensajeria.model';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'mensajeria-response',
@@ -21,45 +22,59 @@ export class MensajeriaResponseComponent {
   mensaje: string = '';
   mensajesHistorial = this.signal.mensajesHistorial;
   showFormResponse = this.signal.showFormResponse;
+  listaDestinatariosResponderA = this.signal.listaDestinatariosResponderA;
+
+  paraRemitenteForm: FormGroup;
   constructor(
     private alert: AlertService,
     private repository: MensajeriaRepository,
     private signal: MensajeriaSignal,
-    private auth: AuthSignal
+    private auth: AuthSignal,
+    private fb: FormBuilder
+  ) {
+    this.paraRemitenteForm = this.fb.group({
+      destinatario: ['', [Validators.required]] 
+    })
+  }
 
-  ) {}
   enviarConfirm = () => {
 
     this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea enviar el mensaje?')
       .then( isConfirm => {
         if( !isConfirm ) return
 
-        // const mensajeResponder: MensajeriaResponder = {
+        const mensajeResponder: MensajeriaResponderAlta = {
          
-        //   idMensaje: this.mensajesHistorial()[this.mensajesHistorial().length -1].idMensaje,
-        //   idRolEmisor: parseInt( this.auth.currentRol().id ),
-        //   idRolReceptor: this.mensajesHistorial()[this.mensajesHistorial().length -1].idRolEmisor, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
-        //   mensaje: this.mensaje.trim(),
-        //   informacionAdicional: ''
-        // }
+          idMensaje: this.paraRemitenteForm.value.destinatario.idMensaje,
+          idTipoMensajeRol: this.paraRemitenteForm.value.destinatario.idTipoMensajeRol,
+          idRolEmisor: parseInt( this.auth.currentRol().id ),
+          idRolReceptor: this.paraRemitenteForm.value.destinatario.idUsuarioRol, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
+          mensaje: this.mensaje.trim(),
+          informacionAdicional: this.mensajesHistorial()[ this.mensajesHistorial().length - 1].informacionAdicional
+        }
 
-        // this.enviarMensaje( mensajeResponder );
+        console.log(mensajeResponder);
+        // return
+
+        this.enviarMensaje( mensajeResponder );
       });
 
     
   }
 
-  enviarMensaje( mensaje: MensajeriaResponder ) {
+  enviarMensaje( mensaje: MensajeriaResponderAlta ) {
     console.log(mensaje);
     // this.signal.renderizarMensajes.set( 'Enviados' );
     
-    this.repository.responderMensaje( mensaje ).subscribe({
+    this.repository.responderMensajeAlta( mensaje ).subscribe({
       next: ( data ) => {
         console.log(data);
         this.alert.showAlert('El mensaje se envió correctamente', 'success', 6);
         // this.signal.setMensajeriaDataAsignacionDefault();
         this.signal.setMensajeriaDataAsignacionDefault();
         this.signal.renderizarMensajes.set( 'Respuesta' );
+        this.showFormResponse.set( false );
+
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al enviar el mensaje: ' + error, 'error', 6)

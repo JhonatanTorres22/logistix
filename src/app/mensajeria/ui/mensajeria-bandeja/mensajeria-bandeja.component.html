@@ -1,0 +1,40 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100 w-full">
+    <ng-container matColumnDef="name" >
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td
+        mat-cell
+        *matCellDef="let mail; let isLast = last; let isFirst = first"
+        (click)="mostrarHistorialMensajes( mail )"
+        class=" mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}} w-full"
+        style="height: 94px;"
+        [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+        <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
+          <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
+          <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
+            <span class="capitalize">{{ mail.emisor.toLowerCase() }}</span>
+            <div class="flex-grow-1 details">
+              <p class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} m-b-0 text-truncate f-14"  appRemoveHtml>
+                {{ mail.mensaje }}
+              </p>
+
+            </div>
+            <span id="fecha" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right text-gray-700">
+              {{ mail.fecha | date: 'dd MMM yyyy, h:mm a' }}
+            </span>
+          </div>
+        </div>
+        <!-- <div class="mail-button">
+          <ul class="list-inline m-b-0">
+            <li class="list-inline-item">
+              <a href="javascript:" class="avatar avatar-s text-muted" title="archive"><i class="ti ti-archive f-18"></i></a>
+            </li>
+            <li class="list-inline-item">
+              <a href="javascript:" class="avatar avatar-s text-muted" title="mail"><i class="ti ti-mail f-18"></i></a>
+            </li>
+          </ul>
+        </div> -->
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

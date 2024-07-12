@@ -7,7 +7,6 @@ import { SemestreAcademico } from "../domain/models/semestre-academico.model";
 import { FacultadPageComponent } from "./facultades-page/facultad-page.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SemestreAddComponent } from "./semestre-academico-page/semestre-add/semestre-add.component";
-import { SemestreAcademicoDomainService } from "../domain/services/semestre-academico-domain.service";
 import { FormBuilder, Validators } from "@angular/forms";
 import { SemestreListComponent } from "./semestre-academico-page/semestre-list/semestre-list.component";
 import { UiButtonComponent } from "src/app/core/components/ui-button/ui-button.component";
@@ -59,8 +58,8 @@ export class ProgramasAcademicosComponent implements OnInit {
     asignaciones = this.asignacionSignal.asignaciones;
     // semestreAcademico: SemestreAcademico;
     
-    semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
-    semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
+    semestresAcademicos = this.semestreSignal.semestresAcademicos;
+    semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
@@ -75,7 +74,6 @@ export class ProgramasAcademicosComponent implements OnInit {
     constructor( 
         
         private dialog: MatDialog,
-        private semestreAcademicoDomainService: SemestreAcademicoDomainService,
         private programaSignal: ProgramaSignal,
         private semestreSignal: SemestreSignal,
         private facultadSignal: FacultadSignal,

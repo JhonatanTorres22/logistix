@@ -56,14 +56,7 @@ export interface MensajeriaInsertar {
     usuarioId: number
 }
 
-export interface MensajeriaResponder {
-    idMensaje: number,
-    idRolEmisor: number,
-    idRolReceptor: number,
-    mensaje: string,
-    informacionAdicional: string,
-    // usuarioId: number
-}
+
 
 export interface MensajeriaInsertarData {
     facultad: Asignacion,
@@ -77,10 +70,19 @@ export interface MensajeriaDataAsignacion {
     tipoMensaje: TipoMensaje
 }
 
+export type MensajeriaResponderAlta = Pick<MensajeriaResponderAList, 'idMensaje' | 'idTipoMensajeRol'> & {
+
+    idRolEmisor: number,
+    idRolReceptor: number,
+    mensaje: string,
+    informacionAdicional: string
+
+}
+
 export interface MensajeriaNuevoMensajeList {
     idTipoMensajeRol: number,
     idUsuarioRol: number,
-    responder: string,
+    flujoNavegacion: string,
     apellidosYnombres: string,
     descripcion: string,
     temporalidad: number,
@@ -109,6 +111,12 @@ export interface MensajeriaEnviarNuevoMensaje  {
 }
 
 
+export type MensajeriaResponderAList = MensajeriaNuevoMensajeList & {
+    idMensaje: number
+}
+
+
+// export type MensajeriaResponder
 // export interface MensajeriaSelectMensaje {
 //     id: number,
 //     nombre: string,

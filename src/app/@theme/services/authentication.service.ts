@@ -41,7 +41,16 @@ export class AuthenticationService {
     }
     auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
     auth.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
-    semestreSignal.setSelectSemestre( JSON.parse( localStorage.getItem('currentSemestre')! ))
+
+    const currentSemestre = JSON.parse(localStorage.getItem('currentSemestre')!);
+
+    if( currentSemestre ) {
+      
+      // console.log( currentSemestre );
+      semestreSignal.setSelectSemestre( JSON.parse( localStorage.getItem('currentSemestre')! ))
+    }
+
+
     // const expToken = JSON.parse(localStorage.getItem('currentUserData')!).exp;
     auth.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
     

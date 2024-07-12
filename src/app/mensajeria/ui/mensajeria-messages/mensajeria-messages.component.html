@@ -1,4 +1,4 @@
-<div class="details-content w-100">
+<div class="details-content w-100 fadein   animation-duration-200">
     
  <!-- <pre>
    {{ mensajesHistorial() | json }}
@@ -18,7 +18,7 @@
             }
             <!-- {{ mensaje.asunto }} -->
  
-          <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard )">
+          <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard, mensaje, false )">
             {{mensaje.asunto}}
           </ui-button>
         </app-card>
@@ -67,21 +67,34 @@
             <div class="m-3" [innerHTML]="mensaje.mensaje">
               <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
             </div>
-            @if ( isLast && tipoBandeja() == 'Recibidos' ) {
+            @if ( isLast && tipoBandeja() == 'Recibidos' && currentRol().rol != 'Vicerrectorado Académico' ) {
               <div class="flex justify-content-end gap-2">
                 <ui-button color="orange" borde="3xl" type="sweet" (onClick)="onResponder()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Pedir Cambio de Director </div>
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Enviar una Observación </div>
                 </ui-button>
                 <!-- <button mat-button color="primary" class="send-mail" >
                   <div class="flex align-item-center">  </div>
                 </button> -->
-                <ui-button color="primary" borde="3xl" type="sweet" [disabled]="showFormResponse()" (onClick)="showCardPrograma( templateProgramaCard )">
+                <ui-button color="primary" borde="3xl" type="sweet" [disabled]="showFormResponse()" (onClick)="showCardPrograma( templateProgramaCard, mensaje, true )">
                   <div class="flex align-item-center">
-                    <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta
+                    <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta y Cerrar
                   </div>
                 </ui-button>
               </div>
             }
+
+            @if ( isLast && tipoBandeja() == 'Recibidos' && currentRol().rol == 'Vicerrectorado Académico' ) {
+              <div class="flex justify-content-end gap-2">
+                <ui-button color="red" borde="3xl" type="sweet" (onClick)="onForzarCierre()">
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Forzar Cierre </div>
+                </ui-button>
+                <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onResponder()">
+                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
+                </ui-button>
+    
+              </div>
+            }
+
 
             @if ( isLast && tipoBandeja() == 'Archivados' ) {
               <app-card [showHeader]="false" cardClass="bg-orange-200">
@@ -91,6 +104,9 @@
           </mat-expansion-panel>
         </mat-accordion>
       </div>
+      <!-- <pre>
+        {{ mensaje | json}}
+      </pre> -->
 
     }
 
@@ -101,16 +117,27 @@
     }
 
 </div>
-
+<!-- <pre>
+  {{ listaDestinatariosResponderA() | json }}
+</pre> -->
 <ng-template #templateProgramaCard let-data>
   <mat-dialog-content>
+    <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
+    <!-- <p>asdasd</p> -->
+    @if ( showButtons ) {
       <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea der de Alta al Director de Escuela?</p>
-      <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
-       <!-- <p>asdasd</p> -->
+      <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
+        <mat-checkbox [(ngModel)]="esConforme" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
+      </div>
+    }
+        
   </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-    <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse()" (click)="onAltaConfirm( mensaje )"></ui-button>
-  </mat-dialog-actions>
+  @if ( showButtons ) {
+    <mat-dialog-actions align="end" class="flex gap-2">
+      <!-- <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar"></ui-button> -->
+      <ui-button color="orange" label="Enviar Observación" mat-dialog-close="cancelar" [disabled]="showFormResponse() || esConforme" (click)="onResponder()"></ui-button>
+      <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse() || !esConforme" (click)="onAltaConfirm( mensajeHistorialSelect )"></ui-button>
+    </mat-dialog-actions>
+  }
   
 </ng-template>

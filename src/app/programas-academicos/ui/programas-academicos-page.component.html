@@ -1,6 +1,6 @@
 <semestre-academico-page></semestre-academico-page>
 
-@if ( semestreSelect().id != 0 && asignaciones().length == 0 ) {
+@if ( semestreSelect() && semestreSelect().id != 0 && asignaciones().length == 0 ) {
     <facultad-page>
       <decano-page decano-page class="flex align-items-center gap-2 "></decano-page>
       <programa-page programa-page>

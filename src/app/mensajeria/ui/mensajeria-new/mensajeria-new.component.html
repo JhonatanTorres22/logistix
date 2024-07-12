@@ -84,7 +84,7 @@
                 <div class="f-14 f-w-600 uppercase">
                     @if ( getAsunto( tipoMensajeForm.value.tipoMensaje ) ) {
                         <ui-button
-                        [label]="getAsunto( tipoMensajeForm.value.tipoMensaje )?.text"
+                        [label]="getAsunto( tipoMensajeForm.value.tipoMensaje )?.text + ' ' + semestreSelect().codigo"
                         color="{{ existeProgramaForAlta ? 'green' : 'red'}}"
                         type="sweet"
                         tooltip="{{ existeProgramaForAlta ? 'Ver Información' : 'No se encontró el Programa'}}"
