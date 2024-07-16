@@ -38,6 +38,7 @@ import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { Router } from '@angular/router';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { ProgramaCardComponent } from '../programa-academico-page/programa-card/programa-card.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 
 @Component({
@@ -97,6 +98,7 @@ export class AsignacionPageComponent {
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
         private mensajeriaSignal: MensajeriaSignal,
+        private auth: AuthSignal,
         private router: Router,
         
     ) {
@@ -177,7 +179,7 @@ export class AsignacionPageComponent {
           idLocales: locales,
           idPrograma: this.programaSelect().id,
           idSemestre: this.semestreSelect().id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         // console.log(newPrograma);
         this.agregarPrograma( newPrograma );

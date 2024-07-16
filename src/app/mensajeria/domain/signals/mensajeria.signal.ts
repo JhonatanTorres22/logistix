@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponderAList, TipoMensaje } from "../models/mensajeria.model";
+import { BackToMail, MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponderAList, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
@@ -33,7 +33,21 @@ export class MensajeriaSignal {
 
     listaDestinatariosDefault: MensajeriaNuevoMensajeList[] = [];
     listaDestinatariosResponderADefault: MensajeriaResponderAList[] = [];
-    destinatarioSelectDefault: MensajeriaNuevoMensajeList = {
+
+    selectedDestinatarioResponderADefault: MensajeriaResponderAList = {
+        apellidosYnombres: '',
+        cierraProceso: false,
+        descripcion: '',
+        flujoNavegacion: '',
+        idMensaje: 0,
+        idTipoMensajeRol: 0,
+        idUsuarioRol: 0,
+        iniciaProceso: false,
+        temporalidad: 0,
+
+    }
+
+    destinatarioSelectedDefault: MensajeriaNuevoMensajeList = {
         apellidosYnombres: '',
         cierraProceso: false,
         descripcion: '',
@@ -46,8 +60,17 @@ export class MensajeriaSignal {
 
     tiposMensajeDefault: UiSelect[] = []
     tiposMensajeGrupoDefault: UiSelect[] = []
+    
+    backToMailDefault: BackToMail = {
+        detailsContent: false,
+        titleContent: true
+    }
 
     toggle = signal( true );
+
+
+    backToMail = signal( this.backToMailDefault );
+
     mensajeriaInsertar = signal( mensajeriaInsertarDefault );
     mensajeriaInsertarDataAsignacion = signal( this.mensajeriaAsignacionDefault );
     mensajeriaModoTablet = signal( false );
@@ -76,7 +99,12 @@ export class MensajeriaSignal {
 
     listaDestinatarios = signal ( this.listaDestinatariosDefault );
     listaDestinatariosResponderA = signal ( this.listaDestinatariosResponderADefault );
-    selectDestinatario = signal ( this.destinatarioSelectDefault );
+    listaDestinatariosResponderAflujo = signal ( this.listaDestinatariosResponderADefault );
+    selectedDestinatario = signal ( this.destinatarioSelectedDefault );
+    selectedDestinatarioResponderA = signal ( this.selectedDestinatarioResponderADefault );
+
+    mensaje = signal('');
+
     tiposMensajes = signal( this.tiposMensajeDefault )
     tiposMensajesGrupo = signal( this.tiposMensajeGrupoDefault )
 

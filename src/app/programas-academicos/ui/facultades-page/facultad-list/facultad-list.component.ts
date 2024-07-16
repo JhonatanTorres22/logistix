@@ -13,6 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'facultad-list',
@@ -43,6 +44,7 @@ export class FacultadListComponent implements OnInit{
     private facultadRepository: FacultadRepository,
     private facultadSignal: FacultadSignal,
     private alertService: AlertService,
+    private auth: AuthSignal,
     public dialogRef: MatDialogRef<FacultadListComponent>,
 
   ) {
@@ -161,7 +163,7 @@ export class FacultadListComponent implements OnInit{
   eliminarFacultad = ( facultad: FacultadEliminar ) => {
     const facultadEliminar = {
       id: facultad.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.facultadRepository.eliminarFacultad( facultadEliminar ).subscribe({

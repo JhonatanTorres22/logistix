@@ -14,7 +14,7 @@ export class Usuario {
         public celular: number,
         public imagenPerfil: string,
         public id: number,
-        public usuario: number,
+        public usuarioId: number,
         // public usuarioEdicion: number
     ) {}
 

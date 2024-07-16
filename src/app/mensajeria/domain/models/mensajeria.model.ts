@@ -26,12 +26,11 @@ export interface MensajeriaRecibidos {
 export type MensajeriaEnviados = Omit<MensajeriaRecibidos, 'rolEmisor'> & {
     rolReceptor: string
 };
-export type MensajeriaArchivados = MensajeriaRecibidos & {
-    rolReceptor: string,
-    archivo: string,
-};
+export type MensajeriaArchivados = MensajeriaRecibidos
 
-export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'>
+export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'> & {
+    usuarioId: number
+}
 
 export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'leido'> & {
     archivo: string,
@@ -115,6 +114,11 @@ export type MensajeriaResponderAList = MensajeriaNuevoMensajeList & {
     idMensaje: number
 }
 
+
+export interface BackToMail {
+    detailsContent: boolean;
+    titleContent: boolean;
+}
 
 // export type MensajeriaResponder
 // export interface MensajeriaSelectMensaje {

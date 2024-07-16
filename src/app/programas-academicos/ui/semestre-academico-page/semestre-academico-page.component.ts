@@ -12,6 +12,7 @@ import { SemestreListComponent } from './semestre-list/semestre-list.component';
 import { SemestreSignal } from '../../domain/signals/semestre.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-items/ui-card-not-items.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'semestre-academico-page',
@@ -32,6 +33,7 @@ export class SemestreAcademicoPageComponent {
     private semestreAcademicoRepository: SemestreAcademicoRepository,
     private dialog: MatDialog,
     private semestreSignal: SemestreSignal,
+    private auth: AuthSignal,
     private alertService: AlertService
   ) {
       const semestre = JSON.parse(localStorage.getItem('currentSemestre')!);
@@ -136,7 +138,7 @@ export class SemestreAcademicoPageComponent {
   eliminarSemestre = ( semestre: SemestreAcademico ) => {
     const semestreEliminar = {
       id: semestre.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.semestreAcademicoRepository.eliminarSemestre( semestreEliminar ).subscribe({
@@ -164,7 +166,7 @@ export class SemestreAcademicoPageComponent {
   // cerrarSemestre = ( cerrarSemestre: SemestreAcademico ) => {
   //   const semestreCerrar = {
   //     id: cerrarSemestre.id,
-  //     usuarioId: 1
+  //     usuarioId: parseInt( this.auth.currentRol().id )
   //   }
 
   //   this.semestreAcademicoRepository.cerrarSemestre( semestreCerrar ).subscribe({

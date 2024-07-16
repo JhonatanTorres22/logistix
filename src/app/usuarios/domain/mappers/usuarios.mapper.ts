@@ -24,7 +24,7 @@ export class UsuarioMapper {
                 correoInstitucional: param.correoInstitucional,
                 celular: param.nCelular,
                 imagenPerfil: param.foto,
-                usuario: param.usuario,
+                usuarioId: param.usuario,
                 id: param.codigo
             }
     }
@@ -43,7 +43,7 @@ export class UsuarioMapper {
             correoInstitucional: param.correoInstitucional,
             nCelular: param.celular,
             foto: param.imagenPerfil,
-            usuario: RolUserId.currentIdRolUser,
+            usuario: param.usuarioId,
             codigo: param.id
         }
     }
@@ -61,7 +61,7 @@ export class UsuarioMapper {
             correoInstitucional: param.correoInstitucional,
             nCelular: param.celular,
             foto: param.imagenPerfil,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
      
         }
     }

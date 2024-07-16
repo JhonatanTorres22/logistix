@@ -30,6 +30,7 @@ import { AsignacionSignal } from "../domain/signals/asignacion.signal";
 import { AlertService } from "src/app/demo/services/alert.service";
 import { AsignarNuevoPrograma } from "../domain/models/asignacion.model";
 import { AsignacionRepository } from "../domain/repositories/asignacion.repository";
+import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 
 
 @Component({
@@ -82,6 +83,7 @@ export class ProgramasAcademicosComponent implements OnInit {
         private asignacionSignal: AsignacionSignal,
         private localSignal: LocalSignal,
         private alertService: AlertService,
+        private auth: AuthSignal,
         private asignacionRepository: AsignacionRepository
     ) {
       effect(() => {
@@ -143,7 +145,7 @@ export class ProgramasAcademicosComponent implements OnInit {
           idLocales: localesId,
           idPrograma: this.programaSelect().id,
           idSemestre: this.semestreSelect().id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
 
         console.log(newPrograma);

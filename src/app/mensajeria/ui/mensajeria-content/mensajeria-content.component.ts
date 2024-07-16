@@ -34,8 +34,8 @@ export class MensajeriaContentComponent implements OnInit {
   @Input() tipoBandeja: 'Recibidos' | 'Enviados' | 'Archivados';
 
   // public props
-  titleContent = true;
-  detailsContent = false;
+  // titleContent = true;
+  // detailsContent = false;
   @Input() star = false;
   @Input() unStar = true;
   @Input() unImportant = true;
@@ -58,6 +58,8 @@ export class MensajeriaContentComponent implements OnInit {
   mensajesTotal = this.signal.mensajesRecibidosTotal;
   mensajesNoLeidos = this.signal.mensajesNoLeidos;
   showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
+  backToMail = this.signal.backToMail;
+
   // tipoBandeja = 
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<MensajeriaRecibidos>(true, []);
@@ -73,8 +75,11 @@ export class MensajeriaContentComponent implements OnInit {
 
       console.log( 'uhmm',  );
       if( !this.modoTablet() ) {
-        this.titleContent = true;
-        this.detailsContent = false;
+        this.backToMail.set({
+          titleContent: true,
+          detailsContent: false
+        })
+        
       }
       // console.log( this.bandeja );
       // console.log(this.mensajesEnviados());
@@ -183,12 +188,15 @@ export class MensajeriaContentComponent implements OnInit {
     mail.leido ? '' : this.onLeido( mail );
     console.log('Ver mensaje', mail);
     this.obtenerHistorialMensajes( mail.idMensaje );
-    this.signal.setSeleccionarMensaje( mail );
+    this.selectMensaje.set( mail );
+    this.signal.showFormNuevoMensaje.set( false );
  
 
     if( this.modoTablet() ) {
-      this.titleContent = !this.titleContent;
-      this.detailsContent = !this.detailsContent;
+      this.backToMail.set({
+        titleContent: !this.backToMail().titleContent,
+        detailsContent: !this.backToMail().detailsContent
+      })
 
       return;
     }
@@ -212,10 +220,9 @@ export class MensajeriaContentComponent implements OnInit {
     })
   }
 
-  backToMail() {
-    this.detailsContent = false;
-    this.titleContent = true;
-  }
+  // backToMail() {
+  //   this.backToMail.set( this.signal.backToMailDefault );
+  // }
 
 }
 

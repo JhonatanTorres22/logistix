@@ -8,12 +8,12 @@
           <mat-option [disabled]="option.disabled" [value]="option.value">
             <div class="flex align-item-center">
               @if ( image ) {
-                <img src="image" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                <img [src]="image" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
               }
               {{ option.text }}
             </div>
           </mat-option>
-          {{ formControl.value }}
+          <!-- {{ formControl.value }} -->
 
         }
     </mat-select>
@@ -23,4 +23,4 @@
 
   </mat-form-field>
 
-{{ formControl.value | json }}
+<!-- {{ formControl.value | json }} -->

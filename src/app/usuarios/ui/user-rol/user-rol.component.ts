@@ -12,6 +12,7 @@ import { Usuario } from '../../domain/models/usuario.model';
 import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -48,6 +49,7 @@ export class UserRolComponent implements OnInit {
     private rolRepository: RolRepository,
     private usuarioRepository: UsuarioRepository,
     private usuariosRolDomainService: UsuariosRolDomainService,
+    private auth: AuthSignal,
     private alertService: AlertService
 
   ) {
@@ -164,7 +166,7 @@ export class UserRolComponent implements OnInit {
 
     const rolActivar = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.usuarioRolRepository.activarRolUser( rolActivar ).subscribe({
@@ -185,7 +187,7 @@ export class UserRolComponent implements OnInit {
   darAltaRolUser = ( rol: Rol ) => {
     const rolAlta = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.usuarioRolRepository.darAltaRolUser( rolAlta ).subscribe({
@@ -205,7 +207,7 @@ export class UserRolComponent implements OnInit {
   suspenderRolUser = ( rol: Rol ) => {
     const rolSuspender = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
     this.usuarioRolRepository.suspenderRolUser( rolSuspender ).subscribe({
       next: ( data ) => {
@@ -234,7 +236,7 @@ export class UserRolComponent implements OnInit {
         const isLast = contadorDelete == this.deleteRoles.length;
         const eliminarRol = {
           idRol: deleteRol.id,
-          usuarioId: 1 
+          usuarioId: parseInt( this.auth.currentRol().id ) 
         }
 
         setTimeout(() => {
@@ -246,7 +248,7 @@ export class UserRolComponent implements OnInit {
         const nuevoRol = {
           idUsuario: this.usuario.id,
           idRol: newRol.id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         setTimeout(() => {
           this.asignarRolUsuario( nuevoRol, isLast );

@@ -3,141 +3,67 @@
  <!-- <pre>
    {{ mensajesHistorial() | json }}
  </pre> -->
-    @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
+ <mensajeria-asunto></mensajeria-asunto>
 
-      @if ( isFirst ) {
-        <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" cardContentClass="flex" headerClassTemplate="title align-item-center">
+    <ng-scrollbar  style="height: calc(100vh - 17.5rem)" #scrolling>
+      @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
+  
+        <div class="my-2">
+          <mat-accordion>
+            <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
+              <mat-expansion-panel-header class="py-3">
+                <mat-panel-title class="block mx-0">
+                  <div class="title align-item-center">
+                    <ul class="list-inline">
+                      <li class="list-inline-item">
 
-            @if ( modoTablet() ) {
-              <ui-button color="secondary" tooltip="Volver" (onClick)="onBackToMail()">
-                <i class="ti ti-chevron-left f-18"></i>
-              </ui-button>
-              <!-- <a  class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
-                
-              </a> -->
-            }
-            <!-- {{ mensaje.asunto }} -->
- 
-          <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard, mensaje, false )">
-            {{mensaje.asunto}}
-          </ui-button>
-        </app-card>
+                        <div class="flex align-item-start">
+                          <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
+                          <div class="flex-grow-1 m-l-10 max-w-14rem sm:max-w-full">
+                            <div class="f-14 f-w-600 text-truncate"> {{ mensaje.rolEmisor }} </div>
+                            <div class="m-b-0 text-muted text-xs sm:text-normal"> De: {{ mensaje.emisor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
+                            <div class="m-b-0 text-muted text-xs sm:text-normal"> Para: {{ mensaje.receptor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <ul class="list-inline text-right">
+                      <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short'}} </li>
+                    </ul>
+                  </div>
+                </mat-panel-title>
+      
+              </mat-expansion-panel-header>
+              <mat-divider></mat-divider>
+
+              <div class="m-3" [innerHTML]="mensaje.mensaje">
+                <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
+              </div>
+
+              <!-- <pre>{{ listaDestinatariosResponderAflujo() | json}}</pre> -->
+
+              @if ( (listaDestinatariosResponderAflujo().length == 0 || listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == '') && tipoBandeja() == 'Recibidos' && isLast ) {
+                <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>  <!-- [listaDestinatarios]="listaDestinatariosResponderAflujo()" -->
+              }
+              
+            </mat-expansion-panel>
+          </mat-accordion>
+
+        </div>
+        @if ( isLast && tipoBandeja() == 'Archivados' ) {
+
+          <mensajeria-card-archived-closed-approved [mensaje]="mensaje"></mensajeria-card-archived-closed-approved>
+
+        }
+  
       }
 
-      <div class="my-2">
-        <mat-accordion>
-          <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
-            <mat-expansion-panel-header class="py-3">
-              <mat-panel-title class="block mx-0">
-                <div class="title align-item-center">
-                  <ul class="list-inline">
-                    <li class="list-inline-item">
-                      <!-- <div class="flex align-item-center gap-2">
-                        <div class="w-3rem">
-                            Para:
-                        </div>
-                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
-                        <div class="flex-grow-1">
-                            <div class="f-14 f-w-600 text-truncate capitalize">{{ paraRolNombreArea.toLocaleLowerCase() }}</div>
-                            <div class="f-12 m-b-0 text-muted mat-small capitalize"> {{ paraRolNombrePersona.toLocaleLowerCase() }} </div>
-                        </div>
-                    </div> -->
-                      <div class="flex align-item-start">
-                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
-                        <div class="flex-grow-1 m-l-10">
-                          <div class="f-14 f-w-600 text-truncate"> {{ mensaje.rolEmisor }} </div>
-                          <div class="m-b-0 text-muted mat-small"> De: {{ mensaje.emisor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
-                          <div class="m-b-0 text-muted mat-small"> Para: {{ mensaje.receptor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                  <ul class="list-inline">
-                    <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short'}} </li>
-                  </ul>
-                </div>
-              </mat-panel-title>
-    
-            </mat-expansion-panel-header>
-            <mat-divider></mat-divider>
-            <!-- <app-card hea>
-              Codigo: 100001
-              Director: Torres Meneses Jhonatan
-            </app-card> -->
-            <div class="m-3" [innerHTML]="mensaje.mensaje">
-              <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
-            </div>
-            @if ( isLast && tipoBandeja() == 'Recibidos' && currentRol().rol != 'Vicerrectorado Académico' ) {
-              <div class="flex justify-content-end gap-2">
-                <ui-button color="orange" borde="3xl" type="sweet" (onClick)="onResponder()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Enviar una Observación </div>
-                </ui-button>
-                <!-- <button mat-button color="primary" class="send-mail" >
-                  <div class="flex align-item-center">  </div>
-                </button> -->
-                <ui-button color="primary" borde="3xl" type="sweet" [disabled]="showFormResponse()" (onClick)="showCardPrograma( templateProgramaCard, mensaje, true )">
-                  <div class="flex align-item-center">
-                    <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta y Cerrar
-                  </div>
-                </ui-button>
-              </div>
-            }
-
-            @if ( isLast && tipoBandeja() == 'Recibidos' && currentRol().rol == 'Vicerrectorado Académico' ) {
-              <div class="flex justify-content-end gap-2">
-                <ui-button color="red" borde="3xl" type="sweet" (onClick)="onForzarCierre()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Forzar Cierre </div>
-                </ui-button>
-                <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onResponder()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
-                </ui-button>
-    
-              </div>
-            }
-
-
-            @if ( isLast && tipoBandeja() == 'Archivados' ) {
-              <app-card [showHeader]="false" cardClass="bg-orange-200">
-                <p class="f-14 f-w-600">MENSAJE ARCHIVADO</p>
-              </app-card>
-            }
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
-      <!-- <pre>
-        {{ mensaje | json}}
-      </pre> -->
-
-    }
-
-    <!-- <mensajeria-response></mensajeria-response> -->
-    
-    @if ( showFormResponse() ) {
-      <mensajeria-response></mensajeria-response>
-    }
+      @if ( showFormResponse() ) {
+        <mensajeria-response></mensajeria-response>
+      }
+    </ng-scrollbar>
 
 </div>
 <!-- <pre>
   {{ listaDestinatariosResponderA() | json }}
 </pre> -->
-<ng-template #templateProgramaCard let-data>
-  <mat-dialog-content>
-    <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
-    <!-- <p>asdasd</p> -->
-    @if ( showButtons ) {
-      <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea der de Alta al Director de Escuela?</p>
-      <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
-        <mat-checkbox [(ngModel)]="esConforme" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
-      </div>
-    }
-        
-  </mat-dialog-content>
-  @if ( showButtons ) {
-    <mat-dialog-actions align="end" class="flex gap-2">
-      <!-- <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar"></ui-button> -->
-      <ui-button color="orange" label="Enviar Observación" mat-dialog-close="cancelar" [disabled]="showFormResponse() || esConforme" (click)="onResponder()"></ui-button>
-      <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse() || !esConforme" (click)="onAltaConfirm( mensajeHistorialSelect )"></ui-button>
-    </mat-dialog-actions>
-  }
-  
-</ng-template>

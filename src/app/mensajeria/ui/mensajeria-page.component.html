@@ -9,7 +9,7 @@
                         <div class="grid">
                           <!-- <ui-button-split label="Nuevo Mensaje" size="sm" classButton="z" (onClick)="onClickNewMessage( $event )"></ui-button-split> -->
                           <!-- <button mat-button [matMenuTriggerFor]="animals">Animal index</button> -->
-                          <button mat-flat-button color="primary" (click)="nuevoMensaje()">
+                          <button mat-flat-button color="primary" (click)="nuevoMensaje( templateSemestreList )">
                             <div class="flex align-item-center"> <i class="ti ti-circle-plus f-18 m-r-10"></i> Mensaje Nuevo </div>
                           </button>
                           
@@ -17,7 +17,7 @@
                       </div>
                       <!-- <img class="border-circle  fadeinleft animation-duration-500 w-5rem m-auto block mb-3" src="./assets/images/mensajeria/icons-gif/correo-electronico-red.gif"> -->
                       <mat-divider></mat-divider>
-                      <ng-scrollbar style="height: calc(100vh - 318px)" visibility="hover" class="mt-2">
+                      <ng-scrollbar style="height: calc(100vh - 14rem)" visibility="hover" class="mt-2">
                         <div class=""> <!-- p-x-10 -->
                           <mat-tab-group (selectedIndexChange)="tabChanged($event)" class="email-column-item">
                             <mat-tab>
@@ -63,6 +63,9 @@
                         </li>
 
                       </ul>
+                      @if( semestreSelect().id != 0 ) {
+                        <ui-button color="secondary" (onClick)="showModalSemestres( templateSemestreList )">{{ semestreSelect().codigo }}</ui-button>
+                      }
                       <ul class="list-inline mx-2">
                         <li class="list-inline-item w-13rem bg-white p-2 border-round border-1 border-gray-300">
                             <mat-select class="w-full min-w-10" value="All">
@@ -76,6 +79,14 @@
                             <i class="ti ti-arrows-vertical f-18"></i>
                           </a>
                         </li>
+                        <!-- <li class="list-inline-item w-13rem bg-white p-2 border-round border-1 border-gray-300"> -->
+                          <!-- <mat-select class="w-full min-w-10" [value]="semestreSelect().id">
+                              @for (semestre of semestresAcademicos(); track semestre ) {
+                                <mat-option [value]="semestre.id">{{ semestre.codigo }}</mat-option>
+                              }
+                              
+                          </mat-select> -->
+                      <!-- </li> -->
                     </ul>
                       <ul class="list-inline search-bar flex align-item-center">
                         <li class="list-inline-item bg-white">
@@ -109,3 +120,38 @@
     </div>
 </div>
 <!-- <app-email></app-email> -->
+<ng-template #templateSemestreList let-data>
+  <mat-dialog-content>
+
+    <mat-radio-group [(ngModel)]="semestreSelected">
+      @for (semestre of semestresAcademicos(); track semestre; let i = $index) {
+        <div class="price-check m-b-15 w-full sm:w-25rem">
+          <mat-radio-button color="primary" class="w-100" [value]="semestre">
+            <div class="row align-item-center">
+              <div class="col-12">
+                <div class="flex align-item-center popular m-b-0"
+                  >{{ semestre.nombre }}
+                </div>
+                <span class="text-muted m-b-0">{{ semestre.value }}</span>
+                @if (semestre.condicion === 'CREADO') {
+                  <span class="mat-small px-3 text-white bg-orange-500 b-rad-5">{{ semestre.condicion }}</span>
+                }
+              </div>
+              <!-- <div class="col-6 text-end">
+                <span class="m-b-0 f-20 f-w-600">$159</span>
+                <span class="text-muted text-sm"> /Lifetime</span>
+              </div> -->
+            </div>
+          </mat-radio-button>
+        </div>
+      }
+    </mat-radio-group>
+
+
+      <!-- {{ semestresAcademicos () | json}} -->
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="flex gap-2">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" label="Seleccionar" [disabled]="semestreSelected.id == 0" (onClick)="onSelect()"></ui-button>
+  </mat-dialog-actions>
+</ng-template>

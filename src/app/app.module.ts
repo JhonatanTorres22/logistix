@@ -11,7 +11,7 @@ import { BasicAuthInterceptor } from 'src/app/@theme/helpers/basic-auth.intercep
 // project import
 import { SharedModule } from './demo/shared/shared.module';
 import { GuestModule } from './demo/layout/front';
-import { ProvidersModule } from './core/Providers/providers.module';
+import { ProvidersModule } from './core/Providers/provider.module';
 
 @NgModule({
   declarations: [AppComponent],

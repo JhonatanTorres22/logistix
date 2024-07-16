@@ -15,6 +15,7 @@ import { SemestreAcademicoValidations } from 'src/app/programas-academicos/domai
 import { DateAdapter } from '@angular/material/core';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'semestre-list',
@@ -63,6 +64,7 @@ export class SemestreListComponent {
     private validation: SemestreAcademicoValidations,
     private semestreRepository: SemestreAcademicoRepository,
     // private semestreSignal: semestreSignal,
+    private auth: AuthSignal,
     private datePipe: DatePipe,
     private semestreSignal: SemestreSignal
   ) {
@@ -251,7 +253,7 @@ export class SemestreListComponent {
   eliminarSemestre = ( semestre: SemestreAcademico ) => {
     const semestreEliminar = {
       id: semestre.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.semestreAcademicoRepository.eliminarSemestre( semestreEliminar ).subscribe({
@@ -307,7 +309,7 @@ export class SemestreListComponent {
   // aperturarSemestre = () => {
   //   const semestreAperturar: SemestreAcademicoAperturar = {
   //     id: this.semestreSelect.id,
-  //     usuarioId: 1
+  //     usuarioId: parseInt( this.auth.currentRol().id )
   //   }
   //   this.semestreRepository.aperturarSemestre( semestreAperturar ).subscribe({
   //     next: ( data ) => {

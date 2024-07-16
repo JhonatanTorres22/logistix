@@ -85,12 +85,12 @@ export class MensajeriaMapper {
             nombreTipoMensajeGrupo: param.nombreTipoMensajeGrupo,
             asunto: param.asunto,
             mensaje: RemoveHTML.removeHTML( param.contenido),
-            rolEmisor: param.rolEmisor,
+            rolEmisor: param.rol,
             emisor: param.emisor,
             receptor: param.receptor,
-            rolReceptor: param.rolReceptor,
+            // rolReceptor: param.rolReceptor,
             fecha: param.fechaCreacion,
-            archivo: param.archivo,
+            // archivo: param.archivo,
             leido: true
         }
     }
@@ -129,7 +129,8 @@ export class MensajeriaMapper {
 
     static fromDomainToApiCerrarArchivar( param: MensajeriaCerrarArchivar ): MensajeriaCerrarArchivarDTO {
         return {
-            codigoMensajeria: param.idMensaje
+            codigoMensajeria: param.idMensaje,
+            usuario: param.usuarioId
         }
     }
 
@@ -145,6 +146,24 @@ export class MensajeriaMapper {
             flujoNavegacion: param.flujoNavegacion,
             temporalidad: param.temporalidad
 
+        }
+    }
+
+    static fromDomainToSelectUi( param: MensajeriaNuevoMensajeListDTO): UiSelect & { data: MensajeriaNuevoMensajeList } {
+        return {
+            value: param.codigoUsuarioRol.toString(),
+            text: param.apellidosyNombres,
+            disabled: false,
+            data: {
+                apellidosYnombres: param.apellidosyNombres,
+                cierraProceso: param.cierraProceso,
+                descripcion: param.descripcion,
+                flujoNavegacion: param.flujoNavegacion,
+                idTipoMensajeRol: param.codigoTipoMensajeRol,
+                idUsuarioRol: param.codigoUsuarioRol,
+                iniciaProceso: param.iniciaProceso,
+                temporalidad: param.temporalidad
+            }
         }
     }
 

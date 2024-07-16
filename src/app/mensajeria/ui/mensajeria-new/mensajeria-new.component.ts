@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef, WritableSignal } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, WritableSignal, effect } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiSelectComponent } from 'src/app/core/components/ui-select/ui-select.component';
@@ -32,24 +32,25 @@ import { UiInputComponent } from "../../../core/components/ui-input/ui-input.com
   templateUrl: './mensajeria-new.component.html',
   styleUrl: './mensajeria-new.component.scss'
 })
-export class MensajeriaNewComponent implements OnInit {
+export class MensajeriaNewComponent implements OnInit, OnDestroy {
 
   // tipoMensajeForm = new FormControl();
   tipoMensajeForm: FormGroup;
   listaDestinatarios = this.signal.listaDestinatarios;
+  selectedDestinatario = this.signal.selectedDestinatario;
   tiposMensajesGrupo = this.signal.tiposMensajesGrupo;
   tiposMensajes = this.signal.tiposMensajes;
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
   programaForAlta: Asignacion;
   existeProgramaForAlta: boolean = false;
-
+  loading: boolean = true;
   // selectDestinatario = this.signal.selectDestinatario;
-  selectDestinatario: MensajeriaNuevoMensajeList;
-  asunto: UiSelect = {
-    disabled: false,
-    text: '',
-    value: ''
-  };
+  // selectDestinatario: MensajeriaNuevoMensajeList;
+  // asunto: UiSelect = {
+  //   disabled: false,
+  //   text: '',
+  //   value: ''
+  // };
 
   mensaje: string = '';
 
@@ -70,6 +71,15 @@ export class MensajeriaNewComponent implements OnInit {
       tipoMensaje: ['', [Validators.required] ],
       destinatario: ['', [Validators.required] ],
       // programaExistente:['', Validators.required ]
+    });
+
+    effect( () => {
+      // console.log('semestre changed');
+      console.log(this.semestreSelect());
+      // if( this.semestreSelect().id != 0 ) {
+        this.searchPrograma();
+      // }
+      
     })
   }
   ngOnInit(): void {
@@ -95,15 +105,25 @@ export class MensajeriaNewComponent implements OnInit {
   // }
 
   obtenerTipoMensajesGrupo = () => {
+
+
     return new Promise<boolean>( (resolve ) => {
+      
       this.repository.obtenerTipoMensajeGrupo().subscribe({
         next: ( tiposMensajesGrupo ) => {
           console.log( tiposMensajesGrupo );
           this.tiposMensajesGrupo.set( tiposMensajesGrupo );
+          if( tiposMensajesGrupo.length == 0 ) {
+            this.alert.sweetAlert('info', 'NO ADMISIBLE', 'Ud. no está admitido para iniciar un nuevo mensaje, si crees que se trata de un error, comunicate con el adminsitrador.');
+            this.signal.showFormNuevoMensaje.set(false);
+            resolve( false )
+          }
+          this.loading = false
           // this.tiposMensajes.set([])
           // this.tipoMensajeForm.reset();
           resolve( true );
         }, error: ( error ) => {
+          this.loading = false
           console.log( error );
           this.alert.showAlert('Ocurrió un error al listar las categorias: ' + error, 'error', 6);
           resolve( false )
@@ -154,16 +174,36 @@ export class MensajeriaNewComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    this.signal.tiposMensajes.set( this.signal.tiposMensajeDefault );
+    this.listaDestinatarios.set( this.signal.listaDestinatariosDefault );
+  }
+
   getAsunto = ( id: number ): UiSelect => {
     const asuntoSelected = this.tiposMensajes().filter( tipo => tipo.value == id.toString());
     return asuntoSelected[0];
   }
 
   getDestinatario = ( id: number ): MensajeriaNuevoMensajeList => {
-    const decanoSelected = this.listaDestinatarios().filter( decano => decano.idUsuarioRol == id );
-
-    return decanoSelected[0]
+    if( id ) {
+      return  this.signal.destinatarioSelectedDefault;
+    }
+    const destinatario = this.listaDestinatarios().filter( decano => decano.idUsuarioRol == id );
+    this.selectedDestinatario.set( destinatario[0] )
+    return destinatario[0]
   }
+
+  setDestinatario = ( id: number ) => {
+    console.log( id );
+    
+    if( !id ) {
+      return  this.selectedDestinatario.set( this.signal.destinatarioSelectedDefault );
+    }
+    const destinatario = this.listaDestinatarios().filter( destinatario => destinatario.idUsuarioRol == id );
+    this.selectedDestinatario.set( destinatario[0] )
+  }
+
+
 
 
   showCompose = ( id: number ) => {
@@ -176,14 +216,14 @@ export class MensajeriaNewComponent implements OnInit {
     // const decano = this.getDestinatario( this.tipoMensajeForm.value.destinatario );
     this.isRolAlta().then( isRolAlta => {
 
-      const destinatario = this.getDestinatario( this.tipoMensajeForm.value.destinatario )
+      const destinatario = this.selectedDestinatario;
 
             const mensaje: MensajeriaEnviarNuevoMensaje = {
-              idTipoMensajeRol: destinatario.idTipoMensajeRol,
+              idTipoMensajeRol: this.selectedDestinatario().idTipoMensajeRol,
               flujoNavegacion: 'Avanzar',
               asunto: this.getAsunto( this.tipoMensajeForm.value.tipoMensaje ).text + ' ' + this.semestreSelect().codigo,
               idRolEmisor: parseInt( this.authSignal.currentRol().id ),
-              idRolReceptor: destinatario.idUsuarioRol,
+              idRolReceptor: this.selectedDestinatario().idUsuarioRol,
               mensaje: this.mensaje,
               informacionAdicional: this.programaForAlta.programas[0].idDirector.toString(),
               usuarioId: parseInt( this.authSignal.currentRol().id ),
@@ -193,7 +233,7 @@ export class MensajeriaNewComponent implements OnInit {
             
 
       if( !isRolAlta ) {
-        this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ destinatario.apellidosYnombres } con el Rol de ${ destinatario.descripcion }, ¿Está seguro que desea enviar el mensaje?`)
+        this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ this.selectedDestinatario().apellidosYnombres } con el Rol de ${ this.selectedDestinatario().descripcion }, ¿Está seguro que desea enviar el mensaje?`)
           .then( isConfirm => {
             if( !isConfirm ) {
               return
@@ -219,6 +259,8 @@ export class MensajeriaNewComponent implements OnInit {
   }
 
   enviarMensaje( mensaje: MensajeriaEnviarNuevoMensaje ) {
+
+    //TODO implementar: ensureMensaje()
     console.log( mensaje);
     this.repository.enviarNuevoMensaje( mensaje ).subscribe({
       
@@ -277,7 +319,21 @@ export class MensajeriaNewComponent implements OnInit {
   obtenerProgramaForAlta() {
     let programaAsignado: AsignacionPrograma[];
     const asunto = this.getAsunto( this.tipoMensajeForm.value.tipoMensaje  );
-    const nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');
+    const tipoGrupo = this.tipoMensajeForm.value.tipoMensajeGrupo;
+    
+    let nombrePrograma = '';
+    console.log( tipoGrupo );
+
+    // this.tiposMensajes().find()
+    
+    switch( parseInt(tipoGrupo) ) {
+      
+      case 1: { nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', ''); }; break;
+      case 2: { nombrePrograma = asunto.text.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); }; break;
+      case 3: { nombrePrograma = asunto.text.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); }; break;
+    }
+    
+    console.log( nombrePrograma );
     
     return new Promise<Asignacion | ''>( resolve => {
       
@@ -316,12 +372,19 @@ export class MensajeriaNewComponent implements OnInit {
   }
 
   searchPrograma = () => {
+    // this.tipoMensajeForm.value.tipoMensaje == ''
+    console.log( this.tipoMensajeForm.value.tipoMensajeGrupo );
+    
+    if( !this.tipoMensajeForm.value.tipoMensajeGrupo ) {
+      return
+    }
+
     setTimeout(() => {
       this.obtenerProgramaForAlta().then( programaForAlta => {
         
         if( programaForAlta == '' ) {
           // console.log('No hay programa encontrado');
-          this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          this.alert.showAlert(`No se encontró el programa académico`, 'error', 6);
           this.existeProgramaForAlta = false;
           // this.tipoMensajeForm.value.programaExistente = ""
 
@@ -330,6 +393,8 @@ export class MensajeriaNewComponent implements OnInit {
   
         this.programaForAlta = programaForAlta;
         this.existeProgramaForAlta = true;
+        this.alert.showAlert(`Programa académico encontrado`, 'success', 6);
+
         // this.tipoMensajeForm.value.programaExistente = 'true'
 
       })

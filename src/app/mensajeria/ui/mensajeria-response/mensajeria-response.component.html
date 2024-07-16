@@ -8,11 +8,20 @@
                         <div class="w-8rem">
                             <ui-button label="Para" color="secondary"></ui-button>
                         </div>
-                        
+                        <!-- {{ selectedDestinatarioResponderA() | json }} -->
                         <!-- <ui-input formControlName="programaExistente" label="programaExistente"></ui-input> -->
-                        <mat-form-field appearance="outline" class="w-100 m-t-5 small">
-                            <mat-select name="assign" formControlName="destinatario">
-                                @for (destinatario of listaDestinatariosResponderA(); track destinatario) {
+                        <mat-form-field appearance="outline" class="w-100 m-t-5 small" [autofocus]="true">
+                            <mat-select name="assign" formControlName="destinatario" #selectDestinatario (selectionChange)="selectedDestinatarioResponderA.set($event.value)">
+                                <mat-select-trigger>
+                                    <div class="flex align-item-center">
+                                        <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                                        <div class="flex flex-column">
+                                            {{ paraRemitenteForm.value.destinatario.apellidosYnombres }}
+                                            <span class="f-w-600">{{ paraRemitenteForm.value.destinatario.descripcion }}</span>
+                                        </div>
+                                    </div>
+                                </mat-select-trigger>
+                                @for (destinatario of listaDestinatariosResponderAflujo(); track destinatario) {
                                     <mat-option [value]="destinatario">
                                         <div class="flex align-item-center">
                                             <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
@@ -22,9 +31,7 @@
                                             </div>
                                         </div>
                                     </mat-option>
-                                    <!-- <pre>
-                                       {{ destinatario  | json }}
-                                    </pre> -->
+                                    
                                 }
                             </mat-select>
                         </mat-form-field>
@@ -36,27 +43,20 @@
             <mat-divider></mat-divider>
         </div>
     </form>
-    <quill-editor class="w-100 h-13rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+    <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
     
 </app-card>
 
 
 
-<div class="flex justify-content-end my-2 gap-2">
-    <ui-button
-        tooltip="Cancelar Envio"
-        color="secondary"
-        (click)="cancelar()"
-        >
-    Cancelar
-    </ui-button>
-    <ui-button
-        label="Enviar"
-        tooltip="Enviar mensaje"
-        color="primary"
-        [disabled]="paraRemitenteForm.invalid || mensaje == null || mensaje == ''"
-        (onClick)="enviarConfirm()"
-        >
-    
-    </ui-button>
-</div>
+<mensajeria-flujo-navegacion
+    [allDestinatario]="listaDestinatariosResponderAflujo()"
+    [disabled]="paraRemitenteForm.invalid || mensaje == null || mensaje == ''"
+    [showCancelar]="true"
+    [mensaje]="mensaje"
+>
+</mensajeria-flujo-navegacion>
+
+<!-- <pre>
+{{ listaDestinatariosResponderAflujo()  | json }}
+</pre> -->

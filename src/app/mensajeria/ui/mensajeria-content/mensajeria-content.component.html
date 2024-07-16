@@ -1,8 +1,8 @@
-@if (titleContent) {
+@if (backToMail().titleContent) {
     <div class="mail-content-table col-12 col-sm-12 col-md-4">
 
         <ng-scrollbar style="height: calc(100vh - 210px); min-width: auto;" visibility="hover" track="all" class="w-full">
-          @if( dataSource.data.length == 0 ) {
+          @if( dataSource.data.length == 0 || dataSource.data.length == 0 && !showFormNuevoMensaje() ) {
             <mensajeria-no-messages text="No hay mensajes" icon="ti ti-mailbox f-60"></mensajeria-no-messages>
           }
 
@@ -14,9 +14,16 @@
                   mat-cell
                   *matCellDef="let mail; let isLast = last; let isFirst = first"
                   (click)="mostrarHistorialMensajes( mail )"
-                  class=" mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}} w-full"
+                  class=" mail-option w-full"
                   style="height: 94px;"
-                  [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+                  [ngClass]="
+                  {
+                    'border-round-top': isFirst,
+                    'border-round-bottom': isLast,
+                    'bg-accent-200': selectMensaje().idMensaje == mail.idMensaje && mail.leido,
+                    'bg-white': mail.leido && selectMensaje().idMensaje != mail.idMensaje,
+                    'bg-primary-100': !mail.leido
+                  }"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
                   <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
                     <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
                     <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
@@ -48,7 +55,7 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
           }
-
+          <!-- {{ selectMensaje() | json }} -->
           @if ( showFormNuevoMensaje() && !modoTablet() ) {
           <!-- BORRAR CUANDO TENGA EL COMPONENTE -->
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100 w-full">
@@ -58,9 +65,16 @@
                 mat-cell
                 *matCellDef="let mail; let isLast = last; let isFirst = first"
                 (click)="mostrarHistorialMensajes( mail )"
-                class=" mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}} w-full"
+                class=" mail-option w-full"
                 style="height: 94px;"
-                [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+                [ngClass]="
+                  {
+                    'border-round-top': isFirst,
+                    'border-round-bottom': isLast,
+                    'bg-accent-200': selectMensaje().idMensaje == mail.idMensaje && mail.leido,
+                    'bg-white': mail.leido && selectMensaje().idMensaje != mail.idMensaje,
+                    'bg-primary-100': !mail.leido
+                  }"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
                 <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
                   <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
                   <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
@@ -94,7 +108,7 @@
           <!-- BORRAR CUANDO  TENGA EL COMPONENTE MENSAJERIA BANDEJA -->
           }
           @if ( modoTablet() && showFormNuevoMensaje() ) {
-              -
+              
               <mensajeria-new class="col-12 col-sm-12 col-md-12"></mensajeria-new>
           }
           
@@ -115,25 +129,25 @@
         <mensajeria-compose class="col-12 col-sm-12 col-md-8"></mensajeria-compose>
       } @else { 
   
-        @if ( selectMensaje().idMensaje == 0 ) {
+        @if ( selectMensaje().idMensaje == 0  && !showFormNuevoMensaje() ) {
           <mensajeria-no-messages class="col-12 col-sm-12 col-md-8"></mensajeria-no-messages>
           <!-- <ui-card-not-items class="col-12 col-sm-12 col-md-8" text="DEBE SELECCIONAR UN SEMESTRE"></ui-card-not-items> -->
 
-        } @else {
-          @if ( !showFadeIn ) {
-            <mensajeria-messages class="col-12 col-sm-12 col-md-8"></mensajeria-messages>
+        } 
+          @if ( selectMensaje().idMensaje != 0  && !showFormNuevoMensaje() && !showFadeIn ) {
+            <mensajeria-messages class="col-12 col-sm-12 col-md-8" style="height: calc(100vh - 13rem);"></mensajeria-messages>
           }
   
-        }
+        
       }
     }
      
      
   }
-  @if ( detailsContent && !showFadeIn ) {
+  @if ( backToMail().detailsContent && !showFadeIn ) {
 
 
-    <mensajeria-messages class="col-12 col-sm-12 col-md-8" (backToMail)="backToMail()"></mensajeria-messages>
+    <mensajeria-messages class="col-12 col-sm-12 col-md-8"></mensajeria-messages>
 
 
 }
