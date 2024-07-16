@@ -77,7 +77,7 @@
                                         >
                                             {{ userRol.estado }}
                                 </mat-slide-toggle>
-                                @if (userRol.rol !== 'Decano de Facultad' && userRol.rol !== 'Director de Escuela') {
+                                @if (userRol.rol === 'Vicerrectorado Académico' || userRol.rol === 'Consejo Universitario' || userRol.rol === 'Administrador') {
                                     <mat-slide-toggle
                                                     class="f-w-500"
                                                     color="primary"

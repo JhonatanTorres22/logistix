@@ -8,10 +8,12 @@
         <form [formGroup]="formPrograma" class="p-3">
           <!-- {{ semestreEdit | json }} -->
           <div class="flex gap-3">
-            <ui-input class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput"></ui-input>
+            <ui-input class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" 
+            [expReg]="expRegNombreToLockInput" patternErrorMessage="El nombre no puede concluir con un espacio"></ui-input>
           </div>
           <div class="flex gap-3">
-            <ui-input class="w-full" label="Definicion" formControlName="definicion" [maxlength]="maxLengthCodigo" [minlength]="minLengthCodigo" [expReg]='expRegCodigoToLockInput'></ui-input>
+            <ui-input class="w-full" label="Definicion" formControlName="definicion" [maxlength]="maxLengthCodigo" [minlength]="minLengthCodigo"
+            [expReg]="expRegCodigoToLockInput" patternErrorMessage="La definicón no puede concluir en un espacio o algún caracter especial como (, : ; -)"></ui-input>
             <!-- {{ formSemestre.value.fechaInicio }} -->
             
 

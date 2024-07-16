@@ -22,7 +22,7 @@ export class ProgramaValidations {
     maxLengthNombre = 50;
     minLengthNombre = 5;
     expRegNombre = /[a-zA-Z0-9\- ]{0,40}/;
-    expRegNombreToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegNombreToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g; // solo permite letras y espacios
     duplicado = this.duplicadoNombrePrograma.bind(this);
 // FIN NOMBRE
 
@@ -31,12 +31,12 @@ export class ProgramaValidations {
     maxLengthCodigo = 150;
     minLengthCodigo = 6;
     expRegCodigo = /[a-zA-Z0-9\- ]{0,40}/
-    expRegCodigoToLockInput = /^((?![a-zA-Z0-9\- ]).)*$/;
+    expRegCodigoToLockInput = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-.:;]/g; // VALIDACION DE LETRAS, COMA, GUION, PUNTO,DOS PUNTOS Y PUNTO Y COMA
 // FIN CODIGO
 
 
 /* GENERAL INICIO */
-    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
+    EXP_REG_SIN_NUMERO = '^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:-]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F.]$'; //permite empezar en letra y terminar en letra o punto. En el medio permite ingresar (, . ; : - y espacios )
 /* GENERAL FIN */
 
 

@@ -15,18 +15,20 @@ export class CicloValidation {
 
     MaxLengthCicloNumero: number = 2;
     MinLengthCicloNumero: number = 1;
-    expRegCicloNumero: RegExp = /[0-9]{1,2}/;
-    expRegCicloNumeroBlockToInput: RegExp = /^((?![0-9]).)*$/;
+    expRegCicloNumero: RegExp =  /^(0?[1-9]|1[0-2])$/;
+    expRegCicloNumeroBlockToInput: RegExp =/^(0[0-9]+|[^\d])/g; ; //PERMITE SOLO NÚMEROS Y NO PERMITE INGRESAR 0 COMO PRIMER DIGITO
 
     MaxLengthCicloLetra: number = 20;
     MinLengthCicloLetra: number = 5;
-    expRegCicloLetra: RegExp = /[A-Za-z]{5,20}/;
-    expRegCicloLetraBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    expRegCicloLetra: RegExp = /[A-Za-z ]{5,20}/;
+    expRegCicloLetraBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
 
     MaxLengthDefinicion: number = 20;
     MinLengthDefinicion: number = 5;
     expRegDefinicion: RegExp = /[A-Za-z]{5,20}/;
-    expRegDefinicionBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    expRegDefinicionBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
+
+    expRegSinNumero: string = '^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F ]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$';
 
     duplicadoNombreCiclo = (control:AbstractControl) : { [key: string]: boolean } | null => {
         const listaCiclos = this.cicloSignal.cicloList();
