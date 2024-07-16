@@ -9,7 +9,9 @@ export class CicloMapper {
             id: param.codigo,
             cicloNumero: param.denominacionResumida,
             cicloLetra: param.denominacionExtendida,
-            definicion: param.definicion
+            definicion: param.definicion,
+            usuarioId: parseInt(param.usuario)
+            
         }
     }
 
@@ -18,14 +20,15 @@ export class CicloMapper {
             denominacionResumida: param.cicloNumero,
             denominacionExtendida: param.cicloLetra,
             definicion: param.definicion,
-            usuario: RolUserId.currentIdRolUser.toString()
+            usuario: param.usuarioId.toString()
         }
     }
 
     static fromDomainToApiEliminar( param: CicloEliminar ): CicloEliminarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser.toString()
+            usuario: param.usuarioId.toString()
+
         }
     }
 
@@ -35,7 +38,8 @@ export class CicloMapper {
             denominacionResumida: param.cicloNumero,
             denominacionExtendida: param.cicloLetra,
             definicion: param.definicion,
-            usuario:RolUserId.currentIdRolUser.toString()
+            usuario: param.usuarioId.toString()
+
         }
     }
 

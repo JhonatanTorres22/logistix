@@ -1,0 +1,39 @@
+<!-- {{ selectedDestinatarioResponderA() | json}} -->
+<div class="flex justify-content-end gap-2">
+
+    @if( showCancelar ) {
+        <ui-button tooltip="Cancelar Envio" color="secondary" (click)="cancelar()"> Cancelar</ui-button>
+    }
+
+    @for (option of allDestinatario; let isLast = $last; track option) {
+
+      @switch ( option.flujoNavegacion ) {
+        @case ('RETROCEDER') {
+            <ui-button color="orange" borde="3xl"
+                [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR'"
+                [type]="listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'RETROCEDER' ? 'default':'sweet'"
+                (onClick)="showCancelar ? enviarConfirm() : onResponder( option.flujoNavegacion )">
+                <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Devolver y Retroceder</div>
+            </ui-button>
+        }
+        @case ('AVANZAR') {
+          @if ( isLast ) {
+            <ui-button color="primary" borde="3xl"
+                [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'RETROCEDER'"
+                [type]="listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR' ? 'default':'sweet'"
+                (onClick)="showCancelar ? enviarConfirm() : onResponder( option.flujoNavegacion )">
+                <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Continuar y Avanzar</div>
+            </ui-button>
+          }
+        }
+      }
+
+      
+      @if ( option.cierraProceso && !showCancelar ) {
+        <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onCerrarProcesoConfirm()" >
+          <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i> {{ option.cierraProceso ? 'Aprobar y Archivar' : 'Continuar y Avanzar'}} </div>
+        </ui-button>
+        
+      }
+    }
+</div>

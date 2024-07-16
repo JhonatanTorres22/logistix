@@ -11,7 +11,7 @@ export class LocalMapper {
             definicion: param.definicion,
             latitud: param.latitud,
             longitud: param.longitud,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -34,14 +34,14 @@ export class LocalMapper {
              definicion: param.definicion,
              latitud: param.latitud,
              longitud: param.longitud,
-             usuario: RolUserId.currentIdRolUser
+             usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiEliminar( param: LocalEliminar ): LocalEliminarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 

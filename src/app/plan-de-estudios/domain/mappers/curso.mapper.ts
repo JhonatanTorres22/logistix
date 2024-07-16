@@ -69,7 +69,7 @@ export class CursoMapper {
     static formDomainToApiEliminar( param: CursoEliminar ): CursoEliminarDTO {
         return {
             id: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 }

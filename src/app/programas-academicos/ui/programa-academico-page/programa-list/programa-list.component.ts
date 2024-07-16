@@ -15,6 +15,7 @@ import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/as
 import { reject } from 'lodash';
 import { FacultadRepository } from 'src/app/programas-academicos/domain/repositories/facultad.repository';
 import { AsignacionPrograma } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'programa-list',
@@ -48,6 +49,7 @@ export class ProgramaAcademicoListComponent {
     private facultadSignal: FacultadSignal,
     private alertService: AlertService,
     private asignacionSignal: AsignacionSignal,
+    private auth: AuthSignal,
     public dialogRef: MatDialogRef<ProgramaAcademicoListComponent>,
     private facultadRepository: FacultadRepository
   ) {
@@ -220,7 +222,7 @@ export class ProgramaAcademicoListComponent {
   eliminarPrograma = ( programa: ProgramaEliminar ) => {
     const programaEliminar = {
       id: programa.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.programaRepository.eliminarPrograma( programaEliminar ).subscribe({

@@ -11,6 +11,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'app-local-list',
@@ -45,6 +46,7 @@ constructor(
   private repository: LocalRepository,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
+  private auth: AuthSignal,
   public dialogRef: MatDialogRef<LocalListComponent>,
 
   ) {
@@ -184,7 +186,7 @@ constructor(
   eliminarPrograma = ( local: LocalEliminar ) => {
     const localEliminar = {
       id: local.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.repository.eliminar( localEliminar ).subscribe({

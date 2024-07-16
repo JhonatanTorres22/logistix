@@ -16,6 +16,7 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { MatDialog } from '@angular/material/dialog';
 import { Local } from 'src/app/programas-academicos/domain/models/local.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 
 @Component({
@@ -35,12 +36,15 @@ export class ProgramaCardComponent {
   localSelect: WritableSignal<Local> = this.localSignal.localSelect;
   localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
   renderizarAsignaciones = this.signal.renderizarAsignaciones;
+  currentRol = this.auth.currentRol;
+
   constructor(
     private alert: AlertService,
     private semestreSignal: SemestreSignal,
     private asignacionRepository: AsignacionRepository,
     private programaSignal: ProgramaSignal,
     private localSignal: LocalSignal,
+    private auth: AuthSignal,
     private directorSignal: DirectorSignal,
     private signal: AsignacionSignal,
     // private modal: UiModalService
@@ -73,7 +77,7 @@ export class ProgramaCardComponent {
         idLocales: locales,
         idPrograma: programa.idPrograma,
         idSemestre: this.semestreSelect().id,
-        usuarioId: 1
+        usuarioId: parseInt( this.auth.currentRol().id )
       }
       this.agregarPrograma( newPrograma );
     })
@@ -129,7 +133,7 @@ export class ProgramaCardComponent {
       idLocales: locales,
       idPrograma: programa.idPrograma,
       idSemestre: this.semestreSelect().id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
     console.log(eliminarPrograma);
     

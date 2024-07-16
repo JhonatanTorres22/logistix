@@ -161,7 +161,7 @@ export class UserAddComponent {
       imagenPerfil: '',
       numeroDocumento: '',
       tipoDocumento: 'DNI',
-      usuario: 0
+      usuarioId: 0
     };
 
     this.usuarioToEdit = this.data;
@@ -187,7 +187,7 @@ export class UserAddComponent {
         imagenPerfil: '',
         numeroDocumento: '',
         tipoDocumento: 'DNI',
-        usuario: 0
+        usuarioId: 0
       };
 
       this.hayUsuarioExistente = this.usuarioToEdit.id == 0;

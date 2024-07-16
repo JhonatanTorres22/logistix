@@ -33,12 +33,7 @@ export interface MensajeriaRecibidosDTO {
 
 
 export type MensajeriaEnviadosDTO = Omit<MensajeriaRecibidosDTO, 'leido'>;
-export type MensajeriaArchivadosDTO = Omit<MensajeriaRecibidosDTO, 'rol'> & {
-    rolEmisor: string,
-    rolReceptor: string,
-    archivo: string,
-
-};
+export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO
 
 export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido'> & {
     archivo: string,
@@ -57,7 +52,9 @@ export interface MensajeriaResponderDTO {
     informacionAdicional: string
 }
 
-export type MensajeriaCerrarArchivarDTO = Pick< MensajeriaDTO, 'codigoMensajeria'>
+export type MensajeriaCerrarArchivarDTO = Pick< MensajeriaDTO, 'codigoMensajeria'> & {
+    usuario: number
+}
 
 export interface MensajeriaLeerMensajeDTO {
     codigoMensajeria: number

@@ -28,7 +28,7 @@ export class UsuarioRolMapper {
         return {
             codigoRol: param.idRol,
             codigoUsuario: param.idUsuario,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
             
         }
 
@@ -37,7 +37,7 @@ export class UsuarioRolMapper {
     static fromDomainToApiSuspenderRolUser( param: UsuarioRolSuspender ): UsuarioRolSuspenderDTO {
         return {
             codigo: param.idRol,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -45,14 +45,14 @@ export class UsuarioRolMapper {
     static fromDomainToApiEliminarRol( param: UsuarioRolEliminar ): UsuarioRolEliminarDTO {
         return {
             codigo: param.idRol,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiDarAltaRol( param: UsuarioRolAlta ): UsuarioRolAltaDTO {
         return {
             codigo: param.idRol,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 

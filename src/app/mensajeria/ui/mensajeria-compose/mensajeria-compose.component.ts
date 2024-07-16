@@ -106,7 +106,7 @@ export class MensajeriaComposeComponent implements OnInit {
         this.alert.showAlert('El mensaje se envió correctamente', 'success', 6);
         const decano: UsuarioRolAlta = {
           idRol: this.idDecano,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         
         this.isAlta( decano ).then( isAlta => {

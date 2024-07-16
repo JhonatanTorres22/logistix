@@ -96,7 +96,7 @@ export class CicloAddComponent implements OnInit {
   }
 
   editar() {
-    const cicloEdit = {
+    const cicloEdit: Ciclo = {
       id: this.cicloEdit.id,
       ...this.formCiclo.value
     }

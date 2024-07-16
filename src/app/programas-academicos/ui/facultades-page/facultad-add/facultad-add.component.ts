@@ -3,6 +3,7 @@ import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
@@ -60,6 +61,7 @@ export class FacultadAddComponent {
     private alertService: AlertService,
     private facultadRepository: FacultadRepository,
     private facultadSignal: FacultadSignal,
+    private auth: AuthSignal,
     private datePipe: DatePipe
   ) {
 
@@ -127,7 +129,7 @@ export class FacultadAddComponent {
         case 'Crear': {
           const newFacultad = {
             ...this.formFacultad.value,
-            usuarioId: 1
+            usuarioId: parseInt( this.auth.currentRol().id )
           }
           
           this.addFacultad( newFacultad )
@@ -137,7 +139,7 @@ export class FacultadAddComponent {
           const editFacultad = {
             ...this.formFacultad.value,
             id: this.facultadEdit.id,
-            usuarioId: 1
+            usuarioId: parseInt( this.auth.currentRol().id )
           }
 
           this.editFacultad( editFacultad )

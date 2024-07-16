@@ -18,7 +18,7 @@ export class FacultadMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
             
         }
     }
@@ -27,14 +27,14 @@ export class FacultadMapper {
         return {
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static formDomainToApiEliminar( param: FacultadEliminar ): FacultadEliminarDTO {
         return {
             codigo: param.id,
-            usuario:RolUserId.currentIdRolUser
+            usuario:param.usuarioId
         }
     }
 }
