@@ -14,12 +14,14 @@ export class CicloSingal {
         cicloLetra: '',
         cicloNumero: '',
         definicion: '',
+        usuarioId: 0
     }
     cicloDafault: Ciclo = {
         id: 0,
         cicloLetra: '',
         cicloNumero: '',
         definicion: '',
+        usuarioId: 0
     }
 
     cicloList: WritableSignal<Ciclo[]> = signal( this.cicloListDefault );

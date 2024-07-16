@@ -9,7 +9,7 @@ export class ProgramaMapper {
             codigoFacultad: param.idFacultad,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -28,7 +28,7 @@ export class ProgramaMapper {
             codigoFacultad: param.idFacultad,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -37,14 +37,14 @@ export class ProgramaMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiEliminar ( param: ProgramaEliminar ): ProgramaEliminarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -53,7 +53,7 @@ export class ProgramaMapper {
             codigo: param.id,
             definicion: param.definicion,
             nombre: param.nombre,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 

@@ -65,6 +65,8 @@ export class UsuarioRolService {
 
     darAltaRolUser = ( darAltaRolUsuario: UsuarioRolAlta ): Observable<void> => {
         const darAltaRolUsuarioAPI = UsuarioRolMapper.fromDomainToApiDarAltaRol( darAltaRolUsuario );
+        console.log( darAltaRolUsuarioAPI );
+        
 
         return this.http.put<void>( this.urlApi + this.urlDarAltaUsuarioRol, darAltaRolUsuarioAPI );
     }

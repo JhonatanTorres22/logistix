@@ -139,6 +139,7 @@
 @import './app/@theme/styles/pages/file-manager.scss';
 @import './app/@theme/styles/pages/dashboard.scss';
 @import './app/@theme/styles/theme-mode/rtl';
+@import './app/core/styles/colors-customs.scss';
 
 // grid
 @import './app/@theme/styles/grid';
@@ -394,7 +395,7 @@
   --red-200:#ffaca7;
   --red-300:#ff8780;
   --red-400:#ff6259;
-  --red-500:#ff3d32;
+  --red-500:#dc2626;  //#ff3d32 MATERIAL / WARN #dc2626
   --red-600:#d9342b;
   --red-700:#b32b23;
   --red-800:#8c221c;

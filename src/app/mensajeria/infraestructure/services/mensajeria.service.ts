@@ -5,15 +5,17 @@ import {
     MensajeriaArchivados,
     MensajeriaCerrarArchivar,
     MensajeriaEnviados,
+    MensajeriaEnviarNuevoMensaje,
     MensajeriaHistorialMensajes,
     MensajeriaInsertar,
     MensajeriaLeerMensaje,
     MensajeriaNuevoMensajeList,
-    MensajeriaRecibidos,
-    MensajeriaResponder } from "../../domain/models/mensajeria.model";
+    MensajeriaRecibidos, 
+    MensajeriaResponderAList,
+    MensajeriaResponderAlta} from "../../domain/models/mensajeria.model";
 import { Observable, map } from "rxjs";
 import { MensajeriaMapper } from "../../domain/mappers/mensajeria.mapper";
-import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
+import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaResponderAListDataArrayDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
 import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -37,6 +39,8 @@ export class MensajeriaService {
     private urlTipoMensajeGrupo: string;
     private urlTipoMensaje: string;
     private urlNuevoMensajeA: string;
+    private urlNuevoMensaje: string;
+    private urlResponderA: string;
 
     private rol = this.signal.currentRol
     
@@ -57,6 +61,8 @@ export class MensajeriaService {
         this.urlTipoMensajeGrupo = 'api/TipoMensajeGrupo/Listar?CodigoUsuarioRol='
         this.urlTipoMensaje = 'api/TipoMensaje/Listar?CodigoUsuarioRol='
         this.urlNuevoMensajeA = 'api/Mensajeria/NuevoA?'
+        this.urlNuevoMensaje = 'api/Mensajeria/Nuevo';
+        this.urlResponderA = 'api/Mensajeria/ResponderA?CodigoMensaje=';
 
     }
 
@@ -95,8 +101,8 @@ export class MensajeriaService {
             .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainHistorialMensajes )));
     }
 
-    responderMensaje( mensaje: MensajeriaResponder ): Observable<void> {
-        const mensajeAPI = MensajeriaMapper.fromDomainToApiResponder( mensaje );
+    responderMensaje( mensaje: MensajeriaResponderAlta ): Observable<void> {
+        const mensajeAPI = MensajeriaMapper.fromDomainToApiResponderAlta( mensaje );
         console.log( mensajeAPI );
         
         return this.http.post<void>( this.urlApi + this.urlResponder, mensajeAPI )
@@ -135,6 +141,20 @@ export class MensajeriaService {
         
         return this.http.get<MensajeriaNuevoMensajeListDataArrayDTO>( this.urlApi + urlApi )
             .pipe( map( api => api.data.map( MensajeriaMapper.fromApiToDomainNuevoMensajeList )))
+    }
+
+
+    enviarNuevoMensaje( mensaje: MensajeriaEnviarNuevoMensaje ): Observable<void> {
+        const mensajeAPI = MensajeriaMapper.fromDomainToApiNuevoMensaje( mensaje );
+
+        return this.http.post<void>( this.urlApi + this.urlNuevoMensaje, mensajeAPI )
+
+    }
+
+    responderAList( idMensaje: number ): Observable<MensajeriaResponderAList[]> {
+        
+        return this.http.get<MensajeriaResponderAListDataArrayDTO>( this.urlApi + this.urlResponderA + idMensaje )
+            .pipe( map ( api => api.data.map( MensajeriaMapper.fromApiToDomainResponderAList )))
     }
 
     

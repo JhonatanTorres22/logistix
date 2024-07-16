@@ -1,11 +1,12 @@
-@if (titleContent) {
+@if (backToMail().titleContent) {
     <div class="mail-content-table col-12 col-sm-12 col-md-4">
 
         <ng-scrollbar style="height: calc(100vh - 210px); min-width: auto;" visibility="hover" track="all" class="w-full">
-          @if( dataSource.data.length == 0 ) {
+          @if( dataSource.data.length == 0 || dataSource.data.length == 0 && !showFormNuevoMensaje() ) {
             <mensajeria-no-messages text="No hay mensajes" icon="ti ti-mailbox f-60"></mensajeria-no-messages>
-          
-          } @else {
+          }
+
+          @if (!showFormNuevoMensaje()) {
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100 w-full">
               <ng-container matColumnDef="name" >
                 <th mat-header-cell *matHeaderCellDef></th>
@@ -13,9 +14,16 @@
                   mat-cell
                   *matCellDef="let mail; let isLast = last; let isFirst = first"
                   (click)="mostrarHistorialMensajes( mail )"
-                  class=" mail-option {{ mail.leido ? 'bg-white' : 'bg-primary-100'}} w-full"
+                  class=" mail-option w-full"
                   style="height: 94px;"
-                  [ngClass]="{'border-round-top': isFirst, 'border-round-bottom': isLast}"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+                  [ngClass]="
+                  {
+                    'border-round-top': isFirst,
+                    'border-round-bottom': isLast,
+                    'bg-accent-200': selectMensaje().idMensaje == mail.idMensaje && mail.leido,
+                    'bg-white': mail.leido && selectMensaje().idMensaje != mail.idMensaje,
+                    'bg-primary-100': !mail.leido
+                  }"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
                   <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
                     <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
                     <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
@@ -31,7 +39,7 @@
                       </span>
                     </div>
                   </div>
-                  <div class="mail-button">
+                  <!-- <div class="mail-button">
                     <ul class="list-inline m-b-0">
                       <li class="list-inline-item">
                         <a href="javascript:" class="avatar avatar-s text-muted" title="archive"><i class="ti ti-archive f-18"></i></a>
@@ -40,21 +48,80 @@
                         <a href="javascript:" class="avatar avatar-s text-muted" title="mail"><i class="ti ti-mail f-18"></i></a>
                       </li>
                     </ul>
-                  </div>
+                  </div> -->
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
           }
+          <!-- {{ selectMensaje() | json }} -->
+          @if ( showFormNuevoMensaje() && !modoTablet() ) {
+          <!-- BORRAR CUANDO TENGA EL COMPONENTE -->
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 bg-accent-100 w-full">
+            <ng-container matColumnDef="name" >
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td
+                mat-cell
+                *matCellDef="let mail; let isLast = last; let isFirst = first"
+                (click)="mostrarHistorialMensajes( mail )"
+                class=" mail-option w-full"
+                style="height: 94px;"
+                [ngClass]="
+                  {
+                    'border-round-top': isFirst,
+                    'border-round-bottom': isLast,
+                    'bg-accent-200': selectMensaje().idMensaje == mail.idMensaje && mail.leido,
+                    'bg-white': mail.leido && selectMensaje().idMensaje != mail.idMensaje,
+                    'bg-primary-100': !mail.leido
+                  }"> <!-- {{toggle() ? 'md:w-13rem lg:w-14rem xl:w-full ' : 'md:w-13rem lg:w-16rem xl:w-full' }} -->
+                <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
+                  <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
+                  <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
+                    <span class="capitalize">{{ mail.emisor.toLowerCase() }}</span>
+                    <div class="flex-grow-1 details">
+                      <p class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} m-b-0 text-truncate f-14"  appRemoveHtml>
+                        {{ mail.mensaje }}
+                      </p>
+
+                    </div>
+                    <span id="fecha" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right text-gray-700">
+                      {{ mail.fecha | date: 'dd MMM yyyy, h:mm a' }}
+                    </span>
+                  </div>
+                </div>
+                <!-- <div class="mail-button">
+                  <ul class="list-inline m-b-0">
+                    <li class="list-inline-item">
+                      <a href="javascript:" class="avatar avatar-s text-muted" title="archive"><i class="ti ti-archive f-18"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript:" class="avatar avatar-s text-muted" title="mail"><i class="ti ti-mail f-18"></i></a>
+                    </li>
+                  </ul>
+                </div> -->
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+          <!-- BORRAR CUANDO  TENGA EL COMPONENTE MENSAJERIA BANDEJA -->
+          }
+          @if ( modoTablet() && showFormNuevoMensaje() ) {
+              
+              <mensajeria-new class="col-12 col-sm-12 col-md-12"></mensajeria-new>
+          }
+          
+   
         </ng-scrollbar>
       
     </div>
     <!-- <mensajeria-messages class="w-9"></mensajeria-messages> -->
      
     @if ( !modoTablet() ) {
-
+     
       @if ( showFormNuevoMensaje() ) {
+        
         <mensajeria-new class="col-12 col-sm-12 col-md-8"></mensajeria-new>
       }
       <!-- {{ mensajeriaData() | json }} -->
@@ -62,93 +129,26 @@
         <mensajeria-compose class="col-12 col-sm-12 col-md-8"></mensajeria-compose>
       } @else { 
   
-        @if ( selectMensaje().idMensaje == 0 ) {
+        @if ( selectMensaje().idMensaje == 0  && !showFormNuevoMensaje() ) {
           <mensajeria-no-messages class="col-12 col-sm-12 col-md-8"></mensajeria-no-messages>
-        } @else {
-          
-          <mensajeria-messages class="col-12 col-sm-12 col-md-8"></mensajeria-messages>
+          <!-- <ui-card-not-items class="col-12 col-sm-12 col-md-8" text="DEBE SELECCIONAR UN SEMESTRE"></ui-card-not-items> -->
+
+        } 
+          @if ( selectMensaje().idMensaje != 0  && !showFormNuevoMensaje() && !showFadeIn ) {
+            <mensajeria-messages class="col-12 col-sm-12 col-md-8" style="height: calc(100vh - 13rem);"></mensajeria-messages>
+          }
   
-        }
+        
       }
     }
-
      
      
   }
-  @if (detailsContent) {
+  @if ( backToMail().detailsContent && !showFadeIn ) {
 
 
-    <mensajeria-messages class="col-12 col-sm-12 col-md-8" (backToMail)="backToMail()"></mensajeria-messages>
+    <mensajeria-messages class="col-12 col-sm-12 col-md-8"></mensajeria-messages>
 
- 
 
-    <!-- <div class="details-content col-12 ">
-      <app-card [showHeader]="false" [padding]="16">
-        <div class="title align-item-center">
-          <ul class="list-inline">
-            <li class="list-inline-item" (click)="backToMail()">
-              <a href="javascript:" class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
-                <i class="ti ti-chevron-left f-18"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <div class="flex align-item-center">
-                <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
-                <div class="flex-grow-1 m-l-10">
-                  <div class="f-16 f-w-600 text-truncate"> Matthew Hawkins </div>
-                  <div class="m-b-0 text-muted mat-small"> From: &lt;tazeanu&#64;company.com&gt; </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <ul class="list-inline">
-            <li class="list-inline-item text-muted"> 12 Jul 22 08:23 AM </li>
-            <li class="list-inline-item">
-              <div class="flex align-item-center">
-                @if (unStar) {
-                  <div class="pc-icon-checkbox">
-                    <input class="form-check-input" matTooltip="star" type="checkbox" />
-                    <i class="material-icons-two-tone pc-icon-uncheck">star_outline</i>
-                    <i class="material-icons-two-tone text-warning pc-icon-check">star</i>
-                  </div>
-                }
-                @if (star) {
-                  <div class="pc-icon-checkbox">
-                    <input class="form-check-input" matTooltip="star" type="checkbox" checked />
-                    <i class="material-icons-two-tone pc-icon-uncheck">star_outline</i>
-                    <i class="material-icons-two-tone text-warning pc-icon-check">star</i>
-                  </div>
-                }
-  
-                <div class="pc-icon-checkbox">
-                  <input class="form-check-input" matTooltip="label" type="checkbox" />
-                  <i class="material-icons-two-tone pc-icon-uncheck">label</i>
-                  <i class="material-icons-two-tone text-secondary pc-icon-check">label</i>
-                </div>
-                <div class="pc-icon-checkbox">
-                  <input class="form-check-input" matTooltip="new release" type="checkbox" />
-                  <i class="material-icons-two-tone pc-icon-uncheck">new_releases</i>
-                  <i class="material-icons-two-tone text-danger pc-icon-check">new_releases</i>
-                </div>
-              </div>
-            </li>
-            <li class="list-inline-item">
-              <a class="avatar avatar-s" [matMenuTriggerFor]="menu">
-                <i class="ti ti-dots f-18"></i>
-              </a>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item>Name</button>
-                <button mat-menu-item>Date</button>
-                <button mat-menu-item>Rating</button>
-                <button mat-menu-item>unread</button>
-              </mat-menu>
-            </li>
-          </ul>
-        </div>
-      </app-card>
-      <div class="mail-details">
-        <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p>
-      </div>
-    </div> -->
 }
   

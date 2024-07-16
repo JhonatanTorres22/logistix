@@ -31,7 +31,9 @@ export type CursoCrear = Omit<Curso, 'id' | 'programa' | 'ciclo' | 'preRequisito
 export type CursoEditar = CursoCrear & {
     id: number
 }
-export type CursoEliminar = Pick<Curso, 'id'>
+export type CursoEliminar = Pick<Curso, 'id'> & {
+    usuarioId: number
+}
 
 export interface CursoDataArray {
 

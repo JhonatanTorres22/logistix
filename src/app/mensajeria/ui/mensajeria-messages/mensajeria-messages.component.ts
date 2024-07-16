@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
@@ -8,10 +8,18 @@ import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-compose.component';
 import { MensajeriaResponseComponent } from '../mensajeria-response/mensajeria-response.component';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
-import { UsuarioRol, UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
-import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes } from '../../domain/models/mensajeria.model';
+import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
+import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes, MensajeriaResponderAList } from '../../domain/models/mensajeria.model';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-academico-page/programa-card/programa-card.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { MensajeriaFlujoNavegacionComponent } from '../mensajeria-flujo-navegacion/mensajeria-flujo-navegacion.component';
+import { MensajeriaAsuntoComponent } from '../mensajeria-asunto/mensajeria-asunto.component';
+import { MensajeriaCardArchivedClosedApprovedComponent } from '../mensajeria-card-archived-closed-approved/mensajeria-card-archived-closed-approved.component';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -22,7 +30,12 @@ import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repos
     MatExpansionModule,
     MensajeriaNoMessagesComponent,
     MensajeriaComposeComponent,
-    MensajeriaResponseComponent  
+    MensajeriaResponseComponent,
+    UiButtonComponent,
+    ProgramaCardComponent,
+    MensajeriaFlujoNavegacionComponent,
+    MensajeriaAsuntoComponent,
+    MensajeriaCardArchivedClosedApprovedComponent
   ],
   templateUrl: './mensajeria-messages.component.html',
   styleUrl: './mensajeria-messages.component.scss',
@@ -34,100 +47,105 @@ import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repos
     ])
   ]
 })
-export class MensajeriaMessagesComponent {
+export class MensajeriaMessagesComponent implements OnInit {
 
   @Input() star = false;
   @Input() unStar = true;
   @Output() backToMail: EventEmitter<boolean> = new EventEmitter();
-  showFormCompose: boolean = false;
-  readonly panelOpenState = signal(false);
+  @ViewChild('scrolling') scrolling: ElementRef;
   
-  modoTablet = this.mensajeriaSignal.mensajeriaModoTablet;
-  mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
-  tipoBandeja = this.mensajeriaSignal.tipoBandeja;  
+  showFormResponse = this.mensajeriaSignal.showFormResponse;
+  readonly panelOpenState = signal(false);
+  btnAvanzar: string = '';
+  btnRetroceder: string = '';
+  btnCerrarYarchivar: string = '';
+  btnForzarCierre: string = '';
 
+  mensajesHistorial = this.mensajeriaSignal.mensajesHistorial;
+  tipoBandeja = this.mensajeriaSignal.tipoBandeja;
+  listaDestinatariosResponderA = this.mensajeriaSignal.listaDestinatariosResponderA;
+  listaDestinatariosResponderAflujo = this.mensajeriaSignal.listaDestinatariosResponderAflujo;
+  
+  currentRol = this.authSignal.currentRol;
+  esConforme: boolean = false;
+  // mensajeHistorialSelect: MensajeriaHistorialMensajes;
   constructor(
     private mensajeriaSignal: MensajeriaSignal,
     private userRolRepository: UsuarioRolRepository,
     private repository: MensajeriaRepository,
-    private alert: AlertService
+    private alert: AlertService,
+    private semestreSignal: SemestreSignal,
+    private modal: UiModalService,
+    private authSignal: AuthSignal
   ) {}
-
-  onResponder() {
-    this.showFormCompose = true;
-    console.log('mostrar');
-    
+  ngOnInit(): void {
+    this.obtenerDestinatariosReponderA(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje );
+    console.log(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje);
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 2000);
   }
 
-  onAltaConfirm( mensaje: MensajeriaHistorialMensajes ) {
-
-    this.alert.sweetAlert( 'question', 'Confirmación', `¿Está seguro que desea DAR DE ALTA al Director de Escuela?`)
-      .then( isConfirm => {
-        if( !isConfirm ) {
-          return
-        }
-
-        const directorAlta: UsuarioRolAlta = {
-          idRol: parseInt( mensaje.informacionAdicional ),
-          usuarioId: 1
-        }
-
-        this.onAlta( directorAlta, mensaje )
-
-      })
+  onObservacion() {
 
   }
 
 
-  onAlta( userAlta: UsuarioRolAlta, mensaje: MensajeriaHistorialMensajes ) {
-    // console.log(userRol);
-    
-    
-    this.userRolRepository.darAltaRolUser( userAlta ).subscribe({
-      next: ( data ) => {
-        const mensajeCerrar: MensajeriaCerrarArchivar = {
-          idMensaje: mensaje.idMensaje
-        }
-        this.cerrarArchivar( mensajeCerrar ).then( completedSuccessfully => {
-          if (!completedSuccessfully) {
-            console.log('Hubo un error al archivar')
+  
+
+
+  
+
+
+
+  // onBackToMail = () => {
+  //   this.backToMail.emit( true );
+  // }
+
+  obtenerDestinatariosReponderA( idMensaje: number ) {
+    this.repository.responderMensajeA( idMensaje ).subscribe({
+      next: ( destinatarioResponderA ) => {
+        console.log( destinatarioResponderA );
+        const filterRolUnique = destinatarioResponderA.reduce( (destinatarios: MensajeriaResponderAList[], data: MensajeriaResponderAList) => {
+
+          const existe = destinatarios.findIndex( dest => dest.idUsuarioRol == data.idUsuarioRol );
+          if( existe != -1 ) {
+            destinatarios[existe] = data;
+            // console.log( destinatarios[existe] );
+            // console.log( data );
+            // console.log( existe );
+            
+            
+            
           }
-          
-          this.alert.showAlert('El Director fué dado de ALTA, y el Mensaje fué CERRADO y ARCHIVADO.', 'success');
-          // console.log('No tenía Alta, ahora si está dado de ALTA');
-          this.mensajeriaSignal.setMensajeriaDataAsignacionDefault();
-          // this.mensajesHistorial
-          setTimeout(() => {
-            this.mensajeriaSignal.renderizarMensajes.set( 'Alta' );
-          }, 200);
 
-        });
+          destinatarios.push( data );
+
+          return destinatarios
+
+        }, []);
+
+        console.log(filterRolUnique);
+        
+
+        this.listaDestinatariosResponderA.set( filterRolUnique );
+
       }, error: ( error ) => {
-        this.alert.showAlert('Ocurrió un error al dar de alta al decano:' + error, 'error');
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al listar los destnatarios: ' + error, 'error', 6);
+
       }
     })
   }
 
-  cerrarArchivar( mensaje: MensajeriaCerrarArchivar ) {
-    
-    return new Promise<boolean>( ( resolve, reject ) => {
-      this.repository.cerrarArchivarMensaje( mensaje ).subscribe({
-        next: ( data ) => {
-          console.log(data);
-          console.log('Mensaje CERRADO Y ARCHIVADO.');
-          resolve( true )
-        }, error: ( error ) => {
-          console.log( error );
-          this.alert.showAlert('Ocurrió un error al ARCHIVAR el mensaje: ' + error, 'error');
-          resolve( false )
-        }
-      });
-    })
+   
 
-  }
 
-  onBackToMail() {
-    this.backToMail.emit( true );
-  }
+
+  scrollToBottom(): void {
+    try {
+        this.scrolling.nativeElement.scrollTop = this.scrolling.nativeElement.scrollHeight;
+    } catch(err) { }                 
+}
 
 }

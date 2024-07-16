@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
-import { SemestreAcademicoDomainService } from "../services/semestre-academico-domain.service";
 import { SemestreAcademico } from "../models/semestre-academico.model";
 import { ValidacionComprobarDuplicadoService } from "../services/validacion-comprobar-duplicado.service";
+import { SemestreSignal } from "../signals/semestre.signal";
 
 
 @Injectable({
@@ -12,7 +12,7 @@ import { ValidacionComprobarDuplicadoService } from "../services/validacion-comp
 export class SemestreAcademicoValidations {
 
     constructor(
-        private semestreAcademicoDomainService: SemestreAcademicoDomainService,
+        private semestreSignal: SemestreSignal,
         private validarDuplicadoService:ValidacionComprobarDuplicadoService
     ) { }
 
@@ -50,8 +50,8 @@ export class SemestreAcademicoValidations {
 
 
     duplicadoNombreSemestre(control: AbstractControl): { [key: string]: boolean } | null {
-        const listaProgramas = this.semestreAcademicoDomainService.semestresAcademicos();
-        const editarProgramas = this.semestreAcademicoDomainService.semestreAcademicoEditado();
+        const listaProgramas = this.semestreSignal.semestresAcademicos();
+        const editarProgramas = this.semestreSignal.semestreAcademicoEditado();
         return this.validarDuplicadoService.duplicadoNombre(control, listaProgramas, editarProgramas, 'codigo');
       }
 

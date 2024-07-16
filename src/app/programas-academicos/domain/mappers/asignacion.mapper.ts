@@ -81,7 +81,7 @@ export class AsignacionMapper {
                 codigoLocal: local,
                 codigoProgramaAcademico: param.idPrograma,
                 codigoSemestre: param.idSemestre,
-                usuario: RolUserId.currentIdRolUser
+                usuario: param.usuarioId
             }
         })
 
@@ -98,7 +98,7 @@ export class AsignacionMapper {
                 codigoLocal: local,
                 codigoProgramaAcademico: param.idPrograma,
                 codigoSemestre: param.idSemestre,
-                usuario: RolUserId.currentIdRolUser
+                usuario: param.usuarioId
             }
         })
 

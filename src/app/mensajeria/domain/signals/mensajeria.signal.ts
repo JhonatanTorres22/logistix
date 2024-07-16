@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, TipoMensaje } from "../models/mensajeria.model";
+import { BackToMail, MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponderAList, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { Local } from "src/app/programas-academicos/domain/models/local.model";
@@ -32,21 +32,45 @@ export class MensajeriaSignal {
     mensajeriaHistorialMensajesDefault: MensajeriaHistorialMensajes[] = []
 
     listaDestinatariosDefault: MensajeriaNuevoMensajeList[] = [];
-    destinatarioSelectDefault: MensajeriaNuevoMensajeList = {
+    listaDestinatariosResponderADefault: MensajeriaResponderAList[] = [];
+
+    selectedDestinatarioResponderADefault: MensajeriaResponderAList = {
+        apellidosYnombres: '',
+        cierraProceso: false,
+        descripcion: '',
+        flujoNavegacion: '',
+        idMensaje: 0,
+        idTipoMensajeRol: 0,
+        idUsuarioRol: 0,
+        iniciaProceso: false,
+        temporalidad: 0,
+
+    }
+
+    destinatarioSelectedDefault: MensajeriaNuevoMensajeList = {
         apellidosYnombres: '',
         cierraProceso: false,
         descripcion: '',
         idTipoMensajeRol: 0,
         idUsuarioRol: 0,
         iniciaProceso: false,
-        responder: '',
+        flujoNavegacion: '',
         temporalidad: 0,
     }
 
     tiposMensajeDefault: UiSelect[] = []
     tiposMensajeGrupoDefault: UiSelect[] = []
+    
+    backToMailDefault: BackToMail = {
+        detailsContent: false,
+        titleContent: true
+    }
 
     toggle = signal( true );
+
+
+    backToMail = signal( this.backToMailDefault );
+
     mensajeriaInsertar = signal( mensajeriaInsertarDefault );
     mensajeriaInsertarDataAsignacion = signal( this.mensajeriaAsignacionDefault );
     mensajeriaModoTablet = signal( false );
@@ -71,9 +95,16 @@ export class MensajeriaSignal {
     tipoBandeja = signal( 'Recibidos' );
 
     showFormNuevoMensaje = signal( false );
+    showFormResponse = signal( false );
 
     listaDestinatarios = signal ( this.listaDestinatariosDefault );
-    selectDestinatario = signal ( this.destinatarioSelectDefault );
+    listaDestinatariosResponderA = signal ( this.listaDestinatariosResponderADefault );
+    listaDestinatariosResponderAflujo = signal ( this.listaDestinatariosResponderADefault );
+    selectedDestinatario = signal ( this.destinatarioSelectedDefault );
+    selectedDestinatarioResponderA = signal ( this.selectedDestinatarioResponderADefault );
+
+    mensaje = signal('');
+
     tiposMensajes = signal( this.tiposMensajeDefault )
     tiposMensajesGrupo = signal( this.tiposMensajeGrupoDefault )
 

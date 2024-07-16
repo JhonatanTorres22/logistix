@@ -14,6 +14,9 @@ import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/as
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
 
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+
+
 
 @Component({
   selector: 'app-decano-list',
@@ -44,6 +47,7 @@ constructor(
   private signal: DecanoSignal,
   private facultadSignal: FacultadSignal,
   private repository: UsuarioRolRepository,
+  private auth: AuthSignal,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
   public dialogRef: MatDialogRef<DecanoListComponent>,
@@ -179,7 +183,7 @@ constructor(
   activarDecano = ( decano: UsuarioRol ) => {
     const decanoActivar = {
       idRol: decano.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.repository.activarRolUser( decanoActivar ).subscribe({

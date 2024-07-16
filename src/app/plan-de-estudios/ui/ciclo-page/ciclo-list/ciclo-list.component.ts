@@ -8,6 +8,7 @@ import { Ciclo, CicloEliminar } from 'src/app/plan-de-estudios/domain/models/cic
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { CicloAddComponent } from '../ciclo-add/ciclo-add.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'ciclo-list',
@@ -25,6 +26,7 @@ export class CicloListComponent implements OnInit {
   constructor(
     private repository: CicloRepository,
     private signal: CicloSingal,
+    private authSignal: AuthSignal,
     private alert: AlertService
   ) {
   }
@@ -50,7 +52,8 @@ export class CicloListComponent implements OnInit {
       id: 0,
       cicloLetra: '',
       cicloNumero: '',
-      definicion: ''
+      definicion: '',
+      usuarioId: 0
     };
   }
   onSubmit() {
@@ -117,8 +120,9 @@ export class CicloListComponent implements OnInit {
   eliminarConfirm( ciclo: Ciclo ) {
     this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea eliminar el ciclo?').then( isConfirm => {
       if( !isConfirm ) return;
-      const eliminarCiclo = {
-        id: ciclo.id
+      const eliminarCiclo: CicloEliminar = {
+        id: ciclo.id,
+        usuarioId: parseInt( this.authSignal.currentRol().id )
       }
       this.eliminar( eliminarCiclo );
 

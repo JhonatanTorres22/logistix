@@ -14,7 +14,6 @@ import { DateAdapter } from '@angular/material/core';
 import { SemestreAcademicoLocalService } from 'src/app/programas-academicos/infraestructure/services/semestre-academico-local.service';
 import { SemestreAcademico } from '../../../domain/models/semestre-academico.model';
 import { SemestreAcademicoRepository } from 'src/app/programas-academicos/domain/repositories/semestre-academico.repository';
-import { SemestreAcademicoDomainService } from 'src/app/programas-academicos/domain/services/semestre-academico-domain.service';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
@@ -45,7 +44,7 @@ export class SemestreAddComponent implements OnInit {
 
   @Input() semestreEdit: SemestreAcademico;
   @Input() listaCodigoSemestre : string[] = []
-  semestreAcademico = this.semestreAcademicoDomainService.semestresAcademicos();
+  semestreAcademico = this.semestreSignal.semestresAcademicos();
 
 
   constructor(
@@ -58,7 +57,6 @@ export class SemestreAddComponent implements OnInit {
     private validation: SemestreAcademicoValidations,
     private alertService: AlertService,
     private semestreRepository: SemestreAcademicoRepository,
-    private semestreAcademicoDomainService: SemestreAcademicoDomainService,
     private datePipe: DatePipe
   ) {
 
@@ -153,7 +151,7 @@ export class SemestreAddComponent implements OnInit {
     this.semestreRepository.agregarSemestre( newSemestre ).subscribe({
       next: (data) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre creado correctamente')
-          // this.semestreAcademicoDomainService.setSemestreAcademico( data );
+          // this.semestreSignal.setSemestreAcademico( data );
           // this.dialogRef.close(data);
           this.semestreEdit = {
             id: 0,
@@ -178,7 +176,7 @@ export class SemestreAddComponent implements OnInit {
         if(this.semestreSignal.semestreSelect().id === this.semestreEdit.id){
           this.semestreSignal.setSelectSemestre(editSemestre)
         }
-        // this.semestreAcademicoDomainService.setSemestreAcademico( data );
+        // this.semestreSignal.setSemestreAcademico( data );
         // this.dialogRef.close( data );
         this.semestreEdit = {
           id: 0,

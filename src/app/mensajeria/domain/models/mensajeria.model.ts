@@ -11,8 +11,9 @@ export type TipoMensaje = 'DAR ALTA A DIRECTOR DE ESCUELA' | 'VALIDAR PLAN DE ES
 
 export interface MensajeriaRecibidos {
     idMensaje: number,
-    idTipoMensaje: number,
-    tipoMensaje: TipoMensaje,
+    nombreTipoMensajeGrupo: string,
+    nombreTipoMensaje: string,
+    // tipoMensaje: TipoMensaje,
     asunto: string,
     mensaje: string,
     rolEmisor: string,
@@ -25,19 +26,18 @@ export interface MensajeriaRecibidos {
 export type MensajeriaEnviados = Omit<MensajeriaRecibidos, 'rolEmisor'> & {
     rolReceptor: string
 };
-export type MensajeriaArchivados = MensajeriaRecibidos & {
-    rolReceptor: string,
-    archivo: string,
-};
+export type MensajeriaArchivados = MensajeriaRecibidos
 
-export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'>
+export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'> & {
+    usuarioId: number
+}
 
-export type MensajeriaHistorialMensajes = MensajeriaRecibidos & {
+export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'leido'> & {
     archivo: string,
     rolReceptor: string,
     informacionAdicional: string,
-    idRolEmisor: number,
-    idRolReseptor: number
+    // idRolEmisor: number,
+    // idRolReseptor: number
 }
 
 export interface MensajeriaLeerMensaje {
@@ -55,14 +55,7 @@ export interface MensajeriaInsertar {
     usuarioId: number
 }
 
-export interface MensajeriaResponder {
-    idMensaje: number,
-    idRolEmisor: number,
-    idRolReceptor: number,
-    mensaje: string,
-    informacionAdicional: string,
-    // usuarioId: number
-}
+
 
 export interface MensajeriaInsertarData {
     facultad: Asignacion,
@@ -76,10 +69,19 @@ export interface MensajeriaDataAsignacion {
     tipoMensaje: TipoMensaje
 }
 
+export type MensajeriaResponderAlta = Pick<MensajeriaResponderAList, 'idMensaje' | 'idTipoMensajeRol'> & {
+
+    idRolEmisor: number,
+    idRolReceptor: number,
+    mensaje: string,
+    informacionAdicional: string
+
+}
+
 export interface MensajeriaNuevoMensajeList {
     idTipoMensajeRol: number,
     idUsuarioRol: number,
-    responder: string,
+    flujoNavegacion: string,
     apellidosYnombres: string,
     descripcion: string,
     temporalidad: number,
@@ -94,9 +96,31 @@ export interface MensajeriaTipoGrupo {
 }
 
 
-export interface MensajeriaEnviarNuevoMensaje {
-    // idTipoMensaje: 
+export interface MensajeriaEnviarNuevoMensaje  {
+
+    idTipoMensajeRol: number,
+    flujoNavegacion: string,
+    asunto: string,
+    idRolEmisor: number,
+    idRolReceptor: number,
+    mensaje: string,
+    informacionAdicional: string,
+    usuarioId: number
+
 }
+
+
+export type MensajeriaResponderAList = MensajeriaNuevoMensajeList & {
+    idMensaje: number
+}
+
+
+export interface BackToMail {
+    detailsContent: boolean;
+    titleContent: boolean;
+}
+
+// export type MensajeriaResponder
 // export interface MensajeriaSelectMensaje {
 //     id: number,
 //     nombre: string,

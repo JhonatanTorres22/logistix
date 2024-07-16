@@ -1,11 +1,62 @@
-<quill-editor class="w-100 h-13rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+<app-card [showHeader]="false" [padding]="16">
+    <form [formGroup]="paraRemitenteForm">
 
-<ui-button
-    label="Enviar"
-    tooltip="Enviar mensaje"
-    color="primary"
-    class="absolute right-0 bottom-0 mb-8"
-    (click)="enviarConfirm()"
-    >
+        <div class="title align-item-center" >
+            <ul class="list-inline mb-3">
+                <li class="list-inline-item w-full">
+                    <div class="flex align-item-center gap-2">
+                        <div class="w-8rem">
+                            <ui-button label="Para" color="secondary"></ui-button>
+                        </div>
+                        <!-- {{ selectedDestinatarioResponderA() | json }} -->
+                        <!-- <ui-input formControlName="programaExistente" label="programaExistente"></ui-input> -->
+                        <mat-form-field appearance="outline" class="w-100 m-t-5 small" [autofocus]="true">
+                            <mat-select name="assign" formControlName="destinatario" #selectDestinatario (selectionChange)="selectedDestinatarioResponderA.set($event.value)">
+                                <mat-select-trigger>
+                                    <div class="flex align-item-center">
+                                        <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                                        <div class="flex flex-column">
+                                            {{ paraRemitenteForm.value.destinatario.apellidosYnombres }}
+                                            <span class="f-w-600">{{ paraRemitenteForm.value.destinatario.descripcion }}</span>
+                                        </div>
+                                    </div>
+                                </mat-select-trigger>
+                                @for (destinatario of listaDestinatariosResponderAflujo(); track destinatario) {
+                                    <mat-option [value]="destinatario">
+                                        <div class="flex align-item-center">
+                                            <img src="assets/images/user/avatar-1.png" alt="images" class="img-fuild m-r-10 border-50 wid-35" />
+                                            <div class="flex flex-column">
+                                                {{ destinatario.apellidosYnombres }}
+                                                <span class="f-w-600">{{ destinatario.descripcion }}</span>
+                                            </div>
+                                        </div>
+                                    </mat-option>
+                                    
+                                }
+                            </mat-select>
+                        </mat-form-field>
+       
+                    </div>
 
-</ui-button>
+                </li>
+            </ul>
+            <mat-divider></mat-divider>
+        </div>
+    </form>
+    <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+    
+</app-card>
+
+
+
+<mensajeria-flujo-navegacion
+    [allDestinatario]="listaDestinatariosResponderAflujo()"
+    [disabled]="paraRemitenteForm.invalid || mensaje == null || mensaje == ''"
+    [showCancelar]="true"
+    [mensaje]="mensaje"
+>
+</mensajeria-flujo-navegacion>
+
+<!-- <pre>
+{{ listaDestinatariosResponderAflujo()  | json }}
+</pre> -->

@@ -4,12 +4,9 @@
       <div class="flex flex-column align-items-center gap-1">
         <div class="flex">
           <img src="assets/images/user/avatar-1.png" alt="user-image" class="user-avatar" />
-          <div class="user-setting">
+          <!-- <div class="user-setting">
             <a href="javascript:" [matMenuTriggerFor]="menu" class="text-muted absolute right-0 mr-3">
               <i class="ti ti-dots-vertical f-18"></i>
-              <!-- <svg class="pc-icon">
-                <use xlink:href="assets/fonts/custom-icon.svg#custom-sort-outline"></use>
-              </svg> -->
             </a>
             <mat-menu #menu="matMenu" [overlapTrigger]="false" yPosition="below" xPosition="after">
               <button mat-menu-item>
@@ -24,7 +21,7 @@
                   <span>Settings</span>
                 </a>
               </button>
-              <button mat-menu-item [matMenuTriggerFor]="roles">
+              <button mat-menu-item [matMenuTriggerFor]="currentUser().Roles.length > 1 ? roles : ''">
                 <a href="javascript:" class="text-muted" [routerLink]="['/application/profile/account/settings']">
                   <i class="ti ti-lock f-18 m-r-10"></i>
                   <span>Cambiar Rol</span>
@@ -44,15 +41,18 @@
               </button>
             </mat-menu>
 
-            <mat-menu #roles="matMenu">
-              @for (rol of currentUser().Roles; track rol) {
-                @if ( rol.Nombre != currentRol()?.rol ) {
-                  <button mat-menu-item (click)="changeRol(rol)">{{ rol.Nombre }}</button>
+     
+
+              <mat-menu #roles="matMenu">
+                @for (rol of currentUser().Roles; let isLast = $last; track rol) {
+                  @if ( rol.Nombre != currentRol()?.rol ) {
+                    <button mat-menu-item (click)="changeRol(rol)">{{ rol.Nombre }}</button>
+                  }
                 }
-              }
-              <!-- <button mat-menu-item>Consejo Universitario</button> -->
-            </mat-menu>
-          </div>
+
+              </mat-menu>
+            
+          </div> -->
         </div>
         <div class="">
           <div class="f-w-600 text-center f-12">{{ currentUser()?.ApellidosyNombres }}</div>

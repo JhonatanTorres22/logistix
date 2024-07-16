@@ -7,7 +7,6 @@ import { SemestreAcademico } from "../domain/models/semestre-academico.model";
 import { FacultadPageComponent } from "./facultades-page/facultad-page.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SemestreAddComponent } from "./semestre-academico-page/semestre-add/semestre-add.component";
-import { SemestreAcademicoDomainService } from "../domain/services/semestre-academico-domain.service";
 import { FormBuilder, Validators } from "@angular/forms";
 import { SemestreListComponent } from "./semestre-academico-page/semestre-list/semestre-list.component";
 import { UiButtonComponent } from "src/app/core/components/ui-button/ui-button.component";
@@ -31,6 +30,7 @@ import { AsignacionSignal } from "../domain/signals/asignacion.signal";
 import { AlertService } from "src/app/demo/services/alert.service";
 import { AsignarNuevoPrograma } from "../domain/models/asignacion.model";
 import { AsignacionRepository } from "../domain/repositories/asignacion.repository";
+import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 
 
 @Component({
@@ -59,8 +59,8 @@ export class ProgramasAcademicosComponent implements OnInit {
     asignaciones = this.asignacionSignal.asignaciones;
     // semestreAcademico: SemestreAcademico;
     
-    semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
-    semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
+    semestresAcademicos = this.semestreSignal.semestresAcademicos;
+    semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
 
     semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
@@ -75,7 +75,6 @@ export class ProgramasAcademicosComponent implements OnInit {
     constructor( 
         
         private dialog: MatDialog,
-        private semestreAcademicoDomainService: SemestreAcademicoDomainService,
         private programaSignal: ProgramaSignal,
         private semestreSignal: SemestreSignal,
         private facultadSignal: FacultadSignal,
@@ -84,6 +83,7 @@ export class ProgramasAcademicosComponent implements OnInit {
         private asignacionSignal: AsignacionSignal,
         private localSignal: LocalSignal,
         private alertService: AlertService,
+        private auth: AuthSignal,
         private asignacionRepository: AsignacionRepository
     ) {
       effect(() => {
@@ -145,7 +145,7 @@ export class ProgramasAcademicosComponent implements OnInit {
           idLocales: localesId,
           idPrograma: this.programaSelect().id,
           idSemestre: this.semestreSelect().id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
 
         console.log(newPrograma);

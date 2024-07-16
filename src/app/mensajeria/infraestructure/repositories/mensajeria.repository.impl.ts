@@ -1,7 +1,13 @@
 import { Injectable } from "@angular/core";
 import { MensajeriaRepository } from "../../domain/repositories/mensajeria.repository";
 import { Observable } from "rxjs";
-import { MensajeriaArchivados, MensajeriaCerrarArchivar, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaLeerMensaje, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponder } from "../../domain/models/mensajeria.model";
+import { 
+    MensajeriaArchivados, MensajeriaCerrarArchivar,
+    MensajeriaEnviados, MensajeriaEnviarNuevoMensaje,
+    MensajeriaHistorialMensajes, MensajeriaInsertar,
+    MensajeriaLeerMensaje, MensajeriaNuevoMensajeList,
+    MensajeriaRecibidos, MensajeriaResponderAList,
+    MensajeriaResponderAlta } from "../../domain/models/mensajeria.model";
 import { MensajeriaService } from "../services/mensajeria.service";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -13,7 +19,7 @@ import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface"
 
 export class MensajeriaRepositoryImpl implements MensajeriaRepository {
 
-    constructor( private service: MensajeriaService ) {}
+    constructor( private service: MensajeriaService ) {}   
     
     
     insertar(mensaje: MensajeriaInsertar): Observable<void> {
@@ -36,7 +42,7 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
         return this.service.obtenerMensajesHistorial( idMensaje );
     }
     
-    responderMensaje(mensaje: MensajeriaResponder): Observable<void> {
+    responderMensajeAlta(mensaje: MensajeriaResponderAlta): Observable<void> {
         return this.service.responderMensaje( mensaje );
     }
     
@@ -62,5 +68,12 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
         return this.service.nuevoMensajeA( idTipoMensaje )
     }
 
+    enviarNuevoMensaje(mensaje: MensajeriaEnviarNuevoMensaje): Observable<void> {
+        return this.service.enviarNuevoMensaje( mensaje );
+    }
+
+    responderMensajeA(idMensaje: number): Observable<MensajeriaResponderAList[]> {
+        return this.service.responderAList( idMensaje )
+    }
 
 }
