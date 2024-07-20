@@ -45,6 +45,10 @@ const routes: Routes = [
        
       },
       {
+        path: 'cursos',
+        loadChildren: () => import('./plan-de-estudios/ui/curso-page/curso.module').then( (m) => m.CursoModule )
+      },
+      {
         path: 'mensajeria',
         loadChildren: () => import('./mensajeria/mensajeria.module').then( (m) => m.MensajeriaModule),
         canActivate: [ PathGuard ],

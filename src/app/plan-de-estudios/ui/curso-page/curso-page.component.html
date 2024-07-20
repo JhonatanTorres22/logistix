@@ -1,1 +1,18 @@
+<mat-divider></mat-divider>
+<br>
+<ciclo-page></ciclo-page>
+<ui-button color="blue" class="ml-2" (onClick)="showPlanes( planEstudioList )"> Asignar A Plan de Estudio </ui-button>
+
 <curso-list class="flex flex-column md:flex-row gap-2 align-item-start justify-content-between w-full"></curso-list> <!-- flex flex-column md:flex-row gap-2 align-item-start justify-content-between w-full -->
+
+
+<ng-template #planEstudioList>
+    <mat-dialog-content>
+        <plan-estudio-list></plan-estudio-list>
+    </mat-dialog-content>
+    {{ planEstudioSelect().resolucion }}
+    <mat-dialog-actions align="end">
+        <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+        <ui-button color="primary" [label]="planEstudioSelect().id != 0 ? 'Asignar' : 'Seleccione un Plan'" [disabled]="planEstudioSelect().id == 0 || planEstudioSelect().resolucion !== null" (onClick)="onSubmit()"></ui-button>
+      </mat-dialog-actions>
+</ng-template>

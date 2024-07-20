@@ -15,8 +15,8 @@ import { CursoService } from "../services/curso.service";
 
     }
 
-     obtener(): Observable<Curso[]> {
-        return this.service.obtener();
+     obtenerPorPrograma( idPrograma: number ): Observable<Curso[]> {
+        return this.service.obtenerPorPrograma( idPrograma );
      }
 
      agregar(curso: CursoCrear): Observable<void> {

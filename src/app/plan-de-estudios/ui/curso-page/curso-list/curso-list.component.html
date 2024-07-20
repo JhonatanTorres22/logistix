@@ -5,7 +5,7 @@
     
             <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
                 <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-                    {{ ciclo.ciclo}}
+                    {{ getNombreCiclo(ciclo.idCiclo)?.definicion }}
                 </div>
             </div>
             <div class="flex flex-column gap-2 example-list"
@@ -15,17 +15,18 @@
                 @for ( curso of ciclo.cursos; track curso) {
                     
                     <div
-                        (click)="openCurso( template1, ciclo, curso )"
+                        
                         cdkDrag
                         [cdkDragStartDelay]="1000"
                         class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
-                        style="min-height: 5rem; max-height: 5rem;">
+                        style="min-height: 5rem; max-height: 7rem;">
                         <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                        <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500">{{ curso.codigoCurso }}</div>
-                        <div class="f-8 m-0 capitalize text-center">{{ curso.nombreCurso }}</div>
-                        <div class="flex">
+                        <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
+                        <div class="f-8 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
+                        <div class="flex justify-content-around my-2 gap-2">
                             <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
-                            <ui-button color="accent" tooltip="Agregar Pre Requisito" icon="ti ti-shield-lock f-12" classButton="h-1rem"></ui-button>
+                            <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-1rem" (onClick)="openCurso( template1, ciclo, curso )"></ui-button>
+                            <ui-button color="green" tooltip="Agregar Pre Requisito" icon="ti ti-shield-lock f-12" classButton="h-1rem" (onClick)="addPreRequisito( curso )"></ui-button>
                         </div>
                     </div>
     

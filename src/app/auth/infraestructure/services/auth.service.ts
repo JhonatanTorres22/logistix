@@ -41,7 +41,7 @@ export class AuthService {
         this.currentUser = this.currentUserSubject.asObservable();
 
         effect( () => {
-          console.log('algo cambió');
+          // console.log('algo cambió');
           
         })
       }
@@ -105,7 +105,7 @@ export class AuthService {
       const menu = AuthMapper.fromDomainToTemplateMenu(menusToRoleOfUsersDomain[0].menus)
       localStorage.setItem('currentMenu', JSON.stringify([menu]));
       localStorage.setItem('currentRol', JSON.stringify(menusToRoleOfUsersDomain[0]));
-      console.log(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion);
+      // console.log(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion);
       // if(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion != 'undefined') {
         localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeriaSignal.mensajeriaInsertarDataAsignacion()));
       // }

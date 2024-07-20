@@ -13,6 +13,8 @@ import { CursoAddComponent } from '../curso-add/curso-add.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { UiModalTemplateComponent } from 'src/app/core/components/ui-modal-template/ui-modal-template.component';
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
+import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
+import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
 
 
 @Component({
@@ -25,32 +27,38 @@ import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 export class CursoListComponent implements OnInit {
 
   cursosByCiclos = this.signal.cursosByCiclos;
+  cicloList = this.cicloSignal.cicloList;
+  cursosList = this.signal.cursosList;
   
   constructor( 
     private repository: CursoRepository,
     private service: CursoService,
+    private cicloRepository: CicloRepository,
     private alert: AlertService,
     private signal: CursoSingal,
+    private cicloSignal: CicloSingal,
     private modal: UiModalService
 
   ) {}
 
   ngOnInit(): void {
     this.obtener();
+    this.obtenerCiclos();
   }
 
 
   obtener() {
-    this.repository.obtener().subscribe({
+    this.repository.obtenerPorPrograma( 1 ).subscribe({
       next: ( cursos ) => {
-        // console.log( cursos );
+        console.log( cursos );
+        this.cursosList.set( cursos )
         const cursoByCiclo = cursos.reduce( ( a: CursoByCiclo[], b: Curso ) => {
 
-          const existeCiclo = a.findIndex( a => a.ciclo == b.ciclo);
+          const existeCiclo = a.findIndex( a => a.idCiclo == b.idCiclo);
             if( existeCiclo == -1 ) {
 
               const newCiclo: CursoByCiclo = {
-                ciclo: b.ciclo,
+                // ciclo: b.id,
                 idCiclo: b.idCiclo,
                 cursos: [b]
               }
@@ -64,7 +72,7 @@ export class CursoListComponent implements OnInit {
           return a
         }, [] )
         console.log( cursoByCiclo );
-        this.cursosByCiclos.set( cursoByCiclo.sort( ( a, b) => parseInt( a.ciclo ) - parseInt( b.ciclo ) ) )
+        this.cursosByCiclos.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
         console.log();
       }, error: ( error ) => {
         console.log(error);
@@ -73,17 +81,17 @@ export class CursoListComponent implements OnInit {
     })
   }
 
-  obtenerMSW() {
-    this.service.obtenerMSW().subscribe({
-      next: ( data ) => {
-        console.log(data);
+  // obtenerMSW() {
+  //   this.service.obtenerMSW().subscribe({
+  //     next: ( data ) => {
+  //       console.log(data);
         
-      }, error: ( error ) => {
-        console.log( error );
+  //     }, error: ( error ) => {
+  //       console.log( error );
         
-      }
-    })
-  }
+  //     }
+  //   })
+  // }
 
 
   drop(event: CdkDragDrop<string[]>) {
@@ -115,8 +123,33 @@ export class CursoListComponent implements OnInit {
         return
       }
 
+      this.obtener();
+
     });
   }
 
+  obtenerCiclos() {
+    this.cicloRepository.obtener().subscribe({
+      next: ( ciclos ) => {
+        console.log( ciclos );
+        this.cicloList.set( ciclos )
+      }, error: ( error ) => {
+        console.log( error );
+        
+      }
+    })
+  }
+
+  getNombreCiclo( idCiclo: number ): Ciclo {
+    const ciclo = this.cicloList().find( ciclo => ciclo.id == idCiclo );
+
+    return ciclo!
+  }
+
+  addPreRequisito = ( curso: Curso) => {
+    this.alert.sweetAlert('info', 'ATENCIÓN', 'PENDIENTE DE IMPLEMENTAR');
+    console.log(curso);
+    
+  }
 
 }

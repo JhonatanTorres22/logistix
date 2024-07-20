@@ -1,13 +1,15 @@
-<mat-form-field appearance="outline" class="w-100 m-t-5">
+<mat-form-field appearance="outline" class="w-100 m-t-5" [ngClass]="classInput">
   <mat-label>{{ label }}</mat-label>
   <input
-  (input)="onInput($event)"
+  (input)="onInput($event); onInputEvent.emit( $event )"
+  
     [expReg]="expReg"
     [readonly]="readonly" 
     [formControl]="formControl"
     [type]="hide ? type : hide"
     matInput
     [maxlength]="maxlength"
+    [minlength]="minlength"
     autocomplete="off"
     UpperCase
     />
@@ -20,19 +22,19 @@
   <mat-hint align="end">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
   
   @if (formControl?.hasError('maxlength')) {
-    <mat-error>Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
+    <mat-error class="mt-4">Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
   }
   @if (formControl?.hasError('minlength')) {
-    <mat-error>Este campo debe tener como mínimo {{ minlength }} caracteres</mat-error>
+    <mat-error class="mt-4">Este campo debe tener como mínimo {{ minlength }} caracteres</mat-error>
   }
   @if (formControl?.hasError('required')) {
-    <mat-error>Este campo es obligatorio</mat-error>
+    <mat-error class="mt-4">Este campo es obligatorio</mat-error>
   }
   @if (formControl?.hasError('pattern')) {
-    <mat-error>{{ patternErrorMessage }}</mat-error>
+    <mat-error class="mt-4">{{ patternErrorMessage }}</mat-error>
   }
   @if (formControl?.hasError('codigoDuplicado')) {
-    <mat-error>Esta campo está siendo duplicado</mat-error>
+    <mat-error class="mt-4">Esta campo está siendo duplicado</mat-error>
   }
 </mat-form-field>
 

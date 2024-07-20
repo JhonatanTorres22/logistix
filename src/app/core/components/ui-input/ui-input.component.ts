@@ -21,7 +21,7 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   }
 
   hide: boolean = true;
-  // @Output() onInput: EventEmitter<string> = new EventEmitter();
+  @Output() onInputEvent: EventEmitter<string> = new EventEmitter();
   @Input() label = '';
   @Input() type = '';
   @Input() readonly: boolean = false;

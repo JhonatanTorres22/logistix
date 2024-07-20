@@ -3,31 +3,36 @@
         <form [formGroup]="formCurso">
             <div class="flex gap-2">
                 <!-- <ui-input class="w-full" label="Programa" formControlName="programa" ></ui-input> -->
-                <ui-input classInput="small" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput"></ui-input>
+                <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" ></ui-select>
+                <ui-input class="w-full" label="Codigo del Curso" formControlName="codigoCurso" [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput"></ui-input>
+                
             </div>
             <div class="flex gap-2">
-                <ui-input classInput="small" class="w-full" label="Nombre del Curso" formControlName="nombreCurso" [maxlength]="maxLengthNombreCurso" [minlength]="minLengthNombreCurso" [expReg]="expRegNombreCursoBlockToInput"></ui-input>
+                <ui-input class="w-full" label="Nombre del Curso" formControlName="nombreCurso" [maxlength]="maxLengthNombreCurso" [minlength]="minLengthNombreCurso" [expReg]="expRegNombreCursoBlockToInput"></ui-input>
+            </div>
+            <div class="flex gap-2">
+                <ui-input class="w-full" label="Descripción del Curso" formControlName="descripcion" [maxlength]="maxLengthDescripcion" [minlength]="minLengthDescripcion" [expReg]="expRegDescripcionBlockToInput"></ui-input>
             </div>
             <div class="flex flex-column md:flex-row gap-2">
-                <ui-select classInput="small" label="Tipo de Estudio" formControlName="tipoEstudio" [options]="optionsTipoEstudio" ></ui-select>
-                <ui-select classInput="small" label="Tipo de Curso" formControlName="tipoCurso" [options]="optionsTipoCurso" ></ui-select>
+                <ui-select label="Tipo de Estudio" formControlName="tipoEstudio" [options]="optionsTipoEstudio" ></ui-select>
+                <ui-select label="Tipo de Curso" formControlName="tipoCurso" [options]="optionsTipoCurso" ></ui-select>
 
                 <!-- <ui-input label="Tipo de Curso" formControlName="tipoCurso" ></ui-input> -->
             </div>
             <!-- <ui-input label="Competencia" formControlName="competencia" ></ui-input> -->
-            <ui-select classInput="small" label="Competencia" formControlName="competencia" [options]="optionsCompetencia" ></ui-select>
+            <ui-select label="Competencia" formControlName="competencia" [options]="optionsCompetencia" ></ui-select>
             <div class="flex flex-column md:flex-row gap-2">
-                <ui-input classInput="small" label="Horas Teoricas" formControlName="horasTeoricas" [maxlength]="maxLengthHorasTeoricas" [minlength]="minLengthHorasTeoricas" [expReg]="expRegHorasTeoricasBlockToInput" ></ui-input>
-                <ui-input classInput="small" label="Horas Practicas" formControlName="horasPracticas" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput" ></ui-input>
+                <ui-input label="Horas Teoricas" formControlName="horasTeoricas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasTeoricas" [minlength]="minLengthHorasTeoricas" [expReg]="expRegHorasTeoricasBlockToInput" ></ui-input>
+                <ui-input label="Horas Practicas" formControlName="horasPracticas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput" ></ui-input>
             </div>
-            <!-- <div class="flex gap-2">
-                <ui-input label="Total de Horas" formControlName="totalHoras" [model]="totalHorasModel" [maxlength]="maxLengthTotalHoras" [minlength]="minLengthTotalHoras" [expReg]="expRegTotalHorasBlockToInput" ></ui-input>
+            <div class="flex gap-2">
+                <ui-input label="Total de Horas" formControlName="totalHoras" [readonly]="true" [maxlength]="maxLengthTotalHoras" [minlength]="minLengthTotalHoras" [expReg]="expRegTotalHorasBlockToInput" ></ui-input>
                 <ui-input label="Total de Creditos" formControlName="totalCreditos" [maxlength]="maxLengthTotalCreditos" [minlength]="minLengthTotalCreditos" [expReg]="expRegTotalCreditosBlockToInput" ></ui-input>
-            </div> -->
-            <div class="flex flex-column md:flex-row gap-2 justify-content-around">
+            </div>
+            <!-- <div class="flex flex-column md:flex-row gap-2 justify-content-around">
                 <span class="bg-primary-100 text-primary-700 f-w-600 border-round p-2 text-center">Total Horas: {{ (formCurso.value.horasPracticas * 1) + (formCurso.value.horasTeoricas * 1) }}</span>
                 <span class="bg-success-100 text-success-700 f-w-600 border-round p-2 text-center">Total Creditos: {{ (formCurso.value.horasPracticas * 1) + (formCurso.value.horasTeoricas * 0.5) }}</span>
-            </div>
+            </div> -->
             
         </form>
 

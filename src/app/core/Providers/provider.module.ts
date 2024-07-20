@@ -14,6 +14,12 @@ import { UsuarioRolRepository } from "src/app/usuarios/domain/repositories/usuar
 import { UsuarioRepository } from "src/app/usuarios/domain/repositories/usuario.repository";
 import { UsuarioRolRepositoryImp } from "src/app/usuarios/infraestructure/repositories/usuario-rol.repository.impl";
 import { UsuarioRepositoryImpl } from "src/app/usuarios/infraestructure/repositories/usuario.repository.impl";
+import { PlanEstudioRepository } from "src/app/plan-de-estudios/domain/repositories/plan-estudio.repository";
+import { PlanEstidoRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/plan-estudio.repository.impl";
+import { CicloRepository } from "src/app/plan-de-estudios/domain/repositories/ciclo.repository";
+import { CursoRepository } from "src/app/plan-de-estudios/domain/repositories/curso.repository";
+import { CicloRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/ciclo.repository.impl";
+import { CursoRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/curso.repository.impl";
 
 
 @NgModule({
@@ -29,7 +35,9 @@ import { UsuarioRepositoryImpl } from "src/app/usuarios/infraestructure/reposito
             { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
             { provide: UsuarioRepository, useClass: UsuarioRepositoryImpl },
             { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl },
-
+            { provide: PlanEstudioRepository, useClass: PlanEstidoRepositoryImpl },
+            { provide: CicloRepository, useClass: CicloRepositoryImpl },
+            { provide: CursoRepository, useClass: CursoRepositoryImpl },
 
         ]
     ]

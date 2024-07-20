@@ -29,7 +29,7 @@ export class AuthenticationService {
   ) {
 
     const currentUserData = JSON.parse(localStorage.getItem('currentUserData')!)
-    console.log( currentUserData );
+    // console.log( currentUserData );
     
     let currentUserDataJSON = {
       ...currentUserData,
@@ -119,7 +119,7 @@ export class AuthenticationService {
     //   console.log(menuItem.url?.substring(1))
       
     // })
-    console.log(authorided);
+    // console.log(authorided);
 
     return authorided ? true : false;
     // return true;

@@ -110,6 +110,10 @@ export class MensajeriaFlujoNavegacionComponent {
 
   onCerrarProcesoConfirm = () => {
     console.log( 'ver opciones ');
+    const mensajeCerrar: MensajeriaCerrarArchivar = {
+      idMensaje: this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje,
+      usuarioId: parseInt( this.auth.currentRol().id )
+    } 
     switch( (this.mensajesHistorial()[ this.mensajesHistorial().length - 1].asunto ).substring(0, 3) ) {
       
       case 'DAR': { 
@@ -119,14 +123,16 @@ export class MensajeriaFlujoNavegacionComponent {
        }; break;
       case 'VAL': { 
 
+        this.onValidacionPlanEstudioConfirm( mensajeCerrar );
+
        }; break;
       case 'CAM': { 
-
+        this.onCambioPlanEstudioConfirm( mensajeCerrar );
        }; break;
     }
   }
 
-  onValidacionPlanEstudioConfirm = () => {
+  onValidacionPlanEstudioConfirm = ( mensajeCerrar: MensajeriaCerrarArchivar ) => {
 
     this.alert.sweetAlert( 'question', 'Confirmación', `¿Está seguro que desea APROBAR la validación del Plan de Estudios?`)
       .then( isConfirm => {
@@ -134,7 +140,7 @@ export class MensajeriaFlujoNavegacionComponent {
           return
         }
 
-        this.cerrarArchivar().then( completedSuccessfully => {
+        this.cerrarArchivar( mensajeCerrar ).then( completedSuccessfully => {
           if (!completedSuccessfully) {
             console.log('Hubo un error al archivar')
           }
@@ -142,7 +148,7 @@ export class MensajeriaFlujoNavegacionComponent {
           this.alert.showAlert('Se aprobó la VALIDACIÓN y VIGENCIA DEL PLAN DE ESTUDIOS, y el Mensaje fué CERRADO y ARCHIVADO.', 'success', 6);
           // console.log('No tenía Alta, ahora si está dado de ALTA');
           this.signal.setMensajeriaDataAsignacionDefault();
-          this.modal.getRefModal().close();
+          this.modal.getRefModal()?.close();
           // this.mensajesHistorial
           setTimeout(() => {
             this.signal.renderizarMensajes.set( 'Alta' );
@@ -154,7 +160,7 @@ export class MensajeriaFlujoNavegacionComponent {
 
   }
 
-  onCambioPlanEstudioConfirm = () => {
+  onCambioPlanEstudioConfirm = ( mensajeCerrar: MensajeriaCerrarArchivar ) => {
 
     this.alert.sweetAlert( 'question', 'Confirmación', `¿Está seguro que desea APROBAR el NUEVO del Plan de Estudios?`)
       .then( isConfirm => {
@@ -162,7 +168,7 @@ export class MensajeriaFlujoNavegacionComponent {
           return
         }
 
-        this.cerrarArchivar().then( completedSuccessfully => {
+        this.cerrarArchivar( mensajeCerrar ).then( completedSuccessfully => {
           if (!completedSuccessfully) {
             console.log('Hubo un error al archivar')
           }
@@ -170,7 +176,7 @@ export class MensajeriaFlujoNavegacionComponent {
           this.alert.showAlert('Se aprobó el NUEVO PLAN DE ESTUDIOS, y el Mensaje fué CERRADO y ARCHIVADO.', 'success', 6);
           // console.log('No tenía Alta, ahora si está dado de ALTA');
           this.signal.setMensajeriaDataAsignacionDefault();
-          this.modal.getRefModal().close();
+          this.modal.getRefModal()?.close();
           // this.mensajesHistorial
           setTimeout(() => {
             this.signal.renderizarMensajes.set( 'Alta' );

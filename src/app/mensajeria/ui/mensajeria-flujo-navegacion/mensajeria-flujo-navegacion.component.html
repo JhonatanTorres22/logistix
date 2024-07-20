@@ -6,7 +6,7 @@
     }
 
     @for (option of allDestinatario; let isLast = $last; track option) {
-
+      
       @switch ( option.flujoNavegacion ) {
         @case ('RETROCEDER') {
             <ui-button color="orange" borde="3xl"
