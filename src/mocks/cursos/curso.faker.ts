@@ -21,24 +21,24 @@ export const generarCursos = ( cantidad: number, ciclo: string, idCiclo: number 
         const horasPracticas = faker.helpers.rangeToNumber( { min: 0, max: 6});
         const totalCreditos = faker.helpers.rangeToNumber( { min: 3, max: 5});
 
-        const curso: Curso = {
-            id,
-            programa,
-            codigoCurso,
-            ciclo: ciclo,
-            idCiclo: idCiclo,
-            nombreCurso,
-            tipoEstudio,
-            tipoCurso,
-            competencia,
-            horasTeoricas,
-            horasPracticas,
-            totalHoras: horasTeoricas + horasPracticas,
-            totalCreditos,
-            preRequisito: []
-        }
+        // const curso: Curso = {
+        //     id,
+        //     // programa,
+        //     codigoCurso,
+        //     ciclo: ciclo,
+        //     idCiclo: idCiclo,
+        //     nombreCurso,
+        //     tipoEstudio,
+        //     tipoCurso,
+        //     competencia,
+        //     horasTeoricas,
+        //     horasPracticas,
+        //     totalHoras: horasTeoricas + horasPracticas,
+        //     totalCreditos,
+        //     preRequisito: []
+        // }
 
-        cursosList.push( curso );
+        // cursosList.push( curso );
 
         
     }

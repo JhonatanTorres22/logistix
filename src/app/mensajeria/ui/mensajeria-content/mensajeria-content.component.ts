@@ -73,7 +73,7 @@ export class MensajeriaContentComponent implements OnInit {
   ) {
     effect( () => {
 
-      console.log( 'uhmm',  );
+      // console.log( 'uhmm',  );
       if( !this.modoTablet() ) {
         this.backToMail.set({
           titleContent: true,
@@ -86,7 +86,7 @@ export class MensajeriaContentComponent implements OnInit {
       // localStorage.setItem('mensajeriaData', JSON.stringify(this.signal.mensajeriaAsignacionDefault))
       // this.mensajeriaData.update( () => this.signal.mensajeriaAsignacionDefault )
       this.signal.tipoBandeja.set( this.tipoBandeja );
-      console.log(this.tipoBandeja);
+      // console.log(this.tipoBandeja);
       
       switch( this.tipoBandeja ) {
         case 'Recibidos': { 
@@ -186,7 +186,7 @@ export class MensajeriaContentComponent implements OnInit {
     this.showFadeIn = true;
     
     mail.leido ? '' : this.onLeido( mail );
-    console.log('Ver mensaje', mail);
+    // console.log('Ver mensaje', mail);
     this.obtenerHistorialMensajes( mail.idMensaje );
     this.selectMensaje.set( mail );
     this.signal.showFormNuevoMensaje.set( false );
@@ -203,11 +203,11 @@ export class MensajeriaContentComponent implements OnInit {
   }
 
   obtenerHistorialMensajes( idMensaje: number ) {
-    console.log(idMensaje);
+    // console.log(idMensaje);
     
     this.repository.obtenerMensajesHistorial( idMensaje ).subscribe({
       next: ( mensajesHistorial ) => {
-        console.log(mensajesHistorial);
+        // console.log(mensajesHistorial);
         this.signal.setMensajesHistorial( mensajesHistorial );
         this.showFadeIn = false;
 

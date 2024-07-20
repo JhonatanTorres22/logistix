@@ -79,7 +79,7 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
     /* BREAKING POINTS ANGULAR */
 
     effect( () => {
-      console.log( this.signal.renderizarMensajes() );
+      // console.log( this.signal.renderizarMensajes() );
       switch( this.signal.renderizarMensajes() ) {
         case 'Enviados': {
           this.showFormNuevoMensaje.set( false );
@@ -173,8 +173,8 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
   onSelect = () => {
     this.semestreSelect.set( this.semestreSelected );
     this.modal.getRefModal().close();
-    console.log( this.semestreSelected );
-    console.log(this.semestreSelect());
+    // console.log( this.semestreSelected );
+    // console.log(this.semestreSelect());
     
     
     this.nuevoMensaje('');
@@ -182,7 +182,7 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
 
   tabChanged(index: number) {
     this.selectedTabIndex = index;
-    console.log(index);
+    // console.log(index);
     this.signal.showFormNuevoMensaje.set( false );
     
   }
@@ -238,7 +238,7 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
     this.repository.obtenerMensajesEnviados().subscribe({
       next: ( mensajesEnviados ) => {
         this.signal.setMensajesEnviados( mensajesEnviados );
-        console.log(mensajesEnviados);
+        // console.log(mensajesEnviados);
         
       }, error: ( error ) => {
         console.log(error);
@@ -251,7 +251,7 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
     this.repository.obtenerMensajesArchivados().subscribe({
       next: ( mensajesArchivados ) => {
         this.signal.setMensajesArchivados( mensajesArchivados );
-        console.log(mensajesArchivados);
+        // console.log(mensajesArchivados);
         
       }, error: ( error ) => {
         console.log(error);

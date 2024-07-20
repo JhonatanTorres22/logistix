@@ -7,7 +7,7 @@ export const PathGuard: CanActivateFn = (route, state) => {
   const router = inject(Router)
   const conexion = inject(AuthenticationService)
 
-  console.log(route);
+  // console.log(route);
   
 
   // conexion.isAuthorized(router.url);

@@ -1,23 +1,125 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="email-page" [ngClass]="{ 'mini-list': mailListHight }">
+          <!-- TOOLBAR START-->
+          <mat-drawer-content class="m-0">
+            <mat-toolbar class="h-auto mt-2 overflow-hidden bg-white border-round border-1 border-gray-300" style="margin: 0px;">
+              <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+                <mat-icon>menu</mat-icon>
+              </button> -->
+              <!-- <span>My App</span> -->
+              <button mat-flat-button color="primary" class="align-items-center mx-1" (click)="nuevoMensaje( templateSemestreList )">
+                <div class="flex align-item-center f-14"> <i class="ti ti-circle-plus f-18"></i><span class="hidden ml-2 sm:block">Mensaje Nuevo</span></div>
+              </button>
+              <ui-button classButton="align-items-end" color="white" type="sweet" (onClick)="mail.toggle(); toggle()" style="margin-bottom: 0.3rem;">
+                <i class="ti ti-mailbox f-22 text-primary"></i>
+              </ui-button>
+              <ui-button classButton="align-items-end" color="white" type="sweet" (onClick)="onClick()" style="margin-bottom: 0.3rem;">
+                <i class="ti ti-arrows-vertical text-green-700 f-22"></i>
+              </ui-button>
+              @if( semestreSelect().id != 0 ) {
+                <ui-button classButton="align-items-end" class="f-14" color="white" [label]="semestreSelect().codigo" type="sweet" (onClick)="showModalSemestres( templateSemestreList )"></ui-button>
+              }
+              <!-- <ul class="list-inline ml-2">
+                <li class="list-inline-item">
+  
+                </li>
+                <li class="list-inline-item">
+                </li>
+  
+              </ul> -->
+              <span class="spacer"></span>
+              <mat-select class="w-13rem min-w-10 border-round border-1 border-gray-300 hidden ml-2 sm:block" value="All" style="padding: 0.45rem;">
+                <mat-option value="All">Todos</mat-option>
+                <mat-option value="Alta">Alta Director de Escuela</mat-option>
+                <mat-option value="Validar">Validar Plan de Estudios</mat-option>
+            </mat-select>
+              <!-- <ul class="list-inline mx-2">
+                <li class="list-inline-item w-13rem bg-white">
+                    <mat-select class="w-full min-w-10 small border-round border-1 border-gray-300" value="All" style="">
+                        <mat-option value="All">Todos</mat-option>
+                        <mat-option value="Alta">Alta Director de Escuela</mat-option>
+                        <mat-option value="Validar">Validar Plan de Estudios</mat-option>
+                    </mat-select>
+                </li>
+        
+              </ul> -->
+              <mat-form-field appearance="outline" class="small mx-1">
+                <input matInput placeholder="Buscar..." autocomplete="off" />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+              <!-- <ul class="list-inline search-bar flex align-item-center">
+                <li class="list-inline-item bg-white">
+                </li>
+              </ul> -->
+              <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+                <mat-icon>favorite</mat-icon>
+              </button>
+              <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+                <mat-icon>share</mat-icon>
+              </button> -->
+            </mat-toolbar>
+          </mat-drawer-content>
+          
+          <!-- <div class="mail-content-header border-1 border-gray-300 flex flex-column sm:flex-row justify-content-between align-item-center bg-white border-round shadow-1 mb-2 fixed" style="margin-top: 1.3rem; z-index: 199; padding: 1px 3px 1px 3px">
+            <button mat-flat-button color="primary" class="align-items-center" (click)="nuevoMensaje( templateSemestreList )">
+              <div class="flex align-item-center"> <i class="ti ti-circle-plus f-18 m-r-10"></i> Mensaje Nuevo </div>
+            </button>
+            <ul class="list-inline ml-2">
+              <li class="list-inline-item">
+              <ui-button classButton="p-0 min-w-0" color="white" type="sweet" (onClick)="mail.toggle(); toggle()">
+                <i class="ti ti-mailbox f-22 text-primary"></i>
+              </ui-button>
+
+              </li>
+              <li class="list-inline-item">
+                <ui-button classButton="p-0 min-w-0" color="white" type="sweet" (onClick)="onClick()">
+                  <i class="ti ti-arrows-vertical text-green-700 f-18"></i>
+                </ui-button>
+              </li>
+
+            </ul>
+            @if( semestreSelect().id != 0 ) {
+              <ui-button color="white" type="sweet" (onClick)="showModalSemestres( templateSemestreList )"><span class="">{{ semestreSelect().codigo }}</span></ui-button>
+            }
+            <span class="spacer"></span>
+            <ul class="list-inline mx-2">
+              <li class="list-inline-item w-13rem bg-white p-2 border-round border-1 border-gray-300">
+                  <mat-select class="w-full min-w-10" value="All">
+                      <mat-option value="All">Todos</mat-option>
+                      <mat-option value="Alta">Alta Director de Escuela</mat-option>
+                      <mat-option value="Validar">Validar Plan de Estudios</mat-option>
+                  </mat-select>
+              </li>
+      
+            </ul>
+            <ul class="list-inline search-bar flex align-item-center">
+              <li class="list-inline-item bg-white">
+                <mat-form-field appearance="outline" class="small">
+                  <input matInput placeholder="Buscar..." autocomplete="off" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+              </li>
+            </ul>
+          </div> -->
+          <!-- TOOLBAR END -->
             <mat-drawer-container class="email-tabs-email">
+              
                 <!-- NAVEGACION START -->
-                <mat-drawer #mail class="email-filter" [mode]="modeValue" [opened]="status">
+                <mat-drawer #mail class="email-filter" [mode]="modeValue" [opened]="status" style="margin-top: 2.05rem;width: 11rem;">
+                  
                     <app-card [showHeader]="false" [padding]="0">
-                      <div class="p-x-20 p-t-20 p-b-15">
+                      <!-- <div class="p-x-20 p-t-20 p-b-15">
                         <div class="grid">
-                          <!-- <ui-button-split label="Nuevo Mensaje" size="sm" classButton="z" (onClick)="onClickNewMessage( $event )"></ui-button-split> -->
-                          <!-- <button mat-button [matMenuTriggerFor]="animals">Animal index</button> -->
                           <button mat-flat-button color="primary" (click)="nuevoMensaje( templateSemestreList )">
                             <div class="flex align-item-center"> <i class="ti ti-circle-plus f-18 m-r-10"></i> Mensaje Nuevo </div>
                           </button>
                           
                         </div>
-                      </div>
+                      </div> -->
                       <!-- <img class="border-circle  fadeinleft animation-duration-500 w-5rem m-auto block mb-3" src="./assets/images/mensajeria/icons-gif/correo-electronico-red.gif"> -->
-                      <mat-divider></mat-divider>
-                      <ng-scrollbar style="height: calc(100vh - 14rem)" visibility="hover" class="mt-2">
+                      <!-- <mat-divider></mat-divider> -->
+                      <ng-scrollbar style="height: calc(100vh - 219px)" visibility="hover" class="mt-2">
                         <div class=""> <!-- p-x-10 -->
                           <mat-tab-group (selectedIndexChange)="tabChanged($event)" class="email-column-item">
                             <mat-tab>
@@ -53,54 +155,7 @@
                 <!-- NAVEGACION END -->
                 <!-- CONTAINER START -->
                 <mat-drawer-content class="p-l-10"> <!-- p-l-25 -->
-                    <!-- TOOLBAR START-->
-                    <div class="mail-content-header">
-                      <ul class="list-inline ml-2">
-                        <li class="list-inline-item">
-                          <a class="avatar avatar-s bg-white text-muted" (click)="mail.toggle(); toggle()">
-                            <i class="ti ti-menu-2 f-18"></i>
-                          </a>
-                        </li>
-
-                      </ul>
-                      @if( semestreSelect().id != 0 ) {
-                        <ui-button color="secondary" (onClick)="showModalSemestres( templateSemestreList )">{{ semestreSelect().codigo }}</ui-button>
-                      }
-                      <ul class="list-inline mx-2">
-                        <li class="list-inline-item w-13rem bg-white p-2 border-round border-1 border-gray-300">
-                            <mat-select class="w-full min-w-10" value="All">
-                                <mat-option value="All">Todos</mat-option>
-                                <mat-option value="Alta">Alta Director de Escuela</mat-option>
-                                <mat-option value="Validar">Validar Plan de Estudios</mat-option>
-                            </mat-select>
-                        </li>
-                        <li class="list-inline-item">
-                          <a class="avatar avatar-s bg-white text-muted" (click)="onClick()">
-                            <i class="ti ti-arrows-vertical f-18"></i>
-                          </a>
-                        </li>
-                        <!-- <li class="list-inline-item w-13rem bg-white p-2 border-round border-1 border-gray-300"> -->
-                          <!-- <mat-select class="w-full min-w-10" [value]="semestreSelect().id">
-                              @for (semestre of semestresAcademicos(); track semestre ) {
-                                <mat-option [value]="semestre.id">{{ semestre.codigo }}</mat-option>
-                              }
-                              
-                          </mat-select> -->
-                      <!-- </li> -->
-                    </ul>
-                      <ul class="list-inline search-bar flex align-item-center">
-                        <li class="list-inline-item bg-white">
-                          <mat-form-field appearance="outline" class="small">
-                            <input matInput placeholder="Buscar..." autocomplete="off" />
-                            <mat-icon matSuffix>search</mat-icon>
-                          </mat-form-field>
-                        </li>
-                        <!-- <li class="list-inline-item">
-                          <mat-paginator [length]="100" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page"> </mat-paginator>
-                        </li> -->
-                      </ul>
-                    </div>
-                    <!-- TOOLBAR END -->
+                    
 
                     <!-- @if (selectedTabIndex === 0) {
 

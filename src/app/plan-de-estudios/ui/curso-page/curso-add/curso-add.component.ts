@@ -23,6 +23,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 
 
 @Component({
@@ -47,6 +48,11 @@ export class CursoAddComponent {
   expRegNombreCurso: RegExp = this.validation.expRegNombreCurso;
   expRegNombreCursoBlockToInput: RegExp = this.validation.expRegNombreCursoBlockToInput;
 
+  maxLengthDescripcion: number = this.validation.maxLengthDescripcion;
+  minLengthDescripcion: number = this.validation.minLengthDescripcion;
+  expRegDescripcion: RegExp = this.validation.expRegDescripcion;
+  expRegDescripcionBlockToInput: RegExp = this.validation.expRegDescripcionBlockToInput;
+
   maxLengthHorasTeoricas: number = this.validation.maxLengthHorasTeoricas;
   minLengthHorasTeoricas: number = this.validation.minLengthHorasTeoricas;
   expRegHorasTeoricas: RegExp = this.validation.expRegHorasTeoricas;
@@ -70,7 +76,7 @@ export class CursoAddComponent {
   optionsTipoEstudio = this.validation.optionsTipoEstudio;
   optionsTipoCurso = this.validation.optionsTipoCurso;
   optionsCompetencia = this.validation.optionsCompetencia;
-  
+  optionsCiclos: UiSelect[] = [];
   totalHorasModel: number;
   formCurso: FormGroup;
   // constructor
@@ -80,21 +86,23 @@ export class CursoAddComponent {
     private auth: AuthSignal,
     private modal: UiModalService,
     private validation: CursoValidation,
+    private cicloRepository: CicloRepository,
     private alert: AlertService
   ) {
 
     this.formCurso = new FormGroup({
       // programa: new FormControl('', [Validators.required]),
-      // ciclo: new FormControl('', [Validators.required]),
+      idCiclo: new FormControl('', [Validators.required]),
       codigoCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthCodigoCurso ), Validators.minLength( this.minLengthCodigoCurso ), Validators.pattern(this.expRegCodigoCurso)]),
       nombreCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombreCurso ), Validators.minLength( this.minLengthNombreCurso ), Validators.pattern(this.expRegNombreCurso)]),
+      descripcion: new FormControl('', [Validators.required]),
       tipoEstudio: new FormControl('', [ Validators.required ]),
       tipoCurso: new FormControl('', [ Validators.required]),
       competencia: new FormControl('', [ Validators.required]),
       horasTeoricas: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthHorasTeoricas ), Validators.minLength( this.minLengthHorasTeoricas ), Validators.pattern(this.expRegHorasTeoricas)]),
       horasPracticas: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthHorasPracticas ), Validators.minLength( this.minLengthHorasPracticas ), Validators.pattern(this.expRegHorasPracticas)]),
-      // totalHoras: new FormControl('', [ Validators.required]),
-      // totalCreditos: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthTotalCreditos ), Validators.minLength( this.minLengthTotalCreditos ), Validators.pattern(this.expRegTotalCreditos)]),
+      totalHoras: new FormControl('', [ Validators.required]),
+      totalCreditos: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthTotalCreditos ), Validators.minLength( this.minLengthTotalCreditos ), Validators.pattern(this.expRegTotalCreditos)]),
      })
      
     //  this.formCurso ? this.pathValueFormEdit() : '';
@@ -111,8 +119,33 @@ export class CursoAddComponent {
   // life cycle event
   ngOnInit() {
 
+    this.obtenerCiclos();
       this.formCurso ? this.pathValueFormEdit() : '';
+
+      this.formCurso.patchValue({
+        idCiclo: this.cursoCicloSelect().idCiclo.toString()
+      })
  
+  }
+
+  obtenerCiclos() {
+    this.cicloRepository.obtener().subscribe({
+      next: ( ciclos ) => {
+        console.log( ciclos );
+        const ciclosOptions: UiSelect[] = ciclos.map( ciclo => {
+          return {
+            value: ciclo.id.toString(),
+            text: ciclo.cicloLetra,
+            disabled: false
+          }
+        })
+
+        this.optionsCiclos = ciclosOptions;
+      }, error: ( error ) => {
+        console.log( error );
+        
+      }
+    })
   }
 
   onSubmit() {
@@ -123,60 +156,82 @@ export class CursoAddComponent {
     }
 
     const tipo = this.cursoDetails().id != 0 ?'editar' : 'crear';
-    switch( tipo ) {
-      case 'crear': {
-        const dataCurso: CursoCrear = {
-          idCiclo: this.signal.cursoCicloSelect().idCiclo,
-          codigoCurso: this.formCurso.value.codigoCurso,
-          idCompetencia: this.formCurso.value.competencia,
-          idTipoCurso: this.formCurso.value.tipoCurso,
-          idTipoEstudio: this.formCurso.value.tipoEstudio,
-          nombreCurso: this.formCurso.value.nombreCurso,
-          horasTeoricas: this.formCurso.value.horasTeoricas,
-          horasPracticas: this.formCurso.value.horasPracticas,
-          totalHoras: parseInt( this.formCurso.value.horasTeoricas )  + parseInt( this.formCurso.value.horasPracticas ), 
-          totalCreditos: ( this.formCurso.value.horasTeoricas * 1 ) + ( this.formCurso.value.horasPracticas * 0.5 ),
-          usuarioId: parseInt( this.auth.currentRol().id )
-        }
-        console.log( dataCurso );
-        return
-        this.crear( dataCurso );
-      }; break;
-      
-      case 'editar': {
-        const dataCurso: CursoEditar = {
-          id: this.cursoDetails().id,
-          idCiclo: this.signal.cursoCicloSelect().idCiclo,
-          codigoCurso: this.formCurso.value.codigoCurso,
-          idCompetencia: this.formCurso.value.competencia,
-          idTipoCurso: this.formCurso.value.tipoCurso,
-          idTipoEstudio: this.formCurso.value.tipoEstudio,
-          nombreCurso: this.formCurso.value.nombreCurso,
-          horasTeoricas: this.formCurso.value.horasTeoricas,
-          horasPracticas: this.formCurso.value.horasPracticas,
-          totalHoras: parseInt( this.formCurso.value.horasTeoricas )  + parseInt( this.formCurso.value.horasPracticas ), 
-          totalCreditos: ( this.formCurso.value.horasTeoricas * 1 ) + ( this.formCurso.value.horasPracticas * 0.5 ),
-          usuarioId: parseInt( this.auth.currentRol().id )
+    this.alert.sweetAlert('question', 'Confirmar', `¿Está seguro que desea ${ tipo } el curso?`)
+      .then( isConfirm => {
+        if( !isConfirm ) { return }
+        
+        switch( tipo ) {
+          case 'crear': {
+            const dataCurso: CursoCrear = {
+              idCiclo: parseInt( this.formCurso.value.idCiclo ),
+              descripcion: this.formCurso.value.descripcion,
+              idPrograma: 1, //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
+              codigoCurso: this.formCurso.value.codigoCurso,
+              competencia: this.formCurso.value.competencia,
+              tipoCurso: this.formCurso.value.tipoCurso,
+              tipoEstudio: this.formCurso.value.tipoEstudio,
+              nombreCurso: this.formCurso.value.nombreCurso,
+              horasTeoricas: parseInt( this.formCurso.value.horasTeoricas ),
+              horasPracticas: parseInt( this.formCurso.value.horasPracticas ),
+              totalHoras: parseInt( this.formCurso.value.horasTeoricas )  + parseInt( this.formCurso.value.horasPracticas ), 
+              totalCreditos: parseInt( this.formCurso.value.totalCreditos),
+              usuarioId: parseInt( this.auth.currentRol().id )
+            }
+            console.log( dataCurso );
+            // return
+            this.crear( dataCurso );
+          }; break;
           
+          case 'editar': {
+            const dataCurso: CursoEditar = {
+              descripcion: this.formCurso.value.descripcion,
+              idPrograma: 1,
+              id: this.cursoDetails().id,
+              idCiclo: parseInt( this.formCurso.value.idCiclo ),
+              codigoCurso: this.formCurso.value.codigoCurso,
+              competencia: this.formCurso.value.competencia,
+              tipoCurso: this.formCurso.value.tipoCurso,
+              tipoEstudio: this.formCurso.value.tipoEstudio,
+              nombreCurso: this.formCurso.value.nombreCurso,
+              horasTeoricas: this.formCurso.value.horasTeoricas,
+              horasPracticas: this.formCurso.value.horasPracticas,
+              totalHoras: parseInt( this.formCurso.value.horasTeoricas )  + parseInt( this.formCurso.value.horasPracticas ), 
+              totalCreditos: parseInt( this.formCurso.value.totalCreditos),
+              usuarioId: parseInt( this.auth.currentRol().id )
+              
+            }
+            this.editar( dataCurso )
+          }
         }
-        this.editar( dataCurso )
-      }
-    }
+
+      })
+
+    
+  }
+
+  calcular() {
+    console.log( this.formCurso.value.horasTeoricas );
+    const total = parseInt( this.formCurso.value.horasTeoricas ) + parseInt( this.formCurso.value.horasPracticas );
+    this.formCurso.patchValue({
+      totalHoras: total
+    });
+    
   }
 
   pathValueFormEdit = () => {
 
     this.formCurso.patchValue({
-      programa: this.cursoDetails().programa,
-      ciclo: this.cursoDetails().ciclo,
+      programa: this.cursoDetails().idPrograma,
+      ciclo: this.cursoDetails().idCiclo,
       codigoCurso: this.cursoDetails().codigoCurso,
       nombreCurso: this.cursoDetails().nombreCurso,
+      descripcion: this.cursoDetails().descripcion,
       tipoEstudio: this.cursoDetails().tipoEstudio,
       tipoCurso: this.cursoDetails().tipoCurso,
       competencia: this.cursoDetails().competencia,
       horasTeoricas: this.cursoDetails().horasTeoricas.toString(),
       horasPracticas: this.cursoDetails().horasPracticas.toString(),
-      // totalHoras: (parseInt(this.formCurso.value.horasPracticas) + parseInt(this.formCurso.value.horasTeoricas)).toString(),
+      totalHoras: this.cursoDetails().totalHoras.toString(),
       totalCreditos: this.cursoDetails().totalCreditos.toString()
 
     });
@@ -189,24 +244,28 @@ export class CursoAddComponent {
     this.repository.agregar( curso ).subscribe({
       next: ( data ) => {
         console.log( data );
-        
+        this.alert.showAlert('Curso agregar de manera correcta', 'success', 6);
+        this.modal.getRefModal().close('Add');
       }, error: ( error ) => {
         console.log( error );
-        
+        this.alert.showAlert('Ocurrió un error al agregar el curso', 'error', 6)
       }
     })
   }
 
   editar( curso: CursoEditar ) {
-    this.repository.editar( curso ).subscribe({
-      next: ( data ) => {
-        console.log( data );
+    this.alert.sweetAlert('info', 'ATENCIÓN', 'Aun no hay API para editar un curso.....')
+    console.log( curso );
+    
+    // this.repository.editar( curso ).subscribe({
+    //   next: ( data ) => {
+    //     console.log( data );
         
-      }, error: ( error ) => {
-        console.log( error );
+    //   }, error: ( error ) => {
+    //     console.log( error );
         
-      }
-    })
+    //   }
+    // })
   }
 
 }

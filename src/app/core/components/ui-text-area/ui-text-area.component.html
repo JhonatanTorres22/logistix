@@ -1,0 +1,50 @@
+<mat-form-field appearance="outline" class="w-100 m-t-5">
+    <mat-label>{{ label }}</mat-label>
+    <textarea
+    rows="5"
+    (input)="onInput($event)"
+    [expReg]="expReg"
+    [readonly]="readonly" 
+    [formControl]="formControl"
+    [type]="hide ? type : hide"
+    matInput
+    [maxlength]="maxlength"
+    autocomplete="off"
+    UpperCase>
+
+    </textarea>
+    <!-- (input)="onInput($event)"
+      [expReg]="expReg"
+      [readonly]="readonly" 
+      [formControl]="formControl"
+      [type]="hide ? type : hide"
+      matInput
+      [maxlength]="maxlength"
+      autocomplete="off"
+      UpperCase
+      /> -->
+      <!-- [(ngModel)]="model" -->
+    @if ( type == 'password') {
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    }
+    <mat-hint align="end">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
+    
+    @if (formControl?.hasError('maxlength')) {
+      <mat-error class="mt-4">Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
+    }
+    @if (formControl?.hasError('minlength')) {
+      <mat-error class="mt-4">Este campo debe tener como mínimo {{ minlength }} caracteres</mat-error>
+    }
+    @if (formControl?.hasError('required')) {
+      <mat-error class="mt-4">Este campo es obligatorio</mat-error>
+    }
+    @if (formControl?.hasError('pattern')) {
+      <mat-error class="mt-4">{{ patternErrorMessage }}</mat-error>
+    }
+    @if (formControl?.hasError('codigoDuplicado')) {
+      <mat-error class="mt-4">Esta campo está siendo duplicado</mat-error>
+    }
+</mat-form-field>
+  

@@ -140,6 +140,7 @@
 @import './app/@theme/styles/pages/dashboard.scss';
 @import './app/@theme/styles/theme-mode/rtl';
 @import './app/core/styles/colors-customs.scss';
+@import './app/core/styles/custom.scss';
 
 // grid
 @import './app/@theme/styles/grid';
@@ -169,6 +170,9 @@
     background-color: #00000040;
     min-width: 44px;
 
+  }
+  .mdc-button {
+    min-width: 34px!important;
   }
 
   .cdk-overlay-container {

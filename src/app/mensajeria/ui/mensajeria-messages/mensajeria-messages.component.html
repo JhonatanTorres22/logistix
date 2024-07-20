@@ -4,11 +4,11 @@
    {{ mensajesHistorial() | json }}
  </pre> -->
  <mensajeria-asunto></mensajeria-asunto>
-
-    <ng-scrollbar  style="height: calc(100vh - 17.5rem)" #scrolling>
+<!-- {{ tipoBandeja() | json }} -->
+    <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling>
       @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
   
-        <div class="my-2">
+        <div [class]="isLast ? 'mt-2' : 'my-2'">
           <mat-accordion>
             <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
               <mat-expansion-panel-header class="py-3">
@@ -50,11 +50,7 @@
           </mat-accordion>
 
         </div>
-        @if ( isLast && tipoBandeja() == 'Archivados' ) {
-
-          <mensajeria-card-archived-closed-approved [mensaje]="mensaje"></mensajeria-card-archived-closed-approved>
-
-        }
+        
   
       }
 
@@ -62,6 +58,12 @@
         <mensajeria-response></mensajeria-response>
       }
     </ng-scrollbar>
+
+    @if ( mensajesHistorial()[ mensajesHistorial().length - 1] && tipoBandeja() == 'Archivados' ) {
+
+      <mensajeria-card-archived-closed-approved [mensaje]="mensajesHistorial()[ mensajesHistorial().length - 1]"></mensajeria-card-archived-closed-approved>
+
+    }
 
 </div>
 <!-- <pre>

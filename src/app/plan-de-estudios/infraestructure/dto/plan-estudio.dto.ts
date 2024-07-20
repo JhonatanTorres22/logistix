@@ -1,0 +1,57 @@
+export interface PlanEstudioDTO {
+    codigoPlanDeEstudio: number,
+    codigoProgramaAcademico: number,
+    nombre: string,
+    resolucion: string,
+    descripcionGrado: string,
+    descripcionTitulo: string,
+    detallePerfil: string,
+    archivo: string,
+    estadoCaducidad: string,
+    estadoMatricula: string
+}
+
+
+export interface PlanEstudioDataArrayDTO {
+    data: PlanEstudioDTO[]
+}
+
+
+export type PlanEstudioAddDTO = Pick<PlanEstudioDTO, 'codigoProgramaAcademico' | 'descripcionGrado' | 'descripcionTitulo' | 'detallePerfil' | 'nombre'> & {
+    usuario: number
+}
+
+export type PlanEstudioEditDEDTO = Omit<PlanEstudioAddDTO, 'codigoProgramaAcademico'> & {
+    codigoPlanDeEstudio: number
+}
+
+export type PlanEstudioEditCUDTO = PlanEstudioEditDEDTO & {
+    resolucion: string
+}
+
+export type PlanEstudioEliminarDTO = {
+    codigoPlanDeEstudio: number,
+    usuario: number
+}
+
+export type PlanEstudioCursoInsertarDTO = {
+    codigoPlanDeEstudio: number,
+    codigoCurso: number,
+    usuario: number
+}
+
+
+export interface CursoPlanListarDTO {
+    codigoCursoPlan: number,
+    nombre: string,
+    descripcion: string
+}
+
+export interface CursoPlanListarDataArrayDTO {
+    data: CursoPlanListarDTO[]
+}
+
+export interface CursoPlanEliminarDTO {
+    codigoCursoPlan: number,
+    usuario: number
+}

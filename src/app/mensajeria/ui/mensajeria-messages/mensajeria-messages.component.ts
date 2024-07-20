@@ -80,7 +80,7 @@ export class MensajeriaMessagesComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.obtenerDestinatariosReponderA(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje );
-    console.log(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje);
+    // console.log(this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje);
     setTimeout(() => {
       this.scrollToBottom();
     }, 2000);
@@ -105,12 +105,13 @@ export class MensajeriaMessagesComponent implements OnInit {
   obtenerDestinatariosReponderA( idMensaje: number ) {
     this.repository.responderMensajeA( idMensaje ).subscribe({
       next: ( destinatarioResponderA ) => {
-        console.log( destinatarioResponderA );
+        // console.log( destinatarioResponderA );
         const filterRolUnique = destinatarioResponderA.reduce( (destinatarios: MensajeriaResponderAList[], data: MensajeriaResponderAList) => {
 
           const existe = destinatarios.findIndex( dest => dest.idUsuarioRol == data.idUsuarioRol );
           if( existe != -1 ) {
             destinatarios[existe] = data;
+            destinatarios = destinatarios.filter( dest => dest.idUsuarioRol !== data.idUsuarioRol )
             // console.log( destinatarios[existe] );
             // console.log( data );
             // console.log( existe );
@@ -125,7 +126,7 @@ export class MensajeriaMessagesComponent implements OnInit {
 
         }, []);
 
-        console.log(filterRolUnique);
+        // console.log(filterRolUnique);
         
 
         this.listaDestinatariosResponderA.set( filterRolUnique );

@@ -2,7 +2,7 @@
     <div class="mail-content-table col-12 col-sm-12 col-md-4">
 
         <ng-scrollbar style="height: calc(100vh - 210px); min-width: auto;" visibility="hover" track="all" class="w-full">
-          @if( dataSource.data.length == 0 || dataSource.data.length == 0 && !showFormNuevoMensaje() ) {
+          @if( dataSource.data.length == 0 && !modoTablet() || dataSource.data.length == 0 && !showFormNuevoMensaje() ) {
             <mensajeria-no-messages text="No hay mensajes" icon="ti ti-mailbox f-60"></mensajeria-no-messages>
           }
 
@@ -130,6 +130,7 @@
       } @else { 
   
         @if ( selectMensaje().idMensaje == 0  && !showFormNuevoMensaje() ) {
+
           <mensajeria-no-messages class="col-12 col-sm-12 col-md-8"></mensajeria-no-messages>
           <!-- <ui-card-not-items class="col-12 col-sm-12 col-md-8" text="DEBE SELECCIONAR UN SEMESTRE"></ui-card-not-items> -->
 
