@@ -24,6 +24,10 @@ export class SemestreSignal {
         
     }
 
+    setSelectSemestreDefault(){
+        this.semestreSelect.set(this.semestre)
+    }
+
     
 
 }

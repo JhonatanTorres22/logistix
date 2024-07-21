@@ -14,6 +14,7 @@ import { JwtPayload, jwtDecode } from "jwt-decode";
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SelectRolComponent } from '../select-rol/select-rol.component';
 import { AuthSignal } from '../../domain/signals/auth.signal';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ import { AuthSignal } from '../../domain/signals/auth.signal';
 })
 export class LoginComponent {
 
+  listaCamposFormulario: string[] = ['userName', 'password']
     // public props
     hide = true;
     loginForm: FormGroup;
@@ -52,6 +54,7 @@ export class LoginComponent {
     menu = [];
 
     constructor(
+      private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
       private formBuilder: FormBuilder,
       private route: ActivatedRoute,
       private router: Router,
@@ -89,6 +92,8 @@ export class LoginComponent {
         ]
         )
       })
+      this.deshabilitarInputsFormService.inicializarInputs(this.formLogin, this.listaCamposFormulario,0);
+      this.deshabilitarInputsFormService.controlarInputs(this.formLogin, this.listaCamposFormulario)
       // redirect to home if already logged in
       if (this.auth.currentUserData()?.NumeroDocumento != '') {
         this.router.navigate(['/dashboard']); // '/dashboard/default'

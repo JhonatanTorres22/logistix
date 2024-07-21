@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { UsuarioRolRepository } from '../../domain/repositories/usuario-rol.repository';
 import { UsuarioRol, UsuarioRolAgregar, UsuarioRolEliminar } from '../../domain/models/usuario-rol.model';
@@ -12,6 +12,10 @@ import { Usuario } from '../../domain/models/usuario.model';
 import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { RolUserId } from 'src/app/core/mappers/rolUserId';
+import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -30,6 +34,7 @@ const DragConfig = {
 export class UserRolComponent implements OnInit {
 
   @Input() usuario: Usuario;
+  @Input() message: string = ''
   usuariosRol: UsuarioRol[];
 
   formAsignarRol: FormGroup;
@@ -43,6 +48,10 @@ export class UserRolComponent implements OnInit {
   /* DRAG AND DROP END */
 
   constructor(
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<UserRolComponent>,
+    private authService: AuthService,
     private usuarioRolRepository: UsuarioRolRepository,
     private fb: FormBuilder,
     private rolRepository: RolRepository,
@@ -76,7 +85,6 @@ export class UserRolComponent implements OnInit {
 
       this.usuarioRolRepository.obtenerUsuariosRol().subscribe({
         next: ( data ) => {
-          // console.log( data );
           this.usuariosRol = data;
           this.usuariosRol = this.usuariosRol.filter( usuario => usuario.usuario == (this.usuario.apellidoPaterno +' '+ this.usuario.apellidoMaterno + ', ' + this.usuario.nombres).toLocaleUpperCase())
           resolve( true )
@@ -134,7 +142,42 @@ export class UserRolComponent implements OnInit {
         $event.source.checked = !$event.checked;
         return;
       }
-      $event.checked ? this.activarRolUser( rol ) : this.suspenderRolUser( rol );
+      if($event.checked){
+        if(rol.rol === RolUserId.currentRol && rol.alta === 'ALTA'){
+          this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
+            if(!isConfirm){
+              $event.source.checked = !$event.checked;
+            }else{
+              this.activarRolUser(rol);
+              setTimeout(() => {
+                this.authService.logout();
+                this.dialogRef.close()
+              }, 300);
+            }
+          })
+        }else{
+          this.activarRolUser(rol)
+        }
+      }else {
+        if(rol.rol === RolUserId.currentRol && rol.alta == 'ALTA' ){
+          this.alertService.sweetAlert('question', '¿Confirmar?', `Si usted desea suspender el rol de ${rol.rol} deberá cerrar sesión`).then( isConfirm =>{
+            if(!isConfirm){
+              $event.source.checked = !$event.checked;
+              return;
+            }else{
+              this.suspenderRolUser(rol)
+              setTimeout(() => {
+                this.authService.logout();
+                this.dialogRef.close()
+              }, 300);
+            }
+          })
+        }else {
+          this.suspenderRolUser(rol)
+        }
+      }
+      // $event.checked ? this.activarRolUser( rol ) 
+      // : (rol.rol === RolUserId.currentRol) ? this.alertService  this.suspenderRolUser( rol ): '';
 
     })
   }
@@ -187,12 +230,23 @@ export class UserRolComponent implements OnInit {
       idRol: rol.id,
       usuarioId: 1
     }
-
     this.usuarioRolRepository.darAltaRolUser( rolAlta ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alertService.showAlert(`El rol ${ rol.rol}, fue dado de Alta`, 'success');
-        this.obtenerUsuarios();
+        this.alertService.sweetAlert('success', '¡Correcto!', `El rol ${ rol.rol} fue dado de alta correctamente` ).then(isConfirm => {
+          if(isConfirm){
+            if(RolUserId.currentIdRolUser === this.usuario.id){
+              this.alertService.sweetAlert('question', '¿Desea acceder al nuevo rol?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
+              if(!isConfirm){
+                return
+              }
+              this.authService.logout();
+              this.dialogRef.close()
+              })
+            }
+            this.obtenerUsuarios();
+          }
+        });
 
       }, error: ( error ) => {
         console.log(error);
@@ -230,13 +284,23 @@ export class UserRolComponent implements OnInit {
 
       let contadorNew = 1;
       let contadorDelete = 1;
-      this.deleteRoles.forEach( deleteRol => {
+      this.deleteRoles.forEach( deleteRol => {  
         const isLast = contadorDelete == this.deleteRoles.length;
         const eliminarRol = {
           idRol: deleteRol.id,
           usuarioId: 1 
         }
 
+
+        if(RolUserId.currentRol == deleteRol.rol){
+          this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que para eliminar el rol ${deleteRol.rol} deberá cerrar sesión`).then( isConfirm => {
+            if(!isConfirm){
+              return;
+            }
+            this.authService.logout();
+            this.dialogRef.close()
+          })
+        }
         setTimeout(() => {
           this.eliminarRolUsuario( eliminarRol, isLast );
         }, 1000);
@@ -263,10 +327,21 @@ export class UserRolComponent implements OnInit {
       next: ( data ) => {
         console.log(data);
         if (isLast) {
-          this.alertService.showAlert('Los roles fueron asginados correctamente.', 'success');
+          this.alertService.sweetAlert('success', '¡Correcto!', 'Los roles fueron asignados correctamente.' ).then( isConfirm => {
+            if(isConfirm){
+              if(this.data.message == 'Director' || this.data.message == 'Decano'){
+                this.router.navigate(['/programas-academicos']);
+                this.dialogRef.close()
+              }
+            }
+          });
           this.obtenerUsuarios();
           this.obtenerRoles();
           this.newRoles = [];
+
+          if(this.data.message == 'Director' || this.data.message == 'Decano'){
+            this.router.navigate(['/configuracion/usuarios']);
+          }
         }
       }, error: ( error ) => {
         console.log( error );

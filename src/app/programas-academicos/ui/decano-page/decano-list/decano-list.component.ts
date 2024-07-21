@@ -13,6 +13,7 @@ import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.componen
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class DecanoListComponent {
     rol: '0',
 };
 constructor(
+  private router: Router,
   private asignacionSignal: AsignacionSignal,
   private signal: DecanoSignal,
   private facultadSignal: FacultadSignal,
@@ -218,5 +220,11 @@ constructor(
 
   deshabilitarDecanoAsignado = (decano: UsuarioRol): boolean => {   
     return this.listaDecanosAsignados.some(decanoAsignado => decanoAsignado.idDecano === decano.id )
+  }
+
+  irModuloAsignarDecano = () => {
+    const message = 'Decano';
+    this.router.navigate(['/configuracion/usuarios'], { state: { message: message } });
+    this.dialogRef.close()
   }
 }

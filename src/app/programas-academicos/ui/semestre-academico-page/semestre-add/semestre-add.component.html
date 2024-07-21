@@ -6,7 +6,6 @@
     </ng-template>
     <div style="height: 300px" visibility="hover">
         <form [formGroup]="formSemestre" class="p-3">
-          <!-- {{ semestreEdit | json }} -->
           <div class="flex gap-3">
             <ui-input [(ngModel)]="preFijoSemestre" class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" 
             [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput" patternErrorMessage="El nombre no puede concluir con un espacio o guion"></ui-input>
@@ -15,7 +14,6 @@
             <ui-input class="w-full" label="Codigo" formControlName="codigo" [maxlength]="maxLengthCodigo"
              [minlength]="minLengthCodigo" [expReg]="expRegCodigoToLockInput"
              patternErrorMessage="El código no puede terminar con un guion o espacio. Ej.: 2024-1"></ui-input>
-            <!-- {{ formSemestre.value.fechaInicio }} -->
             
 
           </div>
@@ -47,5 +45,40 @@
     </ng-template>
   </app-card>
 
+  <!-- <mat-dialog-content>
+    <div class="p-2">
+      <form [formGroup]="formSemestre" class="p-3">
+        <div class="flex gap-3">
+          <ui-input [(ngModel)]="preFijoSemestre" class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" 
+          [minlength]="minLengthNombre" [expReg]="expRegNombreToLockInput" patternErrorMessage="El nombre no puede concluir con un espacio o guion"></ui-input>
+        </div>
+        <div class="flex gap-3">
+          <ui-input class="w-full" label="Codigo" formControlName="codigo" [maxlength]="maxLengthCodigo"
+           [minlength]="minLengthCodigo" [expReg]="expRegCodigoToLockInput"
+           patternErrorMessage="El código no puede terminar con un guion o espacio. Ej.: 2024-1"></ui-input>          
+
+        </div>
+        <mat-form-field class="w-full m-t-5" appearance="outline">
+          <mat-label>Seleccione el rango de fecha</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+              <input readonly matStartDate formControlName="fechaInicio" placeholder="Fecha Inicio" (click)="picker.open()" >
+              <input readonly matEndDate formControlName="fechaFin" placeholder="Fecha Fin" (click)="picker.open()" (dateChange)="onDateChanged($event, 'fechaFin')">
+          </mat-date-range-input>
+          <mat-hint>Fecha Inicio – Fecha Fin</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+
+          <mat-error *ngIf="formSemestre.get('fechaInicio')?.hasError('required')">Fecha de <b>INICIO</b> incompleto</mat-error>
+          <mat-error *ngIf="formSemestre.get('fechaFin')?.hasError('required')">Fecha de <b>FIN</b> incompleto</mat-error>
+        </mat-form-field>
+      </form>
+
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" [label]="semestreEdit && semestreEdit.id != 0 ? 'Editar' : 'Crear'" [disabled]="formSemestre.invalid" (click)="onSubmit()"></ui-button>
+  </mat-dialog-actions> -->
 
     <!-- {{ semestreEdit | json }} -->

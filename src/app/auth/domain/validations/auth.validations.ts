@@ -12,7 +12,7 @@ export class AuthValidations {
     maxLengthUserName = 15;
     minLengthUserName = 8;
     expRegUserName = /[0-9]{8,15}/ ;
-    expRegUserNameToLockInput = /^((?![0-9]$).)*$/;
+    expRegUserNameToLockInput = /[^0-9]/g;
 
     /* PASSWORD */
     maxLengthPassword = 15;

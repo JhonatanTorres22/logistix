@@ -1,22 +1,23 @@
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Input, WritableSignal } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { ModalComponent } from '../components/modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SemestreAddComponent } from './semestre-add/semestre-add.component';
 import { SemestreAcademico, SemestreAcademicoEliminar } from '../../domain/models/semestre-academico.model';
 import { SemestreAcademicoDomainService } from '../../domain/services/semestre-academico-domain.service';
 import { SemestreAcademicoRepository } from '../../domain/repositories/semestre-academico.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
-import { SemestreListComponent } from './semestre-list/semestre-list.component';
 import { SemestreSignal } from '../../domain/signals/semestre.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { SemestreListComponent } from './semestre-list/semestre-list.component';
+import { SemestreAddComponent } from './semestre-add/semestre-add.component';
 
 @Component({
   selector: 'semestre-academico-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiButtonComponent],
+  imports: [CommonModule, SharedModule, UiButtonComponent, SemestreListComponent, SemestreAddComponent],
   templateUrl: './semestre-academico-page.component.html',
   styleUrl: './semestre-academico-page.component.scss'
 })
@@ -29,6 +30,7 @@ export class SemestreAcademicoPageComponent {
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
 
   constructor(
+    private modal: UiModalService,
     private semestreAcademicoRepository: SemestreAcademicoRepository,
     private dialog: MatDialog,
     private semestreAcademicoDomainService: SemestreAcademicoDomainService,
@@ -82,6 +84,19 @@ export class SemestreAcademicoPageComponent {
       if( data == 'cancelar' ) return;
 
       this.obtenerSemestres();
+    })
+  }
+  @ViewChild('template1', { static: true }) template1: TemplateRef<any>;
+  openModalSemestre1 = () => {    
+    let titleModal = 'Semestre Académico';
+
+    this.modal.openTemplate({
+      template: this.template1,
+      titulo: titleModal
+    }).afterClosed().subscribe( resp => {
+      if(resp == 'cancelar'){
+        return;
+      }
     })
   }
 

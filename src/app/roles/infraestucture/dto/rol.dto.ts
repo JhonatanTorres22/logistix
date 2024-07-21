@@ -1,6 +1,8 @@
 export interface RolDTO {
     codigo: number,
-    nombre: string
+    nombre: string,
+    alta:string,
+    estado:string
 }
 
 
