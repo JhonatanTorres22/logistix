@@ -21,7 +21,7 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   }
 
   hide: boolean = true;
-  // @Output() onInput: EventEmitter<string> = new EventEmitter();
+  @Output() onInputEvent: EventEmitter<string> = new EventEmitter();
   @Input() label = '';
   @Input() type = '';
   @Input() readonly: boolean = false;
@@ -29,7 +29,7 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   @Input() minlength = 0;
   @Input() expReg = '';
   @Input() duplicado: boolean = false;
-
+  @Input() classInput: string = ''
   @Input() patternErrorMessage: string = ''
 
   //@Input() classInput: string = '';

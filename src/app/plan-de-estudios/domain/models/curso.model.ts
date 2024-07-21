@@ -1,10 +1,10 @@
 export interface Curso {
     id: number,
-    programa:string,
-    ciclo: string,
+    idPrograma: number,
     idCiclo: number,
     codigoCurso: string,
     nombreCurso: string,
+    descripcion: string,
     tipoEstudio: string,
     tipoCurso: string,
     competencia: string,
@@ -16,22 +16,21 @@ export interface Curso {
 }
 
 export interface CursoByCiclo {
-    ciclo: string,
+    // ciclo: string,
     idCiclo: number,
     cursos: Curso[]
 }
 
-export type CursoCrear = Omit<Curso, 'id' | 'programa' | 'ciclo' | 'preRequisito' | 'competencia' | 'tipoCurso' | 'tipoEstudio'> & {
-    idCompetencia: string,
-    idTipoCurso: string,
-    idTipoEstudio: string,
+export type CursoCrear = Omit<Curso, 'id' | 'preRequisito'> & {
     usuarioId: number
 }
 
 export type CursoEditar = CursoCrear & {
     id: number
 }
-export type CursoEliminar = Pick<Curso, 'id'>
+export type CursoEliminar = Pick<Curso, 'id'> & {
+    usuarioId: number
+}
 
 export interface CursoDataArray {
 

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, WritableSignal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -41,6 +42,7 @@ constructor(
   private repository: UsuarioRolRepository,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
+  private auth: AuthSignal,
   public dialogRef: MatDialogRef<DirectorListComponent>,
 
   ) {
@@ -175,7 +177,7 @@ constructor(
   activarDirector = ( director: UsuarioRol ) => {
     const directorActivar = {
       idRol: director.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.repository.activarRolUser( directorActivar ).subscribe({

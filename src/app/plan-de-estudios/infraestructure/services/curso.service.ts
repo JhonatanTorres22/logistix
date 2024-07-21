@@ -24,18 +24,17 @@ export class CursoService {
         private http: HttpClient
     ) {
         // this.urlApi = environment.EndPoint;
-        this.urlApi = environment.EnpPointMSW;
-
+        this.urlApi = environment.EndPoint;
         
-        this.urlObtener = 'api/Curso/Listar';
+        this.urlObtener = 'api/Curso/ListarxPA?codigoProgramaAcademico=';
         this.urlAgregar = 'api/Curso/Insertar';
         this.urlEditar = 'api/Curso/Actualizar';
         this.urlEliminar = 'api/Curso/Eliminar';
 
     }
 
-    obtener(): Observable<Curso[]>{
-        return this.http.get<CursoDataArrayDTO>( this.urlApi + this.urlObtener )
+    obtenerPorPrograma( idPrograma: number ): Observable<Curso[]>{
+        return this.http.get<CursoDataArrayDTO>( this.urlApi + this.urlObtener + idPrograma)
             .pipe( map( api => api.data.map( CursoMapper.fromApiToDomain )))
     }
 

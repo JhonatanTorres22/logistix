@@ -1,0 +1,38 @@
+<app-card [showHeader]="false" [padding]="12" cardClass="mb-2" cardContentClass="flex" headerClassTemplate="title align-item-center">
+
+    @if ( modoTablet() ) {
+      <ui-button color="secondary" tooltip="Volver" (onClick)="onBackToMail()">
+        <i class="ti ti-chevron-left f-18"></i>
+      </ui-button>
+      <!-- <a  class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
+        
+      </a> -->
+    }
+    <!-- {{ mensaje.asunto }} -->
+  
+    <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard, mensajesHistorial()[0], false )">
+      {{mensajesHistorial()[0]?.asunto}}
+    </ui-button>
+</app-card>
+
+<ng-template #templateProgramaCard let-data>
+    <mat-dialog-content>
+      <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
+      <!-- <p>asdasd</p> -->
+      @if ( showButtons ) {
+        <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea der de Alta al Director de Escuela?</p>
+        <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
+          <mat-checkbox [(ngModel)]="esConforme" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
+        </div>
+      }
+          
+    </mat-dialog-content>
+    @if ( showButtons ) {
+      <mat-dialog-actions align="end" class="flex gap-2">
+        <!-- <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar"></ui-button> -->
+        <ui-button color="orange" label="Enviar Observación" [disabled]="showFormResponse() || esConforme" (onClick)="onResponder()"></ui-button>
+        <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse() || !esConforme" (onClick)="onAltaConfirm( mensajeHistorialSelect )"></ui-button>
+      </mat-dialog-actions>
+    }
+    
+  </ng-template>

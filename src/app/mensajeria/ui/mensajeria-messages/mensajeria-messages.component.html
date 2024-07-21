@@ -1,92 +1,71 @@
-<div class="details-content w-100">
+<div class="details-content w-100 fadein   animation-duration-200">
     
  <!-- <pre>
    {{ mensajesHistorial() | json }}
  </pre> -->
-    @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
+ <mensajeria-asunto></mensajeria-asunto>
+<!-- {{ tipoBandeja() | json }} -->
+    <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling>
+      @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
+  
+        <div [class]="isLast ? 'mt-2' : 'my-2'">
+          <mat-accordion>
+            <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
+              <mat-expansion-panel-header class="py-3">
+                <mat-panel-title class="block mx-0">
+                  <div class="title align-item-center">
+                    <ul class="list-inline">
+                      <li class="list-inline-item">
 
-      @if ( isFirst ) {
-        <app-card [showHeader]="false" [padding]="12" cardClass="mb-2" headerClassTemplate="title align-item-center">
-          <div class="f-w-600">
-            @if ( modoTablet() ) {
-              <a (click)="onBackToMail()" class="avatar avatar-s text-accent-900" matTooltip="left side" id="mail-backinbox">
-                <i class="ti ti-chevron-left f-18"></i>
-              </a>
-            }
-            {{ mensaje.asunto }}
-          </div>
-        </app-card>
+                        <div class="flex align-item-start">
+                          <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
+                          <div class="flex-grow-1 m-l-10 max-w-14rem sm:max-w-full">
+                            <div class="f-14 f-w-600 text-truncate"> {{ mensaje.rolEmisor }} </div>
+                            <div class="m-b-0 text-muted text-xs sm:text-normal"> De: {{ mensaje.emisor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
+                            <div class="m-b-0 text-muted text-xs sm:text-normal"> Para: {{ mensaje.receptor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <ul class="list-inline text-right">
+                      <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short'}} </li>
+                    </ul>
+                  </div>
+                </mat-panel-title>
+      
+              </mat-expansion-panel-header>
+              <mat-divider></mat-divider>
+
+              <div class="m-3" [innerHTML]="mensaje.mensaje">
+                <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
+              </div>
+
+              <!-- <pre>{{ listaDestinatariosResponderAflujo() | json}}</pre> -->
+
+              @if ( (listaDestinatariosResponderAflujo().length == 0 || listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == '') && tipoBandeja() == 'Recibidos' && isLast ) {
+                <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>  <!-- [listaDestinatarios]="listaDestinatariosResponderAflujo()" -->
+              }
+              
+            </mat-expansion-panel>
+          </mat-accordion>
+
+        </div>
+        
+  
       }
 
-      <div class="my-2">
-        <mat-accordion>
-          <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
-            <mat-expansion-panel-header class="py-3">
-              <mat-panel-title class="block mx-0">
-                <div class="title align-item-center">
-                  <ul class="list-inline">
-                    <li class="list-inline-item">
-                      <!-- <div class="flex align-item-center gap-2">
-                        <div class="w-3rem">
-                            Para:
-                        </div>
-                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
-                        <div class="flex-grow-1">
-                            <div class="f-14 f-w-600 text-truncate capitalize">{{ paraRolNombreArea.toLocaleLowerCase() }}</div>
-                            <div class="f-12 m-b-0 text-muted mat-small capitalize"> {{ paraRolNombrePersona.toLocaleLowerCase() }} </div>
-                        </div>
-                    </div> -->
-                      <div class="flex align-item-start">
-                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
-                        <div class="flex-grow-1 m-l-10">
-                          <div class="f-14 f-w-600 text-truncate"> {{ mensaje.rolEmisor }} </div>
-                          <div class="m-b-0 text-muted mat-small"> De: {{ mensaje.emisor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
-                          <div class="m-b-0 text-muted mat-small"> Para: {{ mensaje.receptor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                  <ul class="list-inline">
-                    <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short'}} </li>
-                  </ul>
-                </div>
-              </mat-panel-title>
-    
-            </mat-expansion-panel-header>
-            <mat-divider></mat-divider>
-            <!-- <app-card hea>
-              Codigo: 100001
-              Director: Torres Meneses Jhonatan
-            </app-card> -->
-            <div class="m-3" [innerHTML]="mensaje.mensaje">
-              <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
-            </div>
-            @if ( isLast && tipoBandeja() == 'Recibidos' ) {
-              <div class="flex justify-content-end">
-                <button mat-button color="primary" class="send-mail" (click)="onResponder()">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Responder </div>
-                </button>
-                <button mat-button color="primary" class="send-mail" (click)="onAltaConfirm( mensaje )">
-                  <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i>Dar Alta </div>
-                </button>
-              </div>
-            }
+      @if ( showFormResponse() ) {
+        <mensajeria-response></mensajeria-response>
+      }
+    </ng-scrollbar>
 
-            @if ( isLast && tipoBandeja() == 'Archivados' ) {
-              <app-card [showHeader]="false" cardClass="bg-orange-200">
-                <p class="f-14 f-w-600">MENSAJE ARCHIVADO</p>
-              </app-card>
-            }
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
+    @if ( mensajesHistorial()[ mensajesHistorial().length - 1] && tipoBandeja() == 'Archivados' ) {
 
-    }
+      <mensajeria-card-archived-closed-approved [mensaje]="mensajesHistorial()[ mensajesHistorial().length - 1]"></mensajeria-card-archived-closed-approved>
 
-    <!-- <mensajeria-response></mensajeria-response> -->
-    
-    @if ( showFormCompose ) {
-      <mensajeria-response></mensajeria-response>
     }
 
 </div>
+<!-- <pre>
+  {{ listaDestinatariosResponderA() | json }}
+</pre> -->

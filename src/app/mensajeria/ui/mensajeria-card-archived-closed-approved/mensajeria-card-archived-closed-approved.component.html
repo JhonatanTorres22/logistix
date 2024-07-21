@@ -1,0 +1,17 @@
+<app-card [showHeader]="false" cardClass="border-round mb-0" cardContentClass="border-round bg-approved shadow-3">
+    <div class="flex flex-column sm:flex-row justify-content-center align-items-center gap-2">
+      <div class="avatar bg-white">
+        <i class="ti ti-check f-28 text-green-700"></i>
+      </div>
+      <span class="pr-4 f-w-600">APROBADO</span>
+      <div class="flex align-item-start gap-2">
+        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
+        <div class="flex-grow-1 m-l-10 gap-2">
+          <div class="f-14 f-w-600 text-truncate"> {{ mensaje.receptor }} </div>
+          <div class="m-b-0 mat-small"> {{ mensaje.rolReceptor }} </div>
+        </div>
+      </div>
+      <span class="f-12 f-w-400"> 20 Mayo 2024, 20:35 </span>
+
+    </div>
+</app-card>

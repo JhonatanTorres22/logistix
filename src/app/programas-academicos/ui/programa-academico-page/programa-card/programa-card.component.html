@@ -12,11 +12,13 @@
     <!-- <div class=""> -->
 
       <div class="text-center">
-        <div class="user-upload wid-40 m-auto mb-2" matTooltip="Cambiar de Director de Escuela" (click)="openModalDirector()">
+        <div class="user-upload wid-40 m-auto mb-2" [matTooltip]="currentRol().rol == 'Vicerrectorado Académico' ? 'Cambiar de Director de Escuela': ''" (click)="currentRol().rol == 'Vicerrectorado Académico' ? openModalDirector(): ''">
           <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
-          <label for="uplfile" class="img-avatar-upload">
-            <i class="ti ti-refresh f-24 m-b-5"></i>
-          </label>
+          @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
+            <label for="uplfile" class="img-avatar-upload">
+              <i class="ti ti-refresh f-24 m-b-5"></i>
+            </label>
+          }
         </div>
         <div class="flex align-items-center gap-2 bg-accent-200 text-gray-900 px-2 py-2 border-round justify-content-center">
           <div class="flex flex-column">
@@ -44,41 +46,41 @@
       </div>  
 
       <mat-divider></mat-divider>
-      <div class="flex gap-2 my-2 justify-content-center">
+      @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
+        <div class="flex gap-2 my-2 justify-content-center">
 
-        @if ( programa.locales.length == 1 ) {
-
-          <ui-button
-            ui-button-guardar
-            tooltip="Eliminar Programa"
-            color="warn"
-            icon="ti ti-trash f-18"
-            (click)="eliminarProgramaConfirm(asignacion, programa)">
-          </ui-button>   
-
-        } @else { 
-
-          <ui-button
-            ui-button-guardar
-            tooltip="Eliminar"
-            color="warn"
-            icon="ti ti-trash f-18"
-            [matMenuTriggerFor]="optionsLocal"
-
-          >
-          </ui-button>
-
-          <mat-menu #optionsLocal="matMenu">
-            @for ( local of programa.locales; track local ) {
-              <button mat-menu-item (click)="eliminarProgramaIndividualConfirm(asignacion, programa, local.idLocal)">{{ local.nombreLocal }}</button>
-            }
-            <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
-          </mat-menu>
-        }
-        <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="primary" (click)="openModalLocal( asignacion, programa )"></ui-button>
-        <ui-button icon="ti ti-mail-forward f-18" tooltip="Enviar mensaje" color="primary" (click)="enviarMensaje( asignacion, programa )"></ui-button>
-
-      </div>
+          @if ( programa.locales.length == 1 ) {
+  
+            <ui-button
+              tooltip="Eliminar Programa"
+              color="red"
+              icon="ti ti-trash f-18"
+              (click)="eliminarProgramaConfirm(asignacion, programa)">
+            </ui-button>   
+  
+          } @else { 
+  
+            <ui-button
+              tooltip="Eliminar"
+              color="red"
+              icon="ti ti-trash f-18"
+              [matMenuTriggerFor]="optionsLocal"
+  
+            >
+            </ui-button>
+  
+            <mat-menu #optionsLocal="matMenu">
+              @for ( local of programa.locales; track local ) {
+                <button mat-menu-item (click)="eliminarProgramaIndividualConfirm(asignacion, programa, local.idLocal)">{{ local.nombreLocal }}</button>
+              }
+              <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
+            </mat-menu>
+          }
+          <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="blue" (click)="openModalLocal( asignacion, programa )"></ui-button>
+          <ui-button icon="ti ti-mail-forward f-18" tooltip="Enviar mensaje" color="primary" (click)="enviarMensaje( asignacion, programa )"></ui-button>
+  
+        </div>
+      }
 
     <!-- </div> -->
 

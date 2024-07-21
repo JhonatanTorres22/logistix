@@ -15,13 +15,13 @@ import { CursoRepositoryImpl } from './infraestructure/repositories/curso.reposi
     CommonModule,
     PlanDeEstudiosRoutingModule
   ],
-  providers: [
-    interceptorProviders, 
-        [
-            { provide: CicloRepository, useClass: CicloRepositoryImpl },
-            { provide: CursoRepository, useClass: CursoRepositoryImpl },
+  // providers: [
+  //   interceptorProviders, 
+  //       [
+  //           { provide: CicloRepository, useClass: CicloRepositoryImpl },
+  //           { provide: CursoRepository, useClass: CursoRepositoryImpl },
 
-        ]
-  ]
+  //       ]
+  // ]
 })
 export class PlanDeEstudiosModule { }

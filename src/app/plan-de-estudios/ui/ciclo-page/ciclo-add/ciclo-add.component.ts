@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
+import { Ciclo, CicloCrear } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
 import { CicloValidation } from 'src/app/plan-de-estudios/domain/validations/ciclo.validation';
@@ -49,6 +50,7 @@ export class CicloAddComponent implements OnInit {
     private signal: CicloSingal,
     private validations: CicloValidation,
     private alert: AlertService,
+    private authSignal: AuthSignal,
     private repository: CicloRepository
   ) {
     this.formCiclo = new FormGroup({
@@ -90,8 +92,12 @@ export class CicloAddComponent implements OnInit {
   }
 
   agregar() {
+    const cicloCrear: CicloCrear = {
+      ...this.formCiclo.value,
+      usuarioId: this.authSignal.currentRol().id
+    }
 
-    this.repository.agregar( this.formCiclo.value ).subscribe({
+    this.repository.agregar( cicloCrear ).subscribe({
       next: ( data ) => {
         this.alert.sweetAlert('success', 'Correcto', 'Ciclo agregado correctamente');
         console.log(data);
@@ -105,9 +111,10 @@ export class CicloAddComponent implements OnInit {
   }
 
   editar() {
-    const cicloEdit = {
+    const cicloEdit: Ciclo = {
       id: this.cicloEdit.id,
-      ...this.formCiclo.value
+      ...this.formCiclo.value,
+      usuarioId: this.authSignal.currentRol().id
     }
     this.repository.editar( cicloEdit ).subscribe({
       next:( data ) => {

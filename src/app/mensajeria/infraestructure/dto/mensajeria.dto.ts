@@ -17,8 +17,10 @@ export interface MensajeriaInsertarDTO {
 
 export interface MensajeriaRecibidosDTO {
     codigoMensajeria: number,
-    codigoTipoMensajeria: number,
-    tipoMensaje: TipoMensaje,
+    nombreTipoMensajeGrupo: string,
+    nombreTipoMensaje: string,
+    // codigoTipoMensajeria: number,
+    // tipoMensaje: TipoMensaje,
     asunto: string,
     contenido: string,
     rol: string,
@@ -31,20 +33,15 @@ export interface MensajeriaRecibidosDTO {
 
 
 export type MensajeriaEnviadosDTO = Omit<MensajeriaRecibidosDTO, 'leido'>;
-export type MensajeriaArchivadosDTO = Omit<MensajeriaRecibidosDTO, 'rol'> & {
-    rolEmisor: string,
-    rolReceptor: string,
-    archivo: string,
+export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO
 
-};
-
-export type MensajeriaHistorialMensajesDTO = MensajeriaRecibidosDTO & {
+export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido'> & {
     archivo: string,
     rolReceptor: string,
     rolEmisor: string,
     informacionAdicional: string,
-    codigoEmisorRol: number,
-    codigoReceptorRol: number
+    // codigoEmisorRol: number,
+    // codigoReceptorRol: number
 }
 
 export interface MensajeriaResponderDTO {
@@ -55,7 +52,9 @@ export interface MensajeriaResponderDTO {
     informacionAdicional: string
 }
 
-export type MensajeriaCerrarArchivarDTO = Pick< MensajeriaDTO, 'codigoMensajeria'>
+export type MensajeriaCerrarArchivarDTO = Pick< MensajeriaDTO, 'codigoMensajeria'> & {
+    usuario: number
+}
 
 export interface MensajeriaLeerMensajeDTO {
     codigoMensajeria: number
@@ -80,7 +79,7 @@ export interface MensajeriaHistorialMensajesDataArrayDTO {
 export interface MensajeriaNuevoMensajeListDTO {
     codigoTipoMensajeRol: number,
     codigoUsuarioRol: number,
-    responder: string,
+    flujoNavegacion: string,
     apellidosyNombres: string,
     descripcion: string,
     temporalidad: number,
@@ -108,4 +107,32 @@ export interface MensajeriaTipoGrupoDataArrayDTO {
 
 export interface MensajeriaTipoDataArrayDTO {
     data: MensajeriaTipoDTO[]
+}
+
+
+export interface MensajeriaEnviarNuevoMensajeDTO {
+    codigoTipoMensajeRol: number,
+    flujoNavegacion: string,
+    asunto: string,
+    codigoEmisorRol: number,
+    codigoReceptorRol: number,
+    textoMensaje: string,
+    informacionAdicional: string,
+    usuario: number
+}
+
+export type MensajeriaResponderAListDTO = MensajeriaNuevoMensajeListDTO & {
+    codigoMensajeria: number,
+}
+
+export interface MensajeriaResponderAListDataArrayDTO {
+    data: MensajeriaResponderAListDTO[]
+}
+
+
+export type MensajeriaResponderAltaDTO = Pick<MensajeriaResponderAListDTO, 'codigoMensajeria' | 'codigoTipoMensajeRol'> & {
+    codigoEmisorRol: number,
+    codigoReceptorRol: number,
+    contenido: string,
+    informacionAdicional: string
 }

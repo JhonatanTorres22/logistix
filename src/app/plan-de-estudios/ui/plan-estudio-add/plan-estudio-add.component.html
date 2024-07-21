@@ -1,0 +1,27 @@
+<mat-dialog-content class="w-15rem sm:w-25rem md:w-30rem">
+    <div [formGroup]="formPlanEstudio">
+        <ui-input label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegLockInputNombre"></ui-input>
+        <ui-input label="Descripcion Grado" formControlName="descripcionGrado" [maxlength]="maxLengthDescripcionGrado" [minlength]="minLengthDescripcionGrado" [expReg]="expRegLockInputDescripcionGrado"></ui-input>
+        <ui-input label="Descripcion Titulo" formControlName="descripcionTitulo" [maxlength]="maxLengthDescripcionTitulo" [minlength]="minLengthDescripcionTitulo" [expReg]="expRegLockInputDescripcionTitulo"></ui-input>
+        <ui-text-area label="Detalle de Perfil" formControlName="detallePerfil" [maxlength]="maxLengthDetallePerfil" [minlength]="minLengthDetallePerfil" [expReg]="expRegLockInputDetallePerfil"></ui-text-area>
+
+    
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+  <ui-button color="primary" [label]="planEstudioEdit().id != 0 ? 'Editar' : 'Crear'" [disabled]="formPlanEstudio.invalid" (onClick)="onSubmit()"></ui-button>
+  <!-- <ui-button color="primary" label="Crear" [disabled]="formPlanEstudio.invalid" ></ui-button> -->
+</mat-dialog-actions>
+
+<!-- <div class="p-30 w-15rem sm:w-25rem md:w-30rem">
+    <div [formGroup]="formPlanEstudio">
+        <ui-input label="Nombre" formControlName="nombre"></ui-input>
+        <ui-input label="Descripcion Grado" formControlName="descripcionGrado"></ui-input>
+    
+        <ui-input label="Descripcion Titulo" formControlName="descripcionTitulo"></ui-input>
+    
+        <ui-text-area label="Detalle de Perfil" formControlName="detallePerfil"></ui-text-area>
+
+    </div>
+</div> -->

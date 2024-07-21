@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreAcademico, SemestreAcademicoAperturar } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
 import { SemestreAcademicoRepository } from 'src/app/programas-academicos/domain/repositories/semestre-academico.repository';
-import { SemestreAcademicoDomainService } from 'src/app/programas-academicos/domain/services/semestre-academico-domain.service';
 import { SemestreAddComponent } from '../semestre-add/semestre-add.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -16,7 +15,11 @@ import { SemestreAcademicoValidations } from 'src/app/programas-academicos/domai
 import { DateAdapter } from '@angular/material/core';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+
 
 @Component({
   selector: 'semestre-list',
@@ -28,8 +31,8 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 })
 export class SemestreListComponent implements OnInit {
   listaAsignaciones = this.asignacionSignal.asignaciones;
-  semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
-  semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
+  semestresAcademicos = this.semestreSignal.semestresAcademicos;
+  semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
   semestreSeleccionado = this.semestreSignal.semestreSelect;
   semestreAcademicoList: SemestreAcademico[];
   existeSemestreCreado: boolean;
@@ -65,7 +68,8 @@ export class SemestreListComponent implements OnInit {
     private dateAdapter: DateAdapter<Date>,
     private validation: SemestreAcademicoValidations,
     private semestreRepository: SemestreAcademicoRepository,
-    private semestreAcademicoDomainService: SemestreAcademicoDomainService,
+    // private semestreSignal: semestreSignal,
+    private auth: AuthSignal,
     private datePipe: DatePipe,
     private semestreSignal: SemestreSignal
   ) {
@@ -117,14 +121,14 @@ export class SemestreListComponent implements OnInit {
           console.log(semestres,'lista de semestres');
           // this.existeSemestreCreado = semestres.length > 0;
           // if( semestres.length == 0 ) {
-          //   this.semestreAcademicoDomainService.setSemestreAcademicoDefault();
+          //   this.semestreSignal.setSemestreAcademicoDefault();
           //   return;
           // }
           // semestres.forEach( semestre => {
 
           // })
           // this.semestreSelect = semestres.find(semestre => semestre.id === this.semestreSeleccionado().id)
-          this.semestreAcademicoDomainService.setSemestresAcademicos(semestres);
+          this.semestreSignal.setSemestresAcademicos(semestres);
 
           if(this.semestresAcademicos().length > 0){
             let semestreMarcado = this.semestresAcademicos().find(semestre => semestre.id === this.semestreSeleccionado().id)
@@ -141,9 +145,9 @@ export class SemestreListComponent implements OnInit {
           // };
 
           
-          // this.semestreAcademicoList = this.semestreAcademicoDomainService.semestresAcademicos();
+          // this.semestreAcademicoList = this.semestreSignal.semestresAcademicos();
           
-          // this.semestreAcademicoDomainService.setSemestreAcademico(semestres[0]);
+          // this.semestreSignal.setSemestreAcademico(semestres[0]);
       }, error: ( error ) => {
           console.log(error);
           
@@ -231,7 +235,7 @@ export class SemestreListComponent implements OnInit {
         case 'Open': {
           this.showFormAgregarSemestre = true;
           this.semestreEdit = semestre;
-          this.semestreAcademicoDomainService.setSemestreEditado(semestre);
+          this.semestreSignal.setSemestreEditado(semestre);
           
           // this.pathValueFormSemestreEdit();
         } break;
@@ -274,7 +278,7 @@ export class SemestreListComponent implements OnInit {
   eliminarSemestre = ( semestre: SemestreAcademico ) => {
     const semestreEliminar = {
       id: semestre.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.semestreAcademicoRepository.eliminarSemestre( semestreEliminar ).subscribe({
@@ -330,7 +334,7 @@ export class SemestreListComponent implements OnInit {
   // aperturarSemestre = () => {
   //   const semestreAperturar: SemestreAcademicoAperturar = {
   //     id: this.semestreSelect.id,
-  //     usuarioId: 1
+  //     usuarioId: parseInt( this.auth.currentRol().id )
   //   }
   //   this.semestreRepository.aperturarSemestre( semestreAperturar ).subscribe({
   //     next: ( data ) => {
@@ -353,7 +357,7 @@ export class SemestreListComponent implements OnInit {
       next: (data) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre creado correctamente');
         
-          // this.semestreAcademicoDomainService.setSemestreAcademico( data );
+          // this.semestreSignal.setSemestreAcademico( data );
           this.dialogRef.close(data);
       }, error: ( error ) => {
         console.log(error);
@@ -367,7 +371,7 @@ export class SemestreListComponent implements OnInit {
     this.semestreRepository.editarSemestre( editSemestre ).subscribe({
       next: ( data ) => {
         this.alertService.sweetAlert('success', 'Correcto', 'Semestre editado correctamente');
-        // this.semestreAcademicoDomainService.setSemestreAcademico( data );
+        // this.semestreSignal.setSemestreAcademico( data );
         this.dialogRef.close( data );
       }, error: ( error ) => {
         console.log( error );

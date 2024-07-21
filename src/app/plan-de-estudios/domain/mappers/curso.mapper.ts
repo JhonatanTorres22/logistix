@@ -5,26 +5,26 @@ import { Curso, CursoByCiclo, CursoCrear, CursoEditar, CursoEliminar } from "../
 export class CursoMapper {
     static fromApiToDomain( param: CursoDTO ): Curso {
         return {
-            id: param.id,
-            programa: param.programa,
-            ciclo: param.ciclo,
-            idCiclo: param.idCiclo,
-            codigoCurso: param.codigoCurso,
-            nombreCurso: param.nombreCurso,
-            tipoEstudio: param.tipoEstudio,
-            tipoCurso: param.tipoCurso,
+            id: param.codigoCurso,
+            idPrograma: param.codigoProgramaAcademico,
+            idCiclo: param.codigoCiclo,
+            codigoCurso: param.codigoInterno,
+            nombreCurso: param.nombre,
+            tipoEstudio: param.tipoDeEstudio,
+            tipoCurso: param.tipoDeCurso,
             competencia: param.competencia,
-            horasTeoricas: param.horasTeoricas,
-            horasPracticas: param.horasPracticas,
-            totalHoras: param.totalHoras,
-            totalCreditos: param.totalCreditos,
-            preRequisito: param.preRequisito
+            horasTeoricas: param.ht,
+            horasPracticas: param.hp,
+            totalHoras: param.tHoras,
+            totalCreditos: param.tCreditos,
+            preRequisito: param.prerequisito,
+            descripcion: param.descripcion
         }
     }
 
     static fromApiToDomainByCiclo( param: Curso[] ) {
 
-        const cursoByCiclo = param.reduce( ( a, b) => a.ciclo == b.ciclo ? a : b )
+        const cursoByCiclo = param.reduce( ( a, b) => a.idCiclo == b.idCiclo ? a : b )
 
         // console.log();
         
@@ -34,42 +34,45 @@ export class CursoMapper {
     static fromDomainToApiAgregar( param: CursoCrear ): CursoCrearDTO {
         return {
 
-            codigoCurso: param.codigoCurso,
-            nombreCurso: param.nombreCurso,
-            idCiclo: param.idCiclo,
-            idTipoCurso: param.idTipoCurso,
-            idTipoEstudio: param.idTipoEstudio,
-            idCompetencia: param.idCompetencia,
-            horasTeoricas: param.horasTeoricas,
-            horasPracticas: param.horasPracticas,
-            totalHoras: param.totalHoras,
-            totalCreditos: param.totalCreditos,
+            codigoProgramaAcademico: param.idPrograma,
+            codigoCiclo: param.idCiclo,
+            codigoInterno: param.codigoCurso,
+            nombre: param.nombreCurso,
+            descripcion: param.descripcion,
+            tipoDeEstudio: param.tipoEstudio,
+            tipoDeCurso: param.tipoCurso,
+            competencia: param.competencia,
+            ht: param.horasTeoricas,
+            hp: param.horasPracticas,
+            tHoras: param.totalHoras,
+            tCreditos: param.totalCreditos,
             usuario: param.usuarioId
-        
         }
     }
 
     static fromDomainToApiEditar( param: CursoEditar ): CursoEditarDTO {
         return {
             id: param.id,
-            codigoCurso: param.codigoCurso,
-            nombreCurso: param.nombreCurso,
-            idCiclo: param.idCiclo,
-            idTipoCurso: param.idTipoCurso,
-            idTipoEstudio: param.idTipoEstudio,
-            idCompetencia: param.idCompetencia,
-            horasTeoricas: param.horasTeoricas,
-            horasPracticas: param.horasPracticas,
-            totalHoras: param.totalHoras,
-            totalCreditos: param.totalCreditos,
+            codigoProgramaAcademico: param.idPrograma,
+            codigoCiclo: param.idCiclo,
+            codigoInterno: param.codigoCurso,
+            nombre: param.nombreCurso,
+            descripcion: param.descripcion,
+            tipoDeEstudio: param.tipoEstudio,
+            tipoDeCurso: param.tipoCurso,
+            competencia: param.competencia,
+            ht: param.horasTeoricas,
+            hp: param.horasPracticas,
+            tHoras: param.totalHoras,
+            tCreditos: param.totalCreditos,
             usuario: param.usuarioId
         }
     }
 
     static formDomainToApiEliminar( param: CursoEliminar ): CursoEliminarDTO {
         return {
-            id: param.id,
-            usuario: RolUserId.currentIdRolUser
+            codigoCurso: param.id,
+            usuario: param.usuarioId
         }
     }
 }

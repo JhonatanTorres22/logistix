@@ -8,13 +8,18 @@ import { SemestreAcademico } from "../models/semestre-academico.model";
 
 export class SemestreSignal {
 
+    semestres: SemestreAcademico[] = [];
     semestre: SemestreAcademico = {
-        id: 0,
         codigo: '',
-        condicion: '',
+        // estado: '',
+        // fechaFin: '',
+        // fechaInicio: '',
+        id: 0,
         nombre: '',
+        condicion: '',
         usuarioId: 0
-    }
+    };
+
 
     semestreSelect = signal( this.semestre);
 
@@ -24,9 +29,44 @@ export class SemestreSignal {
         
     }
 
+
     setSelectSemestreDefault(){
         this.semestreSelect.set(this.semestre)
     }
+
+
+
+    public semestresAcademicos = signal(this.semestres);
+    public semestreAcademicoAperturado = signal( this.semestre);
+    public semestreAcademicoEditado = signal (this.semestre)
+    constructor() {}
+
+    /* SIGNAL */
+    public setSemestresAcademicos = ( senestres: SemestreAcademico[]) => {
+        this.semestresAcademicos.set( senestres );        
+    }
+
+    public setSemestreAcademicoDefault = () => {
+        this.semestresAcademicos.set( this.semestres )
+    }
+
+    public setSemestreAcademicoAperturado = ( semestreAcademico: SemestreAcademico ) => {
+        this.semestreAcademicoAperturado.set( semestreAcademico );
+    }
+
+    public setSemestreAcademicoAperturadoDefault = () => {
+        this.semestreAcademicoAperturado.set( this.semestre );
+    } 
+
+    public setSemestreEditado = (semestreEditado:SemestreAcademico) => {
+        this.semestreAcademicoEditado.set(semestreEditado);
+    }
+    
+    public setSemestreEditadoDefault = () => {
+        this.semestreAcademicoEditado.set(this.semestre)
+    }
+
+
 
     
 

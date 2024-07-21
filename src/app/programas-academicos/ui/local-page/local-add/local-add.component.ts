@@ -3,6 +3,7 @@ import { Component, EventEmitter, Inject, Input, Output, WritableSignal } from '
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
@@ -72,6 +73,7 @@ export class LocalAddComponent {
     private dateAdapter: DateAdapter<Date>,
     private validation: LocalValidations,
     private alertService: AlertService,
+    private auth: AuthSignal,
     private signal: LocalSignal,
     private datePipe: DatePipe
   ) {
@@ -151,7 +153,7 @@ export class LocalAddComponent {
           const newLocal = {
             ...this.formLocal.value,
             idFacultad: this.localSelect().id,
-            usuarioId: 1
+            usuarioId: parseInt( this.auth.currentRol().id )
           }
           
           this.addLocal( newLocal )
@@ -161,7 +163,7 @@ export class LocalAddComponent {
           const editLocal = {
             ...this.formLocal.value,
             id: this.localEdit.id,
-            usuarioId: 1
+            usuarioId: parseInt( this.auth.currentRol().id )
           }
 
           this.editLocal( editLocal )

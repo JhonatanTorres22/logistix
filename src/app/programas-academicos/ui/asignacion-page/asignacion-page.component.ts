@@ -9,7 +9,6 @@ import { Facultad } from '../../domain/models/facultad.model';
 import { Local } from '../../domain/models/local.model';
 import { ProgramaFacultad } from '../../domain/models/programa.model';
 import { SemestreAcademico } from '../../domain/models/semestre-academico.model';
-import { SemestreAcademicoDomainService } from '../../domain/services/semestre-academico-domain.service';
 import { DecanoSignal } from '../../domain/signals/decano.signal';
 import { DirectorSignal } from '../../domain/signals/director.signal';
 import { FacultadSignal } from '../../domain/signals/facultad.signal';
@@ -39,6 +38,7 @@ import { RolUserId } from 'src/app/core/mappers/rolUserId';
 import { Router } from '@angular/router';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { ProgramaCardComponent } from '../programa-academico-page/programa-card/programa-card.component';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 
 @Component({
@@ -69,8 +69,8 @@ import { ProgramaCardComponent } from '../programa-academico-page/programa-card/
 export class AsignacionPageComponent {
 
 
-    semestresAcademicos = this.semestreAcademicoDomainService.semestresAcademicos;
-    semestreAcademicoAperturado = this.semestreAcademicoDomainService.semestreAcademicoAperturado;
+    semestresAcademicos = this.semestreSignal.semestresAcademicos;
+    semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
     existeSemestreCreado: boolean;
 
     asignaciones = this.signal.asignaciones;
@@ -88,7 +88,6 @@ export class AsignacionPageComponent {
     constructor( 
         
         private dialog: MatDialog,
-        private semestreAcademicoDomainService: SemestreAcademicoDomainService,
         private programaSignal: ProgramaSignal,
         private semestreSignal: SemestreSignal,
         private facultadSignal: FacultadSignal,
@@ -99,6 +98,7 @@ export class AsignacionPageComponent {
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
         private mensajeriaSignal: MensajeriaSignal,
+        private auth: AuthSignal,
         private router: Router,
         
     ) {
@@ -179,7 +179,7 @@ export class AsignacionPageComponent {
           idLocales: locales,
           idPrograma: this.programaSelect().id,
           idSemestre: this.semestreSelect().id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         // console.log(newPrograma);
         this.agregarPrograma( newPrograma );

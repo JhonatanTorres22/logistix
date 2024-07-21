@@ -26,7 +26,7 @@ export class SemestreAcademicoMapper {
             // fechaDeFin: param.fechaFin,
             // estado: param.estado,
             condicion: param.condicion,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
@@ -37,28 +37,28 @@ export class SemestreAcademicoMapper {
             // fechaDeInicio: param.fechaInicio,
             // fechaDeFin: param.fechaFin,
             // estado: param.estado,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiEliminar( param: SemestreAcademicoEliminar ): SemestreAcademicoEliminarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiAperturar( param: SemestreAcademicoAperturar ): SemestreAcademicoAperturarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 
     static fromDomainToApiCerrar( param: SemestreAcademicoCerrar ): SemestreAcademicoCerrarDTO {
         return {
             codigo: param.id,
-            usuario: RolUserId.currentIdRolUser
+            usuario: param.usuarioId
         }
     }
 }

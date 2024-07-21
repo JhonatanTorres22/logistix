@@ -18,6 +18,11 @@ export class CursoValidation {
     minLengthNombreCurso: number = 6;
     expRegNombreCurso: RegExp = /[A-Za-z]{5,20}/;
     expRegNombreCursoBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+
+    maxLengthDescripcion: number = 80;
+    minLengthDescripcion: number = 6;
+    expRegDescripcion: RegExp = /[A-Za-z]{5,20}/;
+    expRegDescripcionBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
     // maxLengthTipoEstudio: string
     // maxLengthTipoCurso: string
     // maxLengthCompetencia: string
@@ -44,14 +49,14 @@ export class CursoValidation {
     // maxLengthPreRequisito: number[]
 
     optionsTipoEstudio: UiSelect[] = [
-        { value: 'General', text: 'General', disabled: false },
-        { value: 'Específico', text: 'Específico', disabled: false },
-        { value: 'Especialidad', text: 'De Especialidad', disabled: false },
+        { value: 'GENERAL', text: 'GENERAL', disabled: false },
+        { value: 'ESPECÍFICO', text: 'ESPECÍFICO', disabled: false },
+        { value: 'DE ESPECIALIDAD', text: 'DE ESPECIALIDAD', disabled: false },
       ]
     
     optionsTipoCurso: UiSelect[] = [
-    { value: 'Obligatorio', text: 'Obligatorio', disabled: false },
-    { value: 'Electivo', text: 'Electivo', disabled: false },
+    { value: 'OBLIGATORIO', text: 'OBLIGATORIO', disabled: false },
+    { value: 'ELECTIVO', text: 'ELECTIVO', disabled: false },
     ]
 
     optionsCompetencia: UiSelect[] = [

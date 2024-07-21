@@ -1,9 +1,16 @@
-<button [disabled]="disabled" mat-flat-button [color]="color" [matTooltip]="tooltip" [ngClass]="classButton" (click)="onClick.emit( $event )">
+<button [disabled]="disabled" mat-flat-button [matTooltip]="tooltip" [class]="classButton" (click)="onClick.emit( $event )" 
+[class]="type != 'default' ? 'bg-'+color+'-100 text-'+color+'-700 border-round-'+borde : [color] != 'secondary' ? 'bg-'+color+'-500 text-white' : ''"
+
+>
+<!-- 
+[class]="{'bg-{{color}}-100 text-{{color}}-700 border-round-{{borde}}': type != 'default', 'bg-{{color}}-500 text-white': [color] != 'secondary' }"
+[class]="type != 'default' ? 'bg-'+color+'-100 text-'+color+'-700 border-round-'+borde : color == secondary ? 'bg-'+color+'-500 text-white' : ''" -->
     @if ( icon ) {
        <i class="{{ icon }}"></i> 
     }
 
     @if ( label ) {
-        {{ label }} 
+        {{ label }}
     }
+    <ng-content></ng-content>
 </button>

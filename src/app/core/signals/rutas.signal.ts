@@ -14,7 +14,7 @@ export class RutasSignal {
         this.currentRuta.set( ruta );
         const rutas = ['/mensajeria', '/plan-de-estudios/malla-curricular']
         rutas.includes( ruta ) ? this.setLayout('compact') : this.setLayout('vertical');
-        console.log(this.currentLayout());
+        // console.log(this.currentLayout());
         
     }
 

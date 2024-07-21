@@ -12,10 +12,10 @@ import { Usuario } from '../../domain/models/usuario.model';
 import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AlertService } from 'src/app/demo/services/alert.service';
-import { RolUserId } from 'src/app/core/mappers/rolUserId';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -43,6 +43,7 @@ export class UserRolComponent implements OnInit {
   deleteRoles: UsuarioRol[] = [];
   /* DRAG AND DROP START */
 
+  currentRol = this.auth.currentRol;
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
   done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
   /* DRAG AND DROP END */
@@ -57,6 +58,7 @@ export class UserRolComponent implements OnInit {
     private rolRepository: RolRepository,
     private usuarioRepository: UsuarioRepository,
     private usuariosRolDomainService: UsuariosRolDomainService,
+    private auth: AuthSignal,
     private alertService: AlertService
 
   ) {
@@ -143,7 +145,7 @@ export class UserRolComponent implements OnInit {
         return;
       }
       if($event.checked){
-        if(rol.rol === RolUserId.currentRol && rol.alta === 'ALTA'){
+        if(rol.rol === this.currentRol().rol && rol.alta === 'ALTA'){
           this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
             if(!isConfirm){
               $event.source.checked = !$event.checked;
@@ -159,7 +161,7 @@ export class UserRolComponent implements OnInit {
           this.activarRolUser(rol)
         }
       }else {
-        if(rol.rol === RolUserId.currentRol && rol.alta == 'ALTA' ){
+        if(rol.rol === this.currentRol().rol && rol.alta == 'ALTA' ){
           this.alertService.sweetAlert('question', '¿Confirmar?', `Si usted desea suspender el rol de ${rol.rol} deberá cerrar sesión`).then( isConfirm =>{
             if(!isConfirm){
               $event.source.checked = !$event.checked;
@@ -207,7 +209,7 @@ export class UserRolComponent implements OnInit {
 
     const rolActivar = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
 
     this.usuarioRolRepository.activarRolUser( rolActivar ).subscribe({
@@ -228,14 +230,14 @@ export class UserRolComponent implements OnInit {
   darAltaRolUser = ( rol: Rol ) => {
     const rolAlta = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
     this.usuarioRolRepository.darAltaRolUser( rolAlta ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alertService.sweetAlert('success', '¡Correcto!', `El rol ${ rol.rol} fue dado de alta correctamente` ).then(isConfirm => {
           if(isConfirm){
-            if(RolUserId.currentIdRolUser === this.usuario.id){
+            if(parseInt(this.currentRol().id) === this.usuario.id){
               this.alertService.sweetAlert('question', '¿Desea acceder al nuevo rol?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
               if(!isConfirm){
                 return
@@ -259,7 +261,7 @@ export class UserRolComponent implements OnInit {
   suspenderRolUser = ( rol: Rol ) => {
     const rolSuspender = {
       idRol: rol.id,
-      usuarioId: 1
+      usuarioId: parseInt( this.auth.currentRol().id )
     }
     this.usuarioRolRepository.suspenderRolUser( rolSuspender ).subscribe({
       next: ( data ) => {
@@ -288,11 +290,11 @@ export class UserRolComponent implements OnInit {
         const isLast = contadorDelete == this.deleteRoles.length;
         const eliminarRol = {
           idRol: deleteRol.id,
-          usuarioId: 1 
+          usuarioId: parseInt( this.auth.currentRol().id ) 
         }
 
 
-        if(RolUserId.currentRol == deleteRol.rol){
+        if(this.currentRol().rol == deleteRol.rol){
           this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que para eliminar el rol ${deleteRol.rol} deberá cerrar sesión`).then( isConfirm => {
             if(!isConfirm){
               return;
@@ -310,7 +312,7 @@ export class UserRolComponent implements OnInit {
         const nuevoRol = {
           idUsuario: this.usuario.id,
           idRol: newRol.id,
-          usuarioId: 1
+          usuarioId: parseInt( this.auth.currentRol().id )
         }
         setTimeout(() => {
           this.asignarRolUsuario( nuevoRol, isLast );

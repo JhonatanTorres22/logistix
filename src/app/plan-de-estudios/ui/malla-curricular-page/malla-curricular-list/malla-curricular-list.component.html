@@ -1,29 +1,42 @@
-<p>malla-curricular-list works!</p>
+<p></p>
+<h1>{{ planEstudioSelect().nombre }}</h1>
 <mat-divider></mat-divider>
-<br>
+<!-- <br>
 <ciclo-page></ciclo-page>
-<div class="">
-    <curso-page></curso-page>
-    <!-- <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page>
-    <ciclo-page></ciclo-page> -->
+<ui-button color="blue" class="ml-2" (onClick)="asignar()"> Asignar Cursos </ui-button> -->
 
-    <!-- <div class="w-1">
-        <div class="flex flex-column gap-2">
-            <div class="flex align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-                CICLO II
+
+<div class="row" cdkDropListGroup>
+    @for (ciclo of cursosByCiclos(); track ciclo) {
+        <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
+    
+            <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
+                <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
+                    {{ getNombreCiclo(ciclo.idCiclo)?.definicion }}
+                </div>
             </div>
-            <div class="flex align-item-center justify-content-center border-1 border-round p-2 border-dashed border-gray-400">
-                <p class="f-10 m-0">Matemática II</p>
+            <div class="flex flex-column gap-2 example-list"
+>
+                @for ( curso of ciclo.cursos; track curso) {
+                    
+                    <div
+                        
+                        class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
+                        style="min-height: 5rem; max-height: 7rem;">
+                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                        <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
+                        <div class="f-8 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
+                        <div class="flex justify-content-around my-2 gap-2">
+                            <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
+                            <!-- <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-1rem" (onClick)="openCurso( template1, ciclo, curso )"></ui-button> -->
+                         
+                        </div>
+                    </div>
+    
+                }
             </div>
+
         </div>
-    </div> -->
+
+    }
 </div>

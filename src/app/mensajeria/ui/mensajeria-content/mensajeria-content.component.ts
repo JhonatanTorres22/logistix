@@ -12,18 +12,7 @@ import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensaje
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaNewComponent } from '../mensajeria-new/mensajeria-new.component';
-
-export interface PeriodicElement {
-  images: string;
-  name: string;
-  text: string;
-  symbol: string;
-  date: string;
-  promo: string;
-  forums: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = MailData;
+import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-items/ui-card-not-items.component';
 
 @Component({
   selector: 'mensajeria-content',
@@ -34,7 +23,8 @@ const ELEMENT_DATA: PeriodicElement[] = MailData;
     MensajeriaMessagesComponent,
     MensajeriaComposeComponent,
     MensajeriaNoMessagesComponent,
-    MensajeriaNewComponent
+    MensajeriaNewComponent,
+    UiCardNotItemsComponent
   ],
   templateUrl: './mensajeria-content.component.html',
   styleUrl: './mensajeria-content.component.scss'
@@ -44,8 +34,8 @@ export class MensajeriaContentComponent implements OnInit {
   @Input() tipoBandeja: 'Recibidos' | 'Enviados' | 'Archivados';
 
   // public props
-  titleContent = true;
-  detailsContent = false;
+  // titleContent = true;
+  // detailsContent = false;
   @Input() star = false;
   @Input() unStar = true;
   @Input() unImportant = true;
@@ -57,6 +47,7 @@ export class MensajeriaContentComponent implements OnInit {
   // @Input() status = 'true';
 
   toggle = this.signal.toggle;
+  showFadeIn: boolean = false;
 
   displayedColumns: string[] = ['name']; //'select', 'text', 'symbol'
   // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
@@ -67,6 +58,8 @@ export class MensajeriaContentComponent implements OnInit {
   mensajesTotal = this.signal.mensajesRecibidosTotal;
   mensajesNoLeidos = this.signal.mensajesNoLeidos;
   showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
+  backToMail = this.signal.backToMail;
+
   // tipoBandeja = 
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<MensajeriaRecibidos>(true, []);
@@ -80,17 +73,20 @@ export class MensajeriaContentComponent implements OnInit {
   ) {
     effect( () => {
 
-      console.log( 'uhmm',  );
+      // console.log( 'uhmm',  );
       if( !this.modoTablet() ) {
-        this.titleContent = true;
-        this.detailsContent = false;
+        this.backToMail.set({
+          titleContent: true,
+          detailsContent: false
+        })
+        
       }
       // console.log( this.bandeja );
       // console.log(this.mensajesEnviados());
       // localStorage.setItem('mensajeriaData', JSON.stringify(this.signal.mensajeriaAsignacionDefault))
       // this.mensajeriaData.update( () => this.signal.mensajeriaAsignacionDefault )
       this.signal.tipoBandeja.set( this.tipoBandeja );
-      console.log(this.tipoBandeja);
+      // console.log(this.tipoBandeja);
       
       switch( this.tipoBandeja ) {
         case 'Recibidos': { 
@@ -186,38 +182,47 @@ export class MensajeriaContentComponent implements OnInit {
   }
 
   mostrarHistorialMensajes( mail: MensajeriaRecibidos ) {
-
+    // this.signal.setSeleccionarMensajeDefault();
+    this.showFadeIn = true;
+    
     mail.leido ? '' : this.onLeido( mail );
-    console.log('Ver mensaje', mail);
+    // console.log('Ver mensaje', mail);
     this.obtenerHistorialMensajes( mail.idMensaje );
-    this.signal.setSeleccionarMensaje( mail );
+    this.selectMensaje.set( mail );
+    this.signal.showFormNuevoMensaje.set( false );
+ 
 
     if( this.modoTablet() ) {
-      this.titleContent = !this.titleContent;
-      this.detailsContent = !this.detailsContent;
+      this.backToMail.set({
+        titleContent: !this.backToMail().titleContent,
+        detailsContent: !this.backToMail().detailsContent
+      })
 
       return;
     }
   }
 
   obtenerHistorialMensajes( idMensaje: number ) {
-    console.log(idMensaje);
+    // console.log(idMensaje);
     
     this.repository.obtenerMensajesHistorial( idMensaje ).subscribe({
       next: ( mensajesHistorial ) => {
-        console.log(mensajesHistorial);
+        // console.log(mensajesHistorial);
         this.signal.setMensajesHistorial( mensajesHistorial );
+        this.showFadeIn = false;
+
       }, error: ( error ) => {
         console.log(error);
         this.alert.showAlert('Ocurrio un error al abrir el mensaje: ' + error, 'error', 6);
+        this.showFadeIn = false;
+
       }
     })
   }
 
-  backToMail() {
-    this.detailsContent = false;
-    this.titleContent = true;
-  }
+  // backToMail() {
+  //   this.backToMail.set( this.signal.backToMailDefault );
+  // }
 
 }
 

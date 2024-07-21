@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, effect, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, effect, signal } from '@angular/core';
 import { EmailComponent } from 'src/app/demo/pages/application/email/email.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaNavComponent } from './mensajeria-nav/mensajeria-nav.component';
@@ -13,15 +13,20 @@ import { MensajeriaRepository } from '../domain/repositories/mensajeria.reposito
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { Subject, takeUntil } from 'rxjs';
 import { UiButtonSplitComponent } from 'src/app/core/components/ui-button-split/ui-button-split.component';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { SemestreListComponent } from 'src/app/programas-academicos/ui/semestre-academico-page/semestre-list/semestre-list.component';
+import { SemestreAcademico } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 
 @Component({
   selector: 'app-mensajeria-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, MensajeriaContentComponent, UiButtonSplitComponent],
+  imports: [ CommonModule, SharedModule, MensajeriaContentComponent, UiButtonSplitComponent, SemestreListComponent, UiButtonComponent],
   templateUrl: './mensajeria-page.component.html',
   styleUrl: './mensajeria-page.component.scss'
 })
-export class MensajeriaPageComponent {
+export class MensajeriaPageComponent implements OnInit, OnDestroy {
 
   // public props
   @ViewChild('email') email: MatDrawer;
@@ -30,12 +35,19 @@ export class MensajeriaPageComponent {
   status = 'false';
   selectedTabIndex = 0;
   mailListHight = true;
-
+  semestreSelected: SemestreAcademico = {
+    codigo: '',
+    condicion: '',
+    id: 0,
+    nombre: '',
+    usuarioId: 0
+  };
   mensajesRecibidosTotal = this.signal.mensajesRecibidosTotal;
   mensajesEnviadosTotal = this.signal.mensajesEnviadosTotal;
   mensajesArchivadosTotal = this.signal.mensajesArchivadosTotal;
   showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
-
+  semestreSelect = this.semestreSignal.semestreSelect;
+  semestresAcademicos = this.semestreSignal.semestresAcademicos;
   // constructor
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -43,6 +55,8 @@ export class MensajeriaPageComponent {
     private signal: MensajeriaSignal,
     private repository: MensajeriaRepository,
     private alert: AlertService,
+    private semestreSignal: SemestreSignal,
+    private modal: UiModalService
   ) {
 
     /* BREAKING POINTS ANGULAR */
@@ -65,12 +79,15 @@ export class MensajeriaPageComponent {
     /* BREAKING POINTS ANGULAR */
 
     effect( () => {
-      console.log( this.signal.renderizarMensajes() );
+      // console.log( this.signal.renderizarMensajes() );
       switch( this.signal.renderizarMensajes() ) {
         case 'Enviados': {
+          this.showFormNuevoMensaje.set( false );
           this.obtenerMensajesEnviados();
         this.signal.setMensajesHistorialDefault();
+
         this.signal.renderizarMensajes.set('');
+        this.signal.showFormNuevoMensaje.set( false );
 
 
         }; break;
@@ -81,6 +98,7 @@ export class MensajeriaPageComponent {
             this.obtenerMensajesEnviados();
             this.signal.setMensajesHistorialDefault();
             this.signal.renderizarMensajes.set('');
+            this.signal.showFormNuevoMensaje.set( false );
 
           }, 800);
 
@@ -92,10 +110,18 @@ export class MensajeriaPageComponent {
           this.obtenerMensajesArchivados();
           this.signal.setMensajesHistorialDefault();
           this.signal.renderizarMensajes.set('');
+          this.signal.showFormNuevoMensaje.set( false );
 
         }
       }
+      this.signal.selectedDestinatario.set( this.signal.destinatarioSelectedDefault );
+
     }, { allowSignalWrites: true})
+  }
+
+  ngOnDestroy(): void {
+    this.signal.showFormNuevoMensaje.set( false );
+
   }
 
   // life cycle event
@@ -104,6 +130,7 @@ export class MensajeriaPageComponent {
     if( this.signal.mensajeriaInsertarDataAsignacion().asignacion?.idDecano == 0  ) {
       this.signal.setMensajeriaDataAsignacionDefault();
       this.signal.setMensajesHistorialDefault();
+
     }
 
     this.obtenerMensajesRecibidos();
@@ -124,6 +151,7 @@ export class MensajeriaPageComponent {
         this.status = 'true';
       }
     });
+
     this.breakpointObserver.observe([MIN_WIDTH_768PX, MAX_WIDTH_767PX]).subscribe((result) => {
       if (result.breakpoints[MAX_WIDTH_767PX]) {
         this.modoTablet.set( true );
@@ -142,9 +170,20 @@ export class MensajeriaPageComponent {
 
   }
 
+  onSelect = () => {
+    this.semestreSelect.set( this.semestreSelected );
+    this.modal.getRefModal().close();
+    // console.log( this.semestreSelected );
+    // console.log(this.semestreSelect());
+    
+    
+    this.nuevoMensaje('');
+  }
+
   tabChanged(index: number) {
     this.selectedTabIndex = index;
-    console.log(index);
+    // console.log(index);
+    this.signal.showFormNuevoMensaje.set( false );
     
   }
 
@@ -152,9 +191,25 @@ export class MensajeriaPageComponent {
     this.mailListHight = !this.mailListHight;
   }
 
-  nuevoMensaje = ( ) => {
+  nuevoMensaje = ( template: any ) => {
     // this.repository.nuevoMensajeA()
-    this.showFormNuevoMensaje.set( true );
+    this.signal.setSeleccionarMensajeDefault();
+    if( this.semestreSelect().id != 0 ) {
+      this.showFormNuevoMensaje.set( true );
+      return
+    }
+
+    this.alert.sweetAlert('info', 'Seleccione un semestre');
+    
+    this.showModalSemestres( template );
+    
+  }
+
+  showModalSemestres( template: any ) {
+    this.modal.openTemplate( {
+      template,
+      titulo: 'Seleccione Semestre'
+    });
   }
 
   composeMail() {
@@ -183,7 +238,7 @@ export class MensajeriaPageComponent {
     this.repository.obtenerMensajesEnviados().subscribe({
       next: ( mensajesEnviados ) => {
         this.signal.setMensajesEnviados( mensajesEnviados );
-        console.log(mensajesEnviados);
+        // console.log(mensajesEnviados);
         
       }, error: ( error ) => {
         console.log(error);
@@ -196,7 +251,7 @@ export class MensajeriaPageComponent {
     this.repository.obtenerMensajesArchivados().subscribe({
       next: ( mensajesArchivados ) => {
         this.signal.setMensajesArchivados( mensajesArchivados );
-        console.log(mensajesArchivados);
+        // console.log(mensajesArchivados);
         
       }, error: ( error ) => {
         console.log(error);

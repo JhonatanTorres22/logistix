@@ -1,46 +1,63 @@
 <div class="flex gap-3">
-
-    <div class="w-3 text-center">
-        <div class="border-1 border-round p-10 border-gray-400 text-center h-full">
-            <div class="flex flex-column">
-                <div>Plan de Estudios</div>
-                <div>N° 062-2021-UAI-CU/P-V</div>
-            </div>
-            <mat-divider class="mb-4 mt-2"></mat-divider>
-            <div class="flex align-items-center my-2">
-                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                    <i class="f-18 ti ti-arrow-down"></i> 
+    <!-- <pre>
+        {{ planesDeEstudio() | json }}
+    </pre> -->
+    @for (plan of planesDeEstudio(); track plan) {
+        <div class="w-3 text-center">
+            <app-card headerClass="py-2 px-2 block" cardClass="m-0">
+                <ng-template #headerTitleTemplate class="align-items-center">
+                    <div class="f-w-600 f-14">{{ plan.nombre }}</div>
+                </ng-template>
+                <div class="flex flex-column">
+                    <div>{{ plan.resolucion }}</div>
                 </div>
-                <span class="flex-grow-1 text-truncate w-100"> Inicio</span>
-                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2021 </div>
-            </div>
-            <div class="flex align-items-center my-2">
-                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                    <i class="f-18 ti ti-arrow-down"></i> 
+                <div class="flex align-items-center my-2">
+                    <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                        <i class="f-18 ti ti-arrow-down"></i> 
+                    </div>
+                    <span class="flex-grow-1 text-truncate w-100"> Inicio</span>
+                    <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2021 </div>
                 </div>
-                <span class="flex-grow-1 text-truncate w-100"> Fin</span>
-                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
-            </div>
-            <div class="flex align-items-center my-2">
-                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                    <i class="f-18 ti ti-arrow-down"></i> 
+                <div class="flex align-items-center my-2">
+                    <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                        <i class="f-18 ti ti-arrow-down"></i> 
+                    </div>
+                    <span class="flex-grow-1 text-truncate w-100"> Fin</span>
+                    <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
                 </div>
-                <span class="flex-grow-1 text-truncate w-100"> Estado</span>
-                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
-            </div>
-            <div class="flex align-items-center my-2">
-                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                    <i class="f-18 ti ti-arrow-down"></i> 
+                <div class="flex align-items-center my-2">
+                    <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                        <i class="f-18 ti ti-arrow-down"></i> 
+                    </div>
+                    <span class="flex-grow-1 text-truncate w-100"> Estado</span>
+                    <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
                 </div>
-                <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
-                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Asignado </div>
-            </div>
+                <div class="flex align-items-center my-2">
+                    <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                        <i class="f-18 ti ti-arrow-down"></i> 
+                    </div>
+                    <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
+                    <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Asignado </div>
+                </div>
+                <ng-template #actionTemplate>
+                    <div class="flex gap-2 justify-content-around w-full">
+                        <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18"></ui-button>
+                        <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18"></ui-button>
+                        <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18"  (onClick)="verMalla()"></ui-button>
+                    </div>
+                </ng-template>
+            </app-card>
+            <!-- <div class="border-1 border-round p-10 border-gray-400 text-center h-full">
+                
+            </div> -->
         </div>
-    </div>
+    }
     <div class="w-3">
-        <div class="flex align-item-center justify-content-center border-1 border-round p-10 border-dashed border-gray-400 h-full">
-            <ui-button-icon icon="ti ti-plus f-18 border-circle p-3" color="primary" tooltip="Agregar" (click)="agregarMalla()"></ui-button-icon>
-        </div>
+        <app-card [showHeader]="false" cardClass="block h-full m-auto" cardContentClass="m-auto text-center">
+            <ui-button-icon icon="ti ti-plus f-18 border-circle p-3" color="primary" tooltip="Agregar" (onClick)="agregarPlan()"></ui-button-icon>
+        </app-card>
+        <!-- <div class="flex align-item-center justify-content-center border-1 border-round p-10 border-dashed border-gray-400 h-full">
+        </div> -->
     </div>
 
 </div>
