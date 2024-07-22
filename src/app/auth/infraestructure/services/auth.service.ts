@@ -11,6 +11,9 @@ import { JwtPayload, jwtDecode } from "jwt-decode";
 
 import { MensajeriaSignal } from "src/app/mensajeria/domain/signals/mensajeria.signal";
 import { AuthSignal } from "../../domain/signals/auth.signal";
+import { ListarInfoDirector } from "../../domain/models/listarInfoDirector.model";
+import { ListarInfoDirectorArrayDTO } from "../dto/listarInfoDirector.dto";
+import { ListarInfoDirectorMapper } from "../../domain/mappers/listarInfoDirector.mapper";
 
 
 @Injectable({
@@ -25,6 +28,7 @@ export class AuthService {
 
     private urlApi: string;
     private urlLogin: string;
+    private urlListarInfoDirector: string ;
 
     
 
@@ -36,6 +40,7 @@ export class AuthService {
       ) {
         this.urlApi = environment.EndPoint;
         this.urlLogin = 'api/Usuario/Autenticar';
+        this.urlListarInfoDirector = 'api/Asignacion/InfoDirector?codigoUsuario=';
 
         this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')!));
         this.currentUser = this.currentUserSubject.asObservable();
@@ -146,8 +151,14 @@ export class AuthService {
         localStorage.removeItem('currentUserData');
         localStorage.removeItem('currentRol');
         localStorage.removeItem('currentMenu');
+        localStorage.removeItem('infoDirector')
 
         this.auth.setCurrentUserDefault();
         this.router.navigate(['/auth/login']); ///authentication-1/login
+    }
+
+    obtener(idRol: number):Observable<ListarInfoDirector[]>{
+      return this.http.get<ListarInfoDirectorArrayDTO>(this.urlApi + this.urlListarInfoDirector + idRol)
+      .pipe( map ( responseAPI => responseAPI.data.map(ListarInfoDirectorMapper.fromApiToDomain)))
     }
 }

@@ -66,7 +66,7 @@ export class UserAddComponent {
   expRegApellidosYNombres: RegExp;
 
   mensajeBloquearEspacio: string = 'No se debe incluir espacios al término de la palabra'
-  mensajeFormatoCorreo: string = "El correo no tiene el formato adecuado. Ej. XXXXX.YYYYY@"
+  mensajeFormatoCorreo: string = "Correo inválido. Ej. XXXXX.YYYYY@"
   /* celular */
   expRegCelular: RegExp ;
   patternCelular:RegExp;
@@ -456,7 +456,8 @@ export class UserAddComponent {
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
-    }  
-    return age >= 18;
+    }
+    return age >= 18 && age <= 80;
   };
+  
 }

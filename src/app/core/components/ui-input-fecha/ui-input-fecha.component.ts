@@ -55,7 +55,8 @@ export class UiInputFechaComponent implements ControlValueAccessor, OnInit{
   }
  
   onInput( event: any ) {
-    this.formControl.setValue(this.formControl.value.replace(this.expReg, ''));    
+     const value = this.formControl.value || ''; // Asegurarse de que value sea una cadena vacía si es null
+     this.formControl.setValue(value.replace(this.expReg, ''));
   }
   
 }

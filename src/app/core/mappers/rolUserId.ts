@@ -10,7 +10,10 @@ export class RolUserId {
     // constructor( private signal: AuthDomainService ) {
     //     this.idRol = this.signal.currentRol;
     // }
-    // static currentIdRolUser: number = localStorage.getItem('currentRol') ? JSON.parse(localStorage.getItem('currentRol')!).id : '';
+//     static currentIdRolUser: number = JSON.parse(localStorage.getItem('currentRol')!).id;
+//     static currentRol: string = JSON.parse(localStorage.getItem('currentRol')!).rol
+
+
     // static currentIdRolUser() {} 
 
     // public idRolUser() {

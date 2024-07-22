@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, WritableSignal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -35,7 +36,7 @@ export class DirectorListComponent {
     rol: '0',
 };
 constructor(
-  
+  private router: Router,
   private signal: DirectorSignal,
   private programaSignal: ProgramaSignal,
   private repository: UsuarioRolRepository,
@@ -204,5 +205,11 @@ constructor(
       // this.aperturarSemestre();
     
     })
+  }
+
+  irModuloAsignarDirector = () => {
+    const message = 'Director';
+    this.router.navigate(['/configuracion/usuarios'], { state: { message: message } });
+    this.dialogRef.close()
   }
 }

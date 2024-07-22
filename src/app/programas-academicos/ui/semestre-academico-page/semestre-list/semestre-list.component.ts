@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, TemplateRef, WritableSignal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreAcademico, SemestreAcademicoAperturar } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
@@ -15,7 +15,11 @@ import { SemestreAcademicoValidations } from 'src/app/programas-academicos/domai
 import { DateAdapter } from '@angular/material/core';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
+
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+
 
 @Component({
   selector: 'semestre-list',
@@ -25,7 +29,7 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
   styleUrl: './semestre-list.component.scss',
   providers: [ DatePipe ]
 })
-export class SemestreListComponent {
+export class SemestreListComponent implements OnInit {
   listaAsignaciones = this.asignacionSignal.asignaciones;
   semestresAcademicos = this.semestreSignal.semestresAcademicos;
   semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
@@ -54,6 +58,7 @@ export class SemestreListComponent {
 
   showFormAgregarSemestre: boolean = false;
   constructor(
+    private modal: UiModalService,
     private asignacionSignal: AsignacionSignal,
     private semestreAcademicoRepository: SemestreAcademicoRepository,
     private alertService: AlertService,
@@ -148,6 +153,26 @@ export class SemestreListComponent {
           
       }
     }) 
+  }
+
+  openModalSemestre ( semestre: SemestreAcademico, template: TemplateRef<any>) {
+    let titleModal = 'Editar Semestre';
+    console.log(semestre,'semestre');
+    this.semestreEdit = semestre;
+
+    this.showFormAgregarSemestre = !semestre;
+
+    semestre ? this.semestreSignal.semestreSelect.set(semestre) : (titleModal = 'Crear Semestre' )
+    console.log(this.showFormAgregarSemestre);
+    this.modal.openTemplate({
+      template,
+      titulo:titleModal
+    }).afterClosed().subscribe( resp => {
+      if(resp == 'cancelar'){
+        console.log(resp);
+        this.semestreSignal.setSelectSemestreDefault();
+      }
+    })
   }
 
   openShowFormCrearSemestre = ( event?: EventEmitter<string> | string) => {
@@ -258,7 +283,7 @@ export class SemestreListComponent {
 
     this.semestreAcademicoRepository.eliminarSemestre( semestreEliminar ).subscribe({
       next: ( data ) => {
-        this.alertService.showAlert('Semestre eliminado correctamente', 'success');
+        this.alertService.sweetAlert('success', '¡Eliminado!', 'Semestre eliminado correcamente')
         this.limpiarDatosSemestre(); 
         if(semestre.id === this.semestreSeleccionado().id){
           this.semestreSignal.setSelectSemestre(  this.semestreSelect );

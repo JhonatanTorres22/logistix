@@ -30,6 +30,12 @@ export class SemestreSignal {
     }
 
 
+    setSelectSemestreDefault(){
+        this.semestreSelect.set(this.semestre)
+    }
+
+
+
     public semestresAcademicos = signal(this.semestres);
     public semestreAcademicoAperturado = signal( this.semestre);
     public semestreAcademicoEditado = signal (this.semestre)
@@ -59,6 +65,7 @@ export class SemestreSignal {
     public setSemestreEditadoDefault = () => {
         this.semestreAcademicoEditado.set(this.semestre)
     }
+
 
 
     

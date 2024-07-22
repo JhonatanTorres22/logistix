@@ -15,6 +15,7 @@ import { UserEditComponent } from '../user-edit/user-edit.component';
 import { UsuariosDomainService } from '../../domain/services/usuarios-domain.service';
 import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UsuarioLocalService } from '../../infraestructure/services/usuario-local.service';
+import { Router } from '@angular/router';
 
 export interface PeriodicElement {
   id: number;
@@ -38,6 +39,7 @@ export interface PeriodicElement {
 export class UserListComponent {
 
   usuarios: Usuario[] = [];
+  mensajeAsignarRolDirectoroDecano: string;
 
   // public props
   displayedColumns: string[] = ['fullName', 'tipoDocumento', 'numeroDocumento', 'action'];
@@ -65,6 +67,10 @@ export class UserListComponent {
   ) {}
 
   ngOnInit(): void {
+     const state = history.state;
+     if (state && state.message) {
+       this.mensajeAsignarRolDirectoroDecano = state.message;
+     }     
     this.obtenerUsuarios();
     // this.getUserMock();
   }
@@ -143,7 +149,7 @@ export class UserListComponent {
       width: '800px',
       height: '600px',
       disableClose: true,
-      data: {usuario, component: 'user-rol'}
+      data: {usuario, component: 'user-rol', message:this.mensajeAsignarRolDirectoroDecano}
     });
   }
 

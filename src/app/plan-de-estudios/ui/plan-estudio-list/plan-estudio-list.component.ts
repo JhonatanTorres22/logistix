@@ -11,6 +11,7 @@ import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui
 import { PlanEstudioAddComponent } from '../plan-estudio-add/plan-estudio-add.component';
 import { PlanEstudio, PlanEstudioEliminar } from '../../domain/models/plan-estudio.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { InfoDirectorSignal } from 'src/app/auth/domain/signals/infoDirector.signal';
 
 @Component({
   selector: 'plan-estudio-list',
@@ -25,7 +26,9 @@ export class PlanEstudioListComponent implements OnInit {
   planEstudioEdit = this.signal.planEstudioEdit;
   planEstudioSelect =  this.signal.planEstudioSelect;
   isModal = this.signal.isModal;
+  director = this.infoDirectorSignal.infoDirector
   constructor(
+    private infoDirectorSignal:InfoDirectorSignal,
     private router: Router,
     private repository: PlanEstudioRepository,
     private alert: AlertService,
@@ -39,7 +42,7 @@ export class PlanEstudioListComponent implements OnInit {
 
   
   obtener() {
-    this.repository.obtener(1).subscribe({
+    this.repository.obtener(this.director()[0].CodigoProgramaAcademico).subscribe({
       next: ( planes ) => {
         console.log( planes );
         this.planesDeEstudio.set( planes )
@@ -120,7 +123,6 @@ export class PlanEstudioListComponent implements OnInit {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al eliminar el plan de estudios', 'error', 6);
 
-        
       }
     })
 

@@ -5,7 +5,9 @@ export class RolMapper {
     static fromDomainToApi( param: Rol): RolDTO {
         return {
             codigo: param.id,
-            nombre: param.rol
+            nombre: param.rol,
+            alta: param.alta,
+            estado: param.estado
         }
     }
 
@@ -13,7 +15,9 @@ export class RolMapper {
     static fromApiToDomain( param: RolDTO): Rol {
         return {
             id: param.codigo,
-            rol: param.nombre
+            rol: param.nombre,
+            alta: param.alta,
+            estado: param.estado
         }
     }
 }
