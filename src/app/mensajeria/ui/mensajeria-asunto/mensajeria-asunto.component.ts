@@ -11,6 +11,10 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { AsignacionRepository } from 'src/app/programas-academicos/domain/repositories/asignacion.repository';
 import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-academico-page/programa-card/programa-card.component';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
+import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
+import { InfoDirectorSignal } from 'src/app/auth/domain/signals/infoDirector.signal';
 
 @Component({
   selector: 'mensajeria-asunto',
@@ -20,7 +24,9 @@ import { ProgramaCardComponent } from 'src/app/programas-academicos/ui/programa-
   styleUrl: './mensajeria-asunto.component.scss'
 })
 export class MensajeriaAsuntoComponent {
+  director = this.infoDirectorSignal.infoDirector
 
+  planSinResolucion: PlanEstudio[]
   modoTablet = this.signal.mensajeriaModoTablet;
   mensajesHistorial = this.signal.mensajesHistorial;
   backToMail = this.signal.backToMail;
@@ -35,22 +41,37 @@ export class MensajeriaAsuntoComponent {
 
 
   constructor(
+    private infoDirectorSignal:InfoDirectorSignal,
+    private signalPlanEstudio: PlanEstudioSignal,
     private signal: MensajeriaSignal,
     private alert: AlertService,
     private modal: UiModalService,
     private semestreSignal: SemestreSignal,
     private repositoryAsignacion: AsignacionRepository,
+    private repository: PlanEstudioRepository,
 
-  ) {}
+  ) { }
 
   onBackToMail = () => {
     this.backToMail.set( this.signal.backToMailDefault );
   }
 
+  obtenerPlanesEstudio() {
+    this.repository.obtener(this.director()[0].CodigoProgramaAcademico).subscribe({
+      next: ( planes ) => {
+        this.planSinResolucion = planes.filter(plan => plan.resolucion === null);
+        console.log(this.planSinResolucion, 'sin resolucion');
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los planes de estudios', 'error', 6);
+      }
+    })
+  }
   showCardPrograma = ( template: TemplateRef<any>, mensaje: MensajeriaHistorialMensajes, showButtons: boolean ) => {
+    this.obtenerPlanesEstudio();
     this.obtenerProgramaForAlta()
       .then( programaForAlta => {
-        console.log(programaForAlta);
+        console.log(programaForAlta,'programa form alta');
         this.mensajeHistorialSelect = mensaje;
         this.showButtons = showButtons
         if( programaForAlta == '' ) {
@@ -65,7 +86,7 @@ export class MensajeriaAsuntoComponent {
     
           this.modal.openTemplate( {
             template,
-            titulo: 'Programa Académico'
+            titulo: this.tipoAccion === 'DAR' ? 'Programa Académico' : 'PLAN DE ESTUDIO'
           } )
   
 
@@ -78,6 +99,7 @@ export class MensajeriaAsuntoComponent {
     return semestre ? semestre : this.semestreSelect();
   }
 
+  tipoAccion: string = '';
   obtenerProgramaForAlta() {
     let programaAsignado: AsignacionPrograma[];
     const asunto = this.mensajesHistorial()[0].asunto;
@@ -86,14 +108,17 @@ export class MensajeriaAsuntoComponent {
       
       case 'DAR': { 
         nombrePrograma = asunto.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');
+        this.tipoAccion = 'DAR'
 
        }; break;
       case 'VAL': { 
         nombrePrograma = asunto.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', '');
+        this.tipoAccion = 'VAL'
 
        }; break;
       case 'CAM': { 
         nombrePrograma = asunto.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', '');
+        this.tipoAccion = 'CAM'
 
        }; break;
     }

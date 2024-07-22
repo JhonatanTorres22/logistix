@@ -6,6 +6,9 @@ import { RolDTO } from '../../infraestructure/dto/auth.dto';
 import { Router } from '@angular/router';
 import { AuthService } from '../../infraestructure/services/auth.service';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { ListarInfoDirectorRepository } from '../../domain/repositories/listarInfoDirector.repository';
+import { AuthSignal } from '../../domain/signals/auth.signal';
+import { InfoDirectorSignal } from '../../domain/signals/infoDirector.signal';
 
 @Component({
   selector: 'select-rol',
@@ -19,11 +22,15 @@ export class SelectRolComponent {
   @Input() roles: RolDTO[] = [];
   @Input() token: string = '';
 
+  currentRol = this.auth.currentRol;
   imgRol: string = '';
   isSpinnerVisible: boolean = true;
   
 
   constructor(
+    private infoDirectorSignal:InfoDirectorSignal,
+    private auth: AuthSignal,
+    private repository: ListarInfoDirectorRepository,
     private router: Router,
     private authService: AuthService,
     private mensajeria: MensajeriaSignal
@@ -38,6 +45,7 @@ export class SelectRolComponent {
   //   }
   // }
 
+  infoDirector = this.infoDirectorSignal.infoDirector;
   selectRol( rol: RolDTO) {
     // console.log( rol );
 
@@ -47,6 +55,18 @@ export class SelectRolComponent {
     localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeria.mensajeriaAsignacionDefault));
 
     this.router.navigate(['/dashboard']);
+    console.log(rol.Nombre,'****');
+    const rolSeleccionado = rol.Nombre.substring(0,3)
+    
+    if(rolSeleccionado === 'Dir'){
+      this.repository.obtener(parseInt( this.auth.currentRol().id )).subscribe({
+        next: (infoDirector) => {
+          this.infoDirector.set(infoDirector)
+          localStorage.setItem('infoDirector', JSON.stringify(infoDirector))
+          console.log(infoDirector,'infodirector....');
+        }
+      })
+    }
     
   }
 
