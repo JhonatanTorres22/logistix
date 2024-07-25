@@ -1,11 +1,18 @@
 import { Injectable } from "@angular/core";
+import { AbstractControl } from "@angular/forms";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
+import { CursoSingal } from "../signal/curso.signal";
+import { ValidacionComprobarDuplicadoService } from "src/app/programas-academicos/domain/services/validacion-comprobar-duplicado.service";
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class CursoValidation {
+    constructor(
+        private cursoSignal : CursoSingal,
+        private validarDuplicadoService:ValidacionComprobarDuplicadoService
+    ){}
 
     // maxLengthPrograma:string
     // maxLengthCiclo: string
@@ -16,8 +23,9 @@ export class CursoValidation {
 
     maxLengthNombreCurso: number = 50;
     minLengthNombreCurso: number = 6;
-    expRegNombreCurso: RegExp = /[A-Za-z]{5,20}/;
-    expRegNombreCursoBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    expRegNombreCurso: RegExp =/^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;
+    expRegNombreCursoBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
+    duplicado = this.duplicadoNombreCurso.bind(this);
 
     maxLengthDescripcion: number = 80;
     minLengthDescripcion: number = 6;
@@ -29,22 +37,22 @@ export class CursoValidation {
     maxLengthHorasTeoricas: number = 2
     minLengthHorasTeoricas: number = 1;
     expRegHorasTeoricas: RegExp = /[0-9]{1,2}/;
-    expRegHorasTeoricasBlockToInput: RegExp = /^((?![0-9]).)*$/;
+    expRegHorasTeoricasBlockToInput: RegExp = /[^0-9]/g;
 
     maxLengthHorasPracticas: number = 2
     minLengthHorasPracticas: number = 1;
     expRegHorasPracticas: RegExp = /[0-9]{1,2}/;
-    expRegHorasPracticasBlockToInput: RegExp = /^((?![0-9]).)*$/;
+    expRegHorasPracticasBlockToInput: RegExp = /[^0-9]/g;
 
     maxLengthTotalHoras: number = 2
     minLengthTotalHoras: number = 1;
     expRegTotalHoras: RegExp = /[0-9]{1,2}/;
-    expRegTotalHorasBlockToInput: RegExp = /^((?![0-9]).)*$/;
+    expRegTotalHorasBlockToInput: RegExp = /[^0-9]/g;
 
     maxLengthTotalCreditos: number = 2
     minLengthTotalCreditos: number = 1;
     expRegTotalCreditos: RegExp = /[0-9]{1,2}/;
-    expRegTotalCreditosBlockToInput: RegExp = /^((?![0-9]).)*$/;
+    expRegTotalCreditosBlockToInput: RegExp =/[^0-9]/g;
     
     // maxLengthPreRequisito: number[]
 
@@ -70,5 +78,10 @@ export class CursoValidation {
         { value: 'CT3', text: 'Competencia de Especialidad 3', disabled: false },
     ]
 
+    duplicadoNombreCurso(control: AbstractControl): { [key: string]: boolean } | null {
+        const listaCursos = this.cursoSignal.cursosList();
+        const cursoEditar = this.cursoSignal.cursoSelect();
+        return this.validarDuplicadoService.duplicadoNombre(control, listaCursos, cursoEditar, 'nombreCurso');
+      }
 
 }

@@ -44,6 +44,7 @@ export class UserRolComponent implements OnInit {
   /* DRAG AND DROP START */
 
   currentRol = this.auth.currentRol;
+  currentData = this.auth.currentUserData
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
   done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
   /* DRAG AND DROP END */
@@ -136,16 +137,16 @@ export class UserRolComponent implements OnInit {
     })
   }
 
-  changeEstadoRol = ( $event: MatSlideToggleChange, rol: Rol ) => {
-    console.log($event.checked);
-    const estado = $event.checked ? 'ACTIVAR' : 'SUSPENDER'
+  changeEstadoRol = ( $event: MatSlideToggleChange, rol: Rol) => {
+    const estado = $event.checked ? 'ACTIVAR' : 'SUSPENDER';
+    const isCurrentRol = (rol.id === parseInt(this.currentRol().id) ||this.currentData().ApellidosyNombres === this.usuario.apellidoPaterno +' '+ this.usuario.apellidoMaterno+', ' + this.usuario.nombres )&& rol.alta === 'ALTA'
     this.alertService.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ${estado} el ROL?`).then( isConfirm => {
       if( !isConfirm ) {
         $event.source.checked = !$event.checked;
         return;
       }
       if($event.checked){
-        if(rol.rol === this.currentRol().rol && rol.alta === 'ALTA'){
+        if(isCurrentRol){
           this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
             if(!isConfirm){
               $event.source.checked = !$event.checked;
@@ -161,7 +162,7 @@ export class UserRolComponent implements OnInit {
           this.activarRolUser(rol)
         }
       }else {
-        if(rol.rol === this.currentRol().rol && rol.alta == 'ALTA' ){
+        if(isCurrentRol ){
           this.alertService.sweetAlert('question', '¿Confirmar?', `Si usted desea suspender el rol de ${rol.rol} deberá cerrar sesión`).then( isConfirm =>{
             if(!isConfirm){
               $event.source.checked = !$event.checked;
@@ -178,9 +179,6 @@ export class UserRolComponent implements OnInit {
           this.suspenderRolUser(rol)
         }
       }
-      // $event.checked ? this.activarRolUser( rol ) 
-      // : (rol.rol === RolUserId.currentRol) ? this.alertService  this.suspenderRolUser( rol ): '';
-
     })
   }
 
@@ -237,7 +235,7 @@ export class UserRolComponent implements OnInit {
         console.log( data );
         this.alertService.sweetAlert('success', '¡Correcto!', `El rol ${ rol.rol} fue dado de alta correctamente` ).then(isConfirm => {
           if(isConfirm){
-            if(parseInt(this.currentRol().id) === this.usuario.id){
+            if(rol.usuario === this.currentData().ApellidosyNombres){
               this.alertService.sweetAlert('question', '¿Desea acceder al nuevo rol?', `Se le informa que si desea acceder al nuevo rol de ${rol.rol} deberá cerrar sesión`).then(isConfirm => {
               if(!isConfirm){
                 return
@@ -249,7 +247,6 @@ export class UserRolComponent implements OnInit {
             this.obtenerUsuarios();
           }
         });
-
       }, error: ( error ) => {
         console.log(error);
         this.alertService.showAlert(`Ocurrió un error: ${ error }`, 'success');
@@ -279,43 +276,46 @@ export class UserRolComponent implements OnInit {
 
   guardar = () => {
 
-    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea guardar los cambios?').then( isConfirm => {
-      if( !isConfirm ) {
+    this.alertService.sweetAlert('question', 'Confirmación', '¿Está seguro que desea guardar los cambios?').then(isConfirm => {
+      if( !isConfirm) {
         return
       }
 
       let contadorNew = 1;
       let contadorDelete = 1;
-      this.deleteRoles.forEach( deleteRol => {  
+      this.deleteRoles.forEach(deleteRol => {
         const isLast = contadorDelete == this.deleteRoles.length;
         const eliminarRol = {
           idRol: deleteRol.id,
-          usuarioId: parseInt( this.auth.currentRol().id ) 
+          usuarioId: parseInt(this.auth.currentRol().id)
         }
 
 
-        if(this.currentRol().rol == deleteRol.rol){
-          this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que para eliminar el rol ${deleteRol.rol} deberá cerrar sesión`).then( isConfirm => {
-            if(!isConfirm){
+        if (this.currentData().ApellidosyNombres == deleteRol.usuario) {
+          this.alertService.sweetAlert('question', '¿Confirmar?', `Se le informa que para eliminar el rol ${deleteRol.rol} deberá cerrar sesión`).then(isConfirm => {
+            if (!isConfirm) {
               return;
+            } else {
+              this.eliminarRolUsuario(eliminarRol, isLast);
+              setTimeout(() => {
+                this.authService.logout();
+                this.dialogRef.close()
+              }, 300);
             }
-            this.authService.logout();
-            this.dialogRef.close()
           })
+        } else {
+          this.eliminarRolUsuario(eliminarRol, isLast);
         }
-        setTimeout(() => {
-          this.eliminarRolUsuario( eliminarRol, isLast );
-        }, 1000);
       })
-      this.newRoles.forEach( newRol => {
+      this.newRoles.forEach(newRol => {
         const isLast = contadorNew == this.newRoles.length;
         const nuevoRol = {
           idUsuario: this.usuario.id,
           idRol: newRol.id,
-          usuarioId: parseInt( this.auth.currentRol().id )
+          usuarioId: parseInt(this.auth.currentRol().id)
         }
         setTimeout(() => {
-          this.asignarRolUsuario( nuevoRol, isLast );
+          this.asignarRolUsuario(nuevoRol, isLast);
         }, 1000);
         contadorNew++;
       })
@@ -378,6 +378,9 @@ export class UserRolComponent implements OnInit {
 
   /*  DRAG AND DROP START */
   drop = (event: CdkDragDrop<string[]>, tipo: string) => {
+    if(this.currentRol().rol !== 'Administrador'){
+      this.alertService.showAlert('Usted no podrá realizar esta acción, por favor comunicarse con el Administrador', 'warning')
+      return}
     
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

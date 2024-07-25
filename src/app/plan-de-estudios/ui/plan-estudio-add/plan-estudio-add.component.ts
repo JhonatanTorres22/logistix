@@ -12,6 +12,7 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { PlanEstudioRepository } from '../../domain/repositories/plan-estudio.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
 @Component({
   selector: 'plan-estudio-add',
@@ -22,6 +23,8 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 })
 export class PlanEstudioAddComponent implements OnInit {
 
+  mensajeErrorEspacio: string = 'No se puede insertar espacio al final de la palabra'
+  listaCamposFormulario: string[] = ['nombre', 'descripcionGrado', 'descripcionTitulo', 'detallePerfil']
   formPlanEstudio: FormGroup;
   planEstudio = this.signal.planEstudio;
   planEstudioEdit = this.signal.planEstudioEdit;
@@ -45,6 +48,7 @@ export class PlanEstudioAddComponent implements OnInit {
 
 
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private validation: PlanEstudioValidation,
     private authSignal: AuthSignal,
     private signal: PlanEstudioSignal,
@@ -53,11 +57,13 @@ export class PlanEstudioAddComponent implements OnInit {
     private alert: AlertService
   ) {
     this.formPlanEstudio = new FormGroup({
-      nombre: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombre ), Validators.minLength( this.minLengthNombre ), Validators.pattern( this.expRegNombre )]),
+      nombre: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombre ), Validators.minLength( this.minLengthNombre ), Validators.pattern( this.expRegNombre ), validation.duplicadoNombre]),
       descripcionGrado: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDescripcionGrado), Validators.minLength( this.minLengthDescripcionGrado), Validators.pattern( this.expRegDescripcionGrado)]),
       descripcionTitulo: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDescripcionTitulo), Validators.minLength( this.minLengthDescripcionTitulo), Validators.pattern( this.expRegDescripcionTitulo) ]),
       detallePerfil: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDetallePerfil), Validators.minLength( this.minLengthDetallePerfil), Validators.pattern( this.expRegDetallePerfil)])
     })
+    this.deshabilitarInputsFormService.inicializarInputs(this.formPlanEstudio, this.listaCamposFormulario,0);
+    this.deshabilitarInputsFormService.controlarInputs(this.formPlanEstudio, this.listaCamposFormulario)
   }
   ngOnInit(): void {
     console.log(this.planEstudioEdit());
@@ -127,7 +133,8 @@ export class PlanEstudioAddComponent implements OnInit {
     this.repository.insertar( newPlan ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alert.showAlert('Plan de estudios insertado de manera correcta', 'success', 6)
+        this.alert.sweetAlert('success', '¡Correcto!', 'Plan de estudios insertado correctamente')
+        // this.alert.showAlert('Plan de estudios insertado de manera correcta', 'success', 6)
         this.modal.getRefModal().close('Add');
       }, error: ( error ) => {
         console.log( error );
@@ -141,7 +148,8 @@ export class PlanEstudioAddComponent implements OnInit {
     this.repository.editarDE( editPlan ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alert.showAlert('Plan de estudios fué editado de manera correcta', 'success', 6)
+        this.alert.sweetAlert('success', '¡Correcto!', 'El plan de estudios fue editado corectamente')
+        // this.alert.showAlert('Plan de estudios fué editado de manera correcta', 'success', 6)
         this.modal.getRefModal().close('EditDE');
         
       }, error: ( error ) => {

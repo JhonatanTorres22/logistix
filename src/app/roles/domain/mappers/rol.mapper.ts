@@ -7,7 +7,8 @@ export class RolMapper {
             codigo: param.id,
             nombre: param.rol,
             alta: param.alta,
-            estado: param.estado
+            estado: param.estado,
+            usuario: param.usuario
         }
     }
 
@@ -17,7 +18,8 @@ export class RolMapper {
             id: param.codigo,
             rol: param.nombre,
             alta: param.alta,
-            estado: param.estado
+            estado: param.estado,
+            usuario: param.usuario
         }
     }
 }

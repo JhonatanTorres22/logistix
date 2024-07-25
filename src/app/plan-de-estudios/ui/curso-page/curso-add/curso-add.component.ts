@@ -24,6 +24,7 @@ import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/cu
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
+import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
 
 @Component({
@@ -79,8 +80,13 @@ export class CursoAddComponent {
   optionsCiclos: UiSelect[] = [];
   totalHorasModel: number;
   formCurso: FormGroup;
+  listaCamposFormulario: string[] = ['idCiclo', 'codigoCurso', 'nombreCurso', 'descripcion',
+    'tipoEstudio', 'tipoCurso', 'competencia', 'horasTeoricas','horasPracticas', 
+    'totalHoras', 'totalCreditos' 
+  ]
   // constructor
   constructor(
+    private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private repository: CursoRepository,
     private signal: CursoSingal,
     private auth: AuthSignal,
@@ -94,7 +100,7 @@ export class CursoAddComponent {
       // programa: new FormControl('', [Validators.required]),
       idCiclo: new FormControl('', [Validators.required]),
       codigoCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthCodigoCurso ), Validators.minLength( this.minLengthCodigoCurso ), Validators.pattern(this.expRegCodigoCurso)]),
-      nombreCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombreCurso ), Validators.minLength( this.minLengthNombreCurso ), Validators.pattern(this.expRegNombreCurso)]),
+      nombreCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombreCurso ), Validators.minLength( this.minLengthNombreCurso ), Validators.pattern(this.expRegNombreCurso), validation.duplicado]),
       descripcion: new FormControl('', [Validators.required]),
       tipoEstudio: new FormControl('', [ Validators.required ]),
       tipoCurso: new FormControl('', [ Validators.required]),
@@ -105,6 +111,8 @@ export class CursoAddComponent {
       totalCreditos: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthTotalCreditos ), Validators.minLength( this.minLengthTotalCreditos ), Validators.pattern(this.expRegTotalCreditos)]),
      })
      
+     this.deshabilitarInputsFormService.inicializarInputs(this.formCurso, this.listaCamposFormulario,0);
+     this.deshabilitarInputsFormService.controlarInputs(this.formCurso, this.listaCamposFormulario)
     //  this.formCurso ? this.pathValueFormEdit() : '';
 
     effect( () => {

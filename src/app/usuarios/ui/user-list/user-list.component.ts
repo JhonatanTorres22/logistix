@@ -16,6 +16,7 @@ import { UsuariosDomainService } from '../../domain/services/usuarios-domain.ser
 import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UsuarioLocalService } from '../../infraestructure/services/usuario-local.service';
 import { Router } from '@angular/router';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 export interface PeriodicElement {
   id: number;
@@ -38,6 +39,7 @@ export interface PeriodicElement {
 })
 export class UserListComponent {
 
+  currentRol = this.authSignal.currentRol;
   usuarios: Usuario[] = [];
   mensajeAsignarRolDirectoroDecano: string;
 
@@ -60,6 +62,7 @@ export class UserListComponent {
   }
 
   constructor(
+    private authSignal: AuthSignal,
     private usuarioRepository: UsuarioRepository,
     public dialog: MatDialog,
     private usuarioDomainService: UsuariosDomainService,
