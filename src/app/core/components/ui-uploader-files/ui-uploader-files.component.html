@@ -1,0 +1,11 @@
+<app-card [showHeader]="false">
+    <form [formGroup]="filesForm">
+        <div class="overflow-auto max-h-20rem">
+            <file-upload formControlName="files" [multiple]="false" ></file-upload>
+        </div>
+    </form>
+    <div class="text-center m-t-20">
+      <button mat-flat-button color="primary">Upload Now</button>
+    </div>
+    {{ filesForm.value | json }}
+</app-card>

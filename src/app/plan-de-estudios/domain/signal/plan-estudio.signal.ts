@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
-import { PlanEstudio } from "../models/plan-estudio.model";
+import { PlanEstudio, PlanEstudioEditCU } from "../models/plan-estudio.model";
 
 
 @Injectable({
@@ -22,13 +22,37 @@ export class PlanEstudioSignal {
         resolucion: ''
      }
 
+     planEstudioPorAprobarDefault: PlanEstudioEditCU = {
+
+    
+        descripcionGrado: '',
+        descripcionTitulo: '',
+        detallePerfil: '',
+  
+
+        nombre: '',
+        resolucion: '',
+        finVigencia: '',
+        id: 0,
+        inicioVigencia: '',
+        usuarioId: 0
+     }
+
     planesDeEstudio: WritableSignal<PlanEstudio[]> = signal([]);
 
     planEstudioEdit: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
+    planEstudioSinResolucion: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
+    planEstudioPorAprobar: WritableSignal<PlanEstudioEditCU> = signal( this.planEstudioPorAprobarDefault );
     planEstudioSelect: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
 
     planEstudio: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
 
+    programaId = signal(0);
+
     isModal = signal( false );
+
+    openMallaCursos = signal ( false );
+
+    renderizarPor = signal( '' );
 }
 

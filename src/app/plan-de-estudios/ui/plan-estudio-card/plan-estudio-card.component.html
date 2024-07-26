@@ -1,0 +1,61 @@
+@if( planEstudio && planEstudio.id != 0 ) {
+    <!-- <pre>{{ planEstudio | json }}</pre> -->
+    <app-card headerClass="py-2 px-2 block" cardClass="m-0">
+        <ng-template #headerTitleTemplate class="align-items-center">
+            <div class="f-w-600 f-14">{{ planEstudio.nombre }}</div>
+        </ng-template>
+        <div class="flex flex-column">
+            <div>{{ planEstudio.resolucion || 'Sin Resolución' }}</div>
+        </div>
+        <div class="flex align-items-center my-2">
+            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                <i class="f-18 ti ti-arrow-down"></i> 
+            </div>
+            <span class="flex-grow-1 text-truncate w-100"> Inicio</span>
+            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2021 </div>
+        </div>
+        <div class="flex align-items-center my-2">
+            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                <i class="f-18 ti ti-arrow-down"></i> 
+            </div>
+            <span class="flex-grow-1 text-truncate w-100"> Fin</span>
+            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
+        </div>
+        <div class="flex align-items-center my-2">
+            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                <i class="f-18 ti ti-arrow-down"></i> 
+            </div>
+            <span class="flex-grow-1 text-truncate w-100"> Estado</span>
+            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
+        </div>
+        <div class="flex align-items-center my-2">
+            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                <i class="f-18 ti ti-arrow-down"></i> 
+            </div>
+            <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
+            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Asignado </div>
+        </div>
+        @if ( !isModal() ) {
+            <ng-template #actionTemplate>
+                <div class="flex gap-2 justify-content-around w-full">
+                    <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18" (onClick)="eliminarConfirm( planEstudio )"></ui-button>
+                    <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( planEstudio, planEstudioAdd )"></ui-button>
+                    <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( planEstudio )"></ui-button>
+                </div>
+            </ng-template>
+        } @else {
+            <ng-template #actionTemplate>
+                <div class="flex gap-2 justify-content-around w-full">
+                    <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( planEstudio )"></ui-button>
+                </div>
+            </ng-template>
+        }
+    </app-card>
+}
+
+<ng-template #planEstudioAdd let-data>
+    <plan-estudio-add></plan-estudio-add>
+</ng-template>
+<malla-curricular-side></malla-curricular-side>
+
+<!-- {{ isModal() }} -->

@@ -12,6 +12,9 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 })
 export class UiCardNotItemsComponent {
 
-  @Input() text: string = 'No hay ningún elemento seleccionado'
-
+  @Input() text: string = 'No hay ningún elemento seleccionado';
+  @Input() icon: string = 'ti ti-folder-off';
+  @Input() class: string = '';
+  @Input() classContent: string = '';
+  
 }

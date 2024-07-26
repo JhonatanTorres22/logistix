@@ -12,11 +12,18 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { PlanEstudioRepository } from '../../domain/repositories/plan-estudio.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { UiInputFechaComponent } from "../../../core/components/ui-input-fecha/ui-input-fecha.component";
 
 @Component({
   selector: 'plan-estudio-add',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiInputComponent, UiTextAreaComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    UiInputComponent,
+    UiTextAreaComponent,
+    UiButtonComponent,
+    UiInputFechaComponent],
   templateUrl: './plan-estudio-add.component.html',
   styleUrl: './plan-estudio-add.component.scss'
 })
@@ -25,6 +32,8 @@ export class PlanEstudioAddComponent implements OnInit {
   formPlanEstudio: FormGroup;
   planEstudio = this.signal.planEstudio;
   planEstudioEdit = this.signal.planEstudioEdit;
+  currentRol = this.authSignal.currentRol;
+  idPrograma = this.signal.programaId;
   
   expRegDescripcionGrado: RegExp = this.validation.expRegDescripcionGrado;
   expRegDescripcionTitulo: RegExp = this.validation.expRegDescripcionTitulo;
@@ -43,6 +52,8 @@ export class PlanEstudioAddComponent implements OnInit {
   expRegLockInputDetallePerfil: RegExp = this.validation.expRegLockInputDetallePerfil;
   expRegLockInputNombre: RegExp = this.validation.expRegLockInputNombre;
 
+  
+
 
   constructor(
     private validation: PlanEstudioValidation,
@@ -56,6 +67,9 @@ export class PlanEstudioAddComponent implements OnInit {
       nombre: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombre ), Validators.minLength( this.minLengthNombre ), Validators.pattern( this.expRegNombre )]),
       descripcionGrado: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDescripcionGrado), Validators.minLength( this.minLengthDescripcionGrado), Validators.pattern( this.expRegDescripcionGrado)]),
       descripcionTitulo: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDescripcionTitulo), Validators.minLength( this.minLengthDescripcionTitulo), Validators.pattern( this.expRegDescripcionTitulo) ]),
+      // resolucion: new FormControl(''),
+      // inicioVigencia: new FormControl(''),
+      // finVigencia: new FormControl(''),
       detallePerfil: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthDetallePerfil), Validators.minLength( this.minLengthDetallePerfil), Validators.pattern( this.expRegDetallePerfil)])
     })
   }
@@ -63,6 +77,11 @@ export class PlanEstudioAddComponent implements OnInit {
     console.log(this.planEstudioEdit());
     
     this.planEstudioEdit().id != 0 ? this.pathValueForm() : '';
+
+    if( this.currentRol().rol == 'Consejo Universitario' ) {
+      // this.formPlanEstudio.addValidators('resolucion', Validators.required)
+    }
+
   }
 
 
@@ -89,12 +108,12 @@ export class PlanEstudioAddComponent implements OnInit {
               descripcionGrado: this.formPlanEstudio.value.descripcionGrado,
               descripcionTitulo: this.formPlanEstudio.value.descripcionTitulo,
               detallePerfil: this.formPlanEstudio.value.detallePerfil,
-              idProgramaAcademico: 1,
+              idProgramaAcademico: this.idPrograma(),
               nombre: this.formPlanEstudio.value.nombre,
               usuarioId: parseInt( this.authSignal.currentRol().id )
         
             }
-            console.log(this.formPlanEstudio.value);
+            console.log(newPlan);
     
             this.insertar( newPlan );
 
@@ -102,7 +121,7 @@ export class PlanEstudioAddComponent implements OnInit {
 
           case 'Editar': {
             const editPlan: PlanEstudioEditDE = {
-              idPlanEstudio: this.planEstudioEdit().id,
+              id: this.planEstudioEdit().id,
               descripcionGrado: this.formPlanEstudio.value.descripcionGrado,
               descripcionTitulo: this.formPlanEstudio.value.descripcionTitulo,
               detallePerfil: this.formPlanEstudio.value.detallePerfil,
@@ -163,5 +182,8 @@ export class PlanEstudioAddComponent implements OnInit {
     });
 
   }
+
+
+  
 
 }

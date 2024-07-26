@@ -10,81 +10,103 @@
     }
     <!-- {{ mensaje.asunto }} -->
   
-    <ui-button color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="showCardPrograma( templateProgramaCard, mensajesHistorial()[0], false )">
+    <ui-button idButton="asunto" color="secondary" class="text-xs sm:text-sm" classButton="px-0 sm:px-3" (onClick)="openModalCard( )">
       {{mensajesHistorial()[0]?.asunto}}
     </ui-button>
+    <!-- <button (click)="clickAsunto()">sa</button> -->
+
 </app-card>
 
-<ng-template #templateProgramaCard let-data>
+<ng-template #templateCard let-data>
+  <!-- <pre>{{ listaDestinatariosResponderA() | json }}</pre> -->
+  @switch ( tipoCard ) {
+    @case ('ALTA') {
 
-  @if (tipoAccion === 'DAR') {
-    <mat-dialog-content>
-      <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
-      <!-- <p>asdasd</p> -->
-      @if ( showButtons ) {
-        <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea der de Alta al Director de Escuela?</p>
-        <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
-          <mat-checkbox [(ngModel)]="esConforme" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
-        </div>
+      @if (tipoCard === 'ALTA') {
+        <mat-dialog-content>
+          <programa-card [programa]="programaForAlta.programas[0]" [asignacion]="programaForAlta"></programa-card>
+          <!-- <p>asdasd</p> -->
+          @if ( showButtons && tipoBandeja() == 'Recibidos' ) {
+            <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea dar de Alta al Director de Escuela?</p>
+            <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
+              <mat-checkbox [(ngModel)]="esConforme" (change)="onChecked( $event )" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
+            </div>
+          }
+              
+        </mat-dialog-content>
+        @if ( showButtons && tipoBandeja() == 'Recibidos' ) {
+          <mat-dialog-actions align="end" class="flex gap-2">
+            <!-- <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar"></ui-button> -->
+            <!-- <ui-button color="orange" label="Enviar Observación" [disabled]="showFormResponse() || esConforme" (onClick)="onResponder()"></ui-button>
+            <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse() || !esConforme" (onClick)="onAltaConfirm( mensajeHistorialSelect )"></ui-button> -->
+            <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>
+
+          </mat-dialog-actions>
+        }
+        
       }
+
+    }
+
+     @case ( 'VALIDAR' ) {
+      <mat-dialog-content>
+        <plan-estudio-card [planEstudio]="planEstudio"></plan-estudio-card>
+        @if ( tipoBandeja() == 'Recibidos' && listaDestinatariosResponderA()[0].cierraProceso ) {
+          <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea Aprobar el la Validación del Plan de Estudios?</p>
+          <div class="border-1 border-round p-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
+            <mat-checkbox [(ngModel)]="esConforme" (change)="onChecked( $event )" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
+          </div>
+        }
+      </mat-dialog-content>
+      <mat-dialog-actions align="end" class="flex gap-2">
+        @if( tipoBandeja() == 'Recibidos' ) {
           
-    </mat-dialog-content>
-    @if ( showButtons ) {
+          <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>
+
+        }
+      </mat-dialog-actions>
+     }
+
+     @case ( 'CAMBIAR' ) {
+      <mat-dialog-content>
+        @if ( !checkInfoSuccess() ) {
+          
+          <plan-estudio-card [planEstudio]="planEstudio"></plan-estudio-card>
+
+        }
+        @if ( tipoBandeja() == 'Recibidos' && listaDestinatariosResponderA()[0].cierraProceso ) {
+          <p class="mx-auto my-2 w-15rem text-center f-w-500">¿Está seguro que desea Aprobar la Validación del Plan de Estudios? {{ esConforme }}</p>
+          
+          <div class="border-1 border-round p-2 my-2" [ngClass]="{ 'bg-green-100 text-green-700': esConforme, 'bg-orange-100 text-orange-700': !esConforme}">
+            <mat-checkbox [(ngModel)]="esConforme" (change)="onChecked( $event )" class="example-margin "><span class="f-w-600" [ngClass]="{ 'text-green-700': esConforme, 'text-orange-700': !esConforme }">Si, La información correcta</span></mat-checkbox>
+          </div>
+        }
+        @if ( checkInfoSuccess() ) {
+          <plan-estudio-aprobar-cu [planEstudio]="planEstudio"></plan-estudio-aprobar-cu>
+        }
+
+      </mat-dialog-content>
       <mat-dialog-actions align="end" class="flex gap-2">
         <!-- <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar"></ui-button> -->
-        <ui-button color="orange" label="Enviar Observación" [disabled]="showFormResponse() || esConforme" (onClick)="onResponder()"></ui-button>
-        <ui-button color="primary" label="Dar Alta" [disabled]="showFormResponse() || !esConforme" (onClick)="onAltaConfirm( mensajeHistorialSelect )"></ui-button>
+        <!-- <ui-button color="orange" label="Devolver y Retroceder"></ui-button>
+        <ui-button color="primary" label="Dar Alta"></ui-button> -->
+        @if( tipoBandeja() == 'Recibidos' ) {
+          
+          <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>
+
+        }
       </mat-dialog-actions>
-    }
-    
+     }
   }
 
-  @if (tipoAccion === 'VAL' || tipoAccion === 'CAM') {
+  
 
-    <app-card headerClass="py-2 px-2 block" cardClass="m-0">
-      <ng-template #headerTitleTemplate class="align-items-center">
-          <div class="f-w-600 f-14">{{ planSinResolucion[0].nombre }}</div>
-      </ng-template>
-      <div class="flex flex-column">
-          <div>{{ planSinResolucion[0].resolucion || 'Sin Resolución' }}</div>
-      </div>
-      <div class="flex align-items-center my-2">
-          <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-              <i class="f-18 ti ti-arrow-down"></i> 
-          </div>
-          <span class="flex-grow-1 text-truncate w-100"> Inicio</span>
-          <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2021 </div>
-      </div>
-      <div class="flex align-items-center my-2">
-          <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-              <i class="f-18 ti ti-arrow-down"></i> 
-          </div>
-          <span class="flex-grow-1 text-truncate w-100"> Fin</span>
-          <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
-      </div>
-      <div class="flex align-items-center my-2">
-          <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-              <i class="f-18 ti ti-arrow-down"></i> 
-          </div>
-          <span class="flex-grow-1 text-truncate w-100"> Estado</span>
-          <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
-      </div>
-      <div class="flex align-items-center my-2">
-          <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-              <i class="f-18 ti ti-arrow-down"></i> 
-          </div>
-          <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
-          <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Asignado </div>
-      </div>
+  <!-- @if ( tipoCard === 'VALIDAR' || tipoCard === 'CAMBIAR') {
 
-          <ng-template #actionTemplate>
-              <div class="flex gap-2 justify-content-around w-full">
-                  <!-- <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18" (onClick)="eliminarConfirm( plan )"></ui-button>
-                  <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( plan, planEstudioAdd )"></ui-button> -->
-                  <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( plan )"></ui-button>
-              </div>
-          </ng-template>
 
-  </app-card>
-  }
+  } -->
   </ng-template>
+
+  <!-- <pre>
+    {{ mensajesHistorial() | json }}
+  </pre> -->

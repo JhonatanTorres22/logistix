@@ -1,6 +1,6 @@
 export interface ListarInfoDirectorDTO{
     CodigoSemestre: number,
-    DescripconSemestre: string,
+    DescripcionSemestre: string,
     codigoLocal: number,
     DescripcionLocal: string,
     CodigoProgramaAcademico: number,

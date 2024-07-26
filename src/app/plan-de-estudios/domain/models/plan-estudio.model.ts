@@ -17,13 +17,13 @@ export type PlanEstudioAdd = Pick<PlanEstudio, 'idProgramaAcademico' | 'nombre' 
     usuarioId: number,
 }
 
-export type PlanEstudioEditDE = Omit<PlanEstudioAdd, 'idProgramaAcademico'> & {
-    idPlanEstudio: number
-}
+export type PlanEstudioEditDE = Omit<PlanEstudioAdd, 'idProgramaAcademico'> & Pick<PlanEstudio, 'id'>
 
 
 export type PlanEstudioEditCU = PlanEstudioEditDE & {
-    resolucion: string
+    resolucion: string,
+    inicioVigencia: string,
+    finVigencia: string
 }
 
 
@@ -41,7 +41,7 @@ export type PlanEstudioCursoInsertar = {
 
 export interface CursoPlanListar {
     idCursoPlan: number,
-    nombre: string,
+    nombreCurso: string,
     descripcion: string
 }
 
@@ -50,3 +50,4 @@ export interface CursoPlanEliminar {
     idCursoPlan: number,
     usuarioId: number
 }
+

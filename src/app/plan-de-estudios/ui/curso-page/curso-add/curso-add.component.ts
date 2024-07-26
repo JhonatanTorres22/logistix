@@ -24,6 +24,7 @@ import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/cu
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 
 
 @Component({
@@ -37,6 +38,8 @@ export class CursoAddComponent {
 
   cursoDetails: WritableSignal<Curso> = this.signal.cursoSelect;
   cursoCicloSelect: WritableSignal<CursoByCiclo> = this.signal.cursoCicloSelect;
+  idPrograma = this.planEstudioSignal.programaId;
+
 
   maxLengthCodigoCurso: number = this.validation.maxLengthCodigoCurso;
   minLengthCodigoCurso: number = this.validation.minLengthCodigoCurso;
@@ -86,6 +89,7 @@ export class CursoAddComponent {
     private auth: AuthSignal,
     private modal: UiModalService,
     private validation: CursoValidation,
+    private planEstudioSignal: PlanEstudioSignal,
     private cicloRepository: CicloRepository,
     private alert: AlertService
   ) {
@@ -165,7 +169,7 @@ export class CursoAddComponent {
             const dataCurso: CursoCrear = {
               idCiclo: parseInt( this.formCurso.value.idCiclo ),
               descripcion: this.formCurso.value.descripcion,
-              idPrograma: 1, //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
+              idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
               codigoCurso: this.formCurso.value.codigoCurso,
               competencia: this.formCurso.value.competencia,
               tipoCurso: this.formCurso.value.tipoCurso,
@@ -244,7 +248,7 @@ export class CursoAddComponent {
     this.repository.agregar( curso ).subscribe({
       next: ( data ) => {
         console.log( data );
-        this.alert.showAlert('Curso agregar de manera correcta', 'success', 6);
+        this.alert.showAlert('Curso agregado de manera correcta', 'success', 6);
         this.modal.getRefModal().close('Add');
       }, error: ( error ) => {
         console.log( error );

@@ -14,6 +14,7 @@ export class UiButtonComponent implements OnInit {
 
   @Input() color: string = 'secondary';
   @Input() label: '';
+  @Input() idButton: string = '';
   @Input() disabled: boolean = false;
   @Input() icon: string;
   @Input() tooltip: string;

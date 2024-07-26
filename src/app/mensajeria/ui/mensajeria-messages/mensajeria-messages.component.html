@@ -1,8 +1,6 @@
 <div class="details-content w-100 fadein   animation-duration-200">
     
- <!-- <pre>
-   {{ mensajesHistorial() | json }}
- </pre> -->
+
  <mensajeria-asunto></mensajeria-asunto>
 <!-- {{ tipoBandeja() | json }} -->
     <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling>
@@ -57,6 +55,11 @@
       @if ( showFormResponse() ) {
         <mensajeria-response></mensajeria-response>
       }
+
+      <!-- <pre>
+        {{ mensajesHistorial() | json }}
+      </pre> -->
+
     </ng-scrollbar>
 
     @if ( mensajesHistorial()[ mensajesHistorial().length - 1] && tipoBandeja() == 'Archivados' ) {

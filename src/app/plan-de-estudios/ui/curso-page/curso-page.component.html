@@ -1,7 +1,12 @@
 <mat-divider></mat-divider>
 <br>
 <ciclo-page></ciclo-page>
-<ui-button color="blue" class="ml-2" (onClick)="showPlanes( planEstudioList )"> Asignar A Plan de Estudio </ui-button>
+
+@if ( cursosByCiclos().length > 0 ) {
+
+    <ui-button color="blue" class="ml-2" (onClick)="showPlanes( planEstudioList )"> Asignar A Plan de Estudio </ui-button>
+    
+}
 
 <curso-list class="flex flex-column md:flex-row gap-2 align-item-start justify-content-between w-full"></curso-list> <!-- flex flex-column md:flex-row gap-2 align-item-start justify-content-between w-full -->
 

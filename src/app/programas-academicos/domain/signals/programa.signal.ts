@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, WritableSignal } from "@angular/core";
 import { Programa, ProgramaFacultad } from "../models/programa.model";
 
 
@@ -21,6 +21,7 @@ export class ProgramaSignal {
     programasList = signal( this.programas )
     programaEdit = signal(this.programa)
 
+    programasGlobal: WritableSignal<ProgramaFacultad[]> = signal( this.programas );
     setSelectPrograma = ( programa: ProgramaFacultad) => {
         this.programaSelect.set( programa );
     }

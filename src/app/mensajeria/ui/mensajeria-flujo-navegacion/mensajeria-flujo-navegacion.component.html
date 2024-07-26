@@ -1,4 +1,5 @@
 <!-- {{ selectedDestinatarioResponderA() | json}} -->
+  <!-- <pre>{{ this.planEstudioSinResolucion() | json}}</pre> -->
 <div class="flex justify-content-end gap-2">
 
     @if( showCancelar ) {
@@ -10,7 +11,7 @@
       @switch ( option.flujoNavegacion ) {
         @case ('RETROCEDER') {
             <ui-button color="orange" borde="3xl"
-                [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR'"
+                [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR' || checkInfoSuccess()"
                 [type]="listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'RETROCEDER' ? 'default':'sweet'"
                 (onClick)="showCancelar ? enviarConfirm() : onResponder( option.flujoNavegacion )">
                 <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-back-up m-r-5"></i>Devolver y Retroceder</div>
@@ -30,10 +31,14 @@
 
       
       @if ( option.cierraProceso && !showCancelar ) {
-        <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onCerrarProcesoConfirm()" >
+        <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onCerrarProcesoConfirm()" [disabled]="(isModal() && !checkInfoSuccess()) || (isModal() && !isCompletedProcess())">
           <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i> {{ option.cierraProceso ? 'Aprobar y Archivar' : 'Continuar y Avanzar'}} </div>
         </ui-button>
         
       }
     }
 </div>
+
+<ng-template #PlanResolucion>
+  <plan-estudio-card [planEstudio]="planEstudio"></plan-estudio-card>
+</ng-template>

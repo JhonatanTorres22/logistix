@@ -112,6 +112,15 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
           this.signal.renderizarMensajes.set('');
           this.signal.showFormNuevoMensaje.set( false );
 
+        }; break;
+
+        case 'Archivo': {
+          this.obtenerMensajesRecibidos();
+          this.obtenerMensajesEnviados();
+          this.obtenerMensajesArchivados();
+          this.signal.setMensajesHistorialDefault();
+          this.signal.renderizarMensajes.set('');
+          this.signal.showFormNuevoMensaje.set( false );
         }
       }
       this.signal.selectedDestinatario.set( this.signal.destinatarioSelectedDefault );

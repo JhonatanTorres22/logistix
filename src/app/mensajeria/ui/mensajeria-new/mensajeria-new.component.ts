@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, TemplateRef, WritableSignal, effect } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, WritableSignal, effect, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiSelectComponent } from 'src/app/core/components/ui-select/ui-select.component';
@@ -23,26 +23,62 @@ import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuar
 import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiInputComponent } from "../../../core/components/ui-input/ui-input.component";
+import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
+import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
+import { PlanEstudioCardComponent } from 'src/app/plan-de-estudios/ui/plan-estudio-card/plan-estudio-card.component';
+import { ProgramaFacultad } from 'src/app/programas-academicos/domain/models/programa.model';
 
 
 @Component({
   selector: 'mensajeria-new',
   standalone: true,
-  imports: [CommonModule, SharedModule, UiSelectComponent, UiButtonComponent, QuillModule, ProgramaCardComponent, UiInputComponent, UiInputComponent],
+  imports: [
+    CommonModule,
+    SharedModule,
+    UiSelectComponent,
+    UiButtonComponent,
+    QuillModule,
+    ProgramaCardComponent,
+    UiInputComponent,
+    PlanEstudioCardComponent,
+
+    ],
   templateUrl: './mensajeria-new.component.html',
   styleUrl: './mensajeria-new.component.scss'
 })
 export class MensajeriaNewComponent implements OnInit, OnDestroy {
 
+  @ViewChild('templateProgramaCard') templateProgramaCard: TemplateRef<any>
   // tipoMensajeForm = new FormControl();
   tipoMensajeForm: FormGroup;
   listaDestinatarios = this.signal.listaDestinatarios;
   selectedDestinatario = this.signal.selectedDestinatario;
   tiposMensajesGrupo = this.signal.tiposMensajesGrupo;
+  programasGlobal = this.programaSignal.programasGlobal;
+  isModal = this.planEstudioSignal.isModal;
+  planEstudioEdit = this.planEstudioSignal.planEstudioEdit;
+  idPrograma: number = 0;
+  planEstudio: PlanEstudio = {
+    archivo: '',
+    descripcionGrado: '',
+    descripcionTitulo: '',
+    detallePerfil: '',
+    estadoCaducidad: '',
+    estadoMatricula: '',
+    id: 0,
+    idProgramaAcademico: 0,
+    nombre: '',
+    resolucion: ''
+  };
+
   tiposMensajes = this.signal.tiposMensajes;
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
   programaForAlta: Asignacion;
-  existeProgramaForAlta: boolean = false;
+  existeProgramaForCard: boolean = false;
+  nombrePrograma: string = '';
+  tipoCard: 'ALTA' | 'VALIDAR' | 'CAMBIAR';
   loading: boolean = true;
   // selectDestinatario = this.signal.selectDestinatario;
   // selectDestinatario: MensajeriaNuevoMensajeList;
@@ -60,6 +96,9 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     private alert: AlertService,
     private modal: UiModalService,
     private repositoryAsignacion: AsignacionRepository,
+    private programaSignal: ProgramaSignal,
+    private planEstudioRepository: PlanEstudioRepository,
+    private planEstudioSignal: PlanEstudioSignal,
     private asignacionSignal: AsignacionSignal,
     private semestreSignal: SemestreSignal,
     private usuarioRolRepository: UsuarioRolRepository,
@@ -214,47 +253,81 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
 
     //TODO: VERIFICAR ALTA DEL DECANO
     // const decano = this.getDestinatario( this.tipoMensajeForm.value.destinatario );
-    this.isRolAlta().then( isRolAlta => {
+    let mensaje: MensajeriaEnviarNuevoMensaje = {
+      idTipoMensajeRol: this.selectedDestinatario().idTipoMensajeRol,
+      flujoNavegacion: 'Avanzar',
+      asunto: this.getAsunto( this.tipoMensajeForm.value.tipoMensaje ).text + ' ' + this.semestreSelect().codigo,
+      idRolEmisor: parseInt( this.authSignal.currentRol().id ),
+      idRolReceptor: this.selectedDestinatario().idUsuarioRol,
+      mensaje: this.mensaje,
+      informacionAdicional: '',
+      usuarioId: parseInt( this.authSignal.currentRol().id ),
+    }
+    console.log(mensaje);
 
-      const destinatario = this.selectedDestinatario;
+    switch( this.tipoCard ) {
 
-            const mensaje: MensajeriaEnviarNuevoMensaje = {
-              idTipoMensajeRol: this.selectedDestinatario().idTipoMensajeRol,
-              flujoNavegacion: 'Avanzar',
-              asunto: this.getAsunto( this.tipoMensajeForm.value.tipoMensaje ).text + ' ' + this.semestreSelect().codigo,
-              idRolEmisor: parseInt( this.authSignal.currentRol().id ),
-              idRolReceptor: this.selectedDestinatario().idUsuarioRol,
-              mensaje: this.mensaje,
-              informacionAdicional: this.programaForAlta.programas[0].idDirector.toString(),
-              usuarioId: parseInt( this.authSignal.currentRol().id ),
-            }
 
-            console.log(mensaje);
-            
-
-      if( !isRolAlta ) {
-        this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ this.selectedDestinatario().apellidosYnombres } con el Rol de ${ this.selectedDestinatario().descripcion }, ¿Está seguro que desea enviar el mensaje?`)
-          .then( isConfirm => {
-            if( !isConfirm ) {
-              return
-            }
-
-            
-            this.enviarMensaje( mensaje );
-            this.darAltaDecano();
-          })
-      }
-
-      this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea enviar el mensaje?`)
-        .then( isConfirm => {
-          if( !isConfirm ) {
-            return
+      case 'ALTA': {
+        this.isRolAlta().then( isRolAlta => {
+    
+          const mensajeAlta: MensajeriaEnviarNuevoMensaje = {
+            ...mensaje,
+            informacionAdicional: this.programaForAlta.programas[0].idDirector.toString()
           }
-          this.enviarMensaje( mensaje );
-          
-        })
 
-    })
+          if( !isRolAlta ) {
+            this.alert.sweetAlert('question', 'Confirmación', `Al enviar el mensaje, se le dará de alta al usuario ${ this.selectedDestinatario().apellidosYnombres } con el Rol de ${ this.selectedDestinatario().descripcion }, ¿Está seguro que desea enviar el mensaje?`)
+              .then( isConfirm => {
+                if( !isConfirm ) {
+                  return
+                }
+    
+                
+                
+                this.enviarMensaje( mensajeAlta );
+                this.darAltaDecano();
+              })
+          }
+    
+          this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea enviar el mensaje?`)
+            .then( isConfirm => {
+              if( !isConfirm ) {
+                return
+              }
+              this.enviarMensaje( mensajeAlta );
+              
+            });
+    
+        })
+      }; break;
+
+      case 'CAMBIAR': {
+        this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea enviar el mensaje?`)
+            .then( isConfirm => {
+              if( !isConfirm ) {
+                return
+              }
+
+              this.enviarMensaje( mensaje );
+              
+            });
+      }; break;
+
+      case 'VALIDAR': {
+        this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea enviar el mensaje?`)
+            .then( isConfirm => {
+              if( !isConfirm ) {
+                return
+              }
+              
+              this.enviarMensaje( mensaje );
+              
+            });
+      }; break
+    }
+
+    
   
   }
 
@@ -316,24 +389,37 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     })
   }
 
-  obtenerProgramaForAlta() {
-    let programaAsignado: AsignacionPrograma[];
-    const asunto = this.getAsunto( this.tipoMensajeForm.value.tipoMensaje  );
+  obtenerTipoCard() {
     const tipoGrupo = this.tipoMensajeForm.value.tipoMensajeGrupo;
-    
-    let nombrePrograma = '';
-    console.log( tipoGrupo );
+    const asunto = this.getAsunto( this.tipoMensajeForm.value.tipoMensaje  );
 
-    // this.tiposMensajes().find()
-    
     switch( parseInt(tipoGrupo) ) {
       
-      case 1: { nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', ''); }; break;
-      case 2: { nombrePrograma = asunto.text.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); }; break;
-      case 3: { nombrePrograma = asunto.text.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); }; break;
+      case 1: { this.nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');  this.tipoCard = 'ALTA'}; break;
+      case 2: { this.nombrePrograma = asunto.text.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); this.tipoCard = 'VALIDAR' }; break;
+      case 3: { this.nombrePrograma = asunto.text.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); this.tipoCard = 'CAMBIAR' }; break;
     }
+
+  }
+
+  obtenerProgramaForAlta() {
+    let programaAsignado: AsignacionPrograma[];
+    // const asunto = this.getAsunto( this.tipoMensajeForm.value.tipoMensaje  );
+    // const tipoGrupo = this.tipoMensajeForm.value.tipoMensajeGrupo;
     
-    console.log( nombrePrograma );
+    // let nombrePrograma = '';
+    // console.log( tipoGrupo );
+
+
+    
+    // switch( parseInt(tipoGrupo) ) {
+      
+    //   case 1: { nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', ''); }; break;
+    //   case 2: { nombrePrograma = asunto.text.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); }; break;
+    //   case 3: { nombrePrograma = asunto.text.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); }; break;
+    // }
+    
+    console.log( this.nombrePrograma );
     
     return new Promise<Asignacion | ''>( resolve => {
       
@@ -342,7 +428,7 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
 
 
           const asignacionFacultad = programasAsignados.filter( asignacionItem => {
-            const asignacionPrograma = asignacionItem.programas.filter( programaItem => programaItem.nombrePrograma == nombrePrograma );
+            const asignacionPrograma = asignacionItem.programas.filter( programaItem => programaItem.nombrePrograma == this.nombrePrograma );
             
             if( asignacionPrograma.length > 0 ) {
               programaAsignado = asignacionPrograma
@@ -372,6 +458,8 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
   }
 
   searchPrograma = () => {
+
+    
     // this.tipoMensajeForm.value.tipoMensaje == ''
     console.log( this.tipoMensajeForm.value.tipoMensajeGrupo );
     
@@ -379,39 +467,128 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
       return
     }
 
-    setTimeout(() => {
-      this.obtenerProgramaForAlta().then( programaForAlta => {
-        
-        if( programaForAlta == '' ) {
-          // console.log('No hay programa encontrado');
-          this.alert.showAlert(`No se encontró el programa académico`, 'error', 6);
-          this.existeProgramaForAlta = false;
-          // this.tipoMensajeForm.value.programaExistente = ""
+    this.obtenerTipoCard();
 
-          throw('No hay programa encontrado');
-        }
-  
-        this.programaForAlta = programaForAlta;
-        this.existeProgramaForAlta = true;
-        this.alert.showAlert(`Programa académico encontrado`, 'success', 6);
 
-        // this.tipoMensajeForm.value.programaExistente = 'true'
+    console.log( this.tipoCard );
+    
 
-      })
-    }, 200);
+    switch( this.tipoCard ) {
+      case 'ALTA': {
+        setTimeout(() => {
+          this.obtenerProgramaForAlta().then( programaForAlta => {
+            
+            if( programaForAlta == '' ) {
+              // console.log('No hay programa encontrado');
+              this.alert.showAlert(`No se encontró el programa académico`, 'error', 6);
+              this.existeProgramaForCard = false;
+              // this.tipoMensajeForm.value.programaExistente = ""
+    
+              throw('No hay programa encontrado');
+            }
+      
+            this.programaForAlta = programaForAlta;
+            this.existeProgramaForCard = true;
+            this.alert.showAlert(`Programa académico encontrado`, 'success', 6);
+    
+            // this.tipoMensajeForm.value.programaExistente = 'true'
+    
+          })
+        }, 200);
+      } break;
+
+      case 'CAMBIAR': {
+        this.obtenerProgramaForPlan()
+          .then( idPrograma => {
+            if( idPrograma == 0 ) {
+              this.alert.showAlert('El programa no fué encontrado', 'error', 6);
+              this.existeProgramaForCard = false;
+
+              throw('No hay programa encontrado');
+
+            }
+            this.existeProgramaForCard = true;
+            this.idPrograma = idPrograma;
+            this.obtenerPlanDeEstudios( idPrograma );
+            
+          })
+      }; break;
+
+      case 'VALIDAR': {
+        this.obtenerProgramaForPlan()
+          .then( idPrograma => {
+            if( idPrograma == 0 ) {
+              this.alert.showAlert('El programa no fué encontrado', 'error', 6);
+              this.existeProgramaForCard = false;
+
+              throw('No hay programa encontrado');
+
+            }
+            this.existeProgramaForCard = true;
+            this.idPrograma = idPrograma;
+            this.obtenerPlanDeEstudios( idPrograma );
+            
+          })
+      }
+    }
+    
   } 
 
   showCardPrograma = ( template: TemplateRef<any> ) => {
 
-    if( !this.existeProgramaForAlta ) {
-      this.alert.showAlert(`No se encontró el programa`, 'error', 6);
-      return
+    switch( this.tipoCard ) {
+      case 'ALTA': {
+
+        if( !this.existeProgramaForCard ) {
+          this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          return
+        }
+    
+        this.modal.openTemplate( {
+          template,
+          titulo: 'Programa Académico'
+        } );
+
+      }; break;
+
+      case 'CAMBIAR': {
+        if( !this.existeProgramaForCard ) {
+          this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          return
+        }
+
+        const programa = this.programasGlobal().find( programa => programa.id == this.idPrograma );
+
+        this.isModal.set( true );
+        this.modal.openTemplate( {
+          template,
+          titulo:  `${ programa?.nombre }`
+        } ).afterClosed().subscribe( response => {
+          this.isModal.set( false );
+          
+        });
+      }; break;
+
+      case 'VALIDAR': {
+        if( !this.existeProgramaForCard ) {
+          this.alert.showAlert(`No se encontró el programa`, 'error', 6);
+          return
+        }
+
+        const programa = this.programasGlobal().find( programa => programa.id == this.idPrograma );
+
+        this.isModal.set( true );
+        this.modal.openTemplate( {
+          template,
+          titulo:  `${ programa?.nombre }`
+        } ).afterClosed().subscribe( response => {
+          this.isModal.set( false );
+          
+        });
+      }
     }
 
-    this.modal.openTemplate( {
-      template,
-      titulo: 'Programa Académico'
-    } );
+    
 
   }
 
@@ -423,6 +600,45 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     });
 
     this.signal.showFormNuevoMensaje.set( false );
+  }
+
+  obtenerProgramaForPlan = () => {
+
+    return new Promise<number >( (resolve) => {
+      const programa = this.programasGlobal().find( programa => programa.nombre == this.nombrePrograma );
+
+      console.log( programa );
+      if( programa === undefined ) {
+        resolve( 0 )
+      }
+
+      resolve( programa!.id );
+    });
+    
+  }
+
+  obtenerPlanDeEstudios = ( idPrograma: number) => {
+    this.planEstudioRepository.obtener( idPrograma ).subscribe({
+      next: ( planes ) => {
+        // console.log( planes );
+        if( planes.length == 0 ) {
+          
+          this.modal.getRefModal().close('cancelar');
+          this.alert.sweetAlert('info', 'El plan de estudios aún no ha sigo generado');
+          return
+        }
+
+        // this.planEstudio = planes[ planes.length - 1];
+        console.log( this.planEstudio );
+        this.planEstudio = planes.find( plan => plan.resolucion == '') ?? planes[ planes.length - 1];
+        this.planEstudioEdit.set(this.planEstudio);
+        
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al listar los planes de estudios', 'error', 6);
+        
+      }
+    })
   }
 
 }

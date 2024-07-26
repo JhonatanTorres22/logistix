@@ -1,0 +1,33 @@
+<mat-dialog-content>
+
+    <mat-radio-group [(ngModel)]="semestreSelected">
+      @for (semestre of semestresAcademicos(); track semestre; let i = $index) {
+        <div class="price-check m-b-15 w-full sm:w-25rem">
+          <mat-radio-button color="primary" class="w-100" [value]="semestre">
+            <div class="row align-item-center">
+              <div class="col-12">
+                <div class="flex align-item-center popular m-b-0"
+                  >{{ semestre.nombre }}
+                </div>
+                <!-- <span class="text-muted m-b-0">{{ semestre.value }}</span> -->
+                @if (semestre.condicion === 'CREADO') {
+                  <span class="mat-small px-3 text-white bg-orange-500 b-rad-5">{{ semestre.condicion }}</span>
+                }
+              </div>
+              <!-- <div class="col-6 text-end">
+                <span class="m-b-0 f-20 f-w-600">$159</span>
+                <span class="text-muted text-sm"> /Lifetime</span>
+              </div> -->
+            </div>
+          </mat-radio-button>
+        </div>
+      }
+    </mat-radio-group>
+
+
+      <!-- {{ semestresAcademicos () | json}} -->
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="flex gap-2">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" label="Seleccionar" [disabled]="semestreSelected.id == 0" (onClick)="onSelect()"></ui-button>
+</mat-dialog-actions>
