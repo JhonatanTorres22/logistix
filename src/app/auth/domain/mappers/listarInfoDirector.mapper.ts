@@ -5,10 +5,10 @@ export class ListarInfoDirectorMapper {
     static fromApiToDomain (param: ListarInfoDirectorDTO) : ListarInfoDirector {
         return {
             codigoLocal: param.codigoLocal,
-            CodigoProgramaAcademico: param.CodigoProgramaAcademico,
-            CodigoSemestre: param.CodigoSemestre,
+            idProgramaAcademico: param.CodigoProgramaAcademico,
+            idSemestre: param.CodigoSemestre,
             DescripcionLocal: param.DescripcionLocal,
-            DescripconSemestre: param.DescripconSemestre,
+            DescripcionSemestre: param.DescripcionSemestre,
             NombreProgramaAcademico: param.NombreProgramaAcademico
 
         }

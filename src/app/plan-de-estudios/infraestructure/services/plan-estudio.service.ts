@@ -62,7 +62,8 @@ export class PlanEstudioService {
     editarCU( planEdit: PlanEstudioEditCU ): Observable<void> {
 
         const planEditAPI = PlanEstudioMapper.fromDomainToApiEditCU( planEdit );
-
+        console.log( planEditAPI );
+        
         return this.http.put<void>( this.urlApi + this.urlEditarCU, planEditAPI );
 
     }

@@ -1,4 +1,4 @@
-<button [disabled]="disabled" mat-flat-button [matTooltip]="tooltip" [class]="classButton" (click)="onClick.emit( $event )" 
+<button [id]="idButton" [disabled]="disabled" mat-flat-button [matTooltip]="tooltip" [class]="classButton" (click)="onClick.emit( $event )" 
 [class]="type != 'default' ? 'bg-'+color+'-100 text-'+color+'-700 border-round-'+borde : [color] != 'secondary' ? 'bg-'+color+'-500 text-white' : ''"
 
 >

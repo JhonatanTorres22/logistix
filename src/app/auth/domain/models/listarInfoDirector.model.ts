@@ -1,8 +1,8 @@
 export interface ListarInfoDirector {
-    CodigoSemestre: number,
-    DescripconSemestre: string,
+    idSemestre: number,
+    DescripcionSemestre: string,
     codigoLocal: number,
     DescripcionLocal: string,
-    CodigoProgramaAcademico: number,
+    idProgramaAcademico: number,
     NombreProgramaAcademico: string,
 }

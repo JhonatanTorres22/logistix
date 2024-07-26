@@ -1,0 +1,25 @@
+<div [formGroup]="formAprobarPlanCU">
+    <ui-input
+        label="Resolución"
+        formControlName="resolucion"
+        [maxlength]="maxLengthResolucion"
+        [minlength]="minLengthResolucion"
+        [expReg]="expRegLockInputResolucion"
+        (onInputEvent)="validarForm()"
+        ></ui-input>
+    <mat-form-field class="w-full m-t-5" appearance="outline">
+        <mat-label>Seleccione fecha de vigencia</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input readonly matStartDate formControlName="inicioVigencia" placeholder="Fecha Inicio" (click)="picker.open()" >
+            <input readonly matEndDate formControlName="finVigencia" placeholder="Fecha Fin" (click)="picker.open()" (dateChange)="onDateChanged($event, 'fechaFin')">
+        </mat-date-range-input>
+        <mat-hint class="mt-4">Fecha Inicio – Fecha Fin</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        <mat-error class="mt-4" *ngIf="formAprobarPlanCU.get('inicioVigencia')?.hasError('required')">Fecha de <b>INICIO</b> incompleto</mat-error>
+        <mat-error class="mt-4" *ngIf="formAprobarPlanCU.get('finVigencia')?.hasError('required')">Fecha de <b>FIN</b> incompleto</mat-error>
+    </mat-form-field>
+</div>
+
+<!-- <pre>{{ this.planEstudioSinResolucion() | json }}</pre> -->

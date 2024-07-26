@@ -1,4 +1,4 @@
-<app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem bg-primary-100" cardContentClass="h-full flex flex-column justify-content-between"> <!-- flex align-items-center gap-4 -->
+<app-card class="flex" headerClassTemplate="m-auto" headerClass="px-4 py-3" cardClass="w-18rem bg-primary-100 mx-auto" cardContentClass="h-full flex flex-column justify-content-between"> <!-- flex align-items-center gap-4 -->
     <ng-template #headerTitleTemplate >
         <div class="flex flex-column">
           <div class="flex gap-2 text-sm">
@@ -45,41 +45,43 @@
         }
       </div>  
 
-      <mat-divider></mat-divider>
+      <mat-divider class="mt-2"></mat-divider>
       @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
-        <div class="flex gap-2 my-2 justify-content-center">
-
-          @if ( programa.locales.length == 1 ) {
+      <ng-template #actionTemplate>
+          <div class="flex gap-3 mb-2 -mt-3 justify-content-center w-full">
   
-            <ui-button
-              tooltip="Eliminar Programa"
-              color="red"
-              icon="ti ti-trash f-18"
-              (click)="eliminarProgramaConfirm(asignacion, programa)">
-            </ui-button>   
-  
-          } @else { 
-  
-            <ui-button
-              tooltip="Eliminar"
-              color="red"
-              icon="ti ti-trash f-18"
-              [matMenuTriggerFor]="optionsLocal"
-  
-            >
-            </ui-button>
-  
-            <mat-menu #optionsLocal="matMenu">
-              @for ( local of programa.locales; track local ) {
-                <button mat-menu-item (click)="eliminarProgramaIndividualConfirm(asignacion, programa, local.idLocal)">{{ local.nombreLocal }}</button>
-              }
-              <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
-            </mat-menu>
-          }
-          <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="blue" (click)="openModalLocal( asignacion, programa )"></ui-button>
-          <ui-button icon="ti ti-mail-forward f-18" tooltip="Enviar mensaje" color="primary" (click)="enviarMensaje( asignacion, programa )"></ui-button>
-  
-        </div>
+            @if ( programa.locales.length == 1 ) {
+    
+              <ui-button
+                tooltip="Eliminar Programa"
+                color="red"
+                icon="ti ti-trash f-18"
+                (click)="eliminarProgramaConfirm(asignacion, programa)">
+              </ui-button>   
+    
+            } @else { 
+    
+              <ui-button
+                tooltip="Eliminar"
+                color="red"
+                icon="ti ti-trash f-18"
+                [matMenuTriggerFor]="optionsLocal"
+    
+              >
+              </ui-button>
+    
+              <mat-menu #optionsLocal="matMenu">
+                @for ( local of programa.locales; track local ) {
+                  <button mat-menu-item (click)="eliminarProgramaIndividualConfirm(asignacion, programa, local.idLocal)">{{ local.nombreLocal }}</button>
+                }
+                <button mat-menu-item (click)="eliminarProgramaConfirm(asignacion, programa)"> ELIMINAR PROGRAMA </button>
+              </mat-menu>
+            }
+            <ui-button icon="ti ti-plus f-18" tooltip="Agregar Local" color="blue" (click)="openModalLocal( asignacion, programa )"></ui-button>
+            <ui-button icon="ti ti-mail-forward f-18" tooltip="Enviar mensaje" color="primary" (click)="enviarMensaje( asignacion, programa )"></ui-button>
+    
+          </div>
+        </ng-template>
       }
 
     <!-- </div> -->

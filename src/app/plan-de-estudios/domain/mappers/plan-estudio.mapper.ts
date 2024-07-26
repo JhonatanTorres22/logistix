@@ -30,7 +30,7 @@ export class PlanEstudioMapper {
 
     static fromDomainToApiEditDE( param: PlanEstudioEditDE ): PlanEstudioEditDEDTO {
         return {
-            codigoPlanDeEstudio: param.idPlanEstudio,
+            codigoPlanDeEstudio: param.id,
             descripcionGrado: param.descripcionGrado,
             descripcionTitulo: param.descripcionTitulo,
             detallePerfil: param.detallePerfil,
@@ -41,13 +41,15 @@ export class PlanEstudioMapper {
 
     static fromDomainToApiEditCU( param: PlanEstudioEditCU ): PlanEstudioEditCUDTO {
         return {
-            codigoPlanDeEstudio: param.idPlanEstudio,
+            codigoPlanDeEstudio: param.id,
             descripcionGrado: param.descripcionGrado,
             descripcionTitulo: param.descripcionTitulo,
             detallePerfil: param.detallePerfil,
             nombre: param.nombre,
             resolucion: param.resolucion,
-            usuario: param.usuarioId
+            inicioVigencia: param.inicioVigencia,
+            finVigencia: param.finVigencia,
+            usuario: param.usuarioId,
         }
     }
 
@@ -71,9 +73,9 @@ export class PlanEstudioMapper {
 
     static formApiToDomainCursoPlanListar( param: CursoPlanListarDTO ): CursoPlanListar {
         return {
-            idCursoPlan: param.codigoCursoPlan,
-            descripcion: param.descripcion,
-            nombre: param.nombre
+            idCursoPlan: param.CodigoCursoPlan,
+            descripcion: param.Descripcion,
+            nombreCurso: param.Nombre
         }
     }
 

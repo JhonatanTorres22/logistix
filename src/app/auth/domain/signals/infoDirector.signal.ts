@@ -7,15 +7,15 @@ import { ListarInfoDirector } from "../models/listarInfoDirector.model";
 
 export class InfoDirectorSignal {
 
-    infoDirectorDefault: ListarInfoDirector = {
-        codigoLocal: 0,
-        CodigoProgramaAcademico: 0 ,
-        CodigoSemestre: 0, 
-        DescripcionLocal: '',
-        DescripconSemestre: '',
-        NombreProgramaAcademico: ''
-    }
+    // infoDirectorDefault: ListarInfoDirector = {
+    //     codigoLocal: 0,
+    //     CodigoProgramaAcademico: 0 ,
+    //     CodigoSemestre: 0, 
+    //     DescripcionLocal: '',
+    //     DescripcionSemestre: '',
+    //     NombreProgramaAcademico: ''
+    // }
 
-    infoDirector: WritableSignal<ListarInfoDirector[]> = signal([])
+    // infoDirector: WritableSignal<ListarInfoDirector[]> = signal([])
 
 }

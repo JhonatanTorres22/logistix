@@ -1,5 +1,5 @@
 <div class="flex justify-content-between">
     <div class="f-20 f-w-600" mat-dialog-title > {{ data.titulo }} </div>
-    <a class="flex justify-content-center m-2 avatar avatar-s modal-close" mat-dialog-close><i class="ti ti-x f-20"></i></a>
+    <a class="flex justify-content-center m-2 avatar avatar-s modal-close" (click)="cerrar()"><i class="ti ti-x f-20"></i></a>
 </div>
 <ng-container *ngTemplateOutlet="data.template"></ng-container>

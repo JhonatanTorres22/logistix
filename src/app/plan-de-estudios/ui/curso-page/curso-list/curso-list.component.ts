@@ -15,6 +15,7 @@ import { UiModalTemplateComponent } from 'src/app/core/components/ui-modal-templ
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 
 
 @Component({
@@ -29,13 +30,15 @@ export class CursoListComponent implements OnInit {
   cursosByCiclos = this.signal.cursosByCiclos;
   cicloList = this.cicloSignal.cicloList;
   cursosList = this.signal.cursosList;
-  
+  idPrograma = this.planEstudioSignal.programaId;
+
   constructor( 
     private repository: CursoRepository,
     private service: CursoService,
     private cicloRepository: CicloRepository,
     private alert: AlertService,
     private signal: CursoSingal,
+    private planEstudioSignal: PlanEstudioSignal,
     private cicloSignal: CicloSingal,
     private modal: UiModalService
 
@@ -48,7 +51,7 @@ export class CursoListComponent implements OnInit {
 
 
   obtener() {
-    this.repository.obtenerPorPrograma( 1 ).subscribe({
+    this.repository.obtenerPorPrograma( this.idPrograma() ).subscribe({
       next: ( cursos ) => {
         console.log( cursos );
         this.cursosList.set( cursos )
@@ -108,10 +111,10 @@ export class CursoListComponent implements OnInit {
   }
 
 
-  openCurso( template: TemplateRef<any>, ciclo: CursoByCiclo, curso?: Curso, ) {
+  openFormCurso( template: TemplateRef<any>, ciclo?: CursoByCiclo, curso?: Curso, ) {
     console.log( curso );
     let titleModal = 'Editar Curso';
-    this.signal.cursoCicloSelect.set( ciclo );
+    ciclo ? this.signal.cursoCicloSelect.set( ciclo ) : '';
     curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
     this.modal.openTemplate( {
       template,

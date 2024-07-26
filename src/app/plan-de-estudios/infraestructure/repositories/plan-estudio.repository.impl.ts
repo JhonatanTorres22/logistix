@@ -26,9 +26,11 @@ export class PlanEstidoRepositoryImpl implements PlanEstudioRepository {
     editarDE(editPlan: PlanEstudioEditDE): Observable<void> {
         return this.service.editarDE( editPlan );
     }
+
     editarCU(editPlan: PlanEstudioEditCU): Observable<void> {
         return this.service.editarCU( editPlan );
     }
+    
     eliminar(eliminar: PlanEstudioEliminar): Observable<void> {
         return this.service.eliminar( eliminar );
     }

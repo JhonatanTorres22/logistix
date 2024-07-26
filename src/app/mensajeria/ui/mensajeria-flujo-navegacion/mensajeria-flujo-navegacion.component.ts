@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from 'primeng/api';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes, MensajeriaResponderAList, MensajeriaResponderAlta } from '../../domain/models/mensajeria.model';
@@ -10,16 +10,31 @@ import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repos
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
+import { PlanEstudioAddComponent } from 'src/app/plan-de-estudios/ui/plan-estudio-add/plan-estudio-add.component';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { PlanEstudioCardComponent } from 'src/app/plan-de-estudios/ui/plan-estudio-card/plan-estudio-card.component';
+import { ClickDirective } from 'angular-calendar/modules/common/click/click.directive';
+import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
+import { PlanEstudio, PlanEstudioEditCU } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
 
 @Component({
   selector: 'mensajeria-flujo-navegacion',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiButtonComponent],
+  imports: [ 
+    CommonModule,
+    SharedModule,
+    PlanEstudioCardComponent,
+    PlanEstudioAddComponent,
+    UiButtonComponent],
   templateUrl: './mensajeria-flujo-navegacion.component.html',
   styleUrl: './mensajeria-flujo-navegacion.component.scss'
 })
 export class MensajeriaFlujoNavegacionComponent {
 
+  @ViewChild('PlanResolucion') PlanResolucion: TemplateRef<any>
+  // @ViewChild('asunto') asunto: UiButtonComponent;
+  public asunto = <HTMLElement>document.querySelector('#asunto')!;
+ 
   @Input() allDestinatario: MensajeriaResponderAList[] = [];
   @Input() listaDestinatarios: MensajeriaResponderAList[] = [];
   @Input() disabled: string = '';
@@ -30,6 +45,14 @@ export class MensajeriaFlujoNavegacionComponent {
   listaDestinatariosResponderA = this.signal.listaDestinatariosResponderA;
   listaDestinatariosResponderAflujo = this.signal.listaDestinatariosResponderAflujo;
   selectedDestinatarioResponderA = this.signal.selectedDestinatarioResponderA;
+  isModal = this.signalPlanEstudio.isModal;
+  planEstudioSinResolucion = this.signalPlanEstudio.planEstudioSinResolucion;
+  planEstudioPorAprobar = this.signalPlanEstudio.planEstudioPorAprobar;
+  currentRol = this.auth.currentRol;
+  checkInfoSuccess = this.signal.checkInfoSuccess;
+  isCompletedProcess = this.signal.isCompletedProcess;
+  
+  abrirModal = this.signal.abrirModal;
 
   mensajesHistorial = this.signal.mensajesHistorial;
 
@@ -38,7 +61,9 @@ export class MensajeriaFlujoNavegacionComponent {
     private signal: MensajeriaSignal,
     private modal: UiModalService,
     private alert: AlertService,
+    private signalPlanEstudio: PlanEstudioSignal,
     private repository: MensajeriaRepository,
+    private planEstudioRepository: PlanEstudioRepository,
     private auth: AuthSignal,
     private userRolRepository: UsuarioRolRepository
 
@@ -62,7 +87,10 @@ export class MensajeriaFlujoNavegacionComponent {
   }
 
   enviarConfirm = () => {
-
+    const rol = this.currentRol().rol.substring(0,3);
+    const infoAdicional = rol == 'Dir' ? this.planEstudioSinResolucion().id.toString() : this.mensajesHistorial()[ this.mensajesHistorial().length - 1].informacionAdicional;
+    console.log( infoAdicional );
+    
     this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea enviar el mensaje?')
       .then( isConfirm => {
         if( !isConfirm ) return
@@ -74,7 +102,7 @@ export class MensajeriaFlujoNavegacionComponent {
           idRolEmisor: parseInt( this.auth.currentRol().id ),
           idRolReceptor: this.selectedDestinatarioResponderA().idUsuarioRol, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
           mensaje: this.mensaje.trim(),
-          informacionAdicional: this.mensajesHistorial()[ this.mensajesHistorial().length - 1].informacionAdicional
+          informacionAdicional: infoAdicional
         }
 
         console.log(mensajeResponder);
@@ -118,16 +146,23 @@ export class MensajeriaFlujoNavegacionComponent {
       
       case 'DAR': { 
 
-        this.onAltaConfirm();
+        !this.isModal() ? this.showCard() :  this.onAltaConfirm();
+        
 
        }; break;
       case 'VAL': { 
 
-        this.onValidacionPlanEstudioConfirm( mensajeCerrar );
+        !this.isModal() ? this.showCard() :  this.onValidacionPlanEstudioConfirm( mensajeCerrar );
+
 
        }; break;
       case 'CAM': { 
-        this.onCambioPlanEstudioConfirm( mensajeCerrar );
+
+        !this.isModal() ? this.showCard() :  this.onCambioPlanEstudioConfirm( mensajeCerrar );
+        // this.showCard().then( response => {
+
+        //   this.isModal() ?          this.onCambioPlanEstudioConfirm( mensajeCerrar );
+        // } )
        }; break;
     }
   }
@@ -168,24 +203,38 @@ export class MensajeriaFlujoNavegacionComponent {
           return
         }
 
-        this.cerrarArchivar( mensajeCerrar ).then( completedSuccessfully => {
-          if (!completedSuccessfully) {
-            console.log('Hubo un error al archivar')
+        
+        //EDITAR CONSEJO
+        this.aprobarNuevoPlan().then( isSuccess => {
+          if( !isSuccess ) {
+            this.alert.showAlert('Ocurrió un error al APROBAR el Plan de Estudios', 'error', 6);
+            return;
           }
-          
-          this.alert.showAlert('Se aprobó el NUEVO PLAN DE ESTUDIOS, y el Mensaje fué CERRADO y ARCHIVADO.', 'success', 6);
-          // console.log('No tenía Alta, ahora si está dado de ALTA');
-          this.signal.setMensajeriaDataAsignacionDefault();
-          this.modal.getRefModal()?.close();
-          // this.mensajesHistorial
-          setTimeout(() => {
-            this.signal.renderizarMensajes.set( 'Alta' );
-          }, 200);
-    
-        });
+          this.alert.showAlert('Se aprobó el Plan de Estudios', 'success', 6);
 
+          const mensajeCerrar: MensajeriaCerrarArchivar = {
+            idMensaje: this.mensajesHistorial()[ this.mensajesHistorial().length -1].idMensaje,
+            usuarioId: parseInt( this.auth.currentRol().id )
+          }
+          this.cerrarArchivar( mensajeCerrar );
+          this.modal.getRefModal().close('Aprobado');
+        })
       });
 
+  }
+
+  showCard = () => {
+    return new Promise<boolean>( resolve => {
+
+      // console.log( this.asunto );
+      // this.asunto.click();
+      this.abrirModal.set('showModal');
+      // this.modal.openTemplate({
+      //   template: this.PlanResolucion,
+      //   titulo: 'APROBAR PLAN DE ESTUDIO'
+      // });
+      resolve( true )
+    })
   }
 
   onAltaConfirm = () => {
@@ -261,6 +310,7 @@ export class MensajeriaFlujoNavegacionComponent {
         next: ( data ) => {
           console.log(data);
           console.log('Mensaje CERRADO Y ARCHIVADO.');
+          this.signal.renderizarMensajes.set( 'Archivo' );
           resolve( true )
         }, error: ( error ) => {
           console.log( error );
@@ -276,5 +326,29 @@ export class MensajeriaFlujoNavegacionComponent {
     this.alert.sweetAlert('info', 'IMPLEMENTACIÓN PENDIENTE' ,'Falta Implementar, paciencia por favor....  :)')
   }
 
+
+  aprobarNuevoPlan = () => {
+
+    console.log( this.planEstudioPorAprobar() );
+    
+    const AprobarPlan: PlanEstudioEditCU = {
+      ...this.planEstudioPorAprobar(),
+      usuarioId: parseInt( this.currentRol().id )
+    }
+
+   return new Promise<boolean>( resolve => {
+    this.planEstudioRepository.editarCU( AprobarPlan ).subscribe({
+      next: ( response ) =>{
+        console.log( response );
+        resolve( true )
+        
+      }, error: ( error ) => {
+        console.log( error);
+        resolve( false )
+      }
+    })
+   })
+    
+  }
 
 }
