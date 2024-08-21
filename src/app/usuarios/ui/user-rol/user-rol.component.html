@@ -68,7 +68,7 @@
                     <span class="font-bold mx-4">{{ userRol.rol }}</span>
                         
                         <div class="flex flex-column w-full sm:ml-6">
-                            @if ( userRol.usuario ) {
+                            @if ( userRol.usuario && currentRol().rol ==='Administrador' ) {
                                 <mat-slide-toggle
                                             class="f-w-500 "
                                             color="primary"
@@ -77,21 +77,32 @@
                                         >
                                             {{ userRol.estado }}
                                 </mat-slide-toggle>
-                                @if (userRol.rol === 'Vicerrectorado Académico' || userRol.rol === 'Consejo Universitario' || userRol.rol === 'Administrador') {
-                                    <mat-slide-toggle
-                                                    class="f-w-500"
-                                                    color="primary"
-                                                    [checked]="userRol.alta == 'ALTA'"
-                                                    (change)="changeAltaRol($event, userRol)"
+                                @if (!(userRol.rol.startsWith('Director'))) {
+                                <mat-slide-toggle
+                                            class="f-w-500"
+                                            color="primary"
+                                            [checked]="userRol.alta == 'ALTA'"
+                                            (change)="changeAltaRol($event, userRol)"
                                                     
-                                                >
-                                                    {{ userRol.alta }}
-                                    </mat-slide-toggle>
+                                        >
+                                            {{ userRol.alta }}
+                                </mat-slide-toggle>
                                 }
 
                                 @else {
-                                    <div class="mt-2 ml-5 p-1">{{userRol.alta}}</div> 
+                                    <div class="mt-2 p-1 border-round text-center"
+                                    [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
+                                    'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
                                 }
+                            }
+                            @else {
+                                <div class="mt-1 ml-3 border-round text-center" 
+                                [ngClass]="{'bg-red-100 text-red-700': userRol.estado === 'SUSPENDIDO',
+                                'bg-green-100 text-green-700' : userRol.estado === 'ACTIVO'}">{{userRol.estado}}</div> 
+
+                                <div class="mt-1 ml-3 border-round text-center"
+                                [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
+                                'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
                             }
                         </div>
                         <!-- {{userRol.rol}} -->

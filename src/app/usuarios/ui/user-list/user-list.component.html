@@ -1,16 +1,16 @@
 <!-- 
 <div class="absolute rigth-0"> -->
-
+@if (currentRol().rol === 'Administrador') {
   <button mat-flat-button color="primary" class="mb-3 lg:mb-5 lg:pb-0 b-rad-20 -mt-2 lg:-mt-3 block lg:absolute right-0 mr-4 lg:mr-6 abrirModal" (click)="openModalUserAdd()">
 
     <div class="flex align-item-center"> 
       <i class="ti ti-plus f-18 m-r-5"></i> Agregar Usuario 
     </div>
   </button>
-  <div class="lg:mb-5">
-  </div>
+  <div class="lg:mb-5"></div>
+  <div class="mb-5"></div>
+}
 <!-- </div> -->
- <div class="mb-5"></div>
 <app-card cardTitle="Lista de usuarios">
     <div class="p-b-5">
         <div class="table-containe table-reponsive">
@@ -72,11 +72,13 @@
                             <i class="ti ti-eye f-18"></i>
                           </a>
                         </li>
-                        <li class="list-inline-item m-r-10" matTooltip="Editar" (click)="openModalUserEdit( usuario )">
-                          <a href="javascript:" class="avatar avatar-xs text-muted">
-                            <i class="ti ti-edit-circle f-18"></i>
-                          </a>
-                        </li>
+                        @if (currentRol().rol === 'Administrador') {                          
+                          <li class="list-inline-item m-r-10" matTooltip="Editar" (click)="openModalUserEdit( usuario )">
+                            <a href="javascript:" class="avatar avatar-xs text-muted">
+                              <i class="ti ti-edit-circle f-18"></i>
+                            </a>
+                          </li>
+                        }
                         <!-- <li class="list-inline-item m-r-10" matTooltip="Delete">
                           <a href="javascript:" class="avatar avatar-xs text-warn-500">
                             <i class="ti ti-trash f-18"></i>
