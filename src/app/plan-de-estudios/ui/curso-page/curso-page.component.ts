@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, TemplateRef } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { CursoListComponent } from './curso-list/curso-list.component';
 import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
@@ -20,11 +20,18 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'curso-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, CursoListComponent, UiButtonIconComponent, UiButtonComponent, CicloPageComponent, PlanEstudioListComponent ],
+  imports: [ 
+    CommonModule,
+    SharedModule,
+    CursoListComponent,
+    UiButtonIconComponent,
+    UiButtonComponent,
+    CicloPageComponent,
+    PlanEstudioListComponent ],
   templateUrl: './curso-page.component.html',
   styleUrl: './curso-page.component.scss'
 })
-export class CursoPageComponent {
+export class CursoPageComponent implements OnDestroy {
 
   cursosByCiclos = this.cursoSignal.cursosByCiclos;
   // cursos: Curso[] = [];
@@ -43,6 +50,11 @@ export class CursoPageComponent {
     private alert: AlertService,
     private router: Router
   ) {}
+  ngOnDestroy(): void {
+    this.isModal.set( false );
+    // this.planEstudioSelect.set( this.signal.planEstudioDefault );
+
+  }
 
   asignar = () => {
     const cursos: PlanEstudioCursoInsertar[] = this.cursosList().map( curso => {
@@ -59,7 +71,7 @@ export class CursoPageComponent {
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos fueron asignados al plan de estudios', 'success', 6)
-        this.modal.getRefModal().close('Assign')
+        this.modal.getRefModal().close('Assign');
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al Asignar los cursos', 'error', 6)
@@ -160,10 +172,14 @@ export class CursoPageComponent {
     } ).afterClosed().subscribe( response => {
       
       if( response == 'cancelar' ) {
+        this.planEstudioSelect.set( this.signal.planEstudioDefault );
+
         return;
       }
-
+      console.log(response);
+      
       this.router.navigate(['/plan-de-estudios/malla-curricular']);
+
     })
   }
 

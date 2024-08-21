@@ -97,6 +97,11 @@ export class MensajeriaSignal {
     showFormNuevoMensaje = signal( false );
     showFormResponse = signal( false );
 
+    abrirModal = signal( '' ); 
+    checkInfoSuccess = signal( false );
+
+    isCompletedProcess = signal( true );
+
     listaDestinatarios = signal ( this.listaDestinatariosDefault );
     listaDestinatariosResponderA = signal ( this.listaDestinatariosResponderADefault );
     listaDestinatariosResponderAflujo = signal ( this.listaDestinatariosResponderADefault );

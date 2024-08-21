@@ -45,9 +45,10 @@
     </form>
     <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
     
+
 </app-card>
 
-
+<ui-button icon="ti ti-file-upload" (onClick)="showUploader( UploaderFiles )"> Adjuntar archivos </ui-button>
 
 <mensajeria-flujo-navegacion
     [allDestinatario]="listaDestinatariosResponderAflujo()"
@@ -56,6 +57,10 @@
     [mensaje]="mensaje"
 >
 </mensajeria-flujo-navegacion>
+
+<ng-template #UploaderFiles>
+    <ui-uploader-files class="w-30rem"></ui-uploader-files>
+</ng-template>
 
 <!-- <pre>
 {{ listaDestinatariosResponderAflujo()  | json }}

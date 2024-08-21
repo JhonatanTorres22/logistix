@@ -26,7 +26,9 @@ export type PlanEstudioEditDEDTO = Omit<PlanEstudioAddDTO, 'codigoProgramaAcadem
 }
 
 export type PlanEstudioEditCUDTO = PlanEstudioEditDEDTO & {
-    resolucion: string
+    resolucion: string,
+    inicioVigencia: string,
+    finVigencia: string
 }
 
 export type PlanEstudioEliminarDTO = {
@@ -42,9 +44,9 @@ export type PlanEstudioCursoInsertarDTO = {
 
 
 export interface CursoPlanListarDTO {
-    codigoCursoPlan: number,
-    nombre: string,
-    descripcion: string
+    CodigoCursoPlan: number,
+    Nombre: string,
+    Descripcion: string
 }
 
 export interface CursoPlanListarDataArrayDTO {

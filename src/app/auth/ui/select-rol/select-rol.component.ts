@@ -8,7 +8,7 @@ import { AuthService } from '../../infraestructure/services/auth.service';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { ListarInfoDirectorRepository } from '../../domain/repositories/listarInfoDirector.repository';
 import { AuthSignal } from '../../domain/signals/auth.signal';
-import { InfoDirectorSignal } from '../../domain/signals/infoDirector.signal';
+
 
 @Component({
   selector: 'select-rol',
@@ -28,7 +28,6 @@ export class SelectRolComponent {
   
 
   constructor(
-    private infoDirectorSignal:InfoDirectorSignal,
     private auth: AuthSignal,
     private repository: ListarInfoDirectorRepository,
     private router: Router,
@@ -45,7 +44,7 @@ export class SelectRolComponent {
   //   }
   // }
 
-  infoDirector = this.infoDirectorSignal.infoDirector;
+  infoDirector = this.auth.currentInfoDirector;
   selectRol( rol: RolDTO) {
     // console.log( rol );
 
@@ -55,18 +54,7 @@ export class SelectRolComponent {
     localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeria.mensajeriaAsignacionDefault));
 
     this.router.navigate(['/dashboard']);
-    console.log(rol.Nombre,'****');
-    const rolSeleccionado = rol.Nombre.substring(0,3)
     
-    if(rolSeleccionado === 'Dir'){
-      this.repository.obtener(parseInt( this.auth.currentRol().id )).subscribe({
-        next: (infoDirector) => {
-          this.infoDirector.set(infoDirector)
-          localStorage.setItem('infoDirector', JSON.stringify(infoDirector))
-          console.log(infoDirector,'infodirector....');
-        }
-      })
-    }
     
   }
 

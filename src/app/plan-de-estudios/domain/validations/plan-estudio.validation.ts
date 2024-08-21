@@ -39,6 +39,13 @@ export class PlanEstudioValidation {
     maxLengthNombre: number = 40;
     // maxLengthUsuarioId: number = 0;
 
+    maxLengthResolucion: number = 40;
+    minLengthResolucion: number = 10;
+    expRegResolucion: RegExp = /^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F].*$/;
+    expRegLockInputResolucion: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9 \-]/g;
+    
+    // maxLengthUsuarioId: number = 0;
+
 
     minLengthDescripcionGrado: number = 10;
     minLengthDescripcionTitulo: number = 10;

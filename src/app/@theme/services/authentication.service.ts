@@ -7,6 +7,8 @@ import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.s
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
 import { NavigationItem } from '../types/navigation';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { ListarInfoDirector } from 'src/app/auth/domain/models/listarInfoDirector.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -25,6 +27,7 @@ export class AuthenticationService {
     private auth: AuthSignal,
     private mensajeriaSignal: MensajeriaSignal,
     private semestreSignal: SemestreSignal,
+    private planEstudio: PlanEstudioSignal,
     private dialogs: MatDialog,
   ) {
 
@@ -42,7 +45,15 @@ export class AuthenticationService {
     auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
     auth.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
 
+    localStorage.getItem('currentInfoDirector') ? auth.currentInfoDirector.set( JSON.parse( localStorage.getItem('currentInfoDirector')!)) : '';
+    
+    const info: ListarInfoDirector[] = JSON.parse( localStorage.getItem('currentInfoDirector')! );
+
+    const InfoDirect = info && info.length > 0 ? info[0].idProgramaAcademico : 0;
+
+    this.planEstudio.programaId.set( InfoDirect )
     const currentSemestre = JSON.parse(localStorage.getItem('currentSemestre')!);
+
 
     if( currentSemestre ) {
       

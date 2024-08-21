@@ -1,6 +1,7 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, WritableSignal } from "@angular/core";
 import { Navigation } from "src/app/@theme/types/navigation";
 import { Authenticated, Rol } from "../models/auth.model";
+import { ListarInfoDirector } from "../models/listarInfoDirector.model";
 
 
 @Injectable({
@@ -78,4 +79,18 @@ export class AuthSignal {
       checkExpiredToken(): boolean {
         return new Date( this.currentExpirarToken() ).getTime() < new Date().getTime();
       }
+
+
+      infoDirectorDefault: ListarInfoDirector = {
+        codigoLocal: 0,
+        idProgramaAcademico: 0 ,
+        idSemestre: 0, 
+        DescripcionLocal: '',
+        DescripcionSemestre: '',
+        NombreProgramaAcademico: ''
+    }
+
+      currentInfoDirector: WritableSignal<ListarInfoDirector[]> = signal([]);
+
+      idSemestres: WritableSignal<number[]> = signal([]);
 }

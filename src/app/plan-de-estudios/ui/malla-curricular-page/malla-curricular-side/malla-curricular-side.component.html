@@ -1,0 +1,21 @@
+<mat-drawer #task position="end" mode="over" class="kanban-drawer">
+    <!-- @if ( openMallaCursos() ) { -->
+      <div class="header-title">
+        <div class="kanban-header-title">
+          <h4>{{ planEstudioSelect().nombre }}</h4>
+          <div class="flex align-item-center hei-10">
+            <button mat-icon-button (click)="cerrar()" class="modal-close">
+              <i class="ti ti-x f-20 "></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <ng-scrollbar style="height: calc(100vh - 88px)" visibility="hover">
+        <div class="p-2">
+            <malla-curricular-list></malla-curricular-list>
+        </div>
+      </ng-scrollbar>
+    <!-- } -->
+</mat-drawer>
+  

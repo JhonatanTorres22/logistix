@@ -151,7 +151,7 @@ export class AuthService {
         localStorage.removeItem('currentUserData');
         localStorage.removeItem('currentRol');
         localStorage.removeItem('currentMenu');
-        localStorage.removeItem('infoDirector')
+        localStorage.removeItem('currentInfoDirector')
 
         this.auth.setCurrentUserDefault();
         this.router.navigate(['/auth/login']); ///authentication-1/login

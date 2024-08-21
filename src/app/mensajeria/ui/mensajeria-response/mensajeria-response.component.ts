@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -7,6 +7,8 @@ import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MensajeriaFlujoNavegacionComponent } from '../mensajeria-flujo-navegacion/mensajeria-flujo-navegacion.component';
+import { UiUploaderFilesComponent } from "../../../core/components/ui-uploader-files/ui-uploader-files.component";
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 
 @Component({
   selector: 'mensajeria-response',
@@ -16,8 +18,9 @@ import { MensajeriaFlujoNavegacionComponent } from '../mensajeria-flujo-navegaci
     SharedModule,
     QuillEditorComponent,
     UiButtonComponent,
-    MensajeriaFlujoNavegacionComponent
-  ],
+    MensajeriaFlujoNavegacionComponent,
+    UiUploaderFilesComponent
+],
   templateUrl: './mensajeria-response.component.html',
   styleUrl: './mensajeria-response.component.scss'
 })
@@ -34,7 +37,8 @@ export class MensajeriaResponseComponent implements OnInit, OnDestroy {
   paraRemitenteForm: FormGroup;
   constructor(
     private signal: MensajeriaSignal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modal: UiModalService
   ) {
     this.paraRemitenteForm = this.fb.group({
       destinatario: ['', [Validators.required]] 
@@ -57,6 +61,13 @@ export class MensajeriaResponseComponent implements OnInit, OnDestroy {
     
   }
 
+
+  showUploader = ( template: TemplateRef<any> ) => {
+    this.modal.openTemplate({
+      template,
+      titulo: 'Gestión de Archivos'
+    })
+  }
   
 
 }

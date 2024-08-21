@@ -1,5 +1,7 @@
 <mat-dialog-content class="w-15rem sm:w-25rem md:w-30rem">
+    <!-- {{ idPrograma() }} -->
     <div [formGroup]="formPlanEstudio">
+
         <ui-input label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" 
         [expReg]="expRegLockInputNombre" [patternErrorMessage]="'No debe incluir espacios ni guiones al final de la palabra, debe incluir y tener números solo al final '"></ui-input>
         <ui-input label="Descripcion Grado" formControlName="descripcionGrado" [maxlength]="maxLengthDescripcionGrado" [minlength]="minLengthDescripcionGrado"
@@ -8,6 +10,13 @@
         [expReg]="expRegLockInputDescripcionTitulo" [patternErrorMessage]="mensajeErrorEspacio"></ui-input>
         <ui-text-area label="Detalle de Perfil" formControlName="detallePerfil" [maxlength]="maxLengthDetallePerfil" [minlength]="minLengthDetallePerfil" 
         [expReg]="expRegLockInputDetallePerfil" [patternErrorMessage]="mensajeErrorEspacio +' ' +'ni caracteres especiales como (, - : ;)'"></ui-text-area>
+
+<!--
+        <ui-input label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegLockInputNombre"></ui-input>
+        <ui-input label="Descripcion Grado" formControlName="descripcionGrado" [maxlength]="maxLengthDescripcionGrado" [minlength]="minLengthDescripcionGrado" [expReg]="expRegLockInputDescripcionGrado"></ui-input>
+        <ui-input label="Descripcion Titulo" formControlName="descripcionTitulo" [maxlength]="maxLengthDescripcionTitulo" [minlength]="minLengthDescripcionTitulo" [expReg]="expRegLockInputDescripcionTitulo"></ui-input>
+        <ui-text-area label="Detalle de Perfil" formControlName="detallePerfil" [maxlength]="maxLengthDetallePerfil" [minlength]="minLengthDetallePerfil" [expReg]="expRegLockInputDetallePerfil"></ui-text-area>
+ -->    
 
     
     </div>
