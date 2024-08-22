@@ -13,6 +13,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { PlanEstudioAddComponent } from '../plan-estudio-add/plan-estudio-add.component';
 import { MallaCurricularSideComponent } from '../malla-curricular-page/malla-curricular-side/malla-curricular-side.component';
 import { PlanEstudioPerfilEgresadoComponent } from "../plan-estudio-perfil-egresado/plan-estudio-perfil-egresado.component";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'plan-estudio-card',
@@ -72,7 +73,7 @@ export class PlanEstudioCardComponent {
     
     this.modal.openTemplate( {
       template,
-      titulo: tipo = 'Edit' ? 'Editar Plan de Estudio' : 'Perfil'
+      titulo: tipo === 'Edit' ? 'Editar Plan de Estudio' : 'Perfil'
     } ).afterClosed().subscribe( response => {
       // console.log( response );
       this.planEstudioEdit.set( this.signal.planEstudioDefault );
@@ -126,5 +127,13 @@ export class PlanEstudioCardComponent {
   }
 
 
+  mostrarArchivoPlanEstudio(plan: PlanEstudio){
+    if(plan.archivo == null){
+      this.alert.showAlert('El consejo aún no ha emitido una resolución', 'warning')
+      return;
+    }
+    window.open(`${environment.EndPoint}Archivos/${plan.archivo}`, "_blank")
+    return;
+  } 
 
 }

@@ -33,15 +33,17 @@
                 <i class="f-18 ti ti-arrow-down"></i> 
             </div>
             <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> {{planEstudio.estadoMatricula}} </div>
+            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600">{{planEstudio.estadoMatricula}} </div>
         </div>
-        <div class="flex align-items-center my-2">
-            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-file-download"></i> 
+        @if (planEstudio.archivo !== null) {
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class=""></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> </span>
+                <button class="w-100 bg-success-500 text-center text-white user-status f-w-600" (click)="mostrarArchivoPlanEstudio(planEstudio)"> <i class="f-34 ti ti-file-download"></i> </button>
             </div>
-            <span class="flex-grow-1 text-truncate w-100"> Archivo</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> <i class="f-18 ti ti-download"></i> </div>
-        </div>
+        }
         @if ( !isModal() ) {
             <ng-template #actionTemplate>
                 <div class="flex gap-2 justify-content-around w-full">
