@@ -39,6 +39,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
   styleUrl: './curso-add.component.scss'
 })
 export class CursoAddComponent {
+  prefijoCodigoCurso: string = ''
 
   cursoDetails: WritableSignal<Curso> = this.signal.cursoSelect;
   cursoCicloSelect: WritableSignal<CursoByCiclo> = this.signal.cursoCicloSelect;
@@ -140,6 +141,7 @@ export class CursoAddComponent {
       this.formCurso.patchValue({
         idCiclo: this.cursoCicloSelect().idCiclo.toString()
       })
+      this.cursoDetails().id != 0 ? this.prefijoCodigoCurso = '' : this.prefijoCodigoCurso = 'P'
  
   }
 
@@ -282,5 +284,4 @@ export class CursoAddComponent {
     //   }
     // })
   }
-
 }

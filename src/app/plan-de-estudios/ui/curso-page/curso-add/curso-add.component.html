@@ -4,7 +4,8 @@
             <div class="flex gap-2">
                 <!-- <ui-input class="w-full" label="Programa" formControlName="programa" ></ui-input> -->
                 <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" ></ui-select>
-                <ui-input class="w-full" label="Codigo del Curso" formControlName="codigoCurso" [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput"></ui-input>
+                <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
+                [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
                 
             </div>
             <div class="flex gap-2">
