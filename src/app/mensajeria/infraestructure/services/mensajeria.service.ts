@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpBackend } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { 
@@ -18,7 +18,8 @@ import { MensajeriaMapper } from "../../domain/mappers/mensajeria.mapper";
 import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaResponderAListDataArrayDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
 import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
-
+import { serialize } from 'object-to-formdata';
+import { da } from "date-fns/locale";
 
 @Injectable({
     providedIn: 'root'
@@ -43,12 +44,16 @@ export class MensajeriaService {
     private urlResponderA: string;
 
     private rol = this.signal.currentRol
-    
+    private httpBack: HttpClient;
     constructor(
         private http: HttpClient,
-        private signal: AuthSignal
+        private signal: AuthSignal,
+        handler: HttpBackend,
+        private authSignal: AuthSignal
     ) {
         this.urlApi = environment.EndPoint;
+
+        this.httpBack = new HttpClient(handler);
 
         this.urlInsertar = 'api/Mensajeria/Insertar';
         this.urlRecibidos = 'api/Mensajeria/Recibidos?CodigoRolReceptor=';
@@ -63,6 +68,8 @@ export class MensajeriaService {
         this.urlNuevoMensajeA = 'api/Mensajeria/NuevoA?'
         this.urlNuevoMensaje = 'api/Mensajeria/Nuevo';
         this.urlResponderA = 'api/Mensajeria/ResponderA?CodigoMensaje=';
+
+
 
     }
 
@@ -102,10 +109,35 @@ export class MensajeriaService {
     }
 
     responderMensaje( mensaje: MensajeriaResponderAlta ): Observable<void> {
+        let httpParams = new HttpHeaders();
+        httpParams = httpParams.set('Accept', '*/*');
+        httpParams = httpParams.set('Authorization', `Bearer ${ this.authSignal.currentUserData().serviceToken }`)
         const mensajeAPI = MensajeriaMapper.fromDomainToApiResponderAlta( mensaje );
         console.log( mensajeAPI );
-        
-        return this.http.post<void>( this.urlApi + this.urlResponder, mensajeAPI )
+        const responder = serialize( 
+            mensajeAPI
+            // {
+            //     ...mensajeAPI,
+            //     Archivo: mensajeAPI.Archivo == null ? undefined : mensajeAPI.Archivo
+            // },
+            
+            // { nullsAsUndefineds: false }
+        )
+
+        // const data = new FormData();
+
+        // data.append('codigoMensajeria', mensaje.idMensaje.toString() );
+        // data.append('codigoTipoMensajeRol', mensaje.idTipoMensajeRol.toString());
+        // data.append('codigoEmisorRol', mensaje.idRolEmisor.toString());
+        // data.append('codigoReceptorRol', mensaje.idRolReceptor.toString())
+        // data.append('contenido', mensaje.mensaje); 
+        // data.append('informacionAdicional', mensaje.informacionAdicional ),
+        // data.append('Archivo', mensaje.archivo)
+        for( const [key, val] of responder ) {
+            console.log(`${key}: ${val}`);
+            
+        }
+        return this.httpBack.post<void>( this.urlApi + this.urlResponder, responder, { headers: httpParams } )
     }
 
     leerMensaje( mensaje: MensajeriaLeerMensaje ): Observable<void> {

@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, WritableSignal } from "@angular/core";
 import { BackToMail, MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaHistorialMensajes, MensajeriaInsertar, MensajeriaNuevoMensajeList, MensajeriaRecibidos, MensajeriaResponderAList, TipoMensaje } from "../models/mensajeria.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
@@ -16,6 +16,7 @@ import {
     mensajesArchivadosDefault,
 } from "./mensajeria-default"
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 
 @Injectable({
     providedIn: 'root'
@@ -174,5 +175,11 @@ export class MensajeriaSignal {
         this.mensajeriaInsertarDataAsignacion.set( this.mensajeriaAsignacionDefault );
         localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeriaAsignacionDefault))
     }
+
+    fileDefault: any = {
+        files: []
+    }
+
+    file: WritableSignal<any> = signal( this.fileDefault )
 
 }

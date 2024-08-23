@@ -74,7 +74,8 @@ export type MensajeriaResponderAlta = Pick<MensajeriaResponderAList, 'idMensaje'
     idRolEmisor: number,
     idRolReceptor: number,
     mensaje: string,
-    informacionAdicional: string
+    informacionAdicional: string,
+    archivo: File
 
 }
 

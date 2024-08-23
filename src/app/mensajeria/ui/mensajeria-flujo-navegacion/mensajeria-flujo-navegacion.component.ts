@@ -16,6 +16,7 @@ import { PlanEstudioCardComponent } from 'src/app/plan-de-estudios/ui/plan-estud
 import { ClickDirective } from 'angular-calendar/modules/common/click/click.directive';
 import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
 import { PlanEstudio, PlanEstudioEditCU } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
+import { MensajeriaService } from '../../infraestructure/services/mensajeria.service';
 
 @Component({
   selector: 'mensajeria-flujo-navegacion',
@@ -51,6 +52,7 @@ export class MensajeriaFlujoNavegacionComponent {
   currentRol = this.auth.currentRol;
   checkInfoSuccess = this.signal.checkInfoSuccess;
   isCompletedProcess = this.signal.isCompletedProcess;
+  file = this.signal.file;
   
   abrirModal = this.signal.abrirModal;
 
@@ -62,6 +64,7 @@ export class MensajeriaFlujoNavegacionComponent {
     private modal: UiModalService,
     private alert: AlertService,
     private signalPlanEstudio: PlanEstudioSignal,
+    private mensajeriaService: MensajeriaService,
     private repository: MensajeriaRepository,
     private planEstudioRepository: PlanEstudioRepository,
     private auth: AuthSignal,
@@ -94,7 +97,8 @@ export class MensajeriaFlujoNavegacionComponent {
     this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea enviar el mensaje?')
       .then( isConfirm => {
         if( !isConfirm ) return
-
+        console.log( this.file().files.length );
+        
         const mensajeResponder: MensajeriaResponderAlta = {
          
           idMensaje: this.selectedDestinatarioResponderA().idMensaje,
@@ -102,13 +106,13 @@ export class MensajeriaFlujoNavegacionComponent {
           idRolEmisor: parseInt( this.auth.currentRol().id ),
           idRolReceptor: this.selectedDestinatarioResponderA().idUsuarioRol, //TODO: ID DEL RECEPTOR this.mensajesHistorial()[0].informacionAdicional.toString()
           mensaje: this.mensaje.trim(),
-          informacionAdicional: infoAdicional
+          informacionAdicional: infoAdicional == '' ? 'none' : infoAdicional,
+          archivo: this.file().files.length == 0 ? null : this.file().files[0]
         }
-
-        console.log(mensajeResponder);
-        // return
-
+        console.log( mensajeResponder );
+        
         this.enviarMensaje( mensajeResponder );
+
       });
 
     

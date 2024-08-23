@@ -134,5 +134,6 @@ export type MensajeriaResponderAltaDTO = Pick<MensajeriaResponderAListDTO, 'codi
     codigoEmisorRol: number,
     codigoReceptorRol: number,
     contenido: string,
-    informacionAdicional: string
+    informacionAdicional: string,
+    Archivo: File
 }
