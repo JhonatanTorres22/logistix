@@ -21,27 +21,31 @@
             <span class="flex-grow-1 text-truncate w-100"> Fin</span>
             <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
         </div>
-        <div class="flex align-items-center my-2">
-            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+        @if (planEstudio.estadoCaducidad !== null) {
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class="f-18 ti ti-arrow-down"></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> Estado</span>
+                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> {{planEstudio.estadoCaducidad}} </div>
             </div>
-            <span class="flex-grow-1 text-truncate w-100"> Estado</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
-        </div>
-        <div class="flex align-items-center my-2">
-            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+        }
+        @if(planEstudio.estadoMatricula !== null){
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class="f-18 ti ti-arrow-down"></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
+                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600">{{planEstudio.estadoMatricula}} </div>
             </div>
-            <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600">{{planEstudio.estadoMatricula}} </div>
-        </div>
+        }
         @if (planEstudio.archivo !== null) {
             <div class="flex align-items-center my-2">
                 <div class="avatar avatar-xs flex-shrink-0 m-r-10">
                     <i class=""></i> 
                 </div>
                 <span class="flex-grow-1 text-truncate w-100"> </span>
-                <button class="w-100 bg-success-500 text-center text-white user-status f-w-600" (click)="mostrarArchivoPlanEstudio(planEstudio)"> <i class="f-34 ti ti-file-download"></i> </button>
+                <div class="w-100 bg-success-500 text-center text-white user-status f-w-600" (click)="mostrarArchivoPlanEstudio(planEstudio)"> <i class="f-34 ti ti-file-download"></i> </div>
             </div>
         }
         @if ( !isModal() ) {

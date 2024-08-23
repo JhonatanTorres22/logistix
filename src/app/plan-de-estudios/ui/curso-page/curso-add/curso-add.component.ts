@@ -109,7 +109,7 @@ export class CursoAddComponent {
       idCiclo: new FormControl('', [Validators.required]),
       codigoCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthCodigoCurso ), Validators.minLength( this.minLengthCodigoCurso ), Validators.pattern(this.expRegCodigoCurso)]),
       nombreCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombreCurso ), Validators.minLength( this.minLengthNombreCurso ), Validators.pattern(this.expRegNombreCurso), validation.duplicado]),
-      descripcion: new FormControl('', [Validators.required]),
+      descripcion: new FormControl('', [Validators.required, Validators.pattern(this.expRegDescripcion)]),
       tipoEstudio: new FormControl('', [ Validators.required ]),
       tipoCurso: new FormControl('', [ Validators.required]),
       competencia: new FormControl('', [ Validators.required]),
@@ -141,7 +141,7 @@ export class CursoAddComponent {
       this.formCurso.patchValue({
         idCiclo: this.cursoCicloSelect().idCiclo.toString()
       })
-      this.cursoDetails().id != 0 ? this.prefijoCodigoCurso = '' : this.prefijoCodigoCurso = 'P'
+      this.cursoDetails().id != 0 ? this.prefijoCodigoCurso = this.cursoDetails().codigoCurso : this.prefijoCodigoCurso = 'P'
  
   }
 
@@ -204,7 +204,7 @@ export class CursoAddComponent {
               descripcion: this.formCurso.value.descripcion,
               idPrograma: 1,
               id: this.cursoDetails().id,
-              idCiclo: parseInt( this.formCurso.value.idCiclo ),
+              // idCiclo: parseInt( this.formCurso.value.idCiclo ),
               codigoCurso: this.formCurso.value.codigoCurso,
               competencia: this.formCurso.value.competencia,
               tipoCurso: this.formCurso.value.tipoCurso,
@@ -271,17 +271,18 @@ export class CursoAddComponent {
   }
 
   editar( curso: CursoEditar ) {
-    this.alert.sweetAlert('info', 'ATENCIÓN', 'Aun no hay API para editar un curso.....')
-    console.log( curso );
+    // this.alert.sweetAlert('info', 'ATENCIÓN', 'Aun no hay API para editar un curso.....')
+    // console.log( curso );
     
-    // this.repository.editar( curso ).subscribe({
-    //   next: ( data ) => {
-    //     console.log( data );
-        
-    //   }, error: ( error ) => {
-    //     console.log( error );
-        
-    //   }
-    // })
+    this.repository.editar( curso ).subscribe({
+      next: ( data ) => {
+        console.log( data );  
+        this.alert.showAlert('Curso editado de manera correcta', 'success', 6);
+        this.modal.getRefModal().close('Edit');
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al agregar el curso', 'error', 6);
+      }
+    })
   }
 }

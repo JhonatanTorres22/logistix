@@ -5,7 +5,7 @@ import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Curso, CursoByCiclo } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { Curso, CursoByCiclo, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
 import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { CursoService } from 'src/app/plan-de-estudios/infraestructure/services/curso.service';
@@ -16,6 +16,7 @@ import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class CursoListComponent implements OnInit {
   idPrograma = this.planEstudioSignal.programaId;
 
   constructor( 
+    private authSignal: AuthSignal,
     private repository: CursoRepository,
     private service: CursoService,
     private cicloRepository: CicloRepository,
@@ -155,4 +157,31 @@ export class CursoListComponent implements OnInit {
     
   }
 
+  eliminarConfirm = (curso:Curso) => {
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea eliminar el curso?').
+    then(isConfirm => {
+      if(!isConfirm){return}
+      const eliminarCurso: CursoEliminar = {
+        id : curso.id,
+        usuarioId: parseInt( this.authSignal.currentRol().id )
+      }     
+      this.eliminar( eliminarCurso )
+    })
+  }
+
+  eliminar = ( curso : CursoEliminar ) => {
+    this.repository.eliminar(curso).subscribe({
+      next: ( data ) => {
+        console.log(data);
+        this.alert.showAlert('El curso fue eliminado de manera correcta', 'success', 6)
+        setTimeout(() => {
+          this.obtener()
+        }, 300);
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.sweetAlert('error')
+
+      }
+    })
+  }
 }

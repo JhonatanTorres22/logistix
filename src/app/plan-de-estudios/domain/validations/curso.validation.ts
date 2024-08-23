@@ -29,8 +29,8 @@ export class CursoValidation {
 
     maxLengthDescripcion: number = 80;
     minLengthDescripcion: number = 6;
-    expRegDescripcion: RegExp = /[A-Za-z]{5,20}/;
-    expRegDescripcionBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    expRegDescripcion: RegExp = /^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:()"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$/;;
+    expRegDescripcionBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g;
     // maxLengthTipoEstudio: string
     // maxLengthTipoCurso: string
     // maxLengthCompetencia: string
