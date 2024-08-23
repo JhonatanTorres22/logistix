@@ -112,6 +112,7 @@ export class NavBarComponent implements OnInit {
   obtenerInfoDirector = () => {
     // console.log(rol.Nombre,'****');
     const rolSeleccionado = this.auth.currentRol().rol.substring(0,3);
+    console.warn( rolSeleccionado);
     
     if(rolSeleccionado === 'Dir'){
       this.repository.obtener(parseInt( this.auth.currentRol().id )).subscribe({
@@ -124,6 +125,7 @@ export class NavBarComponent implements OnInit {
           // this.semestresAcademicos.set( [] )
           if( infoDirector.length == 0 ) {
             // this.auth.idSemestres.set([]);
+            throw('El director no tiene programa asignado');
           }
           this.currentInfoDirector.set(infoDirector);
           this.idPrograma.set( this.currentInfoDirector()[0].idProgramaAcademico )

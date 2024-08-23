@@ -35,6 +35,7 @@ export class MensajeriaResponseComponent implements OnInit, OnDestroy {
   selectedDestinatarioResponderA = this.signal.selectedDestinatarioResponderA;
 
   paraRemitenteForm: FormGroup;
+  showUpload: boolean = false;
   constructor(
     private signal: MensajeriaSignal,
     private fb: FormBuilder,
@@ -62,12 +63,16 @@ export class MensajeriaResponseComponent implements OnInit, OnDestroy {
   }
 
 
-  showUploader = ( template: TemplateRef<any> ) => {
-    this.modal.openTemplate({
-      template,
-      titulo: 'Gestión de Archivos'
-    })
+  showUploader = () => {
+    this.showUpload = !this.showUpload;
   }
+
+  // showUploaderModal = ( template: TemplateRef<any> ) => {
+  //   this.modal.openTemplate({
+  //     template,
+  //     titulo: 'Gestión de Archivos'
+  //   })
+  // }
   
 
 }

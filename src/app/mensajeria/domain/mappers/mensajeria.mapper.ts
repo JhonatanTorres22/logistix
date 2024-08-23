@@ -228,6 +228,7 @@ export class MensajeriaMapper {
             codigoReceptorRol: param.idRolReceptor,
             contenido: param.mensaje,
             informacionAdicional: param.informacionAdicional,
+            Archivo: param.archivo
         }
     }
 }

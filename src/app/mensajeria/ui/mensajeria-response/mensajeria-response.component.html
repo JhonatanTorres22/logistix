@@ -45,10 +45,14 @@
     </form>
     <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
     
+    @if ( showUpload ) {
+        <ui-uploader-files class="w-30rem" [showButton]="false"></ui-uploader-files>
+    }
 
 </app-card>
 
-<ui-button icon="ti ti-file-upload" (onClick)="showUploader( UploaderFiles )"> Adjuntar archivos </ui-button>
+<!-- <ui-button icon="ti ti-file-upload" (onClick)="showUploader( UploaderFiles )"> Adjuntar archivos </ui-button> -->
+<ui-button icon="ti ti-file-upload" (onClick)="showUploader()" > Adjuntar archivos </ui-button>
 
 <mensajeria-flujo-navegacion
     [allDestinatario]="listaDestinatariosResponderAflujo()"

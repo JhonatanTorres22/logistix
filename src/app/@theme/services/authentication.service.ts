@@ -78,7 +78,7 @@ export class AuthenticationService {
       if( this.auth.checkExpiredToken() ) {
 
         this.dialogs.closeAll();
-        if(this.auth.currentTimer() == 0 && this.contador == 1) {
+        if(this.auth.currentTimer() <= 1 && this.contador == 1) {
           return
         }
         this.router.navigate(['/auth/logout']);

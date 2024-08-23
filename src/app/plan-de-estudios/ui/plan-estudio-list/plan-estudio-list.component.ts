@@ -82,9 +82,8 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.idPrograma.set(this.currentInfoDirector()[0].idProgramaAcademico);
 
-    // this.preparedIdSemestres();
+    this.preparedIdSemestres();
     // this.prepareIdPrograma();
     // if( this.idProgramaSelect != 0 ) {
     //   console.log(this.idProgramaSelect );
@@ -100,7 +99,9 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
       
       return
     }
-    this.idSemestres.set(this.currentInfoDirector().map( semestre => semestre.idSemestre ));
+    this.idPrograma.set(this.currentInfoDirector()[0].idProgramaAcademico);
+
+    // this.idSemestres.set(this.currentInfoDirector().map( semestre => semestre.idSemestre ));
     // console.log(this.idSemestres);
   }
 
