@@ -12,16 +12,20 @@ import { PlanEstudioSignal } from '../../domain/signal/plan-estudio.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { PlanEstudioAddComponent } from '../plan-estudio-add/plan-estudio-add.component';
 import { MallaCurricularSideComponent } from '../malla-curricular-page/malla-curricular-side/malla-curricular-side.component';
+import { PlanEstudioPerfilEgresadoComponent } from "../plan-estudio-perfil-egresado/plan-estudio-perfil-egresado.component";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'plan-estudio-card',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     SharedModule,
     PlanEstudioAddComponent,
     MallaCurricularSideComponent,
-    UiButtonComponent ],
+    UiButtonComponent,
+    PlanEstudioPerfilEgresadoComponent
+],
   templateUrl: './plan-estudio-card.component.html',
   styleUrl: './plan-estudio-card.component.scss'
 })
@@ -62,14 +66,14 @@ export class PlanEstudioCardComponent {
     this.openMallaCursos.set( true );
   }
 
-  showFormEdit = ( plan: PlanEstudio, template: TemplateRef<any> ) => {
+  showFormEdit = ( plan: PlanEstudio, template: TemplateRef<any>, tipo: string ) => {
 
     this.planEstudioEdit.set( plan );
     console.log(this.planEstudioEdit());
     
     this.modal.openTemplate( {
       template,
-      titulo: 'Editar Plan de Estudio'
+      titulo: tipo === 'Edit' ? 'Editar Plan de Estudio' : 'Perfil'
     } ).afterClosed().subscribe( response => {
       // console.log( response );
       this.planEstudioEdit.set( this.signal.planEstudioDefault );
@@ -84,6 +88,10 @@ export class PlanEstudioCardComponent {
   }
 
   eliminarConfirm( plan: PlanEstudio ) {
+    if(plan.resolucion !== null ){
+      this.alert.showAlert('No puede eliminar el plan, porque ya cuenta con una resolución','error')
+      return
+    }
     this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea eliminar el Plan de Estudios?')
       .then( isConfirm => {
         if( !isConfirm ) {
@@ -119,5 +127,13 @@ export class PlanEstudioCardComponent {
   }
 
 
+  mostrarArchivoPlanEstudio(plan: PlanEstudio){
+    if(plan.archivo == null){
+      this.alert.showAlert('El consejo aún no ha emitido una resolución', 'warning')
+      return;
+    }
+    window.open(`${environment.EndPoint}Archivos/${plan.archivo}`, "_blank")
+    return;
+  } 
 
 }

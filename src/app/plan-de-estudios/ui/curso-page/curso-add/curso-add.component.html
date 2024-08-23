@@ -3,15 +3,20 @@
         <form [formGroup]="formCurso">
             <div class="flex gap-2">
                 <!-- <ui-input class="w-full" label="Programa" formControlName="programa" ></ui-input> -->
-                <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" ></ui-select>
-                <ui-input class="w-full" label="Codigo del Curso" formControlName="codigoCurso" [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput"></ui-input>
+                 @if (this.cursoDetails().id == 0) {
+                     <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" ></ui-select>
+                 }
+                <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
+                [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
                 
             </div>
             <div class="flex gap-2">
-                <ui-input class="w-full" label="Nombre del Curso" formControlName="nombreCurso" [maxlength]="maxLengthNombreCurso" [minlength]="minLengthNombreCurso" [expReg]="expRegNombreCursoBlockToInput"></ui-input>
+                <ui-input class="w-full" label="Nombre del Curso" formControlName="nombreCurso" [maxlength]="maxLengthNombreCurso" [minlength]="minLengthNombreCurso" 
+                [expReg]="expRegNombreCursoBlockToInput" [patternErrorMessage]="'No se permite espacios al final del nombre'"></ui-input>
             </div>
             <div class="flex gap-2">
-                <ui-input class="w-full" label="Descripción del Curso" formControlName="descripcion" [maxlength]="maxLengthDescripcion" [minlength]="minLengthDescripcion" [expReg]="expRegDescripcionBlockToInput"></ui-input>
+                <ui-input class="w-full" label="Descripción del Curso" formControlName="descripcion" [maxlength]="maxLengthDescripcion" [minlength]="minLengthDescripcion" 
+                [expReg]="expRegDescripcionBlockToInput" [patternErrorMessage]="'No se debe incluir espacios al término de la palabra ni caracteres especiales (,)'"></ui-input>
             </div>
             <div class="flex flex-column md:flex-row gap-2">
                 <ui-select label="Tipo de Estudio" formControlName="tipoEstudio" [options]="optionsTipoEstudio" ></ui-select>

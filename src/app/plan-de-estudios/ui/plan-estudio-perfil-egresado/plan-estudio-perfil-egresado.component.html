@@ -1,0 +1,25 @@
+ <app-card headerClass="py-2 px-2 block" cardClass="m-0">
+    <ng-template #headerTitleTemplate class="align-items-center">
+        <div class="f-w-600 f-14">GRADO Y PERFIL DEL EGRESADO</div>
+    </ng-template>
+    <div class="bg-blue-100 border-round p-3">
+        <div class="flex justify-content-center align-items-center my-2 pb-3" style="height: 100%;">
+            <img src="../../../../assets/images/perfil-egresado.png" alt="Perfil Egresado" class="w-6 h-auto">
+        </div>
+        
+        <div class="align-items-center my-2 pb-3">
+            <span class="bg-success-500 mat-small text-center text-white user-status f-w-600">GRADO ACADÉMICO</span>
+            <span class="block w-100 pt-2">{{planEstudioEdit().descripcionGrado}}</span>
+        </div>
+
+        <div class="align-items-center my-2 pb-3">
+            <span class="bg-success-500 mat-small text-center text-white user-status f-w-600">TÍTULO UNIVERSITARIO</span>
+            <span class="block w-100 pt-2">{{planEstudioEdit().descripcionTitulo}}</span>
+        </div>
+
+        <div class="align-items-center my-2 pb-3">
+            <span class="bg-success-500 mat-small text-center text-white user-status f-w-600">DESCRIPCIÓN DE PERFIL</span>
+            <span class="block w-100 pt-2">{{planEstudioEdit().detallePerfil}}</span>
+        </div>
+    </div>
+ </app-card>

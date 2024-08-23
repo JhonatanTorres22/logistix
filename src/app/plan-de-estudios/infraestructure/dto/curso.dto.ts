@@ -22,8 +22,8 @@ export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito'> & {
     // idTipoEstudio: string,
     usuario: number
 }
-export type CursoEditarDTO = CursoCrearDTO & {
-    id: number,
+export type CursoEditarDTO = Omit<CursoCrearDTO, 'codigoCiclo'>  & {
+    codigoCurso: number,
     usuario: number
 }
 export type CursoEliminarDTO = Pick<CursoDTO, 'codigoCurso'> & { usuario: number}

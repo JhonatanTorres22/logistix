@@ -25,8 +25,8 @@ export type CursoCrear = Omit<Curso, 'id' | 'preRequisito'> & {
     usuarioId: number
 }
 
-export type CursoEditar = CursoCrear & {
-    id: number
+export type CursoEditar = Omit<CursoCrear, 'idCiclo'> & {
+    id: number;
 }
 export type CursoEliminar = Pick<Curso, 'id'> & {
     usuarioId: number

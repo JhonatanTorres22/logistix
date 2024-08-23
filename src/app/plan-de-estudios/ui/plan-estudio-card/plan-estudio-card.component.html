@@ -9,38 +9,52 @@
         </div>
         <div class="flex align-items-center my-2">
             <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+                <i class="f-18 ti ti-calendar"></i> 
             </div>
             <span class="flex-grow-1 text-truncate w-100"> Inicio</span>
             <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2021 </div>
         </div>
         <div class="flex align-items-center my-2">
             <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+                <i class="f-18 ti ti-calendar-time"></i> 
             </div>
             <span class="flex-grow-1 text-truncate w-100"> Fin</span>
             <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> 21-05-2024 </div>
         </div>
-        <div class="flex align-items-center my-2">
-            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+        @if (planEstudio.estadoCaducidad !== null) {
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class="f-18 ti ti-arrow-down"></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> Estado</span>
+                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> {{planEstudio.estadoCaducidad}} </div>
             </div>
-            <span class="flex-grow-1 text-truncate w-100"> Estado</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Vigente </div>
-        </div>
-        <div class="flex align-items-center my-2">
-            <div class="avatar avatar-xs flex-shrink-0 m-r-10">
-                <i class="f-18 ti ti-arrow-down"></i> 
+        }
+        @if(planEstudio.estadoMatricula !== null){
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class="f-18 ti ti-arrow-down"></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
+                <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600">{{planEstudio.estadoMatricula}} </div>
             </div>
-            <span class="flex-grow-1 text-truncate w-100"> Matrícula</span>
-            <div class="w-100 bg-success-500 mat-small text-center text-white user-status f-w-600"> Asignado </div>
-        </div>
+        }
+        @if (planEstudio.archivo !== null) {
+            <div class="flex align-items-center my-2">
+                <div class="avatar avatar-xs flex-shrink-0 m-r-10">
+                    <i class=""></i> 
+                </div>
+                <span class="flex-grow-1 text-truncate w-100"> </span>
+                <div class="w-100 bg-success-500 text-center text-white user-status f-w-600" (click)="mostrarArchivoPlanEstudio(planEstudio)"> <i class="f-34 ti ti-file-download"></i> </div>
+            </div>
+        }
         @if ( !isModal() ) {
             <ng-template #actionTemplate>
                 <div class="flex gap-2 justify-content-around w-full">
                     <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18" (onClick)="eliminarConfirm( planEstudio )"></ui-button>
-                    <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( planEstudio, planEstudioAdd )"></ui-button>
+                    <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( planEstudio, planEstudioAdd, 'Edit' )"></ui-button>
                     <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( planEstudio )"></ui-button>
+                    <ui-button tooltip="Ver Perfil de Egresado" color="yellow" icon="ti ti-user f-18" (onClick)="showFormEdit( planEstudio, planEstudioPerfilEgresado, 'Perfil' )"></ui-button>
                 </div>
             </ng-template>
         } @else {
@@ -55,6 +69,9 @@
 
 <ng-template #planEstudioAdd let-data>
     <plan-estudio-add></plan-estudio-add>
+</ng-template>
+<ng-template #planEstudioPerfilEgresado let-data>
+    <app-plan-estudio-perfil-egresado></app-plan-estudio-perfil-egresado>
 </ng-template>
 <malla-curricular-side></malla-curricular-side>
 

@@ -134,6 +134,11 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
   
 
   agregarPlan = ( template: TemplateRef<any> ) => {
+    let hayPlanesSinResolucion = this.planesDeEstudio().some (planEstudio => planEstudio.archivo === null)
+    if(hayPlanesSinResolucion){
+      this.alert.showAlert('No puede crear por motivo que hay plan de estudio sin resolución','warning')
+      return;
+    }
     this.modal.openTemplate({
       template,
       titulo: 'Plan de Estudio'

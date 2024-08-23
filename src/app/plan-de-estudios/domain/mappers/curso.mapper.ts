@@ -52,9 +52,9 @@ export class CursoMapper {
 
     static fromDomainToApiEditar( param: CursoEditar ): CursoEditarDTO {
         return {
-            id: param.id,
+            codigoCurso: param.id,
             codigoProgramaAcademico: param.idPrograma,
-            codigoCiclo: param.idCiclo,
+            // codigoCiclo: param.idCiclo,
             codigoInterno: param.codigoCurso,
             nombre: param.nombreCurso,
             descripcion: param.descripcion,

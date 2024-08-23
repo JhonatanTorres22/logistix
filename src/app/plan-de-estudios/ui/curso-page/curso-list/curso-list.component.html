@@ -35,6 +35,7 @@
                         <div class="flex justify-content-around my-2 gap-2">
                             <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
                             <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-1rem" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
+                            <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-1rem" (onClick)="eliminarConfirm( curso )"></ui-button>
                             <ui-button color="green" tooltip="Agregar Pre Requisito" icon="ti ti-shield-lock f-12" classButton="h-1rem" (onClick)="addPreRequisito( curso )"></ui-button>
                         </div>
                     </div>

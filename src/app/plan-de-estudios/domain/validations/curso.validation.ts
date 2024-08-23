@@ -16,10 +16,10 @@ export class CursoValidation {
 
     // maxLengthPrograma:string
     // maxLengthCiclo: string
-    maxLengthCodigoCurso: number = 10;
-    minLengthCodigoCurso: number = 5;
-    expRegCodigoCurso: RegExp = /[A-Za-z]{5,20}/;
-    expRegCodigoCursoBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    maxLengthCodigoCurso: number = 7;
+    minLengthCodigoCurso: number = 7;
+    expRegCodigoCurso: RegExp =/^P\d+$/;
+    expRegCodigoCursoBlockToInput: RegExp = /^(?!P)[^0-9]|[^0-9P]|(?<=^P.*)P/g;
 
     maxLengthNombreCurso: number = 50;
     minLengthNombreCurso: number = 6;
@@ -29,8 +29,8 @@ export class CursoValidation {
 
     maxLengthDescripcion: number = 80;
     minLengthDescripcion: number = 6;
-    expRegDescripcion: RegExp = /[A-Za-z]{5,20}/;
-    expRegDescripcionBlockToInput: RegExp = /^((?![A-Za-z]).)*$/;
+    expRegDescripcion: RegExp = /^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:()"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$/;;
+    expRegDescripcionBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g;
     // maxLengthTipoEstudio: string
     // maxLengthTipoCurso: string
     // maxLengthCompetencia: string
