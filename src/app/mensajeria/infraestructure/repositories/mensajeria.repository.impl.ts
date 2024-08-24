@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { 
     MensajeriaArchivados, MensajeriaCerrarArchivar,
     MensajeriaEnviados, MensajeriaEnviarNuevoMensaje,
+    MensajeriaForzarCierre,
     MensajeriaHistorialMensajes, MensajeriaInsertar,
     MensajeriaLeerMensaje, MensajeriaNuevoMensajeList,
     MensajeriaRecibidos, MensajeriaResponderAList,
@@ -20,6 +21,7 @@ import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface"
 export class MensajeriaRepositoryImpl implements MensajeriaRepository {
 
     constructor( private service: MensajeriaService ) {}   
+    
     
     
     insertar(mensaje: MensajeriaInsertar): Observable<void> {
@@ -61,11 +63,11 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
     
     
     obtenerTipoMensaje( idTipoMensajeGrupo: number ): Observable<UiSelect[]> {
-        return this.service.obtenerTipoMensaje( idTipoMensajeGrupo )
+        return this.service.obtenerTipoMensaje( idTipoMensajeGrupo );
     }
 
     nuevoMensajeA(idTipoMensaje: number ): Observable<MensajeriaNuevoMensajeList[]> {
-        return this.service.nuevoMensajeA( idTipoMensaje )
+        return this.service.nuevoMensajeA( idTipoMensaje );
     }
 
     enviarNuevoMensaje(mensaje: MensajeriaEnviarNuevoMensaje): Observable<void> {
@@ -73,7 +75,11 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
     }
 
     responderMensajeA(idMensaje: number): Observable<MensajeriaResponderAList[]> {
-        return this.service.responderAList( idMensaje )
+        return this.service.responderAList( idMensaje );
+    }
+
+    forzarCierre(mensaje: MensajeriaForzarCierre): Observable<void> {
+        return this.service.forzarCierre( mensaje );
     }
 
 }

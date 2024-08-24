@@ -26,7 +26,10 @@ export interface MensajeriaRecibidos {
 export type MensajeriaEnviados = Omit<MensajeriaRecibidos, 'rolEmisor'> & {
     rolReceptor: string
 };
-export type MensajeriaArchivados = MensajeriaRecibidos
+export type MensajeriaArchivados = MensajeriaRecibidos & {
+    usuarioCierre: string,
+    fechaCierre: string
+}
 
 export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'> & {
     usuarioId: number
@@ -120,6 +123,8 @@ export interface BackToMail {
     detailsContent: boolean;
     titleContent: boolean;
 }
+
+export type MensajeriaForzarCierre = MensajeriaCerrarArchivar;
 
 // export type MensajeriaResponder
 // export interface MensajeriaSelectMensaje {

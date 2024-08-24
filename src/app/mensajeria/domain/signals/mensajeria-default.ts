@@ -50,7 +50,7 @@ export const asignacion: Asignacion = {
 export const tipoMensaje: TipoMensaje = 'NO SELECCIONADO';
 
 
-export const selectMensaje: MensajeriaRecibidos = {
+export const selectMensaje: MensajeriaArchivados = {
     asunto: '',
     emisor: '',
     fecha: '',
@@ -60,7 +60,9 @@ export const selectMensaje: MensajeriaRecibidos = {
     mensaje: "",
     rolEmisor: "",
     receptor: "",
-    leido: false
+    leido: false,
+    fechaCierre: "",
+    usuarioCierre: ""
 }
 
 export const mensajesRecibidosDefault: MensajeriaRecibidos[] = [];

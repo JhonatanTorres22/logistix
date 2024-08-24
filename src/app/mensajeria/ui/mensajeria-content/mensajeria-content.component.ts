@@ -7,7 +7,7 @@ import { MailData } from 'src/app/fake-data/mail';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { MensajeriaMessagesComponent } from '../mensajeria-messages/mensajeria-messages.component';
 import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-compose.component';
-import { MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
+import { MensajeriaArchivados, MensajeriaDataAsignacion, MensajeriaEnviados, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -181,7 +181,7 @@ export class MensajeriaContentComponent implements OnInit {
     })
   }
 
-  mostrarHistorialMensajes( mail: MensajeriaRecibidos ) {
+  mostrarHistorialMensajes( mail: MensajeriaArchivados ) {
     // this.signal.setSeleccionarMensajeDefault();
     this.showFadeIn = true;
     

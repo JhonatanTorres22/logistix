@@ -7,11 +7,11 @@
       <div class="flex align-item-start gap-2">
         <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user wid-40 border-50" />
         <div class="flex-grow-1 m-l-10 gap-2">
-          <div class="f-14 f-w-600 text-truncate"> {{ mensaje.receptor }} </div>
+          <div class="f-14 f-w-600 text-truncate"> {{ selectMensaje().usuarioCierre }} </div> <!-- mensaje.receptor -->
           <div class="m-b-0 mat-small"> {{ mensaje.rolReceptor }} </div>
         </div>
       </div>
-      <span class="f-12 f-w-400"> 20 Mayo 2024, 20:35 </span>
+      <span class="f-12 f-w-400"> {{ selectMensaje().fechaCierre | date: 'short' }} </span>
 
     </div>
 </app-card>

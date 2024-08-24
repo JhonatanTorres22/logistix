@@ -33,7 +33,10 @@ export interface MensajeriaRecibidosDTO {
 
 
 export type MensajeriaEnviadosDTO = Omit<MensajeriaRecibidosDTO, 'leido'>;
-export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO
+export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO & {
+    usuarioCierre: string,
+    fechaCierre: string,
+}
 
 export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido'> & {
     archivo: string,
@@ -137,3 +140,6 @@ export type MensajeriaResponderAltaDTO = Pick<MensajeriaResponderAListDTO, 'codi
     informacionAdicional: string,
     Archivo: File
 }
+
+
+export type MensajeriaForzarCierreDTO = MensajeriaCerrarArchivarDTO

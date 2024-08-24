@@ -114,7 +114,7 @@ export class MensajeriaSignal {
     tiposMensajes = signal( this.tiposMensajeDefault )
     tiposMensajesGrupo = signal( this.tiposMensajeGrupoDefault )
 
-    setSeleccionarMensaje = ( mensaje: MensajeriaRecibidos) => {
+    setSeleccionarMensaje = ( mensaje: MensajeriaArchivados) => {
         this.selectMensaje.set( mensaje );
     }
 

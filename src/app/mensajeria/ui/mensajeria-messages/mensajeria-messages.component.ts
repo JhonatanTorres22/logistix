@@ -20,6 +20,7 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MensajeriaFlujoNavegacionComponent } from '../mensajeria-flujo-navegacion/mensajeria-flujo-navegacion.component';
 import { MensajeriaAsuntoComponent } from '../mensajeria-asunto/mensajeria-asunto.component';
 import { MensajeriaCardArchivedClosedApprovedComponent } from '../mensajeria-card-archived-closed-approved/mensajeria-card-archived-closed-approved.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -65,7 +66,7 @@ export class MensajeriaMessagesComponent implements OnInit {
   tipoBandeja = this.mensajeriaSignal.tipoBandeja;
   listaDestinatariosResponderA = this.mensajeriaSignal.listaDestinatariosResponderA;
   listaDestinatariosResponderAflujo = this.mensajeriaSignal.listaDestinatariosResponderAflujo;
-  
+  selectMensaje = this.mensajeriaSignal.selectMensaje;
   currentRol = this.authSignal.currentRol;
   esConforme: boolean = false;
   // mensajeHistorialSelect: MensajeriaHistorialMensajes;
@@ -147,6 +148,10 @@ export class MensajeriaMessagesComponent implements OnInit {
     try {
         this.scrolling.nativeElement.scrollTop = this.scrolling.nativeElement.scrollHeight;
     } catch(err) { }                 
-}
+  }
+
+  descargarArchivo = ( mensaje: MensajeriaHistorialMensajes) => {
+    window.open(`${environment.EndPoint}Archivos/${mensaje.archivo}`, "_blank")
+  }
 
 }
