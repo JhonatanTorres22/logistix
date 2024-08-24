@@ -20,6 +20,8 @@
         <mat-error class="mt-4" *ngIf="formAprobarPlanCU.get('inicioVigencia')?.hasError('required')">Fecha de <b>INICIO</b> incompleto</mat-error>
         <mat-error class="mt-4" *ngIf="formAprobarPlanCU.get('finVigencia')?.hasError('required')">Fecha de <b>FIN</b> incompleto</mat-error>
     </mat-form-field>
+    <ui-uploader-files class="w-30rem"></ui-uploader-files>
+
 </div>
 
 <!-- <pre>{{ this.planEstudioSinResolucion() | json }}</pre> -->

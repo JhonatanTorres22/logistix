@@ -23,7 +23,8 @@ export type PlanEstudioEditDE = Omit<PlanEstudioAdd, 'idProgramaAcademico'> & Pi
 export type PlanEstudioEditCU = PlanEstudioEditDE & {
     resolucion: string,
     inicioVigencia: string,
-    finVigencia: string
+    finVigencia: string,
+    archivo: File | any
 }
 
 

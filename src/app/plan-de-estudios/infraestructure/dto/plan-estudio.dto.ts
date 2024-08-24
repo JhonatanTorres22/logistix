@@ -28,7 +28,8 @@ export type PlanEstudioEditDEDTO = Omit<PlanEstudioAddDTO, 'codigoProgramaAcadem
 export type PlanEstudioEditCUDTO = PlanEstudioEditDEDTO & {
     resolucion: string,
     inicioVigencia: string,
-    finVigencia: string
+    finVigencia: string,
+    Archivo: File | any
 }
 
 export type PlanEstudioEliminarDTO = {

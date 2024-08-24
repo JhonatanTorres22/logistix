@@ -1,11 +1,12 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpBackend, HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { CursoPlanEliminar, CursoPlanListar, PlanEstudio, PlanEstudioAdd, PlanEstudioCursoInsertar, PlanEstudioEditCU, PlanEstudioEditDE, PlanEstudioEliminar } from "../../domain/models/plan-estudio.model";
 import { CursoPlanListarDataArrayDTO, PlanEstudioDataArrayDTO } from "../dto/plan-estudio.dto";
 import { PlanEstudioMapper } from "../../domain/mappers/plan-estudio.mapper";
-
+import { serialize } from "object-to-formdata";
+import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 
 @Injectable({
     providedIn: 'root'
@@ -22,12 +23,15 @@ export class PlanEstudioService {
     private urlCursoPlanInsertar: string;
     private urlCursoPlanListar: string;
     private urlCursoPlanEliminar: string;
-
+    private httpBack: HttpClient;
 
     constructor( 
-        private http: HttpClient
+        private http: HttpClient,
+        private authSignal: AuthSignal,
+        handler: HttpBackend,
     ) {
         this.urlApi = environment.EndPoint;
+        this.httpBack = new HttpClient(handler);
         this.urlObtener = 'api/PlanDeEstudio/Listar?CodigoProgramaAcademico=';
         this.urlInsertar = 'api/PlanDeEstudio/Insertar';
         this.urlEditarDE = 'api/PlanDeEstudio/ActualizarDE';
@@ -61,10 +65,20 @@ export class PlanEstudioService {
 
     editarCU( planEdit: PlanEstudioEditCU ): Observable<void> {
 
+        let httpParams = new HttpHeaders();
+        httpParams = httpParams.set('Accept', '*/*');
+        httpParams = httpParams.set('Authorization', `Bearer ${ this.authSignal.currentUserData().serviceToken }`)
+
         const planEditAPI = PlanEstudioMapper.fromDomainToApiEditCU( planEdit );
         console.log( planEditAPI );
-        
-        return this.http.put<void>( this.urlApi + this.urlEditarCU, planEditAPI );
+        const data = serialize( planEditAPI );
+
+
+        for( const [key, val] of data ) {
+            console.log(`${key}: ${val}`);
+            
+        }
+        return this.httpBack.put<void>( this.urlApi + this.urlEditarCU, data, { headers: httpParams } );
 
     }
 

@@ -50,6 +50,7 @@ export class PlanEstudioMapper {
             inicioVigencia: param.inicioVigencia,
             finVigencia: param.finVigencia,
             usuario: param.usuarioId,
+            Archivo: param.archivo
         }
     }
 
