@@ -3,6 +3,7 @@
 
  <mensajeria-asunto></mensajeria-asunto>
 <!-- {{ tipoBandeja() | json }} -->
+  <!-- {{ selectMensaje() | json }} -->
     <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling>
       @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
   
@@ -26,7 +27,7 @@
                       </li>
                     </ul>
                     <ul class="list-inline text-right">
-                      <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short'}} </li>
+                      <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short' }} </li>
                     </ul>
                   </div>
                 </mat-panel-title>
@@ -37,6 +38,16 @@
               <div class="m-3" [innerHTML]="mensaje.mensaje">
                 <!-- <p>Estimado TORRES MENESES, JHONATAN JOEL,</p><p> Sirva la presente para saludarlo y a su vez solicitar dar de Alta al <strong> DR. HUAMAN PACHAS, ANGEMAR LIKER</strong> quien a sido designado como Director de la Escuela Profesional de <strong>ADMINISTRACIÓN DE EMPRESAS.</strong></p><p>Agradezco de antemano su atención.</p><p>Saludos.</p> -->
               </div>
+              @if ( mensaje.archivo != null ) {
+                <div class="f-16 f-w-600 mt-5">
+                  <br>
+                  <mat-divider class="pb-2"></mat-divider>
+                  <b><i class="ti ti-paperclip m-r-10 pt-2"></i> 1 Archivo adjunto</b>
+                </div>
+                <div class="border-1 border-round bg-accent inline-block mb-5">
+                  <ui-button tooltip="Descargar" color="secondary" (click)="descargarArchivo( mensaje )"> Descargar Archivo</ui-button>
+                </div>
+              }
 
               <!-- <pre>{{ listaDestinatariosResponderAflujo() | json}}</pre> -->
 
@@ -50,6 +61,11 @@
         </div>
         
   
+      }
+      @if ( currentRol().rol == 'Vicerrectorado Académico' && tipoBandeja() != 'Archivados' ) {
+        <div class="flex justify-content-end gap-2 my-2">
+          <mensajeria-flujo-navegacion></mensajeria-flujo-navegacion>
+        </div>
       }
 
       @if ( showFormResponse() ) {
@@ -67,7 +83,6 @@
       <mensajeria-card-archived-closed-approved [mensaje]="mensajesHistorial()[ mensajesHistorial().length - 1]"></mensajeria-card-archived-closed-approved>
 
     }
-
 </div>
 <!-- <pre>
   {{ listaDestinatariosResponderA() | json }}

@@ -4,6 +4,7 @@ import {
     MensajeriaCerrarArchivarDTO,
     MensajeriaEnviadosDTO,
     MensajeriaEnviarNuevoMensajeDTO,
+     MensajeriaForzarCierreDTO,
      MensajeriaHistorialMensajesDTO,
      MensajeriaInsertarDTO,
      MensajeriaLeerMensajeDTO,
@@ -19,6 +20,7 @@ import {
     MensajeriaCerrarArchivar,
     MensajeriaEnviados,
     MensajeriaEnviarNuevoMensaje,
+    MensajeriaForzarCierre,
     MensajeriaHistorialMensajes,
     MensajeriaInsertar,
     MensajeriaLeerMensaje,
@@ -91,7 +93,9 @@ export class MensajeriaMapper {
             // rolReceptor: param.rolReceptor,
             fecha: param.fechaCreacion,
             // archivo: param.archivo,
-            leido: true
+            leido: true,
+            fechaCierre: param.fechaCierre,
+            usuarioCierre: param.usuarioCierre
         }
     }
 
@@ -229,6 +233,13 @@ export class MensajeriaMapper {
             contenido: param.mensaje,
             informacionAdicional: param.informacionAdicional,
             Archivo: param.archivo
+        }
+    }
+
+    static fromDomainToApiCierreForzado( param: MensajeriaForzarCierre ): MensajeriaForzarCierreDTO {
+        return {
+            codigoMensajeria: param.idMensaje,
+            usuario: param.usuarioId
         }
     }
 }

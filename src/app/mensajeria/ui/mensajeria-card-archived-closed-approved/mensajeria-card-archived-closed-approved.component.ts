@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaHistorialMensajes } from '../../domain/models/mensajeria.model';
+import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 
 @Component({
   selector: 'mensajeria-card-archived-closed-approved',
@@ -11,6 +12,12 @@ import { MensajeriaHistorialMensajes } from '../../domain/models/mensajeria.mode
   styleUrl: './mensajeria-card-archived-closed-approved.component.scss'
 })
 export class MensajeriaCardArchivedClosedApprovedComponent {
-@Input() mensaje: MensajeriaHistorialMensajes;
+  @Input() mensaje: MensajeriaHistorialMensajes;
+
+  selectMensaje = this.signal.selectMensaje;
+
+  constructor( private signal: MensajeriaSignal ) {
+
+  }
 
 }

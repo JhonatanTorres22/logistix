@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import {
     MensajeriaArchivados, MensajeriaCerrarArchivar,
     MensajeriaEnviados, MensajeriaEnviarNuevoMensaje,
+    MensajeriaForzarCierre,
     MensajeriaHistorialMensajes, MensajeriaInsertar,
     MensajeriaLeerMensaje, MensajeriaNuevoMensajeList,
     MensajeriaRecibidos, MensajeriaResponderAList,
@@ -26,6 +27,7 @@ export abstract class MensajeriaRepository {
     abstract nuevoMensajeA( tipoMensaje: number ): Observable< MensajeriaNuevoMensajeList[]>
     abstract enviarNuevoMensaje( mensaje: MensajeriaEnviarNuevoMensaje ): Observable<void>
     abstract responderMensajeA( idMensaje: number ): Observable<MensajeriaResponderAList[]>
+    abstract forzarCierre( mensaje: MensajeriaForzarCierre ): Observable<void>
     // abstract
 
 

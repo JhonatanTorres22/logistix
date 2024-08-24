@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from 'primeng/api';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
-import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes, MensajeriaResponderAList, MensajeriaResponderAlta } from '../../domain/models/mensajeria.model';
+import { MensajeriaCerrarArchivar, MensajeriaForzarCierre, MensajeriaHistorialMensajes, MensajeriaResponderAList, MensajeriaResponderAlta } from '../../domain/models/mensajeria.model';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -355,4 +355,32 @@ export class MensajeriaFlujoNavegacionComponent {
     
   }
 
+
+  cerrarConfirm = () => {
+    this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea Forzar el Cierre de este mensaje, recuerde que una ves cerrado, el mensaje pasará a archivado y nadie más podrá responder ni realizar ninguna acción')
+    .then( isConfirm => {
+      if( !isConfirm ) {
+        return
+      }
+
+      const cerrar: MensajeriaForzarCierre = {
+        idMensaje: this.mensajesHistorial()[ this.mensajesHistorial().length - 1].idMensaje,
+        usuarioId: parseInt( this.currentRol().id )
+      }
+      console.log( cerrar );
+      this.forzarCierre( cerrar );
+
+    })
+  }
+
+  forzarCierre = ( mensajeCerrar: MensajeriaForzarCierre) => {
+    this.repository.forzarCierre( mensajeCerrar ).subscribe({
+      next: ( response ) => {
+        console.log( response );
+        this.alert.showAlert('Mensaje fué cerrado de manera correcta', 'success');
+        this.signal.renderizarMensajes.set( 'CierreForzado' );
+        this.signal.setMensajeriaDataAsignacionDefault();
+      }
+    })
+  }
 }

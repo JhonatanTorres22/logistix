@@ -6,6 +6,7 @@ import {
     MensajeriaCerrarArchivar,
     MensajeriaEnviados,
     MensajeriaEnviarNuevoMensaje,
+    MensajeriaForzarCierre,
     MensajeriaHistorialMensajes,
     MensajeriaInsertar,
     MensajeriaLeerMensaje,
@@ -42,6 +43,7 @@ export class MensajeriaService {
     private urlNuevoMensajeA: string;
     private urlNuevoMensaje: string;
     private urlResponderA: string;
+    private urlForzarCierre: string;
 
     private rol = this.signal.currentRol
     private httpBack: HttpClient;
@@ -68,7 +70,7 @@ export class MensajeriaService {
         this.urlNuevoMensajeA = 'api/Mensajeria/NuevoA?'
         this.urlNuevoMensaje = 'api/Mensajeria/Nuevo';
         this.urlResponderA = 'api/Mensajeria/ResponderA?CodigoMensaje=';
-
+        this.urlForzarCierre = 'api/Mensajeria/CierreForzado';
 
 
     }
@@ -172,6 +174,12 @@ export class MensajeriaService {
         
         return this.http.get<MensajeriaResponderAListDataArrayDTO>( this.urlApi + this.urlResponderA + idMensaje )
             .pipe( map ( api => api.data.map( MensajeriaMapper.fromApiToDomainResponderAList )))
+    }
+
+
+    forzarCierre( cerrarMensaje: MensajeriaForzarCierre ): Observable<void> {
+        const cerrarMensajeAPI = MensajeriaMapper.fromDomainToApiCierreForzado( cerrarMensaje )
+        return this.http.put<void>( this.urlApi + this.urlForzarCierre, cerrarMensajeAPI );
     }
 
     

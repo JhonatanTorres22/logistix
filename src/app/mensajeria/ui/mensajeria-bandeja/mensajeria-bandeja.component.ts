@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
+import { MensajeriaArchivados, MensajeriaRecibidos } from '../../domain/models/mensajeria.model';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -33,7 +33,7 @@ export class MensajeriaBandejaComponent {
   }
 
 
-  mostrarHistorialMensajes( mail: MensajeriaRecibidos ) {
+  mostrarHistorialMensajes( mail: MensajeriaArchivados ) {
     // this.signal.setSeleccionarMensajeDefault();
     this.showFadeIn = true;
  

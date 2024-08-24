@@ -1,6 +1,13 @@
 <!-- {{ selectedDestinatarioResponderA() | json}} -->
   <!-- <pre>{{ this.planEstudioSinResolucion() | json}}</pre> -->
 <div class="flex justify-content-end gap-2">
+</div>
+
+<div class="flex justify-content-end gap-2">
+
+  @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
+    <ui-button tooltip="Cerrar mensaje de manera forzada" color="red" class="flex-1" type="sweet" (click)="cerrarConfirm()"> Forzar Cerrar</ui-button>
+  }
 
     @if( showCancelar ) {
         <ui-button tooltip="Cancelar Envio" color="secondary" (click)="cancelar()"> Cancelar</ui-button>
