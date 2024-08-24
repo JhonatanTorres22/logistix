@@ -116,27 +116,12 @@ export class MensajeriaService {
         console.log( mensajeAPI );
         const responder = serialize( 
             mensajeAPI
-            // {
-            //     ...mensajeAPI,
-            //     Archivo: mensajeAPI.Archivo == null ? undefined : mensajeAPI.Archivo
-            // },
-            
-            // { nullsAsUndefineds: false }
         )
 
-        // const data = new FormData();
-
-        // data.append('codigoMensajeria', mensaje.idMensaje.toString() );
-        // data.append('codigoTipoMensajeRol', mensaje.idTipoMensajeRol.toString());
-        // data.append('codigoEmisorRol', mensaje.idRolEmisor.toString());
-        // data.append('codigoReceptorRol', mensaje.idRolReceptor.toString())
-        // data.append('contenido', mensaje.mensaje); 
-        // data.append('informacionAdicional', mensaje.informacionAdicional ),
-        // data.append('Archivo', mensaje.archivo)
-        for( const [key, val] of responder ) {
-            console.log(`${key}: ${val}`);
+        // for( const [key, val] of responder ) {
+        //     console.log(`${key}: ${val}`);
             
-        }
+        // }
         return this.httpBack.post<void>( this.urlApi + this.urlResponder, responder, { headers: httpParams } )
     }
 

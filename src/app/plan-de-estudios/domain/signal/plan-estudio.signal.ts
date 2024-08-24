@@ -35,6 +35,7 @@ export class PlanEstudioSignal {
         finVigencia: '',
         id: 0,
         inicioVigencia: '',
+        archivo:  '',
         usuarioId: 0
      }
 
