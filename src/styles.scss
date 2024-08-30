@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @include mat.core();
+// @import "primeng/resources/themes/lara-light-blue/theme.css";
 
 // from third party packages
 @import 'node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css';
@@ -18,6 +19,7 @@
 @import 'scss/fonts/fontawesome.css';
 @import 'scss/fonts/material.css';
 @import 'scss/fonts/tabler-icons.min.css';
+@import url('https://cdn-uicons.flaticon.com/2.5.1/uicons-regular-rounded/css/uicons-regular-rounded.css');
 
 // theme setup
 @import './app/@theme/styles/theme-palette-colors.scss';
@@ -144,6 +146,10 @@
 
 // grid
 @import './app/@theme/styles/grid';
+// @import './app/core/animations/transitions.scss';
+
+
+// @import "primeng/resources/primeng.css";
 
 /* CUSTOM STYLES START */
   /* PRIMENG START */
@@ -154,7 +160,14 @@
   position: relative!important;
   margin-top: -1.5rem!important;
   margin-bottom: 1rem!important;
-}
+  }
+
+  /* SCROLL */
+  .ng-scroll-content {
+    display: inline-block;
+    min-width: 100%;
+    max-width: -webkit-fill-available!important;
+  }
 
   /* SNACKBAR INICIO */
   .mat-simple-snackbar {

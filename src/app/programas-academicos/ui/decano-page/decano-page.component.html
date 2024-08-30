@@ -1,6 +1,6 @@
 @if ( decanoSelect().id == 0 ) {
 
-    <div class="user-upload wid-40" matTooltip="Agregar Decano" (click)="openModalDecanos()">
+    <div class="user-upload wid-40" matTooltip="Agregar Decano" (click)="openModalDecanos( templateDecano )">
         <img src="assets/images/user/avatar-0.png" alt="img" class="img-fluid" />
         <label for="uplfile" class="img-avatar-upload">
           <i class="ti ti-plus f-24 m-b-5"></i>
@@ -10,7 +10,7 @@
     {{facultadSelect().nombre}}
 
 } @else {
-    <div class="user-upload wid-40" matTooltip="Cambiar de Decano" (click)="openModalDecanos()">
+    <div class="user-upload wid-40" matTooltip="Cambiar de Decano" (click)="openModalDecanos( templateDecano )">
         <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
         <label for="uplfile" class="img-avatar-upload">
           <i class="ti ti-refresh f-24 m-b-5"></i>
@@ -22,3 +22,8 @@
         <span class="f-14 f-w-500"> {{ decanoSelect().usuario}}</span>
     </div>
 }
+
+<ng-template #templateDecano let-data>
+    <app-decano-list></app-decano-list>
+</ng-template>
+  

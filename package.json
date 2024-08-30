@@ -3,7 +3,7 @@
   "version": "2.2.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build-stage": "ng build --configuration production --base-href /angular/stage/",
     "build-prod": "ng build --configuration production --base-href /angular/default/",
     "build": "ng build",

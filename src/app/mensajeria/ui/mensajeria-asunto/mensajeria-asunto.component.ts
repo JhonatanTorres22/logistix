@@ -81,6 +81,8 @@ export class MensajeriaAsuntoComponent implements OnInit {
     estadoMatricula: '',
     id: 0,
     idProgramaAcademico: 0,
+    finVigencia: '',
+    inicioVigencia: '',
     nombre: '',
     resolucion: ''
   };

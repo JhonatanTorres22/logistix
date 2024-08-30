@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, signal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MensajeriaNoMessagesComponent } from '../mensajeria-no-messages/mensajeria-no-messages.component';
@@ -9,7 +9,7 @@ import { MensajeriaComposeComponent } from '../mensajeria-compose/mensajeria-com
 import { MensajeriaResponseComponent } from '../mensajeria-response/mensajeria-response.component';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { UsuarioRolAlta } from 'src/app/usuarios/domain/models/usuario-rol.model';
-import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes, MensajeriaResponderAList } from '../../domain/models/mensajeria.model';
+import { MensajeriaCerrarArchivar, MensajeriaHistorialMensajes, MensajeriaRecibidos, MensajeriaResponderAList } from '../../domain/models/mensajeria.model';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repository';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
@@ -90,6 +90,8 @@ export class MensajeriaMessagesComponent implements OnInit {
   onObservacion() {
 
   }
+
+
 
 
   

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, Self, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, Self, EventEmitter, input } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 
@@ -30,7 +30,8 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   @Input() expReg = '';
   @Input() duplicado: boolean = false;
   @Input() classInput: string = ''
-  @Input() patternErrorMessage: string = ''
+  @Input() patternErrorMessage: string = '';
+  @Input() min: number;
 
   //@Input() classInput: string = '';
   // @Input() model: number

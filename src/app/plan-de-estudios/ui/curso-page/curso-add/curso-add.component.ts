@@ -84,6 +84,10 @@ export class CursoAddComponent {
   optionsTipoEstudio = this.validation.optionsTipoEstudio;
   optionsTipoCurso = this.validation.optionsTipoCurso;
   optionsCompetencia = this.validation.optionsCompetencia;
+
+  minTotalHoras = this.validation.minTotalHoras;
+  minCredtios = this.validation.minCreditos;
+  
   optionsCiclos: UiSelect[] = [];
   totalHorasModel: number;
   formCurso: FormGroup;
@@ -115,8 +119,8 @@ export class CursoAddComponent {
       competencia: new FormControl('', [ Validators.required]),
       horasTeoricas: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthHorasTeoricas ), Validators.minLength( this.minLengthHorasTeoricas ), Validators.pattern(this.expRegHorasTeoricas)]),
       horasPracticas: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthHorasPracticas ), Validators.minLength( this.minLengthHorasPracticas ), Validators.pattern(this.expRegHorasPracticas)]),
-      totalHoras: new FormControl('', [ Validators.required]),
-      totalCreditos: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthTotalCreditos ), Validators.minLength( this.minLengthTotalCreditos ), Validators.pattern(this.expRegTotalCreditos)]),
+      totalHoras: new FormControl('', [ Validators.required, Validators.min(this.minTotalHoras)]),
+      totalCreditos: new FormControl('', [ Validators.required, Validators.min(this.minCredtios),Validators.maxLength( this.maxLengthTotalCreditos ), Validators.minLength( this.minLengthTotalCreditos ), Validators.pattern(this.expRegTotalCreditos)]),
      })
      
      this.deshabilitarInputsFormService.inicializarInputs(this.formCurso, this.listaCamposFormulario,0);

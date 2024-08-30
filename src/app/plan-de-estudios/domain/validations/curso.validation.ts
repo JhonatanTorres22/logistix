@@ -20,7 +20,8 @@ export class CursoValidation {
     minLengthCodigoCurso: number = 7;
     expRegCodigoCurso: RegExp =/^P\d+$/;
     expRegCodigoCursoBlockToInput: RegExp = /^(?!P)[^0-9]|[^0-9P]|(?<=^P.*)P/g;
-
+    minTotalHoras: number = 2;
+    minCreditos: number = 3;
     maxLengthNombreCurso: number = 50;
     minLengthNombreCurso: number = 6;
     expRegNombreCurso: RegExp =/^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;

@@ -4,21 +4,21 @@
  <mensajeria-asunto></mensajeria-asunto>
 <!-- {{ tipoBandeja() | json }} -->
   <!-- {{ selectMensaje() | json }} -->
-    <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling>
+    <ng-scrollbar  [ngStyle]="{'height' : tipoBandeja() == 'Archivados' ? 'calc(100vh - 24.5rem)' : 'calc(100vh - 17.1rem)'}" #scrolling [viewClass]="'abc'">
       @for (mensaje of mensajesHistorial() ; track mensaje;  let isFirst = $first; let isLast = $last ) {
   
-        <div [class]="isLast ? 'mt-2' : 'my-2'">
+        <div class="w-full" [class]="isLast ? 'mt-2' : 'my-2'">
           <mat-accordion>
             <mat-expansion-panel hideToggle class="border-1 border-gray-300 shadow-none" [expanded]="isLast">
               <mat-expansion-panel-header class="py-3">
                 <mat-panel-title class="block mx-0">
-                  <div class="title align-item-center">
-                    <ul class="list-inline">
+                  <div class="title align-item-center md:flex">
+                    <ul class="list-inline md:col-8">
                       <li class="list-inline-item">
 
                         <div class="flex align-item-start">
                           <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
-                          <div class="flex-grow-1 m-l-10 max-w-14rem sm:max-w-full">
+                          <div class="flex-grow-1 m-l-10 max-w-18rem sm:max-w-21rem md:max-w-full"> <!-- max-w-full -->
                             <div class="f-14 f-w-600 text-truncate"> {{ mensaje.rolEmisor }} </div>
                             <div class="m-b-0 text-muted text-xs sm:text-normal"> De: {{ mensaje.emisor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
                             <div class="m-b-0 text-muted text-xs sm:text-normal"> Para: {{ mensaje.receptor }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
@@ -26,8 +26,23 @@
                         </div>
                       </li>
                     </ul>
-                    <ul class="list-inline text-right">
-                      <li class="list-inline-item text-muted"> {{ mensaje.fecha | date: 'short' }} </li>
+                    <ul class="absolute right-0 bottom-0 text-right mr-2">
+                      @if ( mensaje.archivo != null ) {
+                        <li><i class="ti ti-paperclip m-r-10 pt-2 f-14" matTooltip="Hay archivo adjunto"></i></li>
+                      }
+                      <li class="list-inline-item" matTooltip="Fecha de recepción">
+                        <span class="text-muted bg-accent-300 text-gray-600 px-2 border-round">Recibido el {{ mensaje.fecha | date: 'dd MMM yyyy, h:mm a' }}</span>
+                      </li>
+                      @if ( isLast ) {
+                        <li class="list-inline-item" matTooltip="Fecha de vencimiento">
+                          <span class="text-muted px-2 border-round" ColorClass [mensaje]="selectMensaje()">{{ selectMensaje().fechaVencimiento | date: 'dd MMM yyyy, h:mm a' }}</span>
+                        </li>
+                        <!-- <li class="list-inline-item text-muted text-red-600 px-2 border-round" ColorClass matTooltip="Fecha de vencimiento"></li> -->
+                      } @else { 
+                        <!-- <li class="list-inline-item text-muted bg-accent-300 text-gray-600 px-2 border-round" matTooltip="Fecha de vencimiento">{{ selectMensaje().fechaVencimiento | date: 'short' }} </li> -->
+                      }
+
+                   
                     </ul>
                   </div>
                 </mat-panel-title>

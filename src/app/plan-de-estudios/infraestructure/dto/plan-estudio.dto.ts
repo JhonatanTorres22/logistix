@@ -7,6 +7,8 @@ export interface PlanEstudioDTO {
     descripcionTitulo: string,
     detallePerfil: string,
     archivo: string,
+    inicioVigencia: string,
+    finVigencia: string,
     estadoCaducidad: string,
     estadoMatricula: string
 }

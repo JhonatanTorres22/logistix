@@ -1,0 +1,45 @@
+<div class="card">
+    <mat-dialog-content>
+        <!-- {{ hitos.length }} -->
+        <!-- {{ hitos[0].hitos.length }} -->
+        <p-timeline [value]="hitos" align="alternate" styleClass="customized-timeline">
+            <ng-template pTemplate="marker" let-rol>
+                <span 
+                    class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1" [ngClass]="{'myAnim': rol.orden == rol.nMensajes}"
+                    [style]="{ 'background-color': 'red' }">
+                        <!-- <i class="rol.icon" [ngClass]="{'myAnim': rol.orden == rol.nMensajes}"></i> -->
+                        <!-- <span class="border-circle bg-green-500 circulo">.</span> -->
+                        <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-2rem border-50 border-2" [ngClass]="rol.fechaCreacion != '' ? 'border-green-400' : 'border-gray-400' " />
+                      
+                        
+                    </span>
+                </ng-template>
+                <ng-template pTemplate="content" let-rol>
+
+                    @if ( rol.fechaCreacion != '' ) {
+                        <div class="flex align-items-center gap-2" >
+                            <!-- <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-2rem border-50 border-2 border-green-400" /> -->
+                            <span class="text-accent-900 f-12 font-bold">{{ rol.emisor }}</span>
+                        </div>
+                        <p class="f-12 text-accent-500">{{ rol.fechaCreacion }}</p>
+                        <!-- <button mat-flat-button color="primary" class="m-r-10">
+                            <div class="flex align-item-center">
+                              <svg class="pc-icon m-r-10">
+                                <use xlink:href="assets/fonts/custom-icon.svg#custom-shopping-cart"></use>
+                              </svg>
+                              Buy Now..
+                            </div>
+                        </button> -->
+                        <!-- <div class="border-1 border-round border-green-700 px-2 bg-green-50">
+                            <mat-divider></mat-divider>
+                            <p class="f-12 p-2">Mensaje enviado a {{ rol.receptor }}</p>
+                            <p class="f-12 flex justify-content-end text-accent-500">{{ rol.fechaCreacion }}</p>
+                        </div> -->
+                    } @else {
+                        <span class="text-gray-900 f-12 font-bold text-accent-500">{{ rol.emisor }}</span>
+                    }
+
+            </ng-template>
+        </p-timeline>
+    </mat-dialog-content>
+</div>

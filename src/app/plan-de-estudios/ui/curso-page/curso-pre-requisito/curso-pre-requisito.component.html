@@ -1,0 +1,46 @@
+<mat-drawer #curso position="end" mode="side" class="kanban-drawer ">
+<div class="bg-side-1">
+        <!-- @if ( openMallaCursos() ) { -->
+        <div class="header-title">
+            <div class="kanban-header-title">
+              <h4 class="text-white">Pre Requisito {{ cursoSelectPreRequisito().codigoCurso  }}</h4>
+              <div class="flex align-item-center hei-10">
+                <button mat-icon-button (click)="cerrar()" class="modal-close">
+                  <i class="ti ti-x f-20 "></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <ng-scrollbar style="height: calc(100vh - 88px)" visibility="hover">
+            <div class="p-2 text-center bg-white text-blue-900 font-bold">
+                {{ cursoSelectPreRequisito().nombreCurso }}
+            </div>
+            <!-- <pre>{{ cursoSelectPreRequisito() | json }}</pre> -->
+    
+            <hr>
+            <mat-divider class="py-2"></mat-divider>
+            <h4 class="px-2 text-gray-300 font-bold">Lista de Pre-requisitos:</h4>
+            <div
+                cdkDropList
+                [cdkDropListData]="preRequisitos()"
+                (cdkDropListDropped)="drop($event)"
+    
+                class="border-1 border-dashed border-gray-200 border-round p-3 m-2 flex flex-column gap-2"
+            >
+                
+                @for (preRequisito of preRequisitos(); track preRequisito) {
+                    <div class="bg-blue-100 text-blue-700 border-round px-2 py-3 text-xs flex align-items-center justify-content-between">
+                        {{ preRequisito.codigoCurso + ' - ' +preRequisito.nombreCurso }}
+                        <span class="ti ti-trash f-14 text-red-500 cursor-pointer" (click)="eliminarPreRequisitoConfirm( preRequisito )"></span>
+                    </div>
+                }
+            </div>
+            <div class="bg-yellow-500 text-yellow-900 border-round px-4 py-2 m-2 text-justify"><span class="font-bold pr-2">Nota:</span>Arrastre un curso para agregar como pre-requisito</div>
+            <!-- <ui-button> Guardar </ui-button> -->
+            <!-- <pre>{{ preRequisitos() | json }}</pre> -->
+          </ng-scrollbar>
+        <!-- } -->
+</div>
+</mat-drawer>
+  

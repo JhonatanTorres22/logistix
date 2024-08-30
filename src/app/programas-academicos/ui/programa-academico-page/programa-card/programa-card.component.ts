@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, WritableSignal } from '@angular/core';
+import { Component, Input, TemplateRef, WritableSignal } from '@angular/core';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -17,12 +17,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { Local } from 'src/app/programas-academicos/domain/models/local.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { DirectorAddComponent } from "../../director-page/director-add/director-add.component";
+import { DirectorListComponent } from "../../director-page/director-list/director-list.component";
 
 
 @Component({
   selector: 'programa-card',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiButtonComponent],
+  imports: [CommonModule, SharedModule, UiButtonComponent, DirectorAddComponent, DirectorListComponent],
   templateUrl: './programa-card.component.html',
   styleUrl: './programa-card.component.scss'
 })
@@ -35,8 +37,10 @@ export class ProgramaCardComponent {
   semestreSelect: WritableSignal<SemestreAcademico> = this.semestreSignal.semestreSelect;
   localSelect: WritableSignal<Local> = this.localSignal.localSelect;
   localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
+  programaSelect = this.programaSignal.programaSelect;
   renderizarAsignaciones = this.signal.renderizarAsignaciones;
   currentRol = this.auth.currentRol;
+  programaEditDirector = this.programaSignal.programaEditDirector;
 
   constructor(
     private alert: AlertService,
@@ -46,14 +50,27 @@ export class ProgramaCardComponent {
     private localSignal: LocalSignal,
     private auth: AuthSignal,
     private directorSignal: DirectorSignal,
+    private modal: UiModalService,
     private signal: AsignacionSignal,
     // private modal: UiModalService
     private dialog: MatDialog
   ) {}
 
-  openModalDirector = () => {
-    console.log('Abrir modal Director...');
-    
+  openModalDirector = ( template: TemplateRef<any> ) => {
+    this.programaSelect.set( this.programaSignal.programa )
+    this.programaEditDirector.set( this.programa )
+    // console.log('Abrir modal Director...', this.programa );
+    let titleModal = 'Seleccione el nuevo Director de Escuela';
+    this.modal.openTemplate( {
+      template,
+      titulo: titleModal
+    } ).afterClosed().subscribe( resp => {
+        this.programaEditDirector.set( this.programaSignal.programaAsignacionDefault );
+        if( resp == 'cancelar') {
+          return
+        }
+        this.renderizarAsignaciones.set('Obtener');
+    });
   }
 
   openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {

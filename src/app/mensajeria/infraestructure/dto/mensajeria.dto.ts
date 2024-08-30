@@ -27,6 +27,7 @@ export interface MensajeriaRecibidosDTO {
     emisor: string,
     receptor: string,
     fechaCreacion: string,
+    fechaVencimiento: string,
     leido: boolean
 }
 
@@ -38,7 +39,7 @@ export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO & {
     fechaCierre: string,
 }
 
-export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido'> & {
+export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido' | 'fechaVencimiento'> & {
     archivo: string,
     rolReceptor: string,
     rolEmisor: string,
@@ -141,5 +142,20 @@ export type MensajeriaResponderAltaDTO = Pick<MensajeriaResponderAListDTO, 'codi
     Archivo: File
 }
 
+export interface MensajeriaTimeLineDTO {
+    emisor: string,
+    receptor: string,
+    fechaCreacion: string,
+    fechaVencimiento: string,
+    hitos: MensajeriTimeLineHitoDTO[]
+}
+
+export interface MensajeriTimeLineHitoDTO {
+    rol: string
+}
+
+export interface MensajeriaTimeLineDataArrayDTO {
+    data: MensajeriaTimeLineDTO[]
+}
 
 export type MensajeriaForzarCierreDTO = MensajeriaCerrarArchivarDTO

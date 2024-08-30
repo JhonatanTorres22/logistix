@@ -19,6 +19,7 @@ import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/as
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class SemestreListComponent implements OnInit {
   listaAsignaciones = this.asignacionSignal.asignaciones;
   semestresAcademicos = this.semestreSignal.semestresAcademicos;
   semestreAcademicoAperturado = this.semestreSignal.semestreAcademicoAperturado;
+  programaSelect = this.programaSignal.programaSelect;
   semestreSeleccionado = this.semestreSignal.semestreSelect;
   semestreAcademicoList: SemestreAcademico[];
   existeSemestreCreado: boolean;
@@ -61,6 +63,7 @@ export class SemestreListComponent implements OnInit {
     private modal: UiModalService,
     private asignacionSignal: AsignacionSignal,
     private semestreAcademicoRepository: SemestreAcademicoRepository,
+    private programaSignal: ProgramaSignal,
     private alertService: AlertService,
     public dialogRef: MatDialogRef<SemestreListComponent>,
     public dialog: MatDialog,
@@ -324,8 +327,9 @@ export class SemestreListComponent implements OnInit {
 
       this.semestreSignal.setSelectSemestre(  this.semestreSelect );
       console.log( this.semestreSignal.semestreSelect());
-      
+      this.programaSelect.set( this.programaSignal.programa );
       this.dialogRef.close('seleccionado');
+      
       // this.aperturarSemestre();
     
     })

@@ -8,7 +8,8 @@ import {
     MensajeriaHistorialMensajes, MensajeriaInsertar,
     MensajeriaLeerMensaje, MensajeriaNuevoMensajeList,
     MensajeriaRecibidos, MensajeriaResponderAList,
-    MensajeriaResponderAlta } from "../../domain/models/mensajeria.model";
+    MensajeriaResponderAlta, 
+    MensajeriaTimeLine} from "../../domain/models/mensajeria.model";
 import { MensajeriaService } from "../services/mensajeria.service";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -20,8 +21,7 @@ import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface"
 
 export class MensajeriaRepositoryImpl implements MensajeriaRepository {
 
-    constructor( private service: MensajeriaService ) {}   
-    
+    constructor( private service: MensajeriaService ) {}      
     
     
     insertar(mensaje: MensajeriaInsertar): Observable<void> {
@@ -80,6 +80,10 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
 
     forzarCierre(mensaje: MensajeriaForzarCierre): Observable<void> {
         return this.service.forzarCierre( mensaje );
+    }
+
+    obtenerTimeLine(idMensaje: number): Observable<MensajeriaTimeLine[]> {
+        return this.service.obtenerTimeLine( idMensaje );
     }
 
 }

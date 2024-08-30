@@ -1,6 +1,6 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { AsignacionDTO, AsignacionEliminarDTO, AsignacionLocalDTO, AsignacionProgramaDTO, AsignarNuevoProgramaDTO } from "../../infraestructure/dto/asignacion.dto";
-import { Asignacion, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma } from "../models/asignacion.model";
+import { AsignacionCambiarDecanoDTO, AsignacionDTO, AsignacionEliminarDTO, AsignacionLocalDTO, AsignacionProgramaCambiarDirectorDTO, AsignacionProgramaDTO, AsignarNuevoProgramaDTO } from "../../infraestructure/dto/asignacion.dto";
+import { Asignacion, AsignacionCambiarDecano, AsignacionEliminar, AsignacionLocal, AsignacionPrograma, AsignacionProgramaCambiarDirector, AsignarNuevoPrograma } from "../models/asignacion.model";
 
 export class AsignacionMapper {
     static fromApiToDomain( param: AsignacionDTO ): Asignacion {
@@ -103,5 +103,24 @@ export class AsignacionMapper {
         })
 
         return programa
+    }
+
+
+    static fromDomainToApiCambiarDirector( param: AsignacionProgramaCambiarDirector ): AsignacionProgramaCambiarDirectorDTO {
+        return {
+            codigoDirectorEscuela: param.idDirector,
+            codigoProgramaAcademico: param.idPrograma,
+            codigoSemestre: param.idSemestre,
+            usuario: param.usuarioId
+        }
+    }
+
+    static fromDomainToApiCambiarDecano( param: AsignacionCambiarDecano ): AsignacionCambiarDecanoDTO {
+        return {
+            codigoDecano: param.idDecano,
+            codigoProgramaAcademico: param.idPrograma,
+            codigoSemestre: param.idSemestre,
+            usuario: param.usuarioId
+        }
     }
 }

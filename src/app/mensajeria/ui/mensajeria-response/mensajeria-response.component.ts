@@ -33,7 +33,7 @@ export class MensajeriaResponseComponent implements OnInit, OnDestroy {
   listaDestinatariosResponderA = this.signal.listaDestinatariosResponderA;
   listaDestinatariosResponderAflujo = this.signal.listaDestinatariosResponderAflujo;
   selectedDestinatarioResponderA = this.signal.selectedDestinatarioResponderA;
-
+  file = this.signal.file;
   paraRemitenteForm: FormGroup;
   showUpload: boolean = false;
   constructor(

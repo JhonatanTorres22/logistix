@@ -43,3 +43,13 @@ export interface AsignacionEliminarDTO {
     codigoLocal: number,
     usuario: number
 }
+
+
+export type AsignacionProgramaCambiarDirectorDTO = Pick<AsignacionProgramaDTO, 'codigoDirectorEscuela' | 'codigoProgramaAcademico'> & {
+    codigoSemestre: number,
+    usuario: number
+}
+
+export type AsignacionCambiarDecanoDTO = Pick<AsignacionProgramaCambiarDirectorDTO, 'codigoProgramaAcademico' | 'codigoSemestre' | 'usuario'> & {
+    codigoDecano: number
+}

@@ -20,6 +20,7 @@ export interface MensajeriaRecibidos {
     emisor: string,
     receptor: string,
     fecha: string,
+    fechaVencimiento: string,
     leido: boolean
 }
 
@@ -35,7 +36,7 @@ export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'> & {
     usuarioId: number
 }
 
-export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'leido'> & {
+export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'leido' | 'fechaVencimiento'> & {
     archivo: string,
     rolReceptor: string,
     informacionAdicional: string,
@@ -123,6 +124,39 @@ export interface BackToMail {
     detailsContent: boolean;
     titleContent: boolean;
 }
+
+export interface MensajeriaTimeLine2 {
+    status?: string;
+    date?: string;
+    icon?: string;
+    color?: string;
+    image?: string;
+}
+
+// export interface MensajeriaTimeLine {
+//     emisor: string,
+//     receptor: string,
+//     fechaCreacion: string,
+//     fechaVencimiento: string,
+//     hitos: MensajeriTimeLineHito[]
+// }
+
+export interface MensajeriaTimeLine {
+    emisor: string,
+    receptor: string,
+    fechaCreacion: string,
+    fechaVencimiento: string,
+    orden: number,
+    nMensajes: number,
+    nHitos: number,
+    // hitos: MensajeriTimeLineHito[]
+}
+
+export interface MensajeriTimeLineHito {
+    rol: string
+}
+
+
 
 export type MensajeriaForzarCierre = MensajeriaCerrarArchivar;
 

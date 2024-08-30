@@ -34,9 +34,14 @@
                         </p>
 
                       </div>
-                      <span id="fecha" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right text-gray-700">
-                        {{ mail.fecha | date: 'dd MMM yyyy, h:mm a' }}
-                      </span>
+                      <div class="flex flex-row gap-2">
+                        <span id="fecha" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right bg-accent-300 text-gray-700 border-round px-2">
+                          {{ mail.fecha | date: 'dd MMM yyyy, h:mm a' }}
+                        </span>
+                        <span id="fecha" ColorClass [mensaje]="mail" class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} f-12 block text-right text-gray-700 border-round px-2">
+                          {{ mail.fechaVencimiento | date: 'dd MMM yyyy, h:mm a' }}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <!-- <div class="mail-button">
