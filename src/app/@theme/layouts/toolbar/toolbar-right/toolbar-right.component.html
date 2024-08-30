@@ -1,27 +1,27 @@
 <span class="f-16 text-gray-50" style="vertical-align: middle;">{{ timer() }}</span>
 <div class="header-button">
   <ui-user-options></ui-user-options>
-  <button mat-button [matMenuTriggerFor]="setting" aria-label="mode" class="header-item">
+  <!-- <button mat-button [matMenuTriggerFor]="setting" aria-label="mode" class="header-item">
     <a class="pc-head-link">
       <svg class="pc-icon">
         <use xlink:href="assets/fonts/custom-icon.svg#custom-setting-2"></use>
       </svg>
     </a>
-  </button>
-  <button mat-button (click)="headerBlur(); drawer.toggle()" aria-label="mode" class="header-item" [ngClass]="{ on: headerBlur }">
+  </button> -->
+  <!-- <button mat-button (click)="headerBlur(); drawer.toggle()" aria-label="mode" class="header-item" [ngClass]="{ on: headerBlur }">
     <a class="pc-head-link">
       <svg class="pc-icon">
         <use xlink:href="assets/fonts/custom-icon.svg#custom-flash"></use>
       </svg>
     </a>
-  </button>
-  <button mat-button [matMenuTriggerFor]="Notification" aria-label="mode" class="header-item">
+  </button> -->
+  <!-- <button mat-button [matMenuTriggerFor]="Notification" aria-label="mode" class="header-item">
     <a href="javascript:" class="pc-head-link badge-on-button" matBadge="4" matBadgeColor="primary" matBadgeOverlap="false">
       <svg class="pc-icon">
         <use xlink:href="assets/fonts/custom-icon.svg#custom-notification"></use>
       </svg>
     </a>
-  </button>
+  </button> -->
   <button mat-button [matMenuTriggerFor]="user" aria-label="mode" class="header-item">
     <a class="pc-head-link">
       <!-- <img src="assets/images/user/avatar-2.png" alt="user-image" class="user-avatar" /> -->
@@ -203,18 +203,18 @@
             <p class="mat-caption">{{ currentRol()?.rol }}</p>
           </div>
         </div>
-        <mat-divider class="m-y-15"></mat-divider>
+        <!-- <mat-divider class="m-y-15"></mat-divider>
         <app-card [showHeader]="false" padding="16">
           <div class="flex align-items-center justify-content-between">
             <div class="m-b-0 flex-inline align-item-center f-16 f-w-600">
               <svg class="pc-icon text-muted m-r-10">
                 <use xlink:href="assets/fonts/custom-icon.svg#custom-notification-outline"></use>
               </svg>
-              Notification
+              NOTIFICACIONES
             </div>
             <mat-slide-toggle color="primary" (click)="$event.stopPropagation()"></mat-slide-toggle>
           </div>
-        </app-card>
+        </app-card> -->
         <!-- <div class="m-b-15 mat-body f-w-500">Manage</div>
         <a href="javascript:" class="dropdown-item text-muted" [routerLink]="['/application/profile/account/settings']">
           <svg class="pc-icon m-r-10">

@@ -1,13 +1,13 @@
-<app-card [showHeader]="false">
+<app-card cardTitle="PLANES DE ESTUDIOS POR PROGRAMA ACADÉMICO">
   <div class="flex align-item-center justify-content-between m-b-15">
-    <div class="f-w-600 f-16">Overview Product</div>
-    <a [matMenuTriggerFor]="paymentInfo" class="avatar avatar-s hover"><i class="ti ti-dots-vertical f-18"></i></a>
+    <!-- <div class="f-w-600 f-16">Overview Product</div> -->
+    <!-- <a [matMenuTriggerFor]="paymentInfo" class="avatar avatar-s hover"><i class="ti ti-dots-vertical f-18"></i></a>
     <mat-menu #paymentInfo="matMenu">
       <a href="javascript:" mat-menu-item>Name</a>
       <a href="javascript:" mat-menu-item>Date</a>
       <a href="javascript:" mat-menu-item>Rating</a>
       <a href="javascript:" mat-menu-item>Unread</a>
-    </mat-menu>
+    </mat-menu> -->
   </div>
   <div class="product-overview" id="chart">
     <apx-chart
@@ -18,9 +18,10 @@
       [fill]="chartOptions.fill"
       [responsive]="chartOptions.responsive"
       [colors]="chartOptions.colors"
+      [xaxis]="chartOptions.xaxis"
     ></apx-chart>
   </div>
-  <div class="row text-center">
+  <!-- <div class="row text-center">
     @for (task of overView_product; track task) {
       <div class="col-6 col-lg-4 col-xxl-4">
         <div class="overview-product-legends">
@@ -43,5 +44,5 @@
         <button mat-flat-button class="b-rad-20" color="primary">Create New Page</button>
       </div>
     </div>
-  </div>
+  </div> -->
 </app-card>

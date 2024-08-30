@@ -2,99 +2,73 @@
   <div class="col-md-6 col-xxl-3">
     <app-earning-chart
       iconImage="#wallet-2"
-      headerTitle="All Earnings"
-      earningValue="$30200"
+      headerTitle="LOCAL SL01 - CHINCHA"
+      earningValue="30 200"
       background="bg-primary-50"
       textColor="text-primary-500"
       color="var(--primary-500)"
-      percentageValue="30.6%"
+      percentageValue="91.6%"
       [data]="[10, 30, 40, 20, 60, 50, 20, 15, 20, 25, 30, 25]"
     />
   </div>
   <div class="col-md-6 col-xxl-3">
     <app-earning-chart
       iconImage="#book"
-      headerTitle="Page Views"
-      earningValue="290+"
+      headerTitle="LOCAL FILIAL - HUACHO"
+      earningValue="290 000"
       background="bg-warning-50"
       textColor="text-warning-500"
       color="var(--warning-500)"
-      percentageValue="30.6%"
+      percentageValue="75.6%"
       [data]="[10, 30, 40, 20, 60, 50, 20, 15, 20, 25, 30, 25]"
     />
   </div>
   <div class="col-md-6 col-xxl-3">
     <app-earning-chart
       iconImage="#calendar"
-      headerTitle="Total Task"
-      earningValue="14568"
+      headerTitle="LOCAL SL03 - SUNAMPE"
+      earningValue="185 688"
       background="bg-success-50"
       textColor="text-success-500"
       color="var(--success-500)"
-      percentageValue="30.6%"
+      percentageValue="89.6%"
       [data]="[10, 30, 40, 20, 60, 50, 20, 15, 20, 25, 30, 25]"
     />
   </div>
   <div class="col-md-6 col-xxl-3">
     <app-earning-chart
       iconImage="#coludChange"
-      headerTitle="Download"
-      earningValue="$30200"
+      headerTitle="LOCAL FILIAL ICA "
+      earningValue="$30 200"
       background="bg-warn-50"
       textColor="text-warn-500"
       color="var(--warn-500)"
-      percentageValue="30.6%"
+      percentageValue="92.6%"
       [data]="[10, 30, 40, 20, 60, 50, 20, 15, 20, 25, 30, 25]"
     />
   </div>
-  <div class="col-lg-9">
-    <app-card cardTitle="Monthly Revenue">
-      <app-revenue-chart />
-    </app-card>
-  </div>
-  <div class="col-lg-3">
-    <app-card cardTitle="Project - Able Pro">
-      <div class="m-b-25">
-        <p class="m-b-10">Tasks done <span class="float-end">30%</span></p>
-        <mat-progress-bar mode="determinate" color="primary" value="50"></mat-progress-bar>
-      </div>
-      <div class="grid gap">
-        <a href="javascript:">
-          <div class="flex align-item-center">
-            <div class="flex-shrink-0 m-r-10">
-              <div class="dot wid-10 hei-10"></div>
-            </div>
-            <div class="flex-grow-1">
-              <p class="m-b-0 grid text-start">
-                <span class="text-muted text-truncate w-100">Horizontal Layout</span>
-              </p>
-            </div>
-            <div class="user-status bg-accent-300 text-muted m-l-10 f-12"><i class="ti ti-paperclip mat-small"></i> 2 </div>
-          </div>
-        </a>
-        @for (task of project; track task) {
-          <a href="javascript:">
-            <div class="flex align-item-center">
-              <div class="flex-shrink-0 m-r-10">
-                <div class="dot wid-10 hei-10"></div>
-              </div>
-              <div class="flex-grow-1">
-                <p class="m-b-0 grid text-start">
-                  <span class="text-muted w-100">{{ task.title }}</span>
-                </p>
-              </div>
-            </div>
-          </a>
-        }
-        <div class="grid m-t-15">
-          <button mat-flat-button color="primary" class="b-rad-20">
-            <div class="flex align-item-center"> <i class="ti ti-plus f-18 m-r-10"></i>Add Task </div>
-          </button>
+
+  <div class="flex gap-2">
+    <div class="flex">
+      <div class="flex" style="flex-direction: column; flex: 2;">
+        <div class="col-lg-11">
+          <app-card cardTitle="Alumnos Matriculados por Facultad">
+            <app-revenue-chart />
+          </app-card>
+        </div>
+        <div class="col-lg-11">
+          <app-project-overview-chart />
         </div>
       </div>
-    </app-card>
+      <div class="col-lg-5">
+        <app-total-income-chart />
+      </div>
+    </div>
   </div>
-  <div class="col-lg-9">
+  <div class="col-lg-6">
+   <app-overview-product-chart></app-overview-product-chart>
+  </div>
+  <!-- <div class="col-lg-9">
     <app-project-overview-chart />
   </div>
   <div class="col-lg-3">
@@ -130,8 +104,8 @@
         </a>
       </div>
     </app-card>
-  </div>
-  <div class="col-md-6">
+  </div> -->
+  <!-- <div class="col-md-6">
     <app-card cardTitle="Transaction" headerClass="transaction-card-header" actionClass="card-action block" padding="0">
       <ng-template #headerOptionsTemplate>
         <a [matMenuTriggerFor]="menu" class="avatar avatar-s hover"><i class="ti ti-dots-vertical f-18"></i></a>
@@ -166,13 +140,13 @@
         </div>
       </ng-template>
     </app-card>
-  </div>
-  <div class="col-md-6">
+  </div> -->
+  <!-- <div class="col-md-6">
     <app-total-income-chart />
-  </div>
+  </div> -->
 </div>
 
-<ng-template #Transaction>
+<!-- <ng-template #Transaction>
   <ul class="list-group list-group-flush">
     @for (task of List_transaction; track task) {
       <li class="list-group-item">
@@ -198,4 +172,4 @@
       </li>
     }
   </ul>
-</ng-template>
+</ng-template> -->
