@@ -8,6 +8,7 @@ import { EarningChartComponent } from '../../apex-chart/earning-chart/earning-ch
 import { RevenueChartComponent } from '../../apex-chart/revenue-chart/revenue-chart.component';
 import { ProjectOverviewChartComponent } from '../../apex-chart/project-overview-chart/project-overview-chart.component';
 import { TotalIncomeChartComponent } from '../../apex-chart/total-income-chart/total-income-chart.component';
+import { OverviewProductChartComponent } from '../../apex-chart/overview-product-chart/overview-product-chart.component';
 
 @Component({
   selector: 'app-default',
@@ -18,7 +19,9 @@ import { TotalIncomeChartComponent } from '../../apex-chart/total-income-chart/t
     TotalIncomeChartComponent,
     ProjectOverviewChartComponent,
     EarningChartComponent,
-    RevenueChartComponent
+    RevenueChartComponent,
+    OverviewProductChartComponent,
+
   ],
   templateUrl: './default.component.html',
   styleUrls: ['../dashboard.scss', './default.component.scss']

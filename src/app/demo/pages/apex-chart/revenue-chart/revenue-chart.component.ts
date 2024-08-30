@@ -93,11 +93,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
       },
       series: [
         {
-          name: 'Income',
+          name: 'Ingeniería, Ciencias y Administración',
           data: [20, 70, 40, 70, 70, 90, 50, 55, 45, 60, 50, 65]
         },
         {
-          name: 'Expense',
+          name: 'Ciencias de la Salud',
           data: [10, 40, 20, 40, 50, 70, 80, 30, 15, 32, 90, 30]
         }
       ],

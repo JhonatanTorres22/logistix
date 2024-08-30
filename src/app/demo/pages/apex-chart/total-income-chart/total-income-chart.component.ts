@@ -40,7 +40,7 @@ export class TotalIncomeChartComponent {
   @ViewChild('chart') chart!: ChartComponent;
   chartOptions: Partial<ChartComponent>;
 
-  incomeColors = ['var(--primary-500)', '#E58A00', '#2CA87F', 'var(--primary-200)'];
+  incomeColors = ['var(--primary-500)', '#E58A00', '#2CA87F', 'var(--red-500)'];
 
   constructor() {
     this.chartOptions = {
@@ -48,10 +48,10 @@ export class TotalIncomeChartComponent {
         height: 320,
         type: 'donut'
       },
-      series: [27, 23, 20, 17],
-      labels: ['Total income', 'Total rent', 'Download', 'Views'],
+      series: [65, 60, 58, 57],
+      labels: ['INGENIERÍA DE SISTEMAS', 'INGENIERÍA CIVIL', 'ADMINISTRACIÓN', 'INGENIERÍA INDUSTRIAL'],
       fill: {
-        opacity: [1, 1, 1, 0.3]
+        opacity: [1, 1, 1, 1]
       },
       legend: {
         show: false
@@ -59,11 +59,12 @@ export class TotalIncomeChartComponent {
       plotOptions: {
         pie: {
           donut: {
-            size: '65%',
+            size: '70%',
             labels: {
               show: true,
               name: {
-                show: true
+                show: true,
+                fontSize: '12px'
               },
               value: {
                 show: true
@@ -85,7 +86,7 @@ export class TotalIncomeChartComponent {
             plotOptions: {
               pie: {
                 donut: {
-                  size: '65%',
+                  size: '70%',
                   labels: {
                     show: false
                   }
@@ -101,26 +102,26 @@ export class TotalIncomeChartComponent {
   income_card = [
     {
       background: 'bg-primary-500',
-      item: 'Income',
-      value: '$23,876',
+      item: 'Ingeniería de Sistemas',
+      value: '200',
       number: '+$763,43'
     },
     {
       background: 'bg-warning-500',
-      item: 'Rent',
-      value: '$23,876',
+      item: 'Ingeneiría Civil',
+      value: '200',
       number: '+$763,43'
     },
     {
       background: 'bg-success-500',
-      item: 'Download',
-      value: '$23,876',
+      item: 'Administración',
+      value: '200',
       number: '+$763,43'
     },
     {
-      background: 'bg-primary-200',
-      item: 'Views',
-      value: '$23,876',
+      background: 'bg-red-200',
+      item: 'Ingeniería Industrial',
+      value: '200',
       number: '+$763,43'
     }
   ];

@@ -1,6 +1,6 @@
-<app-card [showHeader]="false">
+<app-card  cardTitle="Cantidad de Cursos por Programa Académico">
   <div class="flex align-item-center justify-content-between">
-    <div class="f-16 f-w-600">Total Income</div>
+    <!-- <div class="f-16 f-w-600">PROGRAMAS ACADÉMICOS</div> -->
     <a [matMenuTriggerFor]="menu" class="avatar avatar-s hover"><i class="ti ti-dots-vertical f-18"></i></a>
     <mat-menu #menu="matMenu">
       <a mat-menu-item>Today</a>
@@ -32,9 +32,9 @@
               <p class="m-b-0">{{ task.item }}</p>
             </div>
           </div>
-          <div class="f-16 f-w-600">
-            {{ task.value }}
-            <span class="text-muted f-w-500"><i class="ti ti-chevrons-up"></i> {{ task.number }}</span>
+          <div class="f-16 f-w-400">
+            {{ 'Total de Créditos ' + task.value }}
+            <!-- <span class="text-muted f-w-500"><i class="ti ti-chevrons-up"></i> {{ task.number }}</span> -->
           </div>
         </div>
       </div>

@@ -32,31 +32,46 @@ export class OverviewProductChartComponent {
   // constructor
   constructor() {
     this.chartOptions = {
-      chart: {
-        height: 350,
-        type: 'pie'
+      series: [
+        {
+          name: "Plan Vigente",
+          data: [2, 2, 1, 4]
+        },
+        {
+          name: "Plan Expirado",
+          data: [5, 4, 2, 3]
+        }
+      ],
+      xaxis: {
+        type: "category",
+        categories: ['Ing. Sistemas', 'Ing. Civil', 'Ing. Industrial', 'Administración']
       },
-      labels: ['Components', 'Widgets', 'Pages', 'Forms', 'Other', 'Apps'],
-      series: [40, 20, 10, 15, 5, 10],
-      colors: ['#4680FF', '#4680FF', '#212529', '#212529', '#212529', '#212529'],
-      fill: {
-        opacity: [1, 1, 0.4, 0.6, 0.8, 1]
+      chart: {
+        type: "bar",
+        height: 350,
+        stacked: true,
+        toolbar: {
+          show: true
+        },
       },
       responsive: [
         {
           breakpoint: 480,
           options: {
-            chart: {
-              width: 200
-            },
             legend: {
-              position: 'bottom'
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0
             }
           }
         }
       ],
       legend: {
-        show: false
+        position: "right",
+        offsetY: 40
+      },
+      fill: {
+        opacity: 1
       }
     };
   }
@@ -64,28 +79,20 @@ export class OverviewProductChartComponent {
   // public method
   overView_product = [
     {
-      name: 'Apps',
-      value: '10+'
+      name: 'ING. SISTEMAS',
+      value: '3'
     },
     {
-      name: 'Other',
-      value: '5+'
+      name: 'ING. CIVIL',
+      value: '4'
     },
     {
-      name: 'Widgets',
-      value: '150+'
+      name: 'ADMINISTRACIÓN',
+      value: '3'
     },
     {
-      name: 'Forms',
-      value: '50+'
-    },
-    {
-      name: 'Components',
-      value: '200+'
-    },
-    {
-      name: 'Pages',
-      value: '150+'
+      name: 'ING. INDUSTRIAL',
+      value: '2'
     }
   ];
 }
