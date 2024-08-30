@@ -1,9 +1,13 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
-import { CursoCrearDTO, CursoDTO, CursoEditarDTO, CursoEliminarDTO } from "../../infraestructure/dto/curso.dto";
-import { Curso, CursoByCiclo, CursoCrear, CursoEditar, CursoEliminar } from "../models/curso.model";
+import { CursoAddPreRequisitoDTO, CursoBuscarPlanDTO, CursoCrearDTO, CursoDeletePreRequisitoDTO, CursoDTO, CursoEditarDTO, CursoEliminarDTO, CursoEncontradoEnPlanDTO, CursoPreRequisitoDTO } from "../../infraestructure/dto/curso.dto";
+import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoByCiclo, CursoCrear, CursoDeletePreRequisito, CursoEditar, CursoEliminar, CursoEncontradoEnPlan, CursoPreRequisito } from "../models/curso.model";
 
 export class CursoMapper {
     static fromApiToDomain( param: CursoDTO ): Curso {
+
+        const preRequisitos = param.prerequisito.map( CursoMapper.fromApiToDomainPreRequisito );
+
+
         return {
             id: param.codigoCurso,
             idPrograma: param.codigoProgramaAcademico,
@@ -17,8 +21,16 @@ export class CursoMapper {
             horasPracticas: param.hp,
             totalHoras: param.tHoras,
             totalCreditos: param.tCreditos,
-            preRequisito: param.prerequisito,
+            preRequisitos: preRequisitos,
             descripcion: param.descripcion
+        }
+    }
+
+    static fromApiToDomainPreRequisito( param: CursoPreRequisitoDTO ): CursoPreRequisito  {
+        return {
+            codigoCurso: param.codigoInterno,
+            id: param.codigoCurso,
+            nombreCurso: param.nombre
         }
     }
 
@@ -73,6 +85,38 @@ export class CursoMapper {
         return {
             codigoCurso: param.id,
             usuario: param.usuarioId
+        }
+    }
+
+    static fromDomainToApiAddPreRequisito( param: CursoAddPreRequisito ): CursoAddPreRequisitoDTO {
+        return {
+            codigoCurso: param.id,
+            codigoCursoPreRequisito: param.idCursoPreRequisito,
+            usuario: param.usuarioId
+        }
+    }
+
+    static fromDomainToApiDeletePreRequisito( param: CursoDeletePreRequisito ): CursoDeletePreRequisitoDTO {
+        return {
+            codigoCurso: param.id,
+            codigoCursoPreRequisito: param.idCursoPreRequisito,
+            usuario: param.usuarioId
+        }
+    }
+
+    static fromDomainToApiBuscarCursoPlanEstudio( param: CursoBuscarPlan ): CursoBuscarPlanDTO {
+        return {
+            codigoCurso: param.id
+        }
+    }
+
+
+    static fromApiToDomainCursoEncontradoEnPlan( param: CursoEncontradoEnPlanDTO ): CursoEncontradoEnPlan {
+        return {
+            archivo: param.archivo,
+            estadoMatricula: param.estadoMatricula,
+            id: param.codigoPlanDeEstudio,
+            nombre: param.nombre
         }
     }
 }

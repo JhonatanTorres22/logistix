@@ -2,9 +2,10 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Asignacion, AsignacionEliminar, AsignarNuevoPrograma } from "../../domain/models/asignacion.model";
+import { Asignacion, AsignacionCambiarDecano, AsignacionEliminar, AsignacionProgramaCambiarDirector, AsignarNuevoPrograma } from "../../domain/models/asignacion.model";
 import { AsginacionDataArrayDTO } from "../dto/asignacion.dto";
 import { AsignacionMapper } from "../../domain/mappers/asignacion.mapper";
+import { A } from "msw/lib/core/HttpResponse-B07UKAkU";
 
 
 @Injectable({
@@ -17,6 +18,9 @@ export class AsignacionService {
     urlAsignacion: string;
     urlAsignarPrograma: string;
     urlEliminarPrograma: string;
+    urlCambiarDirector: string;
+    urlCambiarDecano: string;
+
 
     constructor(
         private http: HttpClient
@@ -24,7 +28,9 @@ export class AsignacionService {
         this.urlApi = environment.EndPoint;
         this.urlAsignacion = 'api/Asignacion/Listar';
         this.urlAsignarPrograma = 'api/Asignacion/Insertar';
-        this.urlEliminarPrograma = 'api/Asignacion/Eliminar'
+        this.urlEliminarPrograma = 'api/Asignacion/Eliminar';
+        this.urlCambiarDirector = 'api/Asignacion/ActualizarDirectorDeEscuela';
+        this.urlCambiarDecano = 'api/Asignacion/ActualizarDecanoDeFacultad';
     }
 
     obtener( idSemestre: number): Observable<Asignacion[]> {
@@ -43,6 +49,20 @@ export class AsignacionService {
         const eliminarProgramaAPI = AsignacionMapper.fromDomainToApiEliminarPrograma( eliminarPrograma );
 
         return this.http.delete<void>( this.urlApi + this.urlEliminarPrograma, { body: eliminarProgramaAPI });
+    }
+
+    cambiarDirector( newDirector: AsignacionProgramaCambiarDirector ): Observable<void> {
+        const newDirectorAPI = AsignacionMapper.fromDomainToApiCambiarDirector( newDirector );
+        console.log( newDirectorAPI );
+        
+        return this.http.put<void>( this.urlApi + this.urlCambiarDirector, newDirectorAPI );
+    }
+
+
+    cambiarDecano( newDecano: AsignacionCambiarDecano ): Observable<void> {
+        const newDecanoAPI = AsignacionMapper.fromDomainToApiCambiarDecano( newDecano );
+
+        return this.http.put<void>( this.urlApi + this.urlCambiarDecano, newDecanoAPI );
     }
 
 }

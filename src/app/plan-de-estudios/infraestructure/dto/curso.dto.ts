@@ -1,3 +1,5 @@
+import { PlanEstudioDTO } from "./plan-estudio.dto"
+
 export interface CursoDTO {
     codigoCurso: number,
     codigoProgramaAcademico: number,
@@ -12,8 +14,11 @@ export interface CursoDTO {
     hp: number,
     tHoras: number,
     tCreditos: number,
-    prerequisito: number[]
+    prerequisito: CursoPreRequisitoDTO[]
 }
+
+
+export type CursoPreRequisitoDTO = Pick<CursoDTO, 'codigoCurso' | 'codigoInterno' | 'nombre'>
 
 
 export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito'> & {
@@ -32,3 +37,18 @@ export interface CursoDataArrayDTO {
 
     data: CursoDTO[]
 }
+
+export type CursoAddPreRequisitoDTO = Pick<CursoDTO, 'codigoCurso'> & {
+    codigoCursoPreRequisito: number,
+    usuario: number
+}
+
+export type CursoBuscarPlanDTO = Pick<CursoDTO, 'codigoCurso'>;
+
+export type CursoEncontradoEnPlanDTO = Pick<PlanEstudioDTO, 'codigoPlanDeEstudio' | 'nombre' | 'archivo' | 'estadoMatricula'>
+
+export interface CursoEncontradoEnPlanDataArrayDTO {
+    data: CursoEncontradoEnPlanDTO[]
+}
+
+export type CursoDeletePreRequisitoDTO = CursoAddPreRequisitoDTO;

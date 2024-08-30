@@ -6,7 +6,8 @@ import {
     MensajeriaHistorialMensajes, MensajeriaInsertar,
     MensajeriaLeerMensaje, MensajeriaNuevoMensajeList,
     MensajeriaRecibidos, MensajeriaResponderAList,
-    MensajeriaResponderAlta } from "../models/mensajeria.model";
+    MensajeriaResponderAlta, 
+    MensajeriaTimeLine} from "../models/mensajeria.model";
 import { Observable } from "rxjs";
 import { MensajeriaTipoDataArrayDTO } from "../../infraestructure/dto/mensajeria.dto";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
@@ -28,6 +29,7 @@ export abstract class MensajeriaRepository {
     abstract enviarNuevoMensaje( mensaje: MensajeriaEnviarNuevoMensaje ): Observable<void>
     abstract responderMensajeA( idMensaje: number ): Observable<MensajeriaResponderAList[]>
     abstract forzarCierre( mensaje: MensajeriaForzarCierre ): Observable<void>
+    abstract obtenerTimeLine( idMensaje: number ): Observable<MensajeriaTimeLine[]>
     // abstract
 
 

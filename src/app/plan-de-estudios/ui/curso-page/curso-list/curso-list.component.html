@@ -1,5 +1,5 @@
 
-<div class="row" cdkDropListGroup>
+<div class="row" cdkDropListGroup [ngClass]="cursoSelectPreRequisito().id != 0 ? 'w-9' : 'w-12'">
     @if ( cursosByCiclos().length == 0 ) {
     
         <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( template1 )"></ui-button-icon>
@@ -9,45 +9,88 @@
 
     <!-- {{ idPrograma() }} -->
 
+    <!-- {{cursoSelectPreRequisito().id != 0}} -->
     @for (ciclo of cursosByCiclos(); track ciclo) {
-        <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
+        @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) {
+            <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
     
-            <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
-                <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-                    {{ getNombreCiclo(ciclo.idCiclo)?.definicion }}
-                </div>
-            </div>
-            <div class="flex flex-column gap-2 example-list"
-                cdkDropList
-                [cdkDropListData]="ciclo.cursos"
-                (cdkDropListDropped)="drop($event)">
-                @for ( curso of ciclo.cursos; track curso) {
-                    
-                    <div
-                        
-                        cdkDrag
-                        [cdkDragStartDelay]="1000"
-                        class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
-                        style="min-height: 5rem; max-height: 7rem;">
-                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                        <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
-                        <div class="f-8 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
-                        <div class="flex justify-content-around my-2 gap-2">
-                            <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
-                            <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-1rem" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
-                            <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-1rem" (onClick)="eliminarConfirm( curso )"></ui-button>
-                            <ui-button color="green" tooltip="Agregar Pre Requisito" icon="ti ti-shield-lock f-12" classButton="h-1rem" (onClick)="addPreRequisito( curso )"></ui-button>
-                        </div>
+                <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
+                    <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
+                        {{ getNombreCiclo(ciclo.idCiclo)?.definicion }}
                     </div>
-    
-                }
+                </div>
+                <div class="flex flex-column gap-2 example-list"
+                    cdkDropList
+                    [cdkDropListData]="ciclo.cursos"
+                    (cdkDropListDropped)="drop($event)">
+                    @for ( curso of ciclo.cursos; track curso) {
+                        <!-- <pre>{{ curso | json }}</pre> -->
+                            <!-- @if ( !preRequisitos().includes( curso )) { -->
+                                <!-- <p>{{ cursoSelectPreRequisito() | json }} Si</p> -->
+                                <!-- [cdkDragStartDelay]="1000" -->
+
+                                <!-- [ngClass]="{'justify-content-center': cursoSelectPreRequisito().id !== 0}" -->
+                                <div
+                                
+                                    cdkDrag
+                                    [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 100000 : 0"
+                                    [cdkDragDisabled]="preRequisitos().includes( curso )"
+                                    class="flex flex-column justify-content-center align-items-center border-1 border-gray-600 border-round  border-gray-400 cursor-pointer px-2"
+                                    (mouseenter)="hoverClass( curso.id.toString() )"
+                                    (mouseleave)="removeClass( curso.id.toString() )"
+                                    style="min-height: 5rem; max-height: 7rem; min-width: -webkit-fill-available; max-width: -webkit-fill-available;">
+                                    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                                    <div class="f-8 bg-primary-200 text-primary-500 px-2 my-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
+                                    <div class="f-12 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
+
+                                    @if( cursoSelectPreRequisito().id == 0 ) {
+                                        <div class="justify-content-around my-2 gap-1 hidden fadein animation-duration-400" [id]="curso.id">
+                                            <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
+                                            <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-2rem" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
+                                            <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-2rem" (onClick)="eliminarConfirm( curso )"></ui-button>
+                                            <ui-button
+                                                color="green"
+                                                tooltip="Agregar Pre Requisito"
+                                                icon="ti ti-shield-lock f-14"
+                                                classButton="h-2rem"
+                                                [matBadge]="curso.preRequisitos.length"
+                                                matBadgePosition="after"
+                                                [matBadgeHidden]="curso.preRequisitos.length == 0"
+                                                matBadgeColor="warn"
+                                                matBadgeOverlap="false"
+                                                (onClick)="addPreRequisito( curso )">
+        
+                                            </ui-button>
+                                        </div>
+                                    }
+                                </div>
+                            <!-- } -->
+                  
+                        }
+        
+                    
+                </div>
+        
+                <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( template1, ciclo )"></ui-button-icon>
             </div>
-    
-            <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( template1, ciclo )"></ui-button-icon>
-        </div>
+
+        }
 
     }
+    
+    <curso-pre-requisito></curso-pre-requisito>
+    <!-- @if ( openCursoPreRequisito() == true ) {
+    } -->
 </div>
 <ng-template #template1 let-data>
     <curso-add></curso-add>
 </ng-template>
+
+<!-- @if (planEstudioEncontrado) { -->
+
+    <ng-template #templatePlan let-data>
+        <div class="bg-yellow-500 text-white-700 font-bold text-center">NO ES POSIBLE {{ accionCurso }} EL CURSO</div>
+        <plan-estudio-card [planEstudio]="planEstudioEncontrado"></plan-estudio-card>
+    </ng-template>
+<!-- {{ isModal() }} -->
+<!-- } -->

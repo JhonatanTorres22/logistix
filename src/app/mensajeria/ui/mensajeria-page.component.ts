@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild, effect, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, effect, signal } from '@angular/core';
 import { EmailComponent } from 'src/app/demo/pages/application/email/email.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaNavComponent } from './mensajeria-nav/mensajeria-nav.component';
@@ -18,11 +18,20 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { SemestreListComponent } from 'src/app/programas-academicos/ui/semestre-academico-page/semestre-list/semestre-list.component';
 import { SemestreAcademico } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { MensajeriaTimeLineComponent } from './mensajeria-time-line/mensajeria-time-line.component';
 
 @Component({
   selector: 'app-mensajeria-page',
   standalone: true,
-  imports: [ CommonModule, SharedModule, MensajeriaContentComponent, UiButtonSplitComponent, SemestreListComponent, UiButtonComponent],
+  imports: [ 
+    CommonModule,
+    SharedModule,
+    MensajeriaContentComponent,
+    UiButtonSplitComponent,
+    SemestreListComponent,
+    MensajeriaTimeLineComponent,
+    UiButtonComponent,
+  ],
   templateUrl: './mensajeria-page.component.html',
   styleUrl: './mensajeria-page.component.scss'
 })
@@ -30,6 +39,8 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
 
   // public props
   @ViewChild('email') email: MatDrawer;
+  @ViewChild('templateTimeLine') templateTimeLine: TemplateRef<any>
+
   modeValue: MatDrawerMode = 'side';
   modoTablet = this.signal.mensajeriaModoTablet
   status = 'false';
@@ -48,6 +59,7 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
   showFormNuevoMensaje = this.signal.showFormNuevoMensaje;
   semestreSelect = this.semestreSignal.semestreSelect;
   semestresAcademicos = this.semestreSignal.semestresAcademicos;
+  selectMensaje = this.signal.selectMensaje
   // constructor
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -278,6 +290,14 @@ export class MensajeriaPageComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  timeLineMensaje = () => {
+    // this.selectMensaje()
+    this.modal.openTemplate({
+      template: this.templateTimeLine,
+      titulo: 'Time Line'
+    })
+  }
 
   // destroyed = new Subject<void>();
   // currentScreenSize: string;

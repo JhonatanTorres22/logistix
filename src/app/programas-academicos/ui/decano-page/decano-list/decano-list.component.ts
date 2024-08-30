@@ -12,10 +12,13 @@ import { UserAddComponent } from 'src/app/usuarios/ui/user-add/user-add.componen
 
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
-import { Asignacion } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { Asignacion, AsignacionCambiarDecano } from 'src/app/programas-academicos/domain/models/asignacion.model';
 import { Router } from '@angular/router';
 
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/semestre.signal';
+import { AsignacionRepository } from 'src/app/programas-academicos/domain/repositories/asignacion.repository';
 
 
 
@@ -34,6 +37,8 @@ export class DecanoListComponent {
   decanoEdit: UsuarioRol;
   decanos: WritableSignal<UsuarioRol[]>= this.signal.decanosList;
   decanoSeleccionado = this.signal.decanoSelect;
+  semestreSelect = this.semestreSignal.semestreSelect;
+  facultadEditDecano = this.signal.facultadEditDecano;
   facultadSelected = this.facultadSignal.facultadSelect;
   // programaes: 
   decanoSelect: UsuarioRol = {
@@ -49,10 +54,13 @@ constructor(
   private signal: DecanoSignal,
   private facultadSignal: FacultadSignal,
   private repository: UsuarioRolRepository,
+  private asignacionRepository: AsignacionRepository,
+  private semestreSignal: SemestreSignal,
+  private modal: UiModalService,
   private auth: AuthSignal,
   // private facultadSignal: LocalSignal,
   private alertService: AlertService,
-  public dialogRef: MatDialogRef<DecanoListComponent>,
+  // public dialogRef: MatDialogRef<DecanoListComponent>,
 
   ) {
 
@@ -122,8 +130,9 @@ constructor(
     this.repository.obtenerUsuariosRol().subscribe({
       next: ( decanos ) => {
         console.log(decanos);
+        const facultad = this.facultadSelected().id != 0 ? this.facultadSelected().nombre : this.facultadEditDecano().nombreFacultad;
         // const decanosRol = ['DECANO DE FACULTAD DE INGENIERÍA CIENCIAS Y ADMINISTRACIÓN', 'DECANO DE FACULTAD DE CIENCIAS DE LA SALUD']
-        const decanosList = decanos.filter( usuario => usuario.rol.toUpperCase() == `DECANO DE ${ this.facultadSelected().nombre.replace(',', '') }` )  // && usuario.estado == 'ACTIVO'
+        const decanosList = decanos.filter( usuario => usuario.rol.toUpperCase() == `DECANO DE ${ facultad.replace(',', '') }` )  // && usuario.estado == 'ACTIVO'
         this.signal.setDecanosList( decanosList );
         if(this.decanos().length > 0){
           let decanoSeleccionado = this.decanos().find(decano => decano.id === this.decanoSeleccionado().id)
@@ -208,10 +217,42 @@ constructor(
     .then( isConfirm => {
       if( !isConfirm ) return;
 
-      this.signal.setSelectDecano(  this.decanoSelect );
-      this.dialogRef.close('seleccionado');
-      // this.aperturarSemestre();
+        if( this.facultadEditDecano().idDecano !== 0 ) {
+          console.log('Editar Director...');
+          this.actualizarDecano();
+          return;
+        }   
+
+        this.signal.setSelectDecano(  this.decanoSelect );
+        this.modal.getRefModal().close('seleccionado');
+        // this.aperturarSemestre();
     
+    })
+  }
+
+  actualizarDecano = () => {
+    const newDecano: AsignacionCambiarDecano = {
+      idDecano: this.decanoSelect.id,
+      idPrograma: this.facultadEditDecano().programas[0].idPrograma,
+      idSemestre: this.semestreSelect().id,
+      usuarioId: parseInt( this.auth.currentRol().id )
+    }
+
+    console.log( newDecano );
+    
+
+    this.asignacionRepository.cambiarDecano( newDecano  ).subscribe({
+      next: ( response ) => {
+        console.log( response);
+        this.alertService.showAlert('Se ha actualizado el Director de Escuela de manera correcta.', 'success', 6);
+        this.modal.dialogRef.close('DirectorEditado');
+
+      }, error: ( error ) => {
+        console.log( error );
+        this.alertService.showAlert('Ocurrió un error al actualizar el Director de Escuela.', 'error', 6);
+        this.modal.dialogRef.close('DirectorEditado');
+        
+      }
     })
   }
 
@@ -229,6 +270,6 @@ constructor(
   irModuloAsignarDecano = () => {
     const message = 'Decano';
     this.router.navigate(['/configuracion/usuarios'], { state: { message: message } });
-    this.dialogRef.close()
+    this.modal.getRefModal().close()
   }
 }

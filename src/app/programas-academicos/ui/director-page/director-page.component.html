@@ -1,6 +1,6 @@
 @if ( directorSelect().id == 0 ) {
 
-    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Agregar Director de Escuela" (click)="openModalDirector()">
+    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Agregar Director de Escuela" (click)="openModalDirector( templateDirector )">
         <img src="assets/images/user/avatar-0.png" alt="img" class="img-fluid" />
         <label for="uplfile" class="img-avatar-upload">
           <i class="ti ti-plus f-24 m-b-5"></i>
@@ -10,7 +10,7 @@
     <!-- {{programaSelect().nombre}} -->
 
 } @else {
-    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Cambiar de Director de Escuela" (click)="openModalDirector()">
+    <div class="user-upload wid-40 m-auto mb-2" matTooltip="Cambiar de Director de Escuela" (click)="openModalDirector( templateDirector )">
         <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
         <label for="uplfile" class="img-avatar-upload">
           <i class="ti ti-refresh f-24 m-b-5"></i>
@@ -23,4 +23,7 @@
     </div>
 }
 
+<ng-template #templateDirector let-data>
+    <director-list></director-list>
+</ng-template>
 

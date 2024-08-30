@@ -12,6 +12,8 @@ export class PlanEstudioMapper {
             estadoMatricula: param.estadoMatricula,
             id: param.codigoPlanDeEstudio,
             idProgramaAcademico: param.codigoProgramaAcademico,
+            finVigencia: param.finVigencia,
+            inicioVigencia: param.inicioVigencia,
             nombre: param.nombre,
             resolucion: param.resolucion
         }

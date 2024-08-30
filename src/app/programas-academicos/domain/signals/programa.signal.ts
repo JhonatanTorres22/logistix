@@ -1,5 +1,6 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
 import { Programa, ProgramaFacultad } from "../models/programa.model";
+import { AsignacionPrograma } from "../models/asignacion.model";
 
 
 @Injectable({
@@ -15,9 +16,18 @@ export class ProgramaSignal {
         usuarioId: 0
     }
 
+    programaAsignacionDefault: AsignacionPrograma = {
+        idPrograma: 0,
+        nombrePrograma: "",
+        idDirector: 0,
+        nombreDirector: "",
+        locales: []
+    }
+
     programas: ProgramaFacultad[] = [];
 
     programaSelect = signal( this.programa);
+    programaEditDirector = signal( this.programaAsignacionDefault );
     programasList = signal( this.programas )
     programaEdit = signal(this.programa)
 

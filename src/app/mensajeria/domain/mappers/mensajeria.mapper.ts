@@ -13,6 +13,7 @@ import {
      MensajeriaResponderAListDTO,
      MensajeriaResponderAltaDTO,
      MensajeriaResponderDTO,
+     MensajeriaTimeLineDTO,
      MensajeriaTipoDTO,
      MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
 import { 
@@ -28,7 +29,8 @@ import {
     MensajeriaRecibidos,
     // MensajeriaResponder,
     MensajeriaResponderAList, 
-    MensajeriaResponderAlta} from "../models/mensajeria.model";
+    MensajeriaResponderAlta,
+    MensajeriaTimeLine} from "../models/mensajeria.model";
 import { RemoveHTML } from "src/app/core/mappers/removeHTML";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
@@ -60,6 +62,7 @@ export class MensajeriaMapper {
             emisor: param.emisor,
             receptor: param.receptor,
             fecha: param.fechaCreacion,
+            fechaVencimiento: param.fechaVencimiento,
             leido: param.leido
         }
     }
@@ -75,6 +78,7 @@ export class MensajeriaMapper {
             emisor: param.emisor,
             receptor: param.receptor,
             fecha: param.fechaCreacion,
+            fechaVencimiento: param.fechaVencimiento,
             leido: true
         }
     }
@@ -92,6 +96,7 @@ export class MensajeriaMapper {
             receptor: param.receptor,
             // rolReceptor: param.rolReceptor,
             fecha: param.fechaCreacion,
+            fechaVencimiento: param.fechaVencimiento,
             // archivo: param.archivo,
             leido: true,
             fechaCierre: param.fechaCierre,
@@ -240,6 +245,22 @@ export class MensajeriaMapper {
         return {
             codigoMensajeria: param.idMensaje,
             usuario: param.usuarioId
+        }
+    }
+
+    static fromApiToDomainTimeLine( param: MensajeriaTimeLineDTO, nMensajes: number, orden: number ): MensajeriaTimeLine {
+
+        console.log( param );
+        
+
+        return {
+            emisor: param.emisor,
+            fechaCreacion: param.fechaCreacion,
+            fechaVencimiento: param.fechaVencimiento,
+            nHitos: param.hitos.length,
+            nMensajes: nMensajes,
+            orden: orden,
+            receptor: param.receptor
         }
     }
 }

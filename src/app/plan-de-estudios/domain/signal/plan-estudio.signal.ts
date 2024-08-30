@@ -18,6 +18,8 @@ export class PlanEstudioSignal {
         estadoCaducidad: '',
         estadoMatricula: '',
         idProgramaAcademico: 0,
+        finVigencia: '',
+        inicioVigencia: '',
         nombre: '',
         resolucion: ''
      }

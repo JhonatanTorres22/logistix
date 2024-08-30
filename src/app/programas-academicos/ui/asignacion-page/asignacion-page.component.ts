@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, WritableSignal, effect } from '@angular/core';
+import { Component, OnInit, TemplateRef, WritableSignal, effect } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { AsignacionRepository } from '../../domain/repositories/asignacion.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -39,6 +39,8 @@ import { Router } from '@angular/router';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
 import { ProgramaCardComponent } from '../programa-academico-page/programa-card/programa-card.component';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { DecanoListComponent } from '../decano-page/decano-list/decano-list.component';
 
 
 @Component({
@@ -54,6 +56,7 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
     ProgramaAcademicoPageComponent,
     LocalPageComponent,
     DecanoPageComponent,
+    DecanoListComponent,
     DirectorPageComponent,
     AsignacionPageComponent,
     LocalListComponent,
@@ -83,6 +86,7 @@ export class AsignacionPageComponent {
     directorSelect: WritableSignal<UsuarioRol> = this. directorSignal.directorSelect;
     localSelect: WritableSignal<Local> = this.localSignal.localSelect;
     localesSelect: WritableSignal<Local[]> = this.localSignal.localesSelect;
+    facultadEditDecano = this.decanoSignal.facultadEditDecano;
     renderizarAsignaciones = this.signal.renderizarAsignaciones;
     // decanoSelect: 
     constructor( 
@@ -97,6 +101,7 @@ export class AsignacionPageComponent {
         private signal: AsignacionSignal,
         private asignacionRepository: AsignacionRepository,
         private alertService: AlertService,
+        private modal: UiModalService,
         private mensajeriaSignal: MensajeriaSignal,
         private auth: AuthSignal,
         private router: Router,
@@ -131,8 +136,26 @@ export class AsignacionPageComponent {
   }
 
 
-  openModalDecanos = () => {
+  openModalDecanos = (  template: TemplateRef<any>, asignacion?: Asignacion  ) => {
+    console.log('Abril modal cambiar decanos');
+    this.facultadSelect.set( this.facultadSignal.facultad );
+    this.programaSelect.set( this.programaSignal.programa )
+    this.facultadEditDecano.set( asignacion! )
+    // console.log('Abrir modal Director...', this.programa );
+    let titleModal = 'Seleccione el nuevo Decano';
+    this.modal.openTemplate( {
+      template,
+      titulo: titleModal
+    } ).afterClosed().subscribe( resp => {
+        // this.programaEditDirector.set( this.programaSignal.programaAsignacionDefault );
+        this.facultadEditDecano.set( this.decanoSignal.facultadEditDecanoDefault )
 
+        if( resp == 'cancelar') {
+          return
+        }
+        this.renderizarAsignaciones.set('Obtener');
+    });
+    
   }
 
 

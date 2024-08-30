@@ -69,6 +69,8 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     estadoMatricula: '',
     id: 0,
     idProgramaAcademico: 0,
+    finVigencia: '',
+    inicioVigencia: '',
     nombre: '',
     resolucion: ''
   };

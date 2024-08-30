@@ -1,5 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { UsuarioRol } from "src/app/usuarios/domain/models/usuario-rol.model";
+import { Asignacion } from "../models/asignacion.model";
 
 
 
@@ -17,10 +18,21 @@ export class DecanoSignal {
         rol: '',
     }
 
+    facultadEditDecanoDefault: Asignacion = {
+        idFacultad: 0,
+        nombreFacultad: "",
+        idDecano: 0,
+        nombreDecano: "",
+        programas: []
+    }
+    
     decanos: UsuarioRol[] = [];
 
     decanoSelect = signal( this.decano);
     decanosList = signal( this.decanos )
+
+    facultadEditDecano = signal( this.facultadEditDecanoDefault );
+
 
     setSelectDecano = ( decano: UsuarioRol) => {
         this.decanoSelect.set( decano );

@@ -18,7 +18,7 @@ import { MallaCurricularListComponent } from '../malla-curricular-list/malla-cur
   styleUrl: './malla-curricular-side.component.scss'
 })
 export class MallaCurricularSideComponent implements OnInit {
-  @ViewChild('task') task: MatDrawer;
+  @ViewChild('malla') malla: MatDrawer;
 
   openMallaCursos = this.signal.openMallaCursos;
   planEstudioSelect = this.signal.planEstudioSelect
@@ -28,20 +28,20 @@ export class MallaCurricularSideComponent implements OnInit {
   ) {
     effect( () => {
       console.log( this.openMallaCursos() );
-      this.openMallaCursos() ? this.task.open() : ''
+      this.openMallaCursos() ? this.malla.open() : ''
       this.openMallaCursos.set( false );
       
     }, { allowSignalWrites: true })
   }
   ngOnInit(): void {
     // setTimeout(() => {
-    //   this.task.toggle();
+    //   this.malla.toggle();
     // }, 200);
   }
 
   cerrar = () => {
     // this.openMallaCursos.set( false );
-    this.task.close();
+    this.malla.close();
   }
   
 }

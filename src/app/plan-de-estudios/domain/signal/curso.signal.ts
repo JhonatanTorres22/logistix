@@ -27,7 +27,6 @@ export class CursoSingal {
         totalHoras: 0,
         totalCreditos: 0,
         usuarioId: 0,
-
     }
     cursoDafault: Curso = {
         id: 0,
@@ -43,7 +42,7 @@ export class CursoSingal {
         horasPracticas: 0,
         totalHoras: 0,
         totalCreditos: 0,
-        preRequisito: []
+        preRequisitos: []
     }
     cursoCicloSelectDefault: CursoByCiclo = {
 
@@ -58,16 +57,22 @@ export class CursoSingal {
         cursos: []
     }
 
+    preRequisitoDefault: Curso[] = []
+
     cursoByCliclosDefault: CursoByCiclo[] = []
 
     cursosByCiclo = signal( this.cursoByClicloDefault );
     cursosByCiclos = signal( this.cursoByCliclosDefault );
 
     cursoSelect = signal( this.cursoDafault );
+    cursoSelectPreRequisito = signal( this.cursoDafault );
 
     cursosList: WritableSignal<Curso[]> = signal( this.cursoListDefault );
+    preRequisitos = signal( this.preRequisitoDefault )
 
     cursoCicloSelect = signal<CursoByCiclo>( this.cursoCicloSelectDefault );
+
+    openCursoPreRequisito = signal( false );
 
     setCursos( cursoList: Curso[]) {
         this.cursosList.set( cursoList )
@@ -80,5 +85,7 @@ export class CursoSingal {
     setCursoCicloSelectDefault() {
         this.cursoCicloSelect.set( this.cursoCicloSelectDefault );
     }
+
+    renderizarCursos = signal( '' );
 
 }

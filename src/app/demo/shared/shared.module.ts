@@ -55,6 +55,8 @@ import { RemoveHtmlDirective } from 'src/app/core/directives/remove-html.directi
 
 //PrimeNg
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { ColorClassDirective } from 'src/app/core/directives/color-class.directive';
+import { HoverClassDirective } from 'src/app/core/directives/hover-class.directive';
 
 const MaterialModules = [
   MatToolbarModule,
@@ -101,7 +103,9 @@ const PrimeNgModules = [
 const Directives = [
   DisabledControlDirective,
   UpperCaseDirective,
-  RemoveHtmlDirective
+  RemoveHtmlDirective,
+  ColorClassDirective,
+  HoverClassDirective,
 
 
 ]

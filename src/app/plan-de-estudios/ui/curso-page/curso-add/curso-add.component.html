@@ -19,20 +19,20 @@
                 [expReg]="expRegDescripcionBlockToInput" [patternErrorMessage]="'No se debe incluir espacios al término de la palabra ni caracteres especiales (,)'"></ui-input>
             </div>
             <div class="flex flex-column md:flex-row gap-2">
-                <ui-select label="Tipo de Estudio" formControlName="tipoEstudio" [options]="optionsTipoEstudio" ></ui-select>
-                <ui-select label="Tipo de Curso" formControlName="tipoCurso" [options]="optionsTipoCurso" ></ui-select>
+                <ui-select class="w-full" label="Tipo de Estudio" formControlName="tipoEstudio" [options]="optionsTipoEstudio" ></ui-select>
+                <ui-select class="w-full" label="Tipo de Curso" formControlName="tipoCurso" [options]="optionsTipoCurso" ></ui-select>
 
                 <!-- <ui-input label="Tipo de Curso" formControlName="tipoCurso" ></ui-input> -->
             </div>
             <!-- <ui-input label="Competencia" formControlName="competencia" ></ui-input> -->
             <ui-select label="Competencia" formControlName="competencia" [options]="optionsCompetencia" ></ui-select>
             <div class="flex flex-column md:flex-row gap-2">
-                <ui-input label="Horas Teoricas" formControlName="horasTeoricas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasTeoricas" [minlength]="minLengthHorasTeoricas" [expReg]="expRegHorasTeoricasBlockToInput" ></ui-input>
-                <ui-input label="Horas Practicas" formControlName="horasPracticas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Horas Teoricas" formControlName="horasTeoricas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasTeoricas" [minlength]="minLengthHorasTeoricas" [expReg]="expRegHorasTeoricasBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Horas Practicas" formControlName="horasPracticas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput" ></ui-input>
             </div>
             <div class="flex gap-2">
-                <ui-input label="Total de Horas" formControlName="totalHoras" [readonly]="true" [maxlength]="maxLengthTotalHoras" [minlength]="minLengthTotalHoras" [expReg]="expRegTotalHorasBlockToInput" ></ui-input>
-                <ui-input label="Total de Creditos" formControlName="totalCreditos" [maxlength]="maxLengthTotalCreditos" [minlength]="minLengthTotalCreditos" [expReg]="expRegTotalCreditosBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Total de Horas" formControlName="totalHoras" [readonly]="true" [min]="minTotalHoras" [maxlength]="maxLengthTotalHoras" [minlength]="minLengthTotalHoras" [expReg]="expRegTotalHorasBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Total de Creditos" formControlName="totalCreditos" [min]="minCredtios" [maxlength]="maxLengthTotalCreditos" [minlength]="minLengthTotalCreditos" [expReg]="expRegTotalCreditosBlockToInput" ></ui-input>
             </div>
             <!-- <div class="flex flex-column md:flex-row gap-2 justify-content-around">
                 <span class="bg-primary-100 text-primary-700 f-w-600 border-round p-2 text-center">Total Horas: {{ (formCurso.value.horasPracticas * 1) + (formCurso.value.horasTeoricas * 1) }}</span>

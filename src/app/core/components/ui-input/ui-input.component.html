@@ -19,7 +19,7 @@
       <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
   }
-  <mat-hint align="end">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
+  <mat-hint align="end" class="text-accent-500">{{ formControl?.value?.length || 0 }}/ {{ maxlength }}</mat-hint>
   
   @if (formControl?.hasError('maxlength')) {
     <mat-error class="mt-4">Este campo debe tener como máximo {{ maxlength }} caracteres</mat-error>
@@ -35,6 +35,9 @@
   }
   @if (formControl?.hasError('codigoDuplicado')) {
     <mat-error class="mt-4">Esta campo está siendo duplicado</mat-error>
+  }
+  @if (formControl?.hasError('min')) {
+    <mat-error class="mt-4">El valor ingresado no puede ser menor a {{ min }} </mat-error>
   }
 </mat-form-field>
 

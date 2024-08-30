@@ -4,7 +4,7 @@
       <div class="flex gap-2">
         <div class="flex align-items-center gap-2">
           <!-- CHANGE DECANO START  -->
-          <div class="user-upload wid-40" matTooltip="Cambiar de Decano" (click)="openModalDecanos()">
+          <div class="user-upload wid-40" matTooltip="Cambiar de Decano" (click)="openModalDecanos( templateDecano, asignacion )">
               <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
               <label for="uplfile" class="img-avatar-upload">
                 <i class="ti ti-refresh f-24 m-b-5"></i>
@@ -57,3 +57,8 @@
 }
 
 <!-- {{ semestreSelect() | json}} -->
+
+
+<ng-template #templateDecano let-data>
+  <app-decano-list></app-decano-list>
+</ng-template>

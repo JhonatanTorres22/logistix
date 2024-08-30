@@ -12,7 +12,7 @@ export class RutasSignal {
 
     setCurrentRuta = (ruta: string) => {
         this.currentRuta.set( ruta );
-        const rutas = ['/mensajeria', '/plan-de-estudios/malla-curricular']
+        const rutas = ['/mensajeria', '/plan-de-estudios/malla-curricular', '/cursos']
         rutas.includes( ruta ) ? this.setLayout('compact') : this.setLayout('vertical');
         // console.log(this.currentLayout());
         

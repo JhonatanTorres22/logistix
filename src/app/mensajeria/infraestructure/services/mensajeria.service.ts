@@ -13,10 +13,11 @@ import {
     MensajeriaNuevoMensajeList,
     MensajeriaRecibidos, 
     MensajeriaResponderAList,
-    MensajeriaResponderAlta} from "../../domain/models/mensajeria.model";
+    MensajeriaResponderAlta,
+    MensajeriaTimeLine} from "../../domain/models/mensajeria.model";
 import { Observable, map } from "rxjs";
 import { MensajeriaMapper } from "../../domain/mappers/mensajeria.mapper";
-import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaResponderAListDataArrayDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
+import { MensajeriaArchivadosDataArrayDTO, MensajeriaEnviadosDataArrayDTO, MensajeriaHistorialMensajesDataArrayDTO, MensajeriaNuevoMensajeListDataArrayDTO, MensajeriaRecibidosDataArrayDTO, MensajeriaResponderAListDataArrayDTO, MensajeriaTimeLineDataArrayDTO, MensajeriaTimeLineDTO, MensajeriaTipoDataArrayDTO, MensajeriaTipoGrupoDataArrayDTO } from "../dto/mensajeria.dto";
 import { AuthSignal } from "src/app/auth/domain/signals/auth.signal";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 import { serialize } from 'object-to-formdata';
@@ -44,6 +45,7 @@ export class MensajeriaService {
     private urlNuevoMensaje: string;
     private urlResponderA: string;
     private urlForzarCierre: string;
+    private urlTimeLine: string;
 
     private rol = this.signal.currentRol
     private httpBack: HttpClient;
@@ -71,7 +73,7 @@ export class MensajeriaService {
         this.urlNuevoMensaje = 'api/Mensajeria/Nuevo';
         this.urlResponderA = 'api/Mensajeria/ResponderA?CodigoMensaje=';
         this.urlForzarCierre = 'api/Mensajeria/CierreForzado';
-
+        this.urlTimeLine = 'api/Mensajeria/LineaDeTiempo?CodigoMensajeria='
 
     }
 
@@ -182,5 +184,47 @@ export class MensajeriaService {
         return this.http.put<void>( this.urlApi + this.urlForzarCierre, cerrarMensajeAPI );
     }
 
-    
+    obtenerTimeLine = ( idMensaje: number): Observable<MensajeriaTimeLine[]> => {
+        let dataTimeVoid: MensajeriaTimeLineDTO = {
+            emisor: "",
+            receptor: "",
+            fechaCreacion: "",
+            fechaVencimiento: "",
+            hitos: []
+        };
+
+        return this.http.get<MensajeriaTimeLineDataArrayDTO>( this.urlApi + this.urlTimeLine + idMensaje)
+            .pipe( 
+                map( (response, indexData ) => response.data[0].hitos.map( (mensaje, index, dataOriginal) => {
+                    // const dataHistos = mensaje.hitos.map( (hito, index, { length }) => {
+                            // if ( response.data.length < index ) {
+                                dataTimeVoid = {
+                                    emisor: mensaje.rol,
+                                    fechaCreacion: '',
+                                    fechaVencimiento: '',
+                                    hitos: [],
+                                    receptor: ''
+                                }
+                                console.log('Total' + response.data.length, 'Indice' + index);
+                                console.log( dataTimeVoid );
+                                
+                                // return dataTimeVoid
+                                // console.log( dataTimeVoid );
+                                
+                                // return MensajeriaMapper.fromApiToDomainTimeLine( dataTimeVoid, response.data.length, index + 1 )
+
+
+                            // }
+                            
+                        // return response.data[index]
+                        return MensajeriaMapper.fromApiToDomainTimeLine( response.data.length <= index ? dataTimeVoid : response.data[index], response.data.length, index + 1 )
+
+                            
+                    // });
+                    
+                    // return { dataFin: dataHistos };
+
+                })
+            ))
+    }
 }

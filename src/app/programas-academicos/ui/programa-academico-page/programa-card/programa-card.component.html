@@ -10,9 +10,12 @@
   
     <!-- DIRECTOR DE ESCUELA START -->
     <!-- <div class=""> -->
-
+<!-- <pre>{{ programa | json }}</pre>
+<pre> {{ programaSelect() | json }}</pre> -->
       <div class="text-center">
-        <div class="user-upload wid-40 m-auto mb-2" [matTooltip]="currentRol().rol == 'Vicerrectorado Académico' ? 'Cambiar de Director de Escuela': ''" (click)="currentRol().rol == 'Vicerrectorado Académico' ? openModalDirector(): ''">
+        <div class="user-upload wid-40 m-auto mb-2"
+          [matTooltip]="currentRol().rol == 'Vicerrectorado Académico' ? 'Cambiar de Director de Escuela': ''"
+          (click)="currentRol().rol == 'Vicerrectorado Académico' ? openModalDirector( templateDirector ): ''">
           <img src="assets/images/user/avatar-1.png" alt="img" class="img-fluid" />
           @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
             <label for="uplfile" class="img-avatar-upload">
@@ -87,3 +90,7 @@
     <!-- </div> -->
 
   </app-card>
+
+<ng-template #templateDirector let-data>
+    <director-list></director-list>
+</ng-template>

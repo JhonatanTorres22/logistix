@@ -2,9 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
-import { CursoDataArrayDTO } from "../dto/curso.dto";
+import { CursoDataArrayDTO, CursoEncontradoEnPlanDataArrayDTO } from "../dto/curso.dto";
 import { CursoMapper } from "../../domain/mappers/curso.mapper";
-import { Curso, CursoCrear, CursoEditar, CursoEliminar } from "../../domain/models/curso.model";
+import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoCrear, CursoDeletePreRequisito, CursoEditar, CursoEliminar, CursoEncontradoEnPlan } from "../../domain/models/curso.model";
 
 
 @Injectable({
@@ -19,6 +19,9 @@ export class CursoService {
     private urlAgregar: string;
     private urlEditar: string;
     private urlEliminar: string;
+    private urlAddPreRequisito: string;
+    private urlDeletePreRequisito: string;
+    private urlBuscarCursoPlanEstudio: string;
 
     constructor(
         private http: HttpClient
@@ -30,7 +33,9 @@ export class CursoService {
         this.urlAgregar = 'api/Curso/Insertar';
         this.urlEditar = 'api/Curso/Actualizar';
         this.urlEliminar = 'api/Curso/Eliminar';
-
+        this.urlAddPreRequisito = 'api/Curso/InsertarPreRequisito';
+        this.urlDeletePreRequisito = 'api/Curso/EliminarPreRequisito';
+        this.urlBuscarCursoPlanEstudio = 'api/Curso/BuscarEnPlanDeEstudio?codigoCurso=';
     }
 
     obtenerPorPrograma( idPrograma: number ): Observable<Curso[]>{
@@ -57,6 +62,26 @@ export class CursoService {
     eliminar( curso: CursoEliminar ): Observable<void> {
         const cursoAPI = CursoMapper.formDomainToApiEliminar( curso );
         return this.http.delete<void>( this.urlApi + this.urlEliminar, { body: cursoAPI } );
+    }
+
+    addPreRequisito( preRequisito: CursoAddPreRequisito ): Observable<void> {
+        const preRequisitoAPI = CursoMapper.fromDomainToApiAddPreRequisito( preRequisito );
+        return this.http.post<void>( this.urlApi + this.urlAddPreRequisito, preRequisitoAPI );
+    }
+
+    deletePreRequisito( preRequisito: CursoDeletePreRequisito ): Observable<void> {
+        const preRequisitoAPI = CursoMapper.fromDomainToApiDeletePreRequisito( preRequisito );
+        console.log( preRequisitoAPI );
+        
+        return this.http.delete<void>( this.urlApi + this.urlDeletePreRequisito, { body: preRequisitoAPI} );
+    }
+
+    buscarCursoPlanEstudios = ( curso: CursoBuscarPlan): Observable<CursoEncontradoEnPlan[]> => {
+        const cursoAPI = CursoMapper.fromDomainToApiBuscarCursoPlanEstudio( curso );
+        console.log( cursoAPI );
+        
+        return this.http.get<CursoEncontradoEnPlanDataArrayDTO>( this.urlApi + this.urlBuscarCursoPlanEstudio + cursoAPI.codigoCurso )
+            .pipe( map ( responseAPI => responseAPI.data.map( CursoMapper.fromApiToDomainCursoEncontradoEnPlan ) ))
     }
 
 }

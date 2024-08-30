@@ -46,4 +46,14 @@ export interface ListarLocalesAsignados {
     programaConLocales:AsignacionLocal[]
 }
 
+export type AsignacionProgramaCambiarDirector = Pick<AsignacionPrograma, 'idDirector' | 'idPrograma'> & {
+    idSemestre: number,
+    usuarioId: number
+}
+
+
+export type AsignacionCambiarDecano = Pick<AsignacionProgramaCambiarDirector, 'idPrograma' | 'idSemestre' | 'usuarioId' > & {
+    idDecano: number
+}
+
 export type AsignacionRenderizar = 'Obtener' | ''
