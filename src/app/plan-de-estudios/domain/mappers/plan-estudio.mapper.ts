@@ -1,5 +1,6 @@
 import { CursoPlanEliminarDTO, CursoPlanListarDTO, PlanEstudioAddDTO, PlanEstudioCursoInsertarDTO, PlanEstudioDTO, PlanEstudioEditCUDTO, PlanEstudioEditDEDTO, PlanEstudioEliminarDTO } from "../../infraestructure/dto/plan-estudio.dto";
 import { CursoPlanEliminar, CursoPlanListar, PlanEstudio, PlanEstudioAdd, PlanEstudioCursoInsertar, PlanEstudioEditCU, PlanEstudioEditDE, PlanEstudioEliminar } from "../models/plan-estudio.model";
+import { CursoMapper } from "./curso.mapper";
 
 export class PlanEstudioMapper {
     static fromApiToDomain( param: PlanEstudioDTO ): PlanEstudio {
@@ -75,10 +76,26 @@ export class PlanEstudioMapper {
     }
 
     static formApiToDomainCursoPlanListar( param: CursoPlanListarDTO ): CursoPlanListar {
+
+        const preRequisitos = param.prerequisito.map( CursoMapper.fromApiToDomainPreRequisito );
+
+
         return {
-            idCursoPlan: param.CodigoCursoPlan,
-            descripcion: param.Descripcion,
-            nombreCurso: param.Nombre
+            id: param.codigoCurso,
+            idPrograma: param.codigoProgramaAcademico,
+            idCiclo: param.codigoCiclo,
+            definicionCiclo: param.denominacionResumidaCiclo,
+            codigoCurso: param.codigoInterno,
+            nombreCurso: param.nombre,
+            tipoEstudio: param.tipoDeEstudio,
+            tipoCurso: param.tipoDeCurso,
+            competencia: param.competencia,
+            horasTeoricas: param.ht,
+            horasPracticas: param.hp,
+            totalHoras: param.tHoras,
+            totalCreditos: param.tCreditos,
+            preRequisitos: preRequisitos,
+            descripcion: param.descripcion
         }
     }
 

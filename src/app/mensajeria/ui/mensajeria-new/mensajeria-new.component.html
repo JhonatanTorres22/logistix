@@ -138,7 +138,12 @@
     
     <!-- {{ getAsunto( tipoMensajeForm.value.tipoMensaje  ) | json }} -->
     <quill-editor class="w-100 h-9rem bg-white" placeholder="" [(ngModel)]="mensaje"></quill-editor>
-    
+    <!-- @if ( showUpload ) {
+        <ui-uploader-files class="w-30rem" [showButton]="false"></ui-uploader-files>
+    }
+    @if ( file().files.length == 0 ) {
+        <ui-button icon="ti ti-file-upload" (onClick)="showUploader()" > Adjuntar archivos </ui-button>
+    } -->
     <div class="flex justify-content-end my-2">
       <ui-button
         label="Cancelar"

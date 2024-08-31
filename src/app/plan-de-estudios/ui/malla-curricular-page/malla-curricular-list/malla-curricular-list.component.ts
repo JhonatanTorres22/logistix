@@ -33,7 +33,7 @@ import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-ite
 })
 export class MallaCurricularListComponent implements OnInit {
 
-  cursosByCiclos = this.cursoSignal.cursosByCiclos;
+  cursosPlanByCiclos = this.cursoSignal.cursosPlanByCiclos;
   cursosPlan: CursoPlanListar[] = []
   cicloList = this.cicloSignal.cicloList;
   planEstudioSelect = this.signal.planEstudioSelect;
@@ -77,27 +77,28 @@ export class MallaCurricularListComponent implements OnInit {
 
         this.cursosPlan = cursosPlan;
         console.log( cursosPlan );
-        // const cursoByCiclo = cursosPlan.reduce( ( a: CursoByCiclo[], b: Curso ) => {
+        const cursoByCiclo = cursosPlan.reduce( ( a: CursoByCiclo[], b: Curso ) => {
 
-        //   const existeCiclo = a.findIndex( a => a.idCiclo == b.idCiclo);
-        //     if( existeCiclo == -1 ) {
+          const existeCiclo = a.findIndex( a => a.idCiclo == b.idCiclo);
+            if( existeCiclo == -1 ) {
 
-        //       const newCiclo: CursoByCiclo = {
-        //         // ciclo: b.id,
-        //         idCiclo: b.idCiclo,
-        //         cursos: [b]
-        //       }
-        //       a.push( newCiclo )
-        //       return a
-        //     }
+              const newCiclo: CursoByCiclo = {
+                // ciclo: b.id,
+                idCiclo: b.idCiclo,
+                ciclo: b.definicionCiclo,
+                cursos: [b]
+              }
+              a.push( newCiclo )
+              return a
+            }
 
-        //     a[existeCiclo].cursos.push( b );
+            a[existeCiclo].cursos.push( b );
 
 
-        //   return a
-        // }, [] )
-        // console.log( cursoByCiclo );
-        // this.cursosByCiclos.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
+          return a
+        }, [] )
+        console.log( cursoByCiclo );
+        this.cursosPlanByCiclos.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
 
       }, error: ( error ) => {
         console.log(error);
@@ -131,6 +132,33 @@ export class MallaCurricularListComponent implements OnInit {
 
   onEliminarConfirm = () => {
     
+  }
+
+  hoverClass = ( curso: Curso) => {
+    // this.buttons.nativeElement.classList.remove('hidden')
+    // console.log( this.buttons.nativeElement );
+    // const buttonId = 
+    document.getElementById(curso.id.toString())?.classList.remove('hidden')
+    document.getElementById(curso.id.toString())?.classList.add('flex')
+    curso.preRequisitos.map( cursoPre => {
+      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.add( 'bg-yellow-200', 'text-yellow-700');
+      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.add('absolute','-mb-4');
+    })
+
+  }
+
+  removeClass = ( curso: Curso ) => {
+    // this.buttons.nativeElement.classList.add('hidden')
+    document.getElementById(curso.id.toString())?.classList.add('hidden');
+    document.getElementById(curso.id.toString())?.classList.remove('flex');
+    curso.preRequisitos.map( cursoPre => {
+      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.remove( 'bg-yellow-200', 'text-yellow-700');
+      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.remove('absolute');
+
+    })
+
+
+
   }
 
 }

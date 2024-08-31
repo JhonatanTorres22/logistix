@@ -33,6 +33,7 @@ export class CursoSingal {
         idPrograma: 0,
         descripcion: '',
         idCiclo: 0,
+        definicionCiclo: '',
         codigoCurso: '',
         nombreCurso: '',
         tipoEstudio: '',
@@ -46,13 +47,13 @@ export class CursoSingal {
     }
     cursoCicloSelectDefault: CursoByCiclo = {
 
-        // ciclo: '',
+        ciclo: '',
         cursos: [],
         idCiclo: 0
         
     }
     cursoByClicloDefault: CursoByCiclo = {
-        // ciclo: '',
+        ciclo: '',
         idCiclo: 0,
         cursos: []
     }
@@ -63,6 +64,7 @@ export class CursoSingal {
 
     cursosByCiclo = signal( this.cursoByClicloDefault );
     cursosByCiclos = signal( this.cursoByCliclosDefault );
+    cursosPlanByCiclos = signal( this.cursoByCliclosDefault );
 
     cursoSelect = signal( this.cursoDafault );
     cursoSelectPreRequisito = signal( this.cursoDafault );

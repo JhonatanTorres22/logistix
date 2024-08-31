@@ -1,3 +1,5 @@
+import { CursoDTO } from "./curso.dto"
+
 export interface PlanEstudioDTO {
     codigoPlanDeEstudio: number,
     codigoProgramaAcademico: number,
@@ -46,11 +48,7 @@ export type PlanEstudioCursoInsertarDTO = {
 }
 
 
-export interface CursoPlanListarDTO {
-    CodigoCursoPlan: number,
-    Nombre: string,
-    Descripcion: string
-}
+export type CursoPlanListarDTO = CursoDTO; 
 
 export interface CursoPlanListarDataArrayDTO {
     data: CursoPlanListarDTO[]

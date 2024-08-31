@@ -105,6 +105,7 @@ export class CursoListComponent implements OnInit {
               const newCiclo: CursoByCiclo = {
                 // ciclo: b.id,
                 idCiclo: b.idCiclo,
+                ciclo: b.definicionCiclo,
                 cursos: [b]
               }
               a.push( newCiclo )
@@ -323,19 +324,29 @@ export class CursoListComponent implements OnInit {
 
   }
 
-  hoverClass = ( id: string) => {
+  hoverClass = ( curso: Curso) => {
     // this.buttons.nativeElement.classList.remove('hidden')
     // console.log( this.buttons.nativeElement );
     // const buttonId = 
-    document.getElementById(id)?.classList.remove('hidden')
-    document.getElementById(id)?.classList.add('flex')
+    document.getElementById(curso.id.toString())?.classList.remove('hidden')
+    document.getElementById(curso.id.toString())?.classList.add('flex')
+    curso.preRequisitos.map( cursoPre => {
+      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.add( 'bg-yellow-200', 'text-yellow-700');
+      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.add('absolute','-mb-4');
+    })
 
   }
 
-  removeClass = ( id: string ) => {
+  removeClass = ( curso: Curso ) => {
     // this.buttons.nativeElement.classList.add('hidden')
-    document.getElementById(id)?.classList.add('hidden')
-    document.getElementById(id)?.classList.remove('flex')
+    document.getElementById(curso.id.toString())?.classList.add('hidden');
+    document.getElementById(curso.id.toString())?.classList.remove('flex');
+    curso.preRequisitos.map( cursoPre => {
+      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.remove( 'bg-yellow-200', 'text-yellow-700');
+      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.remove('absolute');
+
+    })
+
 
 
   }

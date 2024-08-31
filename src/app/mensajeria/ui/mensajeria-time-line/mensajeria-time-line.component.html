@@ -5,7 +5,7 @@
         <p-timeline [value]="hitos" align="alternate" styleClass="customized-timeline">
             <ng-template pTemplate="marker" let-rol>
                 <span 
-                    class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1" [ngClass]="{'myAnim': rol.orden == rol.nMensajes}"
+                    class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1" [ngClass]="{'myAnim': rol.orden == (rol.nMensajes + 1)}"
                     [style]="{ 'background-color': 'red' }">
                         <!-- <i class="rol.icon" [ngClass]="{'myAnim': rol.orden == rol.nMensajes}"></i> -->
                         <!-- <span class="border-circle bg-green-500 circulo">.</span> -->
@@ -37,6 +37,13 @@
                         </div> -->
                     } @else {
                         <span class="text-gray-900 f-12 font-bold text-accent-500">{{ rol.emisor }}</span>
+
+                        @if ( tipoBandeja() == 'Archivados') {
+                            <div class="border-round p-2 font-bold" [ngClass]="( rol.nMensajes +1 ) == hitos.length && selectMensaje().receptor == selectMensaje().usuarioCierre ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                                {{ ( rol.nMensajes +1 ) == hitos.length && selectMensaje().receptor == selectMensaje().usuarioCierre ? 'Aprobado' : 'Rechazado'}} por {{ selectMensaje().usuarioCierre }}
+                                <p class="f-12 text-accent-500 pt-1 f-w-400">{{ selectMensaje().fechaCierre | date: 'dd/MM/yyyy hh:mm:ss' }}</p>
+                        </div>
+                        }
                     }
 
             </ng-template>

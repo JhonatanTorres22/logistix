@@ -4,6 +4,7 @@ export interface CursoDTO {
     codigoCurso: number,
     codigoProgramaAcademico: number,
     codigoCiclo: number,
+    denominacionResumidaCiclo: string,
     codigoInterno: string,
     nombre: string,
     descripcion: string,
@@ -21,7 +22,7 @@ export interface CursoDTO {
 export type CursoPreRequisitoDTO = Pick<CursoDTO, 'codigoCurso' | 'codigoInterno' | 'nombre'>
 
 
-export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito'> & {
+export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito' | 'denominacionResumidaCiclo'> & {
     // idCompetencia: string,
     // idTipoCurso: string,
     // idTipoEstudio: string,

@@ -142,7 +142,7 @@ export class CursoPageComponent implements OnDestroy {
   eliminarCursoPlan = () => {
     const cursosEliminar: CursoPlanEliminar[] = this.cursosPlan.map( curso => {
       return {
-        idCursoPlan: curso.idCursoPlan,
+        idCursoPlan: curso.id,
         usuarioId: parseInt( this.authSignal.currentRol().id )
       }
     })

@@ -16,7 +16,7 @@
     
                 <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
                     <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-                        {{ getNombreCiclo(ciclo.idCiclo)?.definicion }}
+                        {{ ciclo.ciclo }}
                     </div>
                 </div>
                 <div class="flex flex-column gap-2 example-list"
@@ -35,34 +35,56 @@
                                     cdkDrag
                                     [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 100000 : 0"
                                     [cdkDragDisabled]="preRequisitos().includes( curso )"
-                                    class="flex flex-column justify-content-center align-items-center border-1 border-gray-600 border-round  border-gray-400 cursor-pointer px-2"
-                                    (mouseenter)="hoverClass( curso.id.toString() )"
-                                    (mouseleave)="removeClass( curso.id.toString() )"
-                                    style="min-height: 5rem; max-height: 7rem; min-width: -webkit-fill-available; max-width: -webkit-fill-available;">
+                                    class="flex flex-column justify-content-around align-items-center border-1 border-gray-600 border-round  border-gray-400 cursor-pointer px-2"
+                                    (mouseenter)="hoverClass( curso )"
+                                    (mouseleave)="removeClass( curso )"
+                                    [id]="'pre-'+curso.id"
+                                    style="min-height: 7rem; max-height: 7rem; min-width: -webkit-fill-available; max-width: -webkit-fill-available;">
                                     <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                                    <div class="f-8 bg-primary-200 text-primary-500 px-2 my-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
-                                    <div class="f-12 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
-
+                                    <div class="flex-1 justify-content-start">
+                                        <span class="f-8 bg-primary-200 text-primary-500 px-2 my-1 f-w-500 border-round">{{ curso.codigoCurso }}</span>
+                                    </div>
+                                    <div class="flex-1 f-12 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
+                                    @if( curso.preRequisitos.length > 0 ) {
+                                        <!-- <mat-divider class="py-2"></mat-divider> -->
+                                        <!-- <span class="font-bold f-8">Pre Requisito:</span> -->
+                                        <div class="flex justify-content-around mb-2 gap-2">
+                                            @for (CursoPreRequisito of curso.preRequisitos; track CursoPreRequisito) {
+                                                <!-- <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ CursoPreRequisito.codigoCurso }}</div> -->
+                                                <div class="f-8 m-0 capitalize text-center f-w-600  bg-accent-400 text-accent-700 border-round px-1" [id]="'pre-requisito'+CursoPreRequisito.id">{{ CursoPreRequisito.codigoCurso }}</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="flex justify-content-around mb-2 gap-2">
+                                            <div class="f-8 m-0 capitalize text-center f-w-600 text-white border-round px-1">.</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
+                                        </div>
+                                    }
                                     @if( cursoSelectPreRequisito().id == 0 ) {
                                         <div class="justify-content-around my-2 gap-1 hidden fadein animation-duration-400" [id]="curso.id">
                                             <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
-                                            <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-2rem" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
-                                            <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-2rem" (onClick)="eliminarConfirm( curso )"></ui-button>
+                                            <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-2rem px-1" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
+                                            <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-2rem px-1" (onClick)="eliminarConfirm( curso )"></ui-button>
                                             <ui-button
                                                 color="green"
                                                 tooltip="Agregar Pre Requisito"
-                                                icon="ti ti-shield-lock f-14"
-                                                classButton="h-2rem"
-                                                [matBadge]="curso.preRequisitos.length"
-                                                matBadgePosition="after"
-                                                [matBadgeHidden]="curso.preRequisitos.length == 0"
+                                                
+                                                classButton="h-2rem px-1"
+                                                
                                                 matBadgeColor="warn"
                                                 matBadgeOverlap="false"
                                                 (onClick)="addPreRequisito( curso )">
-        
+                                                <span class="f-10 p-1 border-50">{{ curso.preRequisitos.length }}</span>
+                                                <!-- icon="ti ti-shield-lock f-12" -->
+                                                <!--
+                                                    [matBadge]="curso.preRequisitos.length"
+                                                    matBadgePosition="after"
+                                                    [matBadgeHidden]="curso.preRequisitos.length == 0"
+                                                -->
                                             </ui-button>
+                                            
                                         </div>
                                     }
+                                    
                                 </div>
                             <!-- } -->
                   

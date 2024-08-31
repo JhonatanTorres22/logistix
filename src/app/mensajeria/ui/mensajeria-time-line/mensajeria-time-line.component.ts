@@ -23,6 +23,7 @@ import { animate, trigger } from '@angular/animations';
 export class MensajeriaTimeLineComponent implements OnInit {
 
   selectMensaje = this.signal.selectMensaje;
+  tipoBandeja = this.signal.tipoBandeja;
 
   hitos1: MensajeriaTimeLine2[];
   hitos: MensajeriaTimeLine[];
