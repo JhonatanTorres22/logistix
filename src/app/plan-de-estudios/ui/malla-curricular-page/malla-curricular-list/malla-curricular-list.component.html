@@ -13,43 +13,52 @@
 </div>
 }
 
-@if ( cursosPlan.length == 0 ) {
+@if ( cursosPlanByCiclos().length == 0 ) {
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
 <div class="row">
-    @for (curso of cursosPlan; track curso) {
+    @for (ciclo of cursosPlanByCiclos(); track ciclo) {
         <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
     
             <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
                 <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
-                    <!-- {{ getNombreCiclo(ciclo.idCiclo)?.definicion || 'Ciclo' }} -->
-                      Ciclo I
+                    {{ciclo.ciclo || 'Ciclo' }}
+                      <!-- Ciclo I -->
                 </div>
             </div>
             <div class="flex flex-column gap-2 example-list"
 >
-                <div class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
+                <!-- <div class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
                     style="min-height: 5rem; max-height: 7rem;">
-                    <!-- <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div> -->
-                    <div class="f-8 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
+                    <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
+                    <div class="f-8 m-0 capitalize text-center f-w-600">{{ ciclo.ciclo }}</div>
                     <div class="flex justify-content-around my-2 gap-2 f-10">
                         {{ curso.descripcion }}
                     </div>
-                </div>
-                <!-- @for ( curso of ciclo.cursos; track curso) {
+                </div> -->
+                @for ( curso of ciclo.cursos; track curso) {
                     
                     <div
-                        
-                        class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
-                        style="min-height: 5rem; max-height: 7rem;">
+                        (mouseenter)="hoverClass( curso )"
+                        (mouseleave)="removeClass( curso )"
+                        [id]="'pre-'+curso.id"
+                        class="flex flex-column align-item-center justify-content-start border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
+                        style="min-height: 7rem; max-height: 7rem;">
                         <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
-                        <div class="f-8 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
-                        <div class="flex justify-content-around my-2 gap-2">
-
-                        </div>
+                        <div class="f-10 m-0 capitalize text-center font-bold">{{ curso.nombreCurso }}</div>
+                        @if( curso.preRequisitos.length > 0 ) {
+                            <mat-divider class="py-2"></mat-divider>
+                            <span class="font-bold f-8">Pre Requisito:</span>
+                            <div class="flex justify-content-around my-2 gap-2">
+                                @for (CursoPreRequisito of curso.preRequisitos; track CursoPreRequisito) {
+                                    <!-- <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ CursoPreRequisito.codigoCurso }}</div> -->
+                                    <div class="f-8 m-0 capitalize text-center f-w-600  bg-accent-400 text-accent-700 border-round px-1" [id]="'pre-requisito'+CursoPreRequisito.id">{{ CursoPreRequisito.codigoCurso }}</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
+                                }
+                            </div>
+                        }
                     </div>
     
-                } -->
+                }
             </div>
 
         </div>

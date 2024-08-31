@@ -129,6 +129,7 @@ export class MensajeriaFlujoNavegacionComponent {
         // this.signal.setMensajeriaDataAsignacionDefault();
         this.signal.setMensajeriaDataAsignacionDefault();
         this.signal.renderizarMensajes.set( 'Respuesta' );
+        this.signal.file.set( this.signal.fileDefault );
         this.showFormResponse.set( false );
 
       }, error: ( error ) => {

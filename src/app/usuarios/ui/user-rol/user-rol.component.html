@@ -1,158 +1,171 @@
-<ng-scrollbar style="height: calc(100vh - 155px)" visibility="hover">
-    <div class="customer-details-card p-20">
-      <div class="row">
-            <div class="col-12">
-            <app-card [showHeader]="false" padding="5" cardClass="mb-0">
-              <div class="personal-info">
-                <div class="text-center m-t-4 flex justify-content-left w-full overflow-hidden " style="box-sizing: border-box;">
-                  <img src="assets/images/user/avatar-5.jpg" class="img-fluid wid-60 border-50" alt="avatar" />
-                  <div class="flex flex-column text-left ml-3 align-self-center">
-                    <div class="f-16 f-w-600">{{ usuario.apellidoPaterno +' '+ usuario.apellidoMaterno +' '+ usuario.nombres}}</div>
-                    <p class="text-muted text-xs" >{{ usuario.correoInstitucional}}</p>
-                  </div>
-                </div>
-              </div>
-            </app-card>
-            </div>
-        
-            <div class="col-6">
-
-                <app-card cardTitle="Roles" [padding]="20">
-                    @if (roles.length == 0) {
-                        <!-- {{ roles | json }} -->
-                        <div class="mt-5 text-center">
-                            <span class="text-gray-600 f-16">NO HAY ROLES PARA ASIGNAR</span>
-                        </div>
-                    }
-                    <div
-                        cdkDropList
-                        #todoList="cdkDropList"
-                        [cdkDropListData]="(this.roles)"
-                        [cdkDropListConnectedTo]="[doneList]"
-                        class="example-list"
-                        (cdkDropListDropped)="drop($event, 'eliminar')">
-                        @for (rol of roles; track rol) {
-                        <div class="example-box" cdkDrag>{{rol.rol}}</div>
-                        }
-                        <!-- @for (deleteRol of deleteRoles; track deleteRol) {
-                        <div class="example-box" cdkDrag>{{deleteRol.rol}}</div>
-                        } -->
-                    </div>
-                    <!-- <div class="personal-details">
-                        <ul class="list-group-flush">
-                            @for (rol of roles; track rol) {
-                                <li>
-                                    {{ rol.rol }}
-           
-                                </li>
-                            
-                            
-                            }
-                        </ul>
-                    </div> -->
-                </app-card>
-
-            </div>
-            <div class="col-6">
-                <app-card cardTitle="Roles Asignados" [padding]="20">
-                    <div
-                    
-                    cdkDropList
-                    #doneList="cdkDropList"
-                    [cdkDropListData]="(this.usuariosRol)"
-                    [cdkDropListConnectedTo]="[todoList]"
-                    class="example-list"
-                    (cdkDropListDropped)="drop($event, 'asignar')">
-                    @for (userRol of usuariosRol; track userRol) {
-                    <div (click)="setRol(userRol)" class="example-box flex flex-column lg:flex-row" cdkDrag>
-                    <span class="font-bold mx-4">{{ userRol.rol }}</span>
-                        
-                        <div class="flex flex-column w-full sm:ml-6">
-                            @if ( userRol.usuario && currentRol().rol ==='Administrador' ) {
-                                <mat-slide-toggle
-                                            class="f-w-500 "
-                                            color="primary"
-                                            [checked]="userRol.estado == 'ACTIVO' ? true : false"
-                                            (change)="changeEstadoRol($event, userRol)"
-                                        >
-                                            {{ userRol.estado }}
-                                </mat-slide-toggle>
-                                @if (!(userRol.rol.startsWith('Director'))) {
-                                <mat-slide-toggle
-                                            class="f-w-500"
-                                            color="primary"
-                                            [checked]="userRol.alta == 'ALTA'"
-                                            (change)="changeAltaRol($event, userRol)"
-                                                    
-                                        >
-                                            {{ userRol.alta }}
-                                </mat-slide-toggle>
-                                }
-
-                                @else {
-                                    <div class="mt-2 p-1 border-round text-center"
-                                    [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
-                                    'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
-                                }
-                            }
-                            @else {
-                                <div class="mt-1 ml-3 border-round text-center" 
-                                [ngClass]="{'bg-red-100 text-red-700': userRol.estado === 'SUSPENDIDO',
-                                'bg-green-100 text-green-700' : userRol.estado === 'ACTIVO'}">{{userRol.estado}}</div> 
-
-                                <div class="mt-1 ml-3 border-round text-center"
-                                [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
-                                'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
-                            }
-                        </div>
-                        <!-- {{userRol.rol}} -->
-                    </div>
-                    }
-                    <!-- @for (newRol of newRoles; track newRol) {
-                        <div class="example-box" cdkDrag> -->
-                            <!-- <mat-slide-toggle
-                                            class="f-w-500"
-                                            color="primary"
-                                            [checked]="userRol.estado == 'ACTIVO' ? true : false"
-                                            (change)="changeEstado($event, userRol)"
-                                        >
-                                            {{ newR.rol }}
-                            </mat-slide-toggle> -->
-                            <!-- {{newRol.rol}}
-                        </div>
-                    } -->
-                </div>
-                    <!-- <div class="personal-details">
-                        <ul class="list-group-flush">
-                            @for (userRol of usuariosRol; track userRol) {
-                                <li>
-                                    <mat-slide-toggle
-                                        class="f-w-500"
-                                        color="primary"
-                                        [checked]="userRol.estado == 'ACTIVO' ? true : false"
-                                        
-                                    >
-                                        {{ userRol.rol }}
-                                    </mat-slide-toggle>
-                                </li>
-                            
-                            
-                            }
-                        </ul>
-                    </div> -->
-                </app-card>
-            </div>
-        </div>
-    </div>
-
-</ng-scrollbar>
-
-<div class="flex align-item-center justify-content-between mr-3">
-    <div class="flex-grow-1 text-end">
-    <button mat-button mat-dialog-close="cancelar" class="m-r-10">Cerrar</button>
-    <button [disabled]="newRoles.length == 0 && deleteRoles.length == 0" (click)="guardar()" mat-flat-button color="primary">Guardar</button>
-    </div>
+<div class="flex justify-content-between">
+    <div class="f-20 f-w-600" mat-dialog-title > Asignación de Roles </div>
+    <a class="flex justify-content-center m-2 avatar avatar-s modal-close" mat-dialog-close="cancelar"><i class="ti ti-x f-20"></i></a>
 </div>
+<mat-dialog-content>
+    <!-- <ng-scrollbar style="height: calc(100vh - 155px)" visibility="hover"> -->
+        <div class="customer-details-card p-20">
+            <div class="row">
+                  <div class="col-12">
+                  <app-card [showHeader]="false" padding="5" cardClass="mb-0">
+                    <div class="personal-info">
+                      <div class="text-center m-t-4 flex justify-content-left w-full overflow-hidden " style="box-sizing: border-box;">
+                        <img src="assets/images/user/avatar-5.jpg" class="img-fluid wid-60 border-50" alt="avatar" />
+                        <div class="flex flex-column text-left ml-3 align-self-center">
+                          <div class="f-16 f-w-600">{{ usuario.apellidoPaterno +' '+ usuario.apellidoMaterno +' '+ usuario.nombres}}</div>
+                          <p class="text-muted text-xs" >{{ usuario.correoInstitucional}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </app-card>
+                  </div>
+              
+                  <div class="col-6">
+      
+                      <app-card cardTitle="Roles" [padding]="20">
+                          @if (roles.length == 0) {
+                              <!-- {{ roles | json }} -->
+                              <div class="mt-5 text-center">
+                                  <span class="text-gray-600 f-16">NO HAY ROLES PARA ASIGNAR</span>
+                              </div>
+                          }
+                          <div
+                              cdkDropList
+                              #todoList="cdkDropList"
+                              [cdkDropListData]="(this.roles)"
+                              [cdkDropListConnectedTo]="[doneList]"
+                              class="example-list"
+                              (cdkDropListDropped)="drop($event, 'eliminar')">
+                              @for (rol of roles; track rol) {
+                              <div class="example-box" cdkDrag>{{rol.rol}}</div>
+                              }
+                              <!-- @for (deleteRol of deleteRoles; track deleteRol) {
+                              <div class="example-box" cdkDrag>{{deleteRol.rol}}</div>
+                              } -->
+                          </div>
+                          <!-- <div class="personal-details">
+                              <ul class="list-group-flush">
+                                  @for (rol of roles; track rol) {
+                                      <li>
+                                          {{ rol.rol }}
+                 
+                                      </li>
+                                  
+                                  
+                                  }
+                              </ul>
+                          </div> -->
+                      </app-card>
+      
+                  </div>
+                  <div class="col-6">
+                      <app-card cardTitle="Roles Asignados" [padding]="20" cardClass="absolute mr-5">
+                          <div
+                          
+                          cdkDropList
+                          #doneList="cdkDropList"
+                          [cdkDropListData]="(this.usuariosRol)"
+                          [cdkDropListConnectedTo]="[todoList]"
+                          class="example-list"
+                          (cdkDropListDropped)="drop($event, 'asignar')">
+                          @for (userRol of usuariosRol; track userRol) {
+                          <div (click)="setRol(userRol)" class="example-box flex flex-column lg:flex-row" cdkDrag>
+                          <span class="font-bold mx-4">{{ userRol.rol }}</span>
+                              
+                              <div class="flex flex-column w-full sm:ml-6">
+                                  @if ( userRol.usuario && currentRol().rol ==='Administrador' ) {
+                                      <mat-slide-toggle
+                                                  class="f-w-500 "
+                                                  color="primary"
+                                                  [checked]="userRol.estado == 'ACTIVO' ? true : false"
+                                                  (change)="changeEstadoRol($event, userRol)"
+                                              >
+                                                  {{ userRol.estado }}
+                                      </mat-slide-toggle>
+                                      @if (!(userRol.rol.startsWith('Director'))) {
+                                      <mat-slide-toggle
+                                                  class="f-w-500"
+                                                  color="primary"
+                                                  [checked]="userRol.alta == 'ALTA'"
+                                                  (change)="changeAltaRol($event, userRol)"
+                                                          
+                                              >
+                                                  {{ userRol.alta }}
+                                      </mat-slide-toggle>
+                                      }
+      
+                                      @else {
+                                          <div class="mt-2 p-1 border-round text-center"
+                                          [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
+                                          'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
+                                      }
+                                  }
+                                  @else {
+                                      <div class="mt-1 ml-3 border-round text-center" 
+                                      [ngClass]="{'bg-red-100 text-red-700': userRol.estado === 'SUSPENDIDO',
+                                      'bg-green-100 text-green-700' : userRol.estado === 'ACTIVO'}">{{userRol.estado}}</div> 
+      
+                                      <div class="mt-1 ml-3 border-round text-center"
+                                      [ngClass]="{'bg-red-100 text-red-700': userRol.alta === 'NO ALTA',
+                                      'bg-green-100 text-green-700' : userRol.alta === 'ALTA'}">{{userRol.alta}}</div> 
+                                  }
+                              </div>
+                              <!-- {{userRol.rol}} -->
+                          </div>
+                          }
+                          <!-- @for (newRol of newRoles; track newRol) {
+                              <div class="example-box" cdkDrag> -->
+                                  <!-- <mat-slide-toggle
+                                                  class="f-w-500"
+                                                  color="primary"
+                                                  [checked]="userRol.estado == 'ACTIVO' ? true : false"
+                                                  (change)="changeEstado($event, userRol)"
+                                              >
+                                                  {{ newR.rol }}
+                                  </mat-slide-toggle> -->
+                                  <!-- {{newRol.rol}}
+                              </div>
+                          } -->
+                      </div>
+                          <!-- <div class="personal-details">
+                              <ul class="list-group-flush">
+                                  @for (userRol of usuariosRol; track userRol) {
+                                      <li>
+                                          <mat-slide-toggle
+                                              class="f-w-500"
+                                              color="primary"
+                                              [checked]="userRol.estado == 'ACTIVO' ? true : false"
+                                              
+                                          >
+                                              {{ userRol.rol }}
+                                          </mat-slide-toggle>
+                                      </li>
+                                  
+                                  
+                                  }
+                              </ul>
+                          </div> -->
+                      </app-card>
+                  </div>
+              </div>
+          </div>
+      
+      <!-- </ng-scrollbar> -->
+</mat-dialog-content>
+
+
+    <!-- <div class="flex align-item-center justify-content-between mr-3">
+        <div class="flex-grow-1 text-end">
+        <button mat-button mat-dialog-close="cancelar" class="m-r-10">Cerrar</button>
+        <button [disabled]="newRoles.length == 0 && deleteRoles.length == 0" (click)="guardar()" mat-flat-button color="primary">Guardar</button>
+        </div>
+    </div> -->
+
+
+<mat-dialog-actions align="end">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" [disabled]="newRoles.length == 0 && deleteRoles.length == 0" (onClick)="guardar()">Guardar</ui-button>
+</mat-dialog-actions>
 
 
 <!-- 

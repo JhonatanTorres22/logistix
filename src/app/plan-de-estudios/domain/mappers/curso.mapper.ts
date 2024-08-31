@@ -12,6 +12,7 @@ export class CursoMapper {
             id: param.codigoCurso,
             idPrograma: param.codigoProgramaAcademico,
             idCiclo: param.codigoCiclo,
+            definicionCiclo: param.denominacionResumidaCiclo,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombre,
             tipoEstudio: param.tipoDeEstudio,

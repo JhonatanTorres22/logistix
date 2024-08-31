@@ -1,3 +1,5 @@
+import { Curso } from "./curso.model"
+
 export interface PlanEstudio {
     id: number,
     idProgramaAcademico: number,
@@ -42,11 +44,7 @@ export type PlanEstudioCursoInsertar = {
 }
 
 
-export interface CursoPlanListar {
-    idCursoPlan: number,
-    nombreCurso: string,
-    descripcion: string
-}
+export type CursoPlanListar = Curso;
 
 
 export interface CursoPlanEliminar {

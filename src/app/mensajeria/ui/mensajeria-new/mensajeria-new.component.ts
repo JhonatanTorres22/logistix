@@ -29,6 +29,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
 import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
 import { PlanEstudioCardComponent } from 'src/app/plan-de-estudios/ui/plan-estudio-card/plan-estudio-card.component';
 import { ProgramaFacultad } from 'src/app/programas-academicos/domain/models/programa.model';
+import { UiUploaderFilesComponent } from 'src/app/core/components/ui-uploader-files/ui-uploader-files.component';
 
 
 @Component({
@@ -43,7 +44,7 @@ import { ProgramaFacultad } from 'src/app/programas-academicos/domain/models/pro
     ProgramaCardComponent,
     UiInputComponent,
     PlanEstudioCardComponent,
-
+    UiUploaderFilesComponent,
     ],
   templateUrl: './mensajeria-new.component.html',
   styleUrl: './mensajeria-new.component.scss'
@@ -58,7 +59,11 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
   tiposMensajesGrupo = this.signal.tiposMensajesGrupo;
   programasGlobal = this.programaSignal.programasGlobal;
   isModal = this.planEstudioSignal.isModal;
+  file = this.signal.file;
+
   planEstudioEdit = this.planEstudioSignal.planEstudioEdit;
+  showUpload: boolean = false;
+
   idPrograma: number = 0;
   planEstudio: PlanEstudio = {
     archivo: '',
@@ -362,6 +367,7 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
 
           if( decanoRolIsAlta.length == 0 ) {
             resolve( false )
+            return
           }
           decanoRolIsAlta[0].alta == 'ALTA' ? resolve( true ) : resolve( false )
         }, error: ( error ) => {
@@ -641,6 +647,10 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
         
       }
     })
+  }
+
+  showUploader = () => {
+    this.showUpload = !this.showUpload;
   }
 
 }

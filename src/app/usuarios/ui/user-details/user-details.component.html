@@ -1,14 +1,14 @@
-<div class="customer-details-header">
+<!-- <div class="customer-details-header">
     <div class="flex align-item-center justify-content-between">
       <div class="f-w-600 f-16">Información de Usuario</div>
       <a class="avatar avatar-s modal-close" mat-dialog-close>
         <i class="ti ti-x f-20"></i>
       </a>
     </div>
-</div>
+</div> -->
 @if( component == 'user-existente' ) {
 
-  <ng-scrollbar style="height: calc(100vh - 155px)" visibility="hover">
+  <!-- <ng-scrollbar style="height: calc(100vh - 155px)" visibility="hover"> -->
     <div class="customer-details-card p-20">
       <div class="row">
         <div class="col-lg-5">
@@ -78,22 +78,19 @@
         </div>
       </div>
     </div>
-  </ng-scrollbar>
+  <!-- </ng-scrollbar> -->
 
 }
 @else {
   <user-rol [usuario]="usuario"></user-rol>
 }
   
-  <ng-template #actionTemplate>
+  <!-- <ng-template #actionTemplate>
     <div class="flex align-item-center justify-content-between">
-      <!-- <a href="javascript:" class="avatar avatar-s text-warn-500">
-        <i class="ti ti-trash f-18"></i>
-      </a> -->
+  
       <div class="flex-grow-1 text-end">
         <button mat-button mat-dialog-close="cancelar" class="m-r-10">Cerrar</button>
-        <!-- <button [disabled]="formUserAdd.invalid" (click)="onSubmit()" mat-flat-button color="primary">{{ usuarioToEdit ? 'Editar' : 'Crear'}}</button> -->
-        <!-- <input type="submit" mat-flat-button color="primary" value="Crear"> -->
+      
       </div>
     </div>
-  </ng-template>
+  </ng-template> -->

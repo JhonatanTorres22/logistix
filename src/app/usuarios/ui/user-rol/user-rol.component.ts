@@ -16,6 +16,7 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -26,7 +27,7 @@ const DragConfig = {
 @Component({
   selector: 'user-rol',
   standalone: true,
-  imports: [ CommonModule, SharedModule],
+  imports: [ CommonModule, SharedModule, UiButtonComponent],
   templateUrl: './user-rol.component.html',
   styleUrl: './user-rol.component.scss',
   providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
