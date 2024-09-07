@@ -27,7 +27,7 @@
                   <div class="flex align-item-start w-full">  <!-- {{toggle() ? 'md:w-15rem lg:w-17rem xl:w-full' : 'md:w-15rem lg:w-17rem xl:w-full'}} -->
                     <img src="assets/images/user/avatar-3.png" alt="user-image" class="img-user wid-50 border-50" />
                     <div class="{{ mail.leido ? 'f-w-600' : 'f-w-600'}} f-14 m-l-10 text-truncate w-full">
-                      <span class="capitalize">{{ mail.emisor.toLowerCase() }}</span>
+                      <span class="capitalize flex justify-content-between">{{ mail.emisor.toLowerCase() }} <mensajeria-estado [small]="true"></mensajeria-estado></span>
                       <div class="flex-grow-1 details">
                         <p class="{{ mail.leido ? 'f-w-400' : 'f-w-600'}} m-b-0 text-truncate f-14"  appRemoveHtml>
                           {{ mail.mensaje }}

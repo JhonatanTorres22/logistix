@@ -39,7 +39,9 @@ export interface MensajeriaRecibidosDTO {
 export type MensajeriaEnviadosDTO = Omit<MensajeriaRecibidosDTO, 'leido'>;
 export type MensajeriaArchivadosDTO = MensajeriaRecibidosDTO & {
     usuarioCierre: string,
+    rolCierre: string,
     fechaCierre: string,
+    estadoCierre: string,
 }
 
 export type MensajeriaHistorialMensajesDTO = Omit<MensajeriaRecibidosDTO, 'nombreTipoMensajeGrupo' | 'nombreTipoMensaje' | 'rol' | 'leido' | 'fechaVencimiento'> & {

@@ -17,3 +17,4 @@ export interface IValidator {
     expReg: RegExp,
     expRegInput: RegExp,
 }
+

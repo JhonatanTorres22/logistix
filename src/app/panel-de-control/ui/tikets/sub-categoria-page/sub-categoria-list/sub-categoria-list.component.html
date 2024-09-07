@@ -1,0 +1,17 @@
+<div class="flex flex-column gap-2">
+    @for ( subCategoria of subCategorias(); track subCategoria ) {
+
+        <div class="flex justify-content-between align-items-center"
+
+        >
+            <div class="border-3xl border-round bg-accent-300 text-accent-700 px-2">{{ subCategoria.nombre }} (5)</div>
+            <div class="flex gap-2 hidden" [id]="subCategoria.id">
+                <div class="text-red-700 border-round px-1 cursor-pointer bg-red-100" (click)="deleteConfirm( subCategoria )"><i class="ti ti-trash"></i></div>
+            </div>
+        
+            <!-- <div class="text-primary-700 px-2">
+                <ui-button-icon icon="ti ti-edit"></ui-button-icon>
+            </div> -->
+        </div>
+    }
+</div>

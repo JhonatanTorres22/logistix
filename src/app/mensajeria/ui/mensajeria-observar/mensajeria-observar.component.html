@@ -1,16 +1,35 @@
 <mat-dialog-content>
-    <form>
-        <ui-select
-            classInput="small"
-            class="w-full"
-            [options]="options"
-            formControlName="categoria"
-            (selectionChange)="seleccionarCategoria( $event.value )"
-            >
-        </ui-select>
+    <form [formGroup]="formObservar">
+        <div class="row">
+            <div class="col-6">
+                <ui-select
+                    classInput="small"
+                    label="Categoría"
+                    class="w-full"
+                    [options]="categoriaSelectedOptions()"
+                    formControlName="categoria"
+                    (selectionChange)="seleccionarSubCategoria( $event.value )"
+                    >
+                </ui-select>
+            </div>
+            <div class="col-6">
+                <ui-select
+                    classInput="small"
+                    label="Sub Categoría"
+                    class="w-full"
+                    [options]="subCategoriaSelectedOptions()"
+                    formControlName="subCategoria"
+                    (selectionChange)="subCategoriaSelected( $event.value )"
+                >
+                </ui-select>
+            </div>
+        </div>
+        
     </form>
+    <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
+
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-    <ui-button color="primary" >Guardar</ui-button>
+    <ui-button color="primary" [disabled]="formObservar.invalid || mensaje == '' || mensaje == null" (onClick)="submit()">Enviar</ui-button>
 </mat-dialog-actions>

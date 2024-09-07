@@ -39,8 +39,8 @@
                         <span class="text-gray-900 f-12 font-bold text-accent-500">{{ rol.emisor }}</span>
 
                         @if ( tipoBandeja() == 'Archivados') {
-                            <div class="border-round p-2 font-bold" [ngClass]="( rol.nMensajes +1 ) == hitos.length && selectMensaje().receptor == selectMensaje().usuarioCierre ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
-                                {{ ( rol.nMensajes +1 ) == hitos.length && selectMensaje().receptor == selectMensaje().usuarioCierre ? 'Aprobado' : 'Rechazado'}} por {{ selectMensaje().usuarioCierre }}
+                            <div class="border-round p-2 font-bold" [ngClass]="selectMensaje().estadoCierre == 'CierreForzado' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'">
+                                {{ selectMensaje().estadoCierre == 'CierreForzado' ? 'Rechazado' : 'Aprobado'}} por {{ selectMensaje().usuarioCierre }}
                                 <p class="f-12 text-accent-500 pt-1 f-w-400">{{ selectMensaje().fechaCierre | date: 'dd/MM/yyyy hh:mm:ss' }}</p>
                         </div>
                         }

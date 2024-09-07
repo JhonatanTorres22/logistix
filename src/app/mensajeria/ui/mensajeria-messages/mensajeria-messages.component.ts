@@ -21,6 +21,7 @@ import { MensajeriaFlujoNavegacionComponent } from '../mensajeria-flujo-navegaci
 import { MensajeriaAsuntoComponent } from '../mensajeria-asunto/mensajeria-asunto.component';
 import { MensajeriaCardArchivedClosedApprovedComponent } from '../mensajeria-card-archived-closed-approved/mensajeria-card-archived-closed-approved.component';
 import { environment } from 'src/environments/environment';
+import { MensajeriaEstadoComponent } from '../mensajeria-estado/mensajeria-estado.component';
 
 @Component({
   selector: 'mensajeria-messages',
@@ -36,6 +37,7 @@ import { environment } from 'src/environments/environment';
     ProgramaCardComponent,
     MensajeriaFlujoNavegacionComponent,
     MensajeriaAsuntoComponent,
+    MensajeriaEstadoComponent,
     MensajeriaCardArchivedClosedApprovedComponent
   ],
   templateUrl: './mensajeria-messages.component.html',

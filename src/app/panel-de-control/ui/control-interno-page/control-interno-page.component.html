@@ -24,7 +24,7 @@
                     >
                         <div class="border-3xl border-round bg-accent-300 text-accent-700 px-2">{{ categoria.nombre }} (5)</div>
                         <div class="flex gap-2 hidden" [id]="categoria.id">
-                            <div class="text-primary-700 border-round px-1 cursor-pointer bg-blue-100" (click)="openModalCategoria( Categorias, categoria )"><i class="ti ti-plus"></i></div>
+                            <div class="text-primary-700 border-round px-1 cursor-pointer bg-blue-100" (click)="openModalSubCategoria( SubCategorias, categoria )"><i class="ti ti-plus"></i></div>
                             <div class="text-red-700 border-round px-1 cursor-pointer bg-red-100" (click)="deleteConfirm( categoria )"><i class="ti ti-trash"></i></div>
                         </div>
                     
@@ -39,4 +39,8 @@
 </div>
 <ng-template #Categorias>
     <categoria-add></categoria-add>
+</ng-template>
+
+<ng-template #SubCategorias>
+    <sub-categoria-add></sub-categoria-add>
 </ng-template>

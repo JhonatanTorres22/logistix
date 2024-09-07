@@ -24,6 +24,10 @@ import { ListarInfoDirectorRepository } from "src/app/auth/domain/repositories/l
 import { ListarInfoDirectorRepositoryImpl } from "src/app/auth/infraestructure/repositories/listarInfoDirector.impl";
 import { CategoriaRepository } from "src/app/panel-de-control/domain/repositories/categoria.repository";
 import { CategoriaRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/categoria.repository.impl";
+import { SubCategoriaRepository } from "src/app/panel-de-control/domain/repositories/subCategoria.repository";
+import { SubCategoriaRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/subCategoria.repository.impl";
+import { ObservacionRepository } from "src/app/panel-de-control/domain/repositories/observacion.repository";
+import { ObservacionRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/observacion.repository.impl";
 
 
 
@@ -44,7 +48,9 @@ import { CategoriaRepositoryImpl } from "src/app/panel-de-control/infraestructur
             { provide: CicloRepository, useClass: CicloRepositoryImpl },
             { provide: CursoRepository, useClass: CursoRepositoryImpl },
             { provide: ListarInfoDirectorRepository, useClass: ListarInfoDirectorRepositoryImpl },
-            { provide: CategoriaRepository, useClass: CategoriaRepositoryImpl }
+            { provide: CategoriaRepository, useClass: CategoriaRepositoryImpl },
+            { provide: SubCategoriaRepository, useClass: SubCategoriaRepositoryImpl },
+            { provide: ObservacionRepository, useClass: ObservacionRepositoryImpl },
 
         ]
     ]

@@ -29,7 +29,9 @@ export type MensajeriaEnviados = Omit<MensajeriaRecibidos, 'rolEmisor'> & {
 };
 export type MensajeriaArchivados = MensajeriaRecibidos & {
     usuarioCierre: string,
-    fechaCierre: string
+    rolCierre: string,
+    fechaCierre: string,
+    estadoCierre: string,
 }
 
 export type MensajeriaCerrarArchivar = Pick<Mensajeria, 'idMensaje'> & {
