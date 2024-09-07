@@ -12,6 +12,7 @@
     @if( showCancelar ) {
         <ui-button tooltip="Cancelar Envio" color="secondary" (click)="cancelar()"> Cancelar</ui-button>
     }
+    <ui-button tooltip="Observar" type="sweet" borde="3xl" color="red" (click)="observar( Observar )"> Observar</ui-button>
 
     @for (option of allDestinatario; let isLast = $last; track option) {
       
@@ -48,4 +49,8 @@
 
 <ng-template #PlanResolucion>
   <plan-estudio-card [planEstudio]="planEstudio"></plan-estudio-card>
+</ng-template>
+
+<ng-template #Observar>
+  <mensajeria-observar></mensajeria-observar>
 </ng-template>

@@ -1,5 +1,3 @@
-<!-- 
-<div class="absolute rigth-0"> -->
 @if (currentRol().rol === 'Administrador') {
   <button mat-flat-button color="primary" class="mb-3 lg:mb-5 lg:pb-0 b-rad-20 -mt-2 lg:-mt-3 block lg:absolute right-0 mr-4 lg:mr-6 abrirModal" (click)="openModalUserAdd()">
 
@@ -52,16 +50,6 @@
                   <td mat-cell *matCellDef="let user"> {{ user.numeroDocumento }} </td>
                 </ng-container>
 
-
-                <!-- STATUS Column -->
-                <!-- <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef> Estado </th>
-                  <td mat-cell *matCellDef="let user">
-                    <div class="customer-status mat-small {{ user.status_type }}">{{ user.status }}</div>
-                  </td>
-                </ng-container> -->
-
-                <!-- action Column -->
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef class="text-center"> Acciones </th>
                   <td mat-cell *matCellDef="let usuario">
@@ -79,11 +67,7 @@
                             </a>
                           </li>
                         }
-                        <!-- <li class="list-inline-item m-r-10" matTooltip="Delete">
-                          <a href="javascript:" class="avatar avatar-xs text-warn-500">
-                            <i class="ti ti-trash f-18"></i>
-                          </a>
-                        </li> -->
+
                       </ul>
                     </div>
                   </td>
@@ -101,4 +85,4 @@
             </div>
           </div>
     </div>
-  </app-card>
+</app-card>

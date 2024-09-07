@@ -23,7 +23,6 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./demo/pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
-   
 
       },
       {
@@ -36,7 +35,6 @@ const routes: Routes = [
         path: 'programas-academicos',
         loadChildren: () => import('./programas-academicos/programas-academicos.module').then( (m) => m.ProgramasAcademicosModule),
         canActivate: [ PathGuard ],
-   
 
       },{
         path: 'plan-de-estudios',
@@ -52,8 +50,10 @@ const routes: Routes = [
         path: 'mensajeria',
         loadChildren: () => import('./mensajeria/mensajeria.module').then( (m) => m.MensajeriaModule),
         canActivate: [ PathGuard ],
-      
 
+      }, {
+        path: 'panel-de-control',
+        loadChildren: () => import('./panel-de-control/panel-de-control.module').then( (m) => m.PanelDeControlModule )
       }
     ]
   },

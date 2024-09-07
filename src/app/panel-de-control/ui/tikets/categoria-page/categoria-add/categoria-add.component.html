@@ -1,0 +1,20 @@
+<mat-dialog-content>
+    <form [formGroup]="formAdd">
+        <div class="row">
+            <div class="col-8">
+                <ui-inputt label="Nombre" formControlName="nombre" classInput="small" [validator]="validatorNombre"></ui-inputt>
+            </div>
+            <div class="col-4">
+                <ui-inputt label="Abreviatura" formControlName="abreviatura" classInput="small" [validator]="validatorAbreviatura"></ui-inputt>
+            </div>
+            <!-- <div class="flex justify-content-end gap-2">
+                <ui-button classButton="mt-1" (onClick)="this.showFormAdd.set( false )">Cancelar</ui-button>
+                <ui-button color="primary" classButton="mt-1" (onClick)="onSubmit()">Guardar</ui-button>
+            </div> -->
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <ui-button label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" [disabled]="formAdd.invalid" classButton="mt-1" (onClick)="onSubmit()">{{ categoriaEdit().id != 0 ? 'Editar' : 'Guardar' }}</ui-button>
+</mat-dialog-actions>

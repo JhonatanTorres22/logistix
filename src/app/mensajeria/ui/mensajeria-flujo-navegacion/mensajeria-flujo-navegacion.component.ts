@@ -17,6 +17,7 @@ import { ClickDirective } from 'angular-calendar/modules/common/click/click.dire
 import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
 import { PlanEstudio, PlanEstudioEditCU } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
 import { MensajeriaService } from '../../infraestructure/services/mensajeria.service';
+import { MensajeriaObservarComponent } from '../mensajeria-observar/mensajeria-observar.component';
 
 @Component({
   selector: 'mensajeria-flujo-navegacion',
@@ -26,6 +27,7 @@ import { MensajeriaService } from '../../infraestructure/services/mensajeria.ser
     SharedModule,
     PlanEstudioCardComponent,
     PlanEstudioAddComponent,
+    MensajeriaObservarComponent,
     UiButtonComponent],
   templateUrl: './mensajeria-flujo-navegacion.component.html',
   styleUrl: './mensajeria-flujo-navegacion.component.scss'
@@ -382,6 +384,17 @@ export class MensajeriaFlujoNavegacionComponent {
         this.signal.renderizarMensajes.set( 'CierreForzado' );
         this.signal.setMensajeriaDataAsignacionDefault();
       }
+    })
+  }
+
+  observar = ( template: TemplateRef<any> ) => {
+    console.log( 'Observar mensaje, abrir modal...');
+    this.modal.openTemplate({
+      template: template,
+      titulo: 'Observar'
+    }).afterClosed().subscribe( response => {
+      console.log( response);
+      
     })
   }
 }

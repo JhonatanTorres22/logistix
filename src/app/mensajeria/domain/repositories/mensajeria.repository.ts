@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import {
     MensajeriaArchivados, MensajeriaCerrarArchivar,
     MensajeriaEnviados, MensajeriaEnviarNuevoMensaje,
@@ -9,7 +8,6 @@ import {
     MensajeriaResponderAlta, 
     MensajeriaTimeLine} from "../models/mensajeria.model";
 import { Observable } from "rxjs";
-import { MensajeriaTipoDataArrayDTO } from "../../infraestructure/dto/mensajeria.dto";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 
 
@@ -30,6 +28,7 @@ export abstract class MensajeriaRepository {
     abstract responderMensajeA( idMensaje: number ): Observable<MensajeriaResponderAList[]>
     abstract forzarCierre( mensaje: MensajeriaForzarCierre ): Observable<void>
     abstract obtenerTimeLine( idMensaje: number ): Observable<MensajeriaTimeLine[]>
+    
     // abstract
 
 

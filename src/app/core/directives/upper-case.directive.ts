@@ -17,13 +17,15 @@ export class UpperCaseDirective extends DefaultValueAccessor{
   @Input() expReg = '';
 
   @HostListener('input', ['$event']) input( $event: InputEvent) {
+    console.log( this.expReg );
+    
     const target = $event.target as HTMLInputElement;
     const start = target.selectionStart;
 
     
     target.value = target.value.toUpperCase().trimStart().replace(/\s{1,}/g, ' ');
   
-    target.value = target.value.replace(this.expReg, '');
+    // target.value = target.value.replace(this.expReg, '');
     
     target.setSelectionRange(start, start);
 

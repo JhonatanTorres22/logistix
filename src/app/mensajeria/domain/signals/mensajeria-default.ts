@@ -63,6 +63,9 @@ export const selectMensaje: MensajeriaArchivados = {
     leido: false,
     fechaCierre: "",
     fechaVencimiento: "",
+    mensajeObservado: false,
+    observacionResuelta: false,
+    solucionConforme: false,
     usuarioCierre: ""
 }
 

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { IValidator } from "src/app/panel-de-control/domain/models/categoria.model";
 
 
 
@@ -7,6 +8,20 @@ import { Injectable } from "@angular/core";
 })
 
 export class AuthValidations {
+
+    validatorUsername: IValidator = {
+        maxLength: 15,
+        minLength: 8,
+        expReg: /^\d{8,15}$/,
+        expRegInput: /^(?!\d+$).+$/
+    }
+
+    validatorPassword: IValidator = {
+        maxLength: 15,
+        minLength: 8,
+        expReg: /^\d{8,15}$/,
+        expRegInput: / /
+    }
 
     /* USERNAME */
     maxLengthUserName = 15;

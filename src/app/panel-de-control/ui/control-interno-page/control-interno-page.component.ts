@@ -1,0 +1,124 @@
+import { CommonModule } from '@angular/common';
+import { Component, effect, OnInit, TemplateRef } from '@angular/core';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { AlertService } from 'src/app/demo/services/alert.service';
+import { SharedModule } from 'src/app/demo/shared/shared.module';
+import { CategoriaListComponent } from '../tikets/categoria-page/categoria-list/categoria-list.component';
+import { CategoriaRepository } from '../../domain/repositories/categoria.repository';
+import { CategoriaSignal } from '../../domain/signals/categoria.signal';
+import { CategoriaAddComponent } from '../tikets/categoria-page/categoria-add/categoria-add.component';
+import { UiButtonIconComponent } from "../../../core/components/ui-button-icon/ui-button-icon.component";
+import { Categoria, CategoriaEliminar } from '../../domain/models/categoria.model';
+
+@Component({
+  selector: 'app-control-interno-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    SharedModule,
+    UiButtonComponent,
+    CategoriaAddComponent,
+    UiButtonIconComponent,
+  ],
+
+  templateUrl: './control-interno-page.component.html',
+  styleUrl: './control-interno-page.component.scss'
+})
+export class ControlInternoPageComponent implements OnInit {
+  
+  categorias = this.signal.categorias;
+  categoriaEdit = this.signal.categoriaEdit;
+  renderizarCategorias = this.signal.renderizarCategorias;
+
+  constructor(
+    private repository: CategoriaRepository,
+    private signal: CategoriaSignal,
+    private alert: AlertService,
+    private modal: UiModalService,
+  ) {
+
+    effect( () => {
+      console.log( this.renderizarCategorias() );
+      switch( this.renderizarCategorias() ) {
+        case 'Listar': { this.obtenerCategorias(); this.renderizarCategorias.set('') }; break
+      }
+    }, { allowSignalWrites: true })
+
+  }
+  ngOnInit(): void {
+    this.obtenerCategorias();
+  }
+
+
+  obtenerCategorias = () => {
+    this.repository.listarCategoria().subscribe({
+      next: ( categorias ) => {
+        console.log( categorias );
+        this.categorias.set( categorias );
+
+        this.alert.showAlert('Listando categorías...', 'success', 5);
+        
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener las categorías', 'error', 5);
+      }
+    })
+  }
+
+  openModalCategoria = ( template: TemplateRef<any>, categoria?: Categoria) => {
+
+    categoria ? this.categoriaEdit.set( categoria ) : ''
+
+    this.modal.openTemplate({
+      template: template,
+      titulo: categoria ? 'Editar Categoria' : 'Agregar Categoria'
+    }).afterClosed().subscribe( response => {
+      console.log( response );
+      if( response == 'cancelar') {
+        this.categoriaEdit.set( this.signal.categoriaDefault );
+        return
+      }
+      
+    })
+  }
+
+  hoverClass = ( categoria: Categoria ) => {
+    document.getElementById(categoria.id.toString())?.classList.remove('hidden')
+    document.getElementById(categoria.id.toString())?.classList.add('flex')
+  }
+
+  removeClass = ( categoria: Categoria ) => {
+
+  }
+
+  edit = ( categoria: Categoria ) => {
+
+  }
+
+  deleteConfirm = ( categoria: Categoria ) => {
+    this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea eliminar la categoria ${ categoria.nombre }?`)
+      .then( isConfirm => {
+        if( !isConfirm ) return
+        const categoriaDelete: CategoriaEliminar = {
+          id: categoria.id
+        }
+        this.delete( categoriaDelete );
+      })
+  }
+
+  delete = ( categoriaDelete: CategoriaEliminar ) => {
+    this.repository.eliminarCategoria( categoriaDelete ).subscribe({
+      next: ( response ) => {
+        console.log( response );
+        this.alert.showAlert('La categoría se eliminó correctamente', 'success');
+        this.renderizarCategorias.set('Listar')
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al eliminar la categoría', 'error');
+        
+      }
+    })
+  }
+
+}
