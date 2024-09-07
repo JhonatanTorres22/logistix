@@ -74,9 +74,11 @@ export class CursoValidation {
         { value: 'CG3', text: 'Competencia General 3', disabled: false },
         { value: 'CE1', text: 'Competencia Específica 1', disabled: false },
         { value: 'CE2', text: 'Competencia Específica 2', disabled: false },
+        { value: 'CE3', text: 'Competencia Específica 3', disabled: false },
         { value: 'CT1', text: 'Competencia de Especialidad 1', disabled: false },
         { value: 'CT2', text: 'Competencia de Especialidad 2', disabled: false },
         { value: 'CT3', text: 'Competencia de Especialidad 3', disabled: false },
+        { value: 'CT4', text: 'Competencia de Especialidad 4', disabled: false },
     ]
 
     duplicadoNombreCurso(control: AbstractControl): { [key: string]: boolean } | null {

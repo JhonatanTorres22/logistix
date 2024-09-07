@@ -28,6 +28,9 @@ export interface MensajeriaRecibidosDTO {
     receptor: string,
     fechaCreacion: string,
     fechaVencimiento: string,
+    observado: boolean,
+    resuelto: boolean,
+    conforme: boolean,
     leido: boolean
 }
 

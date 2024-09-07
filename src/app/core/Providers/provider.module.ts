@@ -22,6 +22,9 @@ import { CicloRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/re
 import { CursoRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/curso.repository.impl";
 import { ListarInfoDirectorRepository } from "src/app/auth/domain/repositories/listarInfoDirector.repository";
 import { ListarInfoDirectorRepositoryImpl } from "src/app/auth/infraestructure/repositories/listarInfoDirector.impl";
+import { CategoriaRepository } from "src/app/panel-de-control/domain/repositories/categoria.repository";
+import { CategoriaRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/categoria.repository.impl";
+
 
 
 @NgModule({
@@ -40,7 +43,8 @@ import { ListarInfoDirectorRepositoryImpl } from "src/app/auth/infraestructure/r
             { provide: PlanEstudioRepository, useClass: PlanEstidoRepositoryImpl },
             { provide: CicloRepository, useClass: CicloRepositoryImpl },
             { provide: CursoRepository, useClass: CursoRepositoryImpl },
-            { provide: ListarInfoDirectorRepository, useClass: ListarInfoDirectorRepositoryImpl}
+            { provide: ListarInfoDirectorRepository, useClass: ListarInfoDirectorRepositoryImpl },
+            { provide: CategoriaRepository, useClass: CategoriaRepositoryImpl }
 
         ]
     ]

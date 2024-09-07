@@ -15,17 +15,26 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SelectRolComponent } from '../select-rol/select-rol.component';
 import { AuthSignal } from '../../domain/signals/auth.signal';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
+import { UiInputtComponent } from 'src/app/core/components/ui-inputt/ui-inputt.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ CommonModule, SharedModule, RouterModule, FormsModule, UiInputComponent, SelectRolComponent ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    UiInputtComponent,
+    SelectRolComponent ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../../authentication.scss']
 })
 export class LoginComponent {
 
   listaCamposFormulario: string[] = ['userName', 'password']
+  validatorUsername = this.authValidations.validatorUsername;
+  validatorPassword = this.authValidations.validatorPassword;
     // public props
     hide = true;
     loginForm: FormGroup;
@@ -35,15 +44,15 @@ export class LoginComponent {
     returnUrl: string;
     error = '';
   
-    maxLengthUserName: number;
-    minLengthUserName: number;
-    expRegUsername: RegExp;
-    expRegUserNameToLockInput: RegExp;
+    // maxLengthUserName: number;
+    // minLengthUserName: number;
+    // expRegUsername: RegExp;
+    // expRegUserNameToLockInput: RegExp;
 
-    maxLengthPassword: number;
-    minLengthPassword: number;
-    expRegPassword: RegExp;
-    expRegPasswordToLockInput: RegExp;
+    // maxLengthPassword: number;
+    // minLengthPassword: number;
+    // expRegPassword: RegExp;
+    // expRegPasswordToLockInput: RegExp;
 
     messageErrorLogin = '';
 
@@ -66,29 +75,29 @@ export class LoginComponent {
       private alertService: AlertService
     ) {
 
-      this.maxLengthUserName = this.authValidations.maxLengthUserName;
-      this.minLengthUserName = this.authValidations.minLengthUserName;
-      this.expRegUsername = this.authValidations.expRegUserName;
-      this.expRegUserNameToLockInput = this.authValidations.expRegUserNameToLockInput;
+      // this.maxLengthUserName = this.authValidations.maxLengthUserName;
+      // this.minLengthUserName = this.authValidations.minLengthUserName;
+      // this.expRegUsername = this.authValidations.expRegUserName;
+      // this.expRegUserNameToLockInput = this.authValidations.expRegUserNameToLockInput;
 
-      this.maxLengthPassword = this.authValidations.maxLengthPassword;
-      this.minLengthPassword = this.authValidations.minLengthPassword;
+      // this.maxLengthPassword = this.authValidations.maxLengthPassword;
+      // this.minLengthPassword = this.authValidations.minLengthPassword;
 
-      this.expRegPassword = this.authValidations.expRegPassword;
-      this.expRegPasswordToLockInput = this.authValidations.expRegPasswordToLockInput;
+      // this.expRegPassword = this.authValidations.expRegPassword;
+      // this.expRegPasswordToLockInput = this.authValidations.expRegPasswordToLockInput;
 
       this.formLogin = new FormGroup({
         userName: new FormControl('', [
           Validators.required,
-          Validators.maxLength(this.maxLengthUserName),
-          Validators.minLength(this.minLengthUserName),
-          Validators.pattern(this.expRegUsername)
+          Validators.maxLength(this.validatorUsername.maxLength),
+          Validators.minLength(this.validatorUsername.minLength),
+          Validators.pattern(this.validatorUsername.expReg)
         ]
         ),
         password: new FormControl('', [
           Validators.required,
-          Validators.maxLength(this.maxLengthPassword),
-          Validators.minLength(this.minLengthPassword)
+          Validators.maxLength(this.validatorPassword.maxLength),
+          Validators.minLength(this.validatorPassword.minLength)
         ]
         )
       })

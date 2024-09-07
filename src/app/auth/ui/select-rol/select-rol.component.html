@@ -9,7 +9,7 @@
 
 <div class="bg-white scale bg-white border-round my-4 border-3 border-white cursor-pointer hover:border-cyan-500" (click)="selectRol(rol)">
     <div class="flex justify-content-left align-item-center gap-4 mx-4">
-        <img [src]="'./assets/images/authentication/rol/' + rol.Nombre +'.gif'" width="80px"/>
+        <img [src]="'./assets/images/authentication/rol/' + rol.Nombre.substring(0, 4) +'.gif'" width="80px"/>
         <span class="f-w-400 f-20">{{ rol.Nombre }}</span>
     </div>
 </div>

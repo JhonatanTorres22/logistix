@@ -1,4 +1,3 @@
-import { RolUserId } from "src/app/core/mappers/rolUserId";
 import {
     MensajeriaArchivadosDTO,
     MensajeriaCerrarArchivarDTO,
@@ -12,7 +11,6 @@ import {
      MensajeriaRecibidosDTO,
      MensajeriaResponderAListDTO,
      MensajeriaResponderAltaDTO,
-     MensajeriaResponderDTO,
      MensajeriaTimeLineDTO,
      MensajeriaTipoDTO,
      MensajeriaTipoGrupoDTO } from "../../infraestructure/dto/mensajeria.dto";
@@ -27,7 +25,6 @@ import {
     MensajeriaLeerMensaje,
     MensajeriaNuevoMensajeList,
     MensajeriaRecibidos,
-    // MensajeriaResponder,
     MensajeriaResponderAList, 
     MensajeriaResponderAlta,
     MensajeriaTimeLine} from "../models/mensajeria.model";
@@ -63,6 +60,9 @@ export class MensajeriaMapper {
             receptor: param.receptor,
             fecha: param.fechaCreacion,
             fechaVencimiento: param.fechaVencimiento,
+            mensajeObservado: param.observado,
+            observacionResuelta: param.resuelto,
+            solucionConforme: param.conforme,
             leido: param.leido
         }
     }
@@ -78,6 +78,9 @@ export class MensajeriaMapper {
             emisor: param.emisor,
             receptor: param.receptor,
             fecha: param.fechaCreacion,
+            mensajeObservado: param.observado,
+            observacionResuelta: param.resuelto,
+            solucionConforme: param.conforme,
             fechaVencimiento: param.fechaVencimiento,
             leido: true
         }
@@ -94,10 +97,11 @@ export class MensajeriaMapper {
             rolEmisor: param.rol,
             emisor: param.emisor,
             receptor: param.receptor,
-            // rolReceptor: param.rolReceptor,
             fecha: param.fechaCreacion,
             fechaVencimiento: param.fechaVencimiento,
-            // archivo: param.archivo,
+            mensajeObservado: param.observado,
+            observacionResuelta: param.resuelto,
+            solucionConforme: param.conforme,
             leido: true,
             fechaCierre: param.fechaCierre,
             usuarioCierre: param.usuarioCierre
@@ -114,21 +118,15 @@ export class MensajeriaMapper {
             emisor: param.emisor,
             receptor: param.receptor,
             rolReceptor: param.rolReceptor,
+            mensajeObservado: param.observado,
+            observacionResuelta: param.resuelto,
+            solucionConforme: param.conforme,
             fecha: param.fechaCreacion,
             informacionAdicional: param.informacionAdicional,
 
         }
     }
 
-    // static fromDomainToApiResponder( param: MensajeriaResponder ): MensajeriaResponderDTO {
-    //     return {
-    //         codigoMensajeria: param.idMensaje,
-    //         codigoEmisorRol: param.idRolEmisor,
-    //         codigoReceptorRol: param.idRolReceptor,
-    //         contenido: param.mensaje,
-    //         informacionAdicional: param.informacionAdicional
-    //     }
-    // }
 
     static fromDomainToApiLeerMensaje( param: MensajeriaLeerMensaje ): MensajeriaLeerMensajeDTO {
         return {
@@ -176,13 +174,6 @@ export class MensajeriaMapper {
         }
     }
 
-
-    // static fromApiToDomainTipoMensaje( param: MensajeriaTipoDTO ): MensajeriaTipo {
-    //     return {
-    //         id: param.codigo,
-    //         tipo: param.nombre
-    //     }
-    // }
 
     static fromApiToDomainTipoMensajeGrupo( param: MensajeriaTipoGrupoDTO ): UiSelect {
         return {
@@ -263,4 +254,7 @@ export class MensajeriaMapper {
             receptor: param.receptor
         }
     }
+
+    
+
 }

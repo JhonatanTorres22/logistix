@@ -22,20 +22,16 @@
               </div>
               <div class="text-center mb-3 -mt-3 f-18 f-w-500 pt-1" >INICIAR SESIÓN</div>
               <form [formGroup]="formLogin" class="text-start">
-                <ui-input
+                <ui-inputt
                   label="Usuario" formControlName="userName"
-                  [maxlength]="maxLengthUserName"
-                  [minlength]="minLengthUserName"
-                  [expReg]="expRegUserNameToLockInput"
+                  [validator]="validatorUsername"
   
-                ></ui-input>
-                <ui-input
+                ></ui-inputt>
+                <ui-inputt
                   label="Contraseña" formControlName="password"
-                  [maxlength]="maxLengthPassword"
-                  [minlength]="minLengthPassword"
-                  [expReg]="expRegPasswordToLockInput"
+                  [validator]="validatorPassword"
                   type="password"
-                ></ui-input>
+                ></ui-inputt>
   
                 @if (messageErrorLogin) {
                   <div class="bg-warn-500 text-warn-50 p-10 m-t-10 mb-0 border-round">{{ messageErrorLogin }}</div>

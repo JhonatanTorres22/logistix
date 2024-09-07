@@ -24,6 +24,7 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
     constructor( private service: MensajeriaService ) {}      
     
     
+    
     insertar(mensaje: MensajeriaInsertar): Observable<void> {
         return this.service.insertar( mensaje );
     }
@@ -86,4 +87,5 @@ export class MensajeriaRepositoryImpl implements MensajeriaRepository {
         return this.service.obtenerTimeLine( idMensaje );
     }
 
+    
 }

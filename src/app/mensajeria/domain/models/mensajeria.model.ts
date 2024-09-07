@@ -1,11 +1,9 @@
 import { Asignacion, AsignacionPrograma } from "src/app/programas-academicos/domain/models/asignacion.model";
 import { SemestreAcademico } from "src/app/programas-academicos/domain/models/semestre-academico.model";
 
-
 export interface Mensajeria {
     idMensaje: number
 }
-
 
 export type TipoMensaje = 'DAR ALTA A DIRECTOR DE ESCUELA' | 'VALIDAR PLAN DE ESTUDIOS' | 'NO SELECCIONADO';
 
@@ -13,7 +11,6 @@ export interface MensajeriaRecibidos {
     idMensaje: number,
     nombreTipoMensajeGrupo: string,
     nombreTipoMensaje: string,
-    // tipoMensaje: TipoMensaje,
     asunto: string,
     mensaje: string,
     rolEmisor: string,
@@ -21,6 +18,9 @@ export interface MensajeriaRecibidos {
     receptor: string,
     fecha: string,
     fechaVencimiento: string,
+    mensajeObservado: boolean,
+    observacionResuelta: boolean,
+    solucionConforme: boolean,
     leido: boolean
 }
 
@@ -40,8 +40,6 @@ export type MensajeriaHistorialMensajes = Omit<MensajeriaRecibidos, 'nombreTipoM
     archivo: string,
     rolReceptor: string,
     informacionAdicional: string,
-    // idRolEmisor: number,
-    // idRolReseptor: number
 }
 
 export interface MensajeriaLeerMensaje {
@@ -133,14 +131,6 @@ export interface MensajeriaTimeLine2 {
     image?: string;
 }
 
-// export interface MensajeriaTimeLine {
-//     emisor: string,
-//     receptor: string,
-//     fechaCreacion: string,
-//     fechaVencimiento: string,
-//     hitos: MensajeriTimeLineHito[]
-// }
-
 export interface MensajeriaTimeLine {
     emisor: string,
     receptor: string,
@@ -149,7 +139,7 @@ export interface MensajeriaTimeLine {
     orden: number,
     nMensajes: number,
     nHitos: number,
-    // hitos: MensajeriTimeLineHito[]
+
 }
 
 export interface MensajeriTimeLineHito {
@@ -157,13 +147,4 @@ export interface MensajeriTimeLineHito {
 }
 
 
-
 export type MensajeriaForzarCierre = MensajeriaCerrarArchivar;
-
-// export type MensajeriaResponder
-// export interface MensajeriaSelectMensaje {
-//     id: number,
-//     nombre: string,
-//     mensaje: string,
-//     fecha: string
-// }
