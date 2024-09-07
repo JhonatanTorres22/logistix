@@ -1,0 +1,11 @@
+@if ( !small ) {
+    <div class="text-red-700 border-round border-red-700 border-1 max-w-max px-3 font-bold flex align-items-center gap-2 cursor-pointer hover:bg-red-200" (click)="showModalObservacion(Observacion)">
+        <i class="ti ti-alert-circle f-20"></i> Observado
+    </div>
+} @else {
+    <div class="text-red-700 border-round max-w-max px-1 font-bold" matTooltip="Mensaje Observado"> <i class="ti ti-alert-circle f-20"></i> </div>
+}
+
+<ng-template #Observacion>
+    <mensajeria-observacion></mensajeria-observacion>
+</ng-template>

@@ -13,3 +13,6 @@ export type CategoriaListarDTO = CategoriaDTO;
 export type CategoriaEliminarDTO = Pick<CategoriaDTO, 'codigo'>
 
 export type CategoriaInsertarDTO = Omit<CategoriaDTO, 'codigo'>
+
+
+

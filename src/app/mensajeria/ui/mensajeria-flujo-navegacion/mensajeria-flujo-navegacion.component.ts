@@ -47,6 +47,7 @@ export class MensajeriaFlujoNavegacionComponent {
   showFormResponse = this.signal.showFormResponse;
   listaDestinatariosResponderA = this.signal.listaDestinatariosResponderA;
   listaDestinatariosResponderAflujo = this.signal.listaDestinatariosResponderAflujo;
+  selectMensaje = this.signal.selectMensaje;
   selectedDestinatarioResponderA = this.signal.selectedDestinatarioResponderA;
   isModal = this.signalPlanEstudio.isModal;
   planEstudioSinResolucion = this.signalPlanEstudio.planEstudioSinResolucion;
@@ -394,7 +395,8 @@ export class MensajeriaFlujoNavegacionComponent {
       titulo: 'Observar'
     }).afterClosed().subscribe( response => {
       console.log( response);
-      
+      if( response == 'cancelar' ) return
+
     })
   }
 }

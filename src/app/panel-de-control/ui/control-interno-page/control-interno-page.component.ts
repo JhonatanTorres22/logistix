@@ -10,6 +10,7 @@ import { CategoriaSignal } from '../../domain/signals/categoria.signal';
 import { CategoriaAddComponent } from '../tikets/categoria-page/categoria-add/categoria-add.component';
 import { UiButtonIconComponent } from "../../../core/components/ui-button-icon/ui-button-icon.component";
 import { Categoria, CategoriaEliminar } from '../../domain/models/categoria.model';
+import { SubCategoriaAddComponent } from '../tikets/sub-categoria-page/sub-categoria-add/sub-categoria-add.component';
 
 @Component({
   selector: 'app-control-interno-page',
@@ -19,6 +20,7 @@ import { Categoria, CategoriaEliminar } from '../../domain/models/categoria.mode
     SharedModule,
     UiButtonComponent,
     CategoriaAddComponent,
+    SubCategoriaAddComponent,
     UiButtonIconComponent,
   ],
 
@@ -29,6 +31,7 @@ export class ControlInternoPageComponent implements OnInit {
   
   categorias = this.signal.categorias;
   categoriaEdit = this.signal.categoriaEdit;
+  categoriaSelected = this.signal.categoriaSelected;
   renderizarCategorias = this.signal.renderizarCategorias;
 
   constructor(
@@ -72,11 +75,28 @@ export class ControlInternoPageComponent implements OnInit {
 
     this.modal.openTemplate({
       template: template,
-      titulo: categoria ? 'Editar Categoria' : 'Agregar Categoria'
+      titulo: categoria ? 'Agregar Sub Categoria' : 'Agregar Categoria'
     }).afterClosed().subscribe( response => {
       console.log( response );
       if( response == 'cancelar') {
         this.categoriaEdit.set( this.signal.categoriaDefault );
+        return
+      }
+      
+    })
+  }
+
+  openModalSubCategoria = ( template: TemplateRef<any>, categoria: Categoria ) => {
+
+    this.categoriaSelected.set( categoria );
+
+    this.modal.openTemplate({
+      template,
+      titulo: 'Agregar Sub Categoria'
+    }).afterClosed().subscribe( response => {
+      console.log( response );
+      if( response == 'cancelar') {
+        this.categoriaSelected.set( this.signal.categoriaDefault );
         return
       }
       

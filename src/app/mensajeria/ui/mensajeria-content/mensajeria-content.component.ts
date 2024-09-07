@@ -13,6 +13,7 @@ import { MensajeriaRepository } from '../../domain/repositories/mensajeria.repos
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MensajeriaNewComponent } from '../mensajeria-new/mensajeria-new.component';
 import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-items/ui-card-not-items.component';
+import { MensajeriaEstadoComponent } from '../mensajeria-estado/mensajeria-estado.component';
 
 @Component({
   selector: 'mensajeria-content',
@@ -24,6 +25,7 @@ import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-ite
     MensajeriaComposeComponent,
     MensajeriaNoMessagesComponent,
     MensajeriaNewComponent,
+    MensajeriaEstadoComponent,
     UiCardNotItemsComponent
   ],
   templateUrl: './mensajeria-content.component.html',

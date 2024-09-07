@@ -66,7 +66,9 @@ export const selectMensaje: MensajeriaArchivados = {
     mensajeObservado: false,
     observacionResuelta: false,
     solucionConforme: false,
-    usuarioCierre: ""
+    usuarioCierre: "",
+    rolCierre: '',
+    estadoCierre: ''
 }
 
 export const mensajesRecibidosDefault: MensajeriaRecibidos[] = [];

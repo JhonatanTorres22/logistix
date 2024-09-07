@@ -70,11 +70,13 @@
                 <mensajeria-flujo-navegacion [allDestinatario]="listaDestinatariosResponderA()" ></mensajeria-flujo-navegacion>  <!-- [listaDestinatarios]="listaDestinatariosResponderAflujo()" -->
               }
               
+              @if( selectMensaje().mensajeObservado && selectMensaje().observacionResuelta == false ) {
+                <mensajeria-estado></mensajeria-estado>
+              }
             </mat-expansion-panel>
           </mat-accordion>
 
         </div>
-        
   
       }
       @if ( currentRol().rol == 'Vicerrectorado Académico' && tipoBandeja() == 'Enviados' ) {

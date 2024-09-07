@@ -104,7 +104,9 @@ export class MensajeriaMapper {
             solucionConforme: param.conforme,
             leido: true,
             fechaCierre: param.fechaCierre,
-            usuarioCierre: param.usuarioCierre
+            usuarioCierre: param.usuarioCierre,
+            rolCierre: param.rolCierre,
+            estadoCierre: param.estadoCierre
         }
     }
 
