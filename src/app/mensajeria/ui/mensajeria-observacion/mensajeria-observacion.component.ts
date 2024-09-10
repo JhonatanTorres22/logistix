@@ -6,15 +6,17 @@ import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositor
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { TicketDetalleComponent } from "../../../panel-de-control/ui/tikets/ticket-detalle/ticket-detalle.component";
 
 @Component({
   selector: 'mensajeria-observacion',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     SharedModule,
-    UiButtonComponent
-   ],
+    UiButtonComponent,
+    TicketDetalleComponent
+],
   templateUrl: './mensajeria-observacion.component.html',
   styleUrl: './mensajeria-observacion.component.scss'
 })

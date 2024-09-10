@@ -11,6 +11,9 @@ import { CategoriaAddComponent } from '../tikets/categoria-page/categoria-add/ca
 import { UiButtonIconComponent } from "../../../core/components/ui-button-icon/ui-button-icon.component";
 import { Categoria, CategoriaEliminar } from '../../domain/models/categoria.model';
 import { SubCategoriaAddComponent } from '../tikets/sub-categoria-page/sub-categoria-add/sub-categoria-add.component';
+import { OpcionesFiltroComponent } from '../tikets/opciones-filtro/opciones-filtro.component';
+import { TicketListComponent } from '../tikets/ticket-list/ticket-list.component';
+import { CategoriaPageComponent } from '../tikets/categoria-page/categoria-page.component';
 
 @Component({
   selector: 'app-control-interno-page',
@@ -20,125 +23,26 @@ import { SubCategoriaAddComponent } from '../tikets/sub-categoria-page/sub-categ
     SharedModule,
     UiButtonComponent,
     CategoriaAddComponent,
+    CategoriaPageComponent,
     SubCategoriaAddComponent,
+    OpcionesFiltroComponent,
+    TicketListComponent,
+    UiButtonComponent,
     UiButtonIconComponent,
   ],
 
   templateUrl: './control-interno-page.component.html',
   styleUrl: './control-interno-page.component.scss'
 })
-export class ControlInternoPageComponent implements OnInit {
+export class ControlInternoPageComponent {
   
-  categorias = this.signal.categorias;
-  categoriaEdit = this.signal.categoriaEdit;
-  categoriaSelected = this.signal.categoriaSelected;
-  renderizarCategorias = this.signal.renderizarCategorias;
+ 
 
   constructor(
-    private repository: CategoriaRepository,
-    private signal: CategoriaSignal,
-    private alert: AlertService,
-    private modal: UiModalService,
-  ) {
+    
+  ) {}
+  
 
-    effect( () => {
-      console.log( this.renderizarCategorias() );
-      switch( this.renderizarCategorias() ) {
-        case 'Listar': { this.obtenerCategorias(); this.renderizarCategorias.set('') }; break
-      }
-    }, { allowSignalWrites: true })
-
-  }
-  ngOnInit(): void {
-    this.obtenerCategorias();
-  }
-
-
-  obtenerCategorias = () => {
-    this.repository.listarCategoria().subscribe({
-      next: ( categorias ) => {
-        console.log( categorias );
-        this.categorias.set( categorias );
-
-        this.alert.showAlert('Listando categorías...', 'success', 5);
-        
-      }, error: ( error ) => {
-        console.log( error );
-        this.alert.showAlert('Ocurrió un error al obtener las categorías', 'error', 5);
-      }
-    })
-  }
-
-  openModalCategoria = ( template: TemplateRef<any>, categoria?: Categoria) => {
-
-    categoria ? this.categoriaEdit.set( categoria ) : ''
-
-    this.modal.openTemplate({
-      template: template,
-      titulo: categoria ? 'Agregar Sub Categoria' : 'Agregar Categoria'
-    }).afterClosed().subscribe( response => {
-      console.log( response );
-      if( response == 'cancelar') {
-        this.categoriaEdit.set( this.signal.categoriaDefault );
-        return
-      }
-      
-    })
-  }
-
-  openModalSubCategoria = ( template: TemplateRef<any>, categoria: Categoria ) => {
-
-    this.categoriaSelected.set( categoria );
-
-    this.modal.openTemplate({
-      template,
-      titulo: 'Agregar Sub Categoria'
-    }).afterClosed().subscribe( response => {
-      console.log( response );
-      if( response == 'cancelar') {
-        this.categoriaSelected.set( this.signal.categoriaDefault );
-        return
-      }
-      
-    })
-  }
-
-  hoverClass = ( categoria: Categoria ) => {
-    document.getElementById(categoria.id.toString())?.classList.remove('hidden')
-    document.getElementById(categoria.id.toString())?.classList.add('flex')
-  }
-
-  removeClass = ( categoria: Categoria ) => {
-
-  }
-
-  edit = ( categoria: Categoria ) => {
-
-  }
-
-  deleteConfirm = ( categoria: Categoria ) => {
-    this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea eliminar la categoria ${ categoria.nombre }?`)
-      .then( isConfirm => {
-        if( !isConfirm ) return
-        const categoriaDelete: CategoriaEliminar = {
-          id: categoria.id
-        }
-        this.delete( categoriaDelete );
-      })
-  }
-
-  delete = ( categoriaDelete: CategoriaEliminar ) => {
-    this.repository.eliminarCategoria( categoriaDelete ).subscribe({
-      next: ( response ) => {
-        console.log( response );
-        this.alert.showAlert('La categoría se eliminó correctamente', 'success');
-        this.renderizarCategorias.set('Listar')
-      }, error: ( error ) => {
-        console.log( error );
-        this.alert.showAlert('Ocurrió un error al eliminar la categoría', 'error');
-        
-      }
-    })
-  }
+  
 
 }

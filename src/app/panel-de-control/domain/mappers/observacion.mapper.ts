@@ -1,5 +1,5 @@
-import { ObservacionInsertDTO, ObservacionListarDTO } from "../../infraestructure/dto/observacion.dto";
-import { ObservacionInsert, ObservacionListar } from "../models/obserbacion.model";
+import { ObservacionDTO, ObservacionInsertDTO } from "../../infraestructure/dto/observacion.dto";
+import { Observacion, ObservacionInsert } from "../models/obserbacion.model";
 
 
 export class ObservacionMapper {
@@ -12,7 +12,7 @@ export class ObservacionMapper {
         }
     }
 
-    static fromApiToDomainListar( param: ObservacionListarDTO ): ObservacionListar {
+    static fromApiToDomainListar( param: ObservacionDTO ): Observacion {
         return {
             categoriaNombre: param.denominacionCategoria,
             fechaObservacion: param.fechaObservacion,

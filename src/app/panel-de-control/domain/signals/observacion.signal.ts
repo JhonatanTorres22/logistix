@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { ObservacionListar } from "../models/obserbacion.model";
+import { Observacion } from "../models/obserbacion.model";
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +7,9 @@ import { ObservacionListar } from "../models/obserbacion.model";
 
 export class ObservacionSignal {
 
-    observacionDefault: ObservacionListar = {
+    filtroTipos: 'all' | 'pen' | 'apr' | 'pro'
+
+    observacionDefault: Observacion = {
         id: 0,
         mensajeId: 0,
         ticket: "",
@@ -18,4 +20,10 @@ export class ObservacionSignal {
     }
 
     observacionSelect = signal( this.observacionDefault );
+
+    ticketSelect = signal( this.observacionDefault );
+
+    filtroSelect = signal( 'all');
+
+    buscador = signal(['', '']);
 }   

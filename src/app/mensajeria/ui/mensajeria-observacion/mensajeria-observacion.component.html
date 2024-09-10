@@ -1,21 +1,7 @@
 <mat-dialog-content>
-    
-    <app-card >
-        <ng-template #headerTitleTemplate>
-            Tiket {{ observacionSelect().ticket }}
-        </ng-template>
-        <div class="flex gap-2">
-            <div><span class="font-bold">Categoria </span>{{ observacionSelect().subCategoriaNombre }}</div>
-            <div><span class="font-bold">Sub Categoria </span>{{ observacionSelect().categoriaNombre }}</div>
-        </div>
-        <mat-divider class="py-3"></mat-divider>
-        <div [innerHTML]="observacionSelect().mensaje"></div>
-        <div><span class="font-bold">Fecha</span>{{ observacionSelect().fechaObservacion }}</div>
-
-    </app-card>
-
+  <ticket-detalle [ticketDetalle]="observacionSelect()"></ticket-detalle>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-    <!-- <ui-button color="primary" >Enviar</ui-button> -->
+  <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+  <ui-button color="primary" >Marcar como Resuelto</ui-button>
 </mat-dialog-actions>

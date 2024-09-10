@@ -1,4 +1,4 @@
-export interface ObservacionDTO {
+export interface ObservacionModelDTO {
     codigoObservacion: number,
     codigoMensajeria: number,
     denominacionCategoria: string,
@@ -11,12 +11,12 @@ export interface ObservacionDTO {
 }
 
 
-export type ObservacionInsertDTO = Pick<ObservacionDTO, 'codigoMensajeria' | 'codigoObservacionSubCategoria' | 'detalleObservacion' | 'usuarioObservacion' >;
+export type ObservacionInsertDTO = Pick<ObservacionModelDTO, 'codigoMensajeria' | 'codigoObservacionSubCategoria' | 'detalleObservacion' | 'usuarioObservacion' >;
 
 
-export type ObservacionListarDTO = Omit<ObservacionDTO, 'codigoObservacionSubCategoria' | 'usuarioObservacion'>
+export type ObservacionDTO = Omit<ObservacionModelDTO, 'codigoObservacionSubCategoria' | 'usuarioObservacion'>
 
 
 export interface ObservacionListarDataArrayDTO {
-    data: ObservacionListarDTO[]
+    data: ObservacionDTO[]
 }

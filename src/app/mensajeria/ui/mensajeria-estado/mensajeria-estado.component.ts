@@ -34,7 +34,7 @@ export class MensajeriaEstadoComponent {
   showModalObservacion = ( template: TemplateRef<any>) => {
     this.modal.openTemplate({
       template,
-      titulo: 'Tiket'
+      titulo: ``
     }).afterClosed().subscribe( response => {
       console.log( response );
       

@@ -1,25 +1,27 @@
-<mat-dialog-content>
-    <!-- {{ categoriaSelected() | json }} -->
-    @if( showFormAddSubCategoria() ) {
-        <form [formGroup]="formAdd" class="pb-4">
-            <div class="row">
-                <div class="col-12">
-                    <ui-inputt label="Nombre" formControlName="nombre" classInput="small" [validator]="validatorNombre"></ui-inputt>
-                </div>
-    
-                <div class="flex gap-2 justify-content-end">
-                    <ui-button label="Cancelar" (onClick)="cerrarForm()"></ui-button>
-                    <ui-button color="primary" [disabled]="formAdd.invalid" (onClick)="onSubmit()">{{ subCategoriaEdit().id != 0 ? 'Editar' : 'Guardar' }}</ui-button>
-                </div>
+<!-- {{ categoriaSelected() | json }} -->
+@if( showFormAddSubCategoria() ) {
+    <form [formGroup]="formAdd" class="px-4">
+        <div class="row border-1 mx-0 border-round border-gray-300 p-3">
+            <div class="font-semibold">Nueva Sub Categoria</div>
+            <div class="col-12">
+                <ui-inputt label="Nombre" formControlName="nombre" classInput="small" [validator]="validatorNombre"></ui-inputt>
             </div>
-        </form>
-    } @else {
-        <div class="flex gap-2 justify-content-end pb-2 w-30rem">
-            <ui-button color="primary" label="Agregar" class="m-r-10" (onClick)="showFormAddSubCategoria.set( true )"></ui-button>
+
+            <div class="flex gap-2 justify-content-end">
+                <ui-button label="Cancelar" (onClick)="cerrarForm()"></ui-button>
+                <ui-button color="primary" [disabled]="formAdd.invalid" (onClick)="onSubmit()">{{ subCategoriaEdit().id != 0 ? 'Editar' : 'Guardar' }}</ui-button>
+            </div>
         </div>
-    }
-    <mat-divider class="py-3"></mat-divider>
+    </form>
+}
+<!-- @else {
+    <div class="flex gap-2 justify-content-start px-4 w-30rem -mt-4">
+        <ui-button color="primary" label="Agregar" class="m-r-10" (onClick)="showFormAddSubCategoria.set( true )"></ui-button>
+    </div>
+} -->
+<mat-dialog-content>
+    <!-- <mat-divider class="py-3"></mat-divider> -->
     <sub-categoria-list></sub-categoria-list>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-</mat-dialog-actions>
+<!-- <mat-dialog-actions align="end">
+</mat-dialog-actions> -->
