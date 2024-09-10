@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { ObservacionRepository } from "../../domain/repositories/observacion.repository";
 import { Observable } from "rxjs";
-import { ObservacionInsert, ObservacionListar } from "../../domain/models/obserbacion.model";
+import { ObservacionInsert, Observacion } from "../../domain/models/obserbacion.model";
 import { ObservacionService } from "../services/observacion.service";
 
 @Injectable({
@@ -16,7 +16,7 @@ export class ObservacionRepositoryImpl implements ObservacionRepository {
         return this.service.insertar( observacion )
     }
     
-    listarxId(idMensaje: number): Observable<ObservacionListar[]> {
+    listarxId(idMensaje: number): Observable<Observacion[]> {
         return this.service.listarxId( idMensaje );
     }
 

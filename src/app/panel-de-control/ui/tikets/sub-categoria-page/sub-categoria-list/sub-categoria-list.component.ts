@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, OnInit } from '@angular/core';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { SubCategoria, SubCategoriaEliminar, SubCategoriaListar } from 'src/app/panel-de-control/domain/models/subCategoria.model';
@@ -10,7 +11,11 @@ import { SubCategoriaSignal } from 'src/app/panel-de-control/domain/signals/subC
 @Component({
   selector: 'sub-categoria-list',
   standalone: true,
-  imports: [ CommonModule, SharedModule ],
+  imports: [ 
+    CommonModule,
+    SharedModule,
+    UiButtonComponent,
+   ],
   templateUrl: './sub-categoria-list.component.html',
   styleUrl: './sub-categoria-list.component.scss'
 })
@@ -19,6 +24,7 @@ export class SubCategoriaListComponent implements OnInit {
   subCategorias = this.signal.subCategorias;
   categoriaSelected = this.categoriaSignal.categoriaSelected;
   renderizarSubcategorias = this.signal.renderizarSubCategorias;
+  showFormAddSubCategoria = this.signal.showFormAddSubCategoria;
 
   constructor(
     private repository: SubCategoriaRepository,

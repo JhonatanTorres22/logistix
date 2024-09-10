@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { ObservacionInsert, ObservacionListar } from "../../domain/models/obserbacion.model";
+import { ObservacionInsert, Observacion } from "../../domain/models/obserbacion.model";
 import { ObservacionMapper } from "../../domain/mappers/observacion.mapper";
 import { ObservacionListarDataArrayDTO } from "../dto/observacion.dto";
 
@@ -33,7 +33,7 @@ export class ObservacionService {
         return this.http.post<void>( this.urlApi + this.urlInsertar, observacionAPI )
      }
 
-     listarxId = ( idMensaje: number ): Observable<ObservacionListar[]> => {
+     listarxId = ( idMensaje: number ): Observable<Observacion[]> => {
       return this.http.get<ObservacionListarDataArrayDTO>( this.urlApi + this.urlListarxId + idMensaje )
          .pipe( map ( responseAPI => responseAPI.data.map ( ObservacionMapper.fromApiToDomainListar ) ))
      }

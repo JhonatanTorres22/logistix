@@ -1,4 +1,4 @@
-export interface Observacion {
+export interface ObservacionModel {
     id: number,
     mensajeId: number,
     ticket: string,
@@ -12,6 +12,12 @@ export interface Observacion {
     
 }
 
-export type ObservacionInsert = Pick<Observacion, 'mensajeId' | 'subCategoriaId' | 'mensaje' | 'userId'>;
+export type ObservacionInsert = Pick<ObservacionModel, 'mensajeId' | 'subCategoriaId' | 'mensaje' | 'userId'>;
 
-export type ObservacionListar = Omit<Observacion, 'subCategoriaId' | 'userId'>
+export type Observacion = Omit<ObservacionModel, 'subCategoriaId' | 'userId'>
+
+export type Ticket = Pick<ObservacionModel, 'id' | 'mensajeId' | 'ticket' | 'fechaObservacion'> & {
+    usuario: string,
+    rol: string,
+    estado: string
+}

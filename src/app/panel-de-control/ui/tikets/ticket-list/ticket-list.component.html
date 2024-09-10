@@ -1,0 +1,7 @@
+<!-- {{ filtroSelect() }} -->
+<div class="h-30rem overflow-auto">
+    @for (ticket of tickets; track ticket) {
+        <ticket-card [ticket]="ticket"></ticket-card>
+    }
+    
+</div>
