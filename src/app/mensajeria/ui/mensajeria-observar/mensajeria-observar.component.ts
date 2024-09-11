@@ -41,6 +41,7 @@ export class MensajeriaObservarComponent implements OnInit {
   categoriaSelectedOptions = this.signal.categoriaSelectedOptions;
   subCategoriaSelectedOptions = this.subCategoriaSignal.subCategoriaSelectedOptions;
   selectMensaje = this.mensajeriaSignal.selectMensaje;
+  mensajesRecibidos = this.mensajeriaSignal.mensajesRecibidos;
   currentRol = this.authSignal.currentRol;
   formObservar: FormGroup;
   // categoria
@@ -132,18 +133,38 @@ export class MensajeriaObservarComponent implements OnInit {
         this.alert.showAlert('Observación enviada con éxito', 'success', 6);
         this.modal.getRefModal().close('Observado')
         // this.mensajeriaSignal.renderizarMensajes('')
-        this.selectMensaje.update( mensaje => {
-          return {
-            ...mensaje,
-            mensajeObservado: true
-          }
-        } );
+        
+        this.actualizarCampoObservado()
         
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al enviar la observación', 'error', 6);
       }
     })
+  }
+
+  actualizarCampoObservado = () => {
+    this.selectMensaje.update( mensaje => {
+      this.mensajesRecibidos.update( mensajes => {
+        const msj = mensajes.map( men => {
+          if( men.idMensaje == mensaje.idMensaje ) {
+            return {
+              ...men,
+              mensajeObservado: true
+
+            }
+          }
+          return { ...men }
+        } );
+
+        return msj;
+      });
+      
+      return {
+        ...mensaje,
+        mensajeObservado: true
+      }
+    } );
   }
 
 }

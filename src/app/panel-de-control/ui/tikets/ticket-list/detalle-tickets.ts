@@ -4,11 +4,14 @@ export const detalleTickets: Observacion[] = [
     {
       id: 1,
       mensajeId: 1,
-      ticket: '105945',
-      categoriaNombre: 'TECNOLOGÍA',
-      subCategoriaNombre: 'PLATAFORMA',
-      mensaje: '<p>Hay un problema con el usuario del sigu</p>',
-      fechaObservacion: '09/14/2024 17:56'
+      ticket: 'DOC0000009',
+      categoriaNombre: 'DOCUMENTACIÓN',
+      subCategoriaNombre: 'FORMATO C1 INCORRECTO',
+      mensaje: '<p>Falta documentación para completar el formato C1 con el Plan de estudios actual, si no requiere ACTUALIZACIÓN, el C1 debe RATIFICARSE mediante resolución de consejo universitario</p>',
+      fechaObservacion: '09/10/2024 17:24',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 2,
@@ -17,7 +20,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'ATENCIÓN AL CLIENTE',
       subCategoriaNombre: 'RESPUESTA',
       mensaje: '<p>El cliente está insatisfecho con la respuesta recibida.</p>',
-      fechaObservacion: '09/15/2024 10:22'
+      fechaObservacion: '09/15/2024 10:22',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 3,
@@ -26,7 +32,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'OPERACIONES',
       subCategoriaNombre: 'PROCESO',
       mensaje: '<p>Se detectó un error en el proceso de actualización.</p>',
-      fechaObservacion: '09/16/2024 11:35'
+      fechaObservacion: '09/16/2024 11:35',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 4,
@@ -35,7 +44,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'HARDWARE',
       subCategoriaNombre: 'FALLA',
       mensaje: '<p>El dispositivo presenta fallas de hardware.</p>',
-      fechaObservacion: '09/17/2024 14:05'
+      fechaObservacion: '09/17/2024 14:05',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 5,
@@ -44,7 +56,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'SEGURIDAD',
       subCategoriaNombre: 'ACCESO',
       mensaje: '<p>Problemas con el acceso a la plataforma segura.</p>',
-      fechaObservacion: '09/18/2024 15:20'
+      fechaObservacion: '09/18/2024 15:20',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 6,
@@ -53,7 +68,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'TECNOLOGÍA',
       subCategoriaNombre: 'MANTENIMIENTO',
       mensaje: '<p>Se requiere mantenimiento urgente en el servidor.</p>',
-      fechaObservacion: '09/19/2024 09:45'
+      fechaObservacion: '09/19/2024 09:45',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 7,
@@ -62,7 +80,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'ATENCIÓN AL CLIENTE',
       subCategoriaNombre: 'QUEJA',
       mensaje: '<p>El cliente ha presentado una queja sobre el producto.</p>',
-      fechaObservacion: '09/20/2024 12:50'
+      fechaObservacion: '09/20/2024 12:50',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 8,
@@ -71,7 +92,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'OPERACIONES',
       subCategoriaNombre: 'ERROR',
       mensaje: '<p>Error en la carga de datos durante la operación.</p>',
-      fechaObservacion: '09/21/2024 16:15'
+      fechaObservacion: '09/21/2024 16:15',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 9,
@@ -80,7 +104,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'HARDWARE',
       subCategoriaNombre: 'REEMPLAZO',
       mensaje: '<p>Necesario reemplazar el componente dañado.</p>',
-      fechaObservacion: '09/22/2024 08:30'
+      fechaObservacion: '09/22/2024 08:30',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 10,
@@ -89,7 +116,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'SEGURIDAD',
       subCategoriaNombre: 'INCIDENCIA',
       mensaje: '<p>Incidencia de seguridad detectada en el sistema.</p>',
-      fechaObservacion: '09/23/2024 10:00'
+      fechaObservacion: '09/23/2024 10:00',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 11,
@@ -98,7 +128,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'TECNOLOGÍA',
       subCategoriaNombre: 'INTEGRACIÓN',
       mensaje: '<p>Problema con la integración de nuevos módulos.</p>',
-      fechaObservacion: '09/24/2024 11:25'
+      fechaObservacion: '09/24/2024 11:25',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 12,
@@ -107,7 +140,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'ATENCIÓN AL CLIENTE',
       subCategoriaNombre: 'FOLLOW-UP',
       mensaje: '<p>Se requiere seguimiento al caso del cliente.</p>',
-      fechaObservacion: '09/25/2024 13:40'
+      fechaObservacion: '09/25/2024 13:40',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 13,
@@ -116,7 +152,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'OPERACIONES',
       subCategoriaNombre: 'DOCUMENTACIÓN',
       mensaje: '<p>Falta documentación para completar la operación.</p>',
-      fechaObservacion: '09/26/2024 15:55'
+      fechaObservacion: '09/26/2024 15:55',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 14,
@@ -125,7 +164,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'HARDWARE',
       subCategoriaNombre: 'INSTALACIÓN',
       mensaje: '<p>Se necesita instalar nuevo hardware en la oficina.</p>',
-      fechaObservacion: '09/27/2024 09:10'
+      fechaObservacion: '09/27/2024 09:10',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 15,
@@ -134,7 +176,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'SEGURIDAD',
       subCategoriaNombre: 'ACTUALIZACIÓN',
       mensaje: '<p>Actualizar las medidas de seguridad del sistema.</p>',
-      fechaObservacion: '09/28/2024 11:25'
+      fechaObservacion: '09/28/2024 11:25',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 16,
@@ -143,7 +188,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'TECNOLOGÍA',
       subCategoriaNombre: 'DESARROLLO',
       mensaje: '<p>Problemas durante el desarrollo de nuevas funciones.</p>',
-      fechaObservacion: '09/29/2024 14:40'
+      fechaObservacion: '09/29/2024 14:40',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 17,
@@ -152,7 +200,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'ATENCIÓN AL CLIENTE',
       subCategoriaNombre: 'CONSULTA',
       mensaje: '<p>Consulta sobre el estado del pedido.</p>',
-      fechaObservacion: '09/30/2024 16:50'
+      fechaObservacion: '09/30/2024 16:50',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 18,
@@ -161,7 +212,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'OPERACIONES',
       subCategoriaNombre: 'OPTIMIZACIÓN',
       mensaje: '<p>Necesaria optimización del proceso actual.</p>',
-      fechaObservacion: '10/01/2024 08:15'
+      fechaObservacion: '10/01/2024 08:15',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 19,
@@ -170,7 +224,10 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'HARDWARE',
       subCategoriaNombre: 'REPARACIÓN',
       mensaje: '<p>Reparación de equipo defectuoso requerido.</p>',
-      fechaObservacion: '10/02/2024 10:25'
+      fechaObservacion: '10/02/2024 10:25',
+      estado: '',
+      rol: '',
+      usuario: ''
     },
     {
       id: 20,
@@ -179,6 +236,9 @@ export const detalleTickets: Observacion[] = [
       categoriaNombre: 'SEGURIDAD',
       subCategoriaNombre: 'ALERTA',
       mensaje: '<p>Alerta de posible brecha de seguridad.</p>',
-      fechaObservacion: '10/03/2024 13:35'
+      fechaObservacion: '10/03/2024 13:35',
+      estado: '',
+      rol: '',
+      usuario: ''
     }
   ];

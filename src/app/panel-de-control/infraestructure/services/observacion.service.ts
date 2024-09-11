@@ -2,9 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { ObservacionInsert, Observacion } from "../../domain/models/obserbacion.model";
+import { ObservacionInsert, Observacion, ObservacionPendiente } from "../../domain/models/obserbacion.model";
 import { ObservacionMapper } from "../../domain/mappers/observacion.mapper";
-import { ObservacionListarDataArrayDTO } from "../dto/observacion.dto";
+import { ObservacionListarDataArrayDTO, ObservacionListarPendientesDataArrayDTO } from "../dto/observacion.dto";
 
 
 
@@ -17,6 +17,7 @@ export class ObservacionService {
     urlApi: string;
     urlInsertar: string;
     urlListarxId: string;
+    urlListarPendientes: string;
 
     constructor(
         private http: HttpClient,
@@ -24,7 +25,8 @@ export class ObservacionService {
      ) {
         this.urlApi = environment.EndPoint;
         this.urlInsertar = 'api/Observacion/Insertar';
-        this.urlListarxId = 'api/Observacion/ListarxCodigoMensaje?MensajeriaDetalleId='
+        this.urlListarxId = 'api/Observacion/ListarxCodigoMensaje?MensajeriaDetalleId=';
+        this.urlListarPendientes = 'api/Observacion/ListarNoResueltasNoConformes';
      }
 
      insertar = ( observacion: ObservacionInsert ): Observable<void> => {
@@ -36,6 +38,13 @@ export class ObservacionService {
      listarxId = ( idMensaje: number ): Observable<Observacion[]> => {
       return this.http.get<ObservacionListarDataArrayDTO>( this.urlApi + this.urlListarxId + idMensaje )
          .pipe( map ( responseAPI => responseAPI.data.map ( ObservacionMapper.fromApiToDomainListar ) ))
+     }
+
+     listarPendientes = (): Observable<ObservacionPendiente[]> => {
+
+      return this.http.get<ObservacionListarPendientesDataArrayDTO>( this.urlApi + this.urlListarPendientes )
+         .pipe( map ( responseAPI => responseAPI.data.map ( ObservacionMapper.fromApiToDomainListarPendiente) ))
+
      }
 
 }

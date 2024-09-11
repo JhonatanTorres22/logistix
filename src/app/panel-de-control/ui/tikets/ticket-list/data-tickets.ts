@@ -4,11 +4,11 @@ export const dataTickets: Ticket[] = [
     {
       id: 1,
       mensajeId: 1,
-      ticket: '105945',
-      usuario: 'Callens Lopez José Miguel',
-      rol: 'Director de Escuela de Ingeniería de Sistemas',
-      fechaObservacion: '09/14/2024 17:56',
-      estado: 'Resuelto'
+      ticket: 'DOC0000009',
+      usuario: 'Gates Maxwell Henry',
+      rol: 'Decano de la Facultad de Ingeniería, Ciencias y Administración',
+      fechaObservacion: '09/10/2024 17:24',
+      estado: 'Pendiente'
     },
     {
       id: 2,

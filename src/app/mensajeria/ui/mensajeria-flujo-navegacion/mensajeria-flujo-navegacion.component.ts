@@ -48,6 +48,8 @@ export class MensajeriaFlujoNavegacionComponent {
   listaDestinatariosResponderA = this.signal.listaDestinatariosResponderA;
   listaDestinatariosResponderAflujo = this.signal.listaDestinatariosResponderAflujo;
   selectMensaje = this.signal.selectMensaje;
+  tipoBandeja = this.signal.tipoBandeja;
+
   selectedDestinatarioResponderA = this.signal.selectedDestinatarioResponderA;
   isModal = this.signalPlanEstudio.isModal;
   planEstudioSinResolucion = this.signalPlanEstudio.planEstudioSinResolucion;

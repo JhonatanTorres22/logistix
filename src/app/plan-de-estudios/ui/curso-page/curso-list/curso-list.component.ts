@@ -202,7 +202,7 @@ export class CursoListComponent implements OnInit {
         this.signal.setCursoSelectDefault();
         return
       }
-
+      this.signal.setCursoSelectDefault();
       this.obtener();
 
     });

@@ -27,6 +27,9 @@ export class TicketDetalleComponent {
     categoriaNombre: '',
     subCategoriaNombre: '',
     mensaje: '',
+    estado: '',
+    rol: '',
+    usuario: '',
     fechaObservacion: ''
   }
 

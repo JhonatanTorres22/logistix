@@ -1,6 +1,6 @@
 <!-- {{ filtroSelect() }} -->
 <div class="h-30rem overflow-auto">
-    @for (ticket of tickets; track ticket) {
+    @for (ticket of ticketsPendientes; track ticket) {
         <ticket-card [ticket]="ticket"></ticket-card>
     }
     
