@@ -1,17 +1,17 @@
 <app-card>
-    <ng-template #headerTitleTemplate> Tiket {{ ticketDetalle.ticket }} </ng-template>
+    <ng-template #headerTitleTemplate> #{{ ticketDetalle.ticket }} </ng-template>
     <div class="row">
         <div class="col-4 font-bold">Categoria </div>
-        <div class="col">{{ ticketDetalle.subCategoriaNombre }}</div>
+        <div class="col">{{ ticketDetalle.categoriaNombre }}</div>
         <mat-divider></mat-divider>
         <div class="col-4 font-bold">Sub Categoria </div>
-        <div class="col">{{ ticketDetalle.categoriaNombre }}</div>
+        <div class="col">{{ ticketDetalle.subCategoriaNombre }}</div>
         <mat-divider></mat-divider>
         <div class="col-4 font-bold">Fecha</div>
         <div class="col">{{ ticketDetalle.fechaObservacion | date: 'dd MMM yyyy, h:mm a' }}</div>
-        <mat-divider></mat-divider>
+        <!-- <mat-divider></mat-divider>
         <div class="col-4 font-bold">Estado</div>
-        <div class="col"><span>ABIERTO</span> </div>
+        <div class="col"><span>ABIERTO</span> </div> -->
         <mat-divider></mat-divider>
         <div class="col-4 font-bold">Detalle </div>
         <div class="col" [innerHTML]="ticketDetalle.mensaje"></div>

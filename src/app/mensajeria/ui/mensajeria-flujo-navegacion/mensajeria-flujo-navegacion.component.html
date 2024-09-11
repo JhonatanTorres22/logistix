@@ -5,15 +5,15 @@
 
 <div class="flex justify-content-end gap-2">
 
-  @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
+  <!-- @if ( currentRol().rol == 'Vicerrectorado Académico' ) {
     <ui-button tooltip="Cerrar mensaje de manera forzada" color="red" class="flex-1" type="sweet" (click)="cerrarConfirm()"> Forzar Cerrar</ui-button>
-  }
+  } -->
 
     @if( showCancelar ) {
         <ui-button tooltip="Cancelar Envio" color="secondary" (click)="cancelar()"> Cancelar</ui-button>
     }
     
-    @if ( !selectMensaje().mensajeObservado ) {
+    @if ( !selectMensaje().mensajeObservado && tipoBandeja() == 'Recibidos' ) {
       <ui-button tooltip="Observar" type="sweet" borde="3xl" color="red" (click)="observar( Observar )"> Observar</ui-button>
     }
 
@@ -29,7 +29,7 @@
             </ui-button> -->
         }
         @case ('AVANZAR') {
-          @if ( isLast ) {
+          @if ( isLast && !selectMensaje().mensajeObservado ) {
             <ui-button color="primary" borde="3xl"
                 [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'RETROCEDER'"
                 [type]="listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR' ? 'default':'sweet'"

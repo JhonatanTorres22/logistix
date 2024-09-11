@@ -2,7 +2,7 @@
     <ticket-detalle [ticketDetalle]="ticketSelect()"></ticket-detalle>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-    <ui-button color="primary" >Marcar como Resuelto</ui-button>
+    <ui-button color="red" label="Forzar Cierre"  class="m-r-10" (onClick)="onCierreConfirm()"></ui-button> <!-- mat-dialog-close="cancelar" -->
+    <ui-button color="primary" >Responder</ui-button>
   </mat-dialog-actions>
   

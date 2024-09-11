@@ -50,8 +50,8 @@
         @if ( !isModal() ) {
             <ng-template #actionTemplate>
                 <div class="flex gap-2 justify-content-around w-full">
-                    <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18" (onClick)="eliminarConfirm( planEstudio )"></ui-button>
-                    <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( planEstudio, planEstudioAdd, 'Edit' )"></ui-button>
+                    <ui-button tooltip="Eliminar" color="red" icon="ti ti-trash f-18" (onClick)="eliminarConfirm( planEstudio )" [disabled]="planEstudio.archivo != null"></ui-button>
+                    <ui-button tooltip="Editar" color="blue" icon="ti ti-pencil f-18" (onClick)="showFormEdit( planEstudio, planEstudioAdd, 'Edit' )" [disabled]="planEstudio.archivo != null"></ui-button>
                     <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( planEstudio )"></ui-button>
                     <ui-button tooltip="Ver Perfil de Egresado" color="yellow" icon="ti ti-user f-18" (onClick)="showFormEdit( planEstudio, planEstudioPerfilEgresado, 'Perfil' )"></ui-button>
                 </div>

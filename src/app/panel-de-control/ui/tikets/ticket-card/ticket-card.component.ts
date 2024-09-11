@@ -4,7 +4,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
-import { Observacion, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { Observacion, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { detalleTickets } from '../ticket-list/detalle-tickets';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 
@@ -25,14 +25,17 @@ export class TicketCardComponent {
   // tickets: Observacion[] = detalleTickets;
   ticketSelect = this.signal.ticketSelect;
 
-  @Input() ticket: Ticket = {
+  @Input() ticket: Observacion = {
     estado: '',
     fechaObservacion: '',
     id: 0,
     mensajeId: 0,
     rol: '',
     ticket: '',
-    usuario: ''
+    usuario: '',
+    categoriaNombre: '',
+    mensaje: '',
+    subCategoriaNombre: ''
   }
 
 
@@ -49,7 +52,9 @@ export class TicketCardComponent {
 
   openModalTicket = ( template: TemplateRef<any>, ticket: Ticket ) => {
 
-    this.ticketSelect.set( detalleTickets.find( tik => tik.ticket == ticket.ticket )!);
+    // this.ticketSelect.set( detalleTickets.find( tik => tik.ticket == ticket.ticket )!);
+    this.ticketSelect.set( this.ticket );
+    
 
     this.modal.openTemplate({
       template,

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { TicketCardComponent } from '../ticket-card/ticket-card.component';
-import { Observacion, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { Observacion, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { detalleTickets } from './detalle-tickets';
 import { dataTickets } from './data-tickets';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
+import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
+import { AlertService } from 'src/app/demo/services/alert.service';
 
 @Component({
   selector: 'ticket-list',
@@ -18,13 +20,16 @@ import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/obser
   templateUrl: './ticket-list.component.html',
   styleUrl: './ticket-list.component.scss'
 })
-export class TicketListComponent {
+export class TicketListComponent implements OnInit {
 
-  tickets: Ticket[] = dataTickets;
+  ticketsPendientes: ObservacionPendiente[] = [];
   filtroSelect = this.signal.filtroSelect;
+  tickets = this.signal.tikets;
   buscador = this.signal.buscador;
   constructor(
     private signal: ObservacionSignal,
+    private repository: ObservacionRepository,
+    private alert: AlertService,
   ) {
 
     effect( () => {
@@ -39,23 +44,40 @@ export class TicketListComponent {
     })
 
   }
+  ngOnInit(): void {
+    this.listarPendientes();
+  }
 
-  filtrar = () => {
-    console.log('filt');
-    
-    if( this.filtroSelect() == 'all' ) {
-      this.tickets = dataTickets;
+  listarPendientes = () => {
+    this.repository.listarPendientes().subscribe({
+      next: ( tickets ) => {
+        console.log( tickets );
+        this.alert.showAlert('Listando los tikets pendientes', 'success', 6);
+        this.tickets.set( tickets )
+        this.ticketsPendientes = this.tickets();
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los tikets pendientes....', 'error', 6)
+      }
+    })
+  }
+
+  filtrar = () => {    
+    if( this.filtroSelect() == 'all' || this.filtroSelect() == 'search' ) {
+      this.ticketsPendientes = this.tickets();
       return
     }
 
-    this.tickets = dataTickets.filter( tick => tick.estado.toLowerCase() == this.filtroSelect())
+    // this.tickets = dataTickets.filter( tick => tick.estado.toLowerCase() == this.filtroSelect())
   }
   
   buscar = () => {
-    let ticketFiltrado: Ticket[] = [];
-
-    const dataActual = this.tickets;
-
+    let ticketFiltrado: ObservacionPendiente[] = [];
+    if( this.tickets.length == 0) {
+      // this.tickets = dataTickets
+      this.ticketsPendientes = this.tickets()
+    }
+    const dataActual = this.ticketsPendientes;
     dataActual.map( tick => {
 
       const ticket = JSON.stringify( tick ).toLowerCase();
@@ -65,10 +87,8 @@ export class TicketListComponent {
       }
 
     } )
-
-    console.log(ticketFiltrado );
-    
-    this.tickets = ticketFiltrado;
+    // console.log(ticketFiltrado );    
+    this.ticketsPendientes = ticketFiltrado;
   }
 
 }

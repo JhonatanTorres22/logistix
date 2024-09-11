@@ -14,9 +14,21 @@ export interface ObservacionModelDTO {
 export type ObservacionInsertDTO = Pick<ObservacionModelDTO, 'codigoMensajeria' | 'codigoObservacionSubCategoria' | 'detalleObservacion' | 'usuarioObservacion' >;
 
 
-export type ObservacionDTO = Omit<ObservacionModelDTO, 'codigoObservacionSubCategoria' | 'usuarioObservacion'>
+export type ObservacionDTO = Omit<ObservacionModelDTO, 'codigoObservacionSubCategoria' | 'usuarioObservacion'> & {
+    nombreRol: string,
+    nombreUsuario: string,
+    estado: string,
+}
+export type ObservacionPendienteDTO = ObservacionDTO & {
+    nombreRol: string,
+    nombreUsuario: string,
+}
 
 
 export interface ObservacionListarDataArrayDTO {
     data: ObservacionDTO[]
+}
+
+export interface ObservacionListarPendientesDataArrayDTO {
+    data: ObservacionPendienteDTO[]
 }

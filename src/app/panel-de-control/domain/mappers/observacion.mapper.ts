@@ -1,5 +1,5 @@
-import { ObservacionDTO, ObservacionInsertDTO } from "../../infraestructure/dto/observacion.dto";
-import { Observacion, ObservacionInsert } from "../models/obserbacion.model";
+import { ObservacionDTO, ObservacionInsertDTO, ObservacionPendienteDTO } from "../../infraestructure/dto/observacion.dto";
+import { Observacion, ObservacionInsert, ObservacionPendiente } from "../models/obserbacion.model";
 
 
 export class ObservacionMapper {
@@ -20,8 +20,26 @@ export class ObservacionMapper {
             mensaje: param.detalleObservacion,
             mensajeId: param.codigoMensajeria,
             subCategoriaNombre: param.denominacionSubCategoria,
+            estado: 'Pendiente',
+            rol: param.nombreRol,
+            usuario: param.nombreUsuario,
             ticket: param.numeroTicket
         
+        }
+    }
+
+    static fromApiToDomainListarPendiente( param: ObservacionPendienteDTO ): ObservacionPendiente {
+        return {
+            categoriaNombre: param.denominacionCategoria,
+            fechaObservacion: param.fechaObservacion,
+            id: param.codigoObservacion,
+            mensaje: param.detalleObservacion,
+            mensajeId: param.codigoMensajeria,
+            rol: param.nombreRol,
+            subCategoriaNombre: param.denominacionSubCategoria,
+            ticket: param.numeroTicket,
+            estado: 'Pendiente',
+            usuario: param.nombreUsuario
         }
     }
 }
