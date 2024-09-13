@@ -5,7 +5,7 @@
     <mat-select [formControl]="formControl" (selectionChange)="onSelectionChange( $event )" [disabled]="readonly">
         @for (option of options; track option) {
 
-          <mat-option [disabled]="option.disabled" [value]="option.value">
+          <mat-option [disabled]="option.disabled" [value]="option">
             <div class="flex align-item-center">
               @if ( image ) {
                 <img [src]="image" alt="images" class="img-fuild m-r-10 border-50 wid-35" />

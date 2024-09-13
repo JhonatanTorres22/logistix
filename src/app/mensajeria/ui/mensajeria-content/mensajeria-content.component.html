@@ -30,7 +30,7 @@
                       <span class="capitalize flex justify-content-between">
                         {{ mail.emisor.toLowerCase() }}
                         @if ( mail.mensajeObservado ) {
-                          <mensajeria-estado [small]="true"></mensajeria-estado>
+                          <mensajeria-estado [small]="true" [mensaje]="mail"></mensajeria-estado>
                         }
                       </span>
                       <div class="flex-grow-1 details">

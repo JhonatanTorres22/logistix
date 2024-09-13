@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { ObservacionInsert, Observacion, ObservacionPendiente } from "../../domain/models/obserbacion.model";
+import { ObservacionInsert, Observacion, ObservacionPendiente, ObservacionResolver, ObservacionConfirmar } from "../../domain/models/obserbacion.model";
 import { ObservacionMapper } from "../../domain/mappers/observacion.mapper";
 import { ObservacionListarDataArrayDTO, ObservacionListarPendientesDataArrayDTO } from "../dto/observacion.dto";
 
@@ -18,6 +18,8 @@ export class ObservacionService {
     urlInsertar: string;
     urlListarxId: string;
     urlListarPendientes: string;
+    urlResolver: string;
+    urlConfirmar: string;
 
     constructor(
         private http: HttpClient,
@@ -27,24 +29,37 @@ export class ObservacionService {
         this.urlInsertar = 'api/Observacion/Insertar';
         this.urlListarxId = 'api/Observacion/ListarxCodigoMensaje?MensajeriaDetalleId=';
         this.urlListarPendientes = 'api/Observacion/ListarNoResueltasNoConformes';
+        this.urlResolver = 'api/Observacion/Resuelta';
+        this.urlConfirmar = 'api/Observacion/Conforme';
      }
 
-     insertar = ( observacion: ObservacionInsert ): Observable<void> => {
+     insertObservation = ( observacion: ObservacionInsert ): Observable<void> => {
         const observacionAPI = ObservacionMapper.fromDomainToApiInsert( observacion );
 
         return this.http.post<void>( this.urlApi + this.urlInsertar, observacionAPI )
      }
 
-     listarxId = ( idMensaje: number ): Observable<Observacion[]> => {
+     getObservationsById = ( idMensaje: number ): Observable<Observacion[]> => {
       return this.http.get<ObservacionListarDataArrayDTO>( this.urlApi + this.urlListarxId + idMensaje )
          .pipe( map ( responseAPI => responseAPI.data.map ( ObservacionMapper.fromApiToDomainListar ) ))
      }
 
-     listarPendientes = (): Observable<ObservacionPendiente[]> => {
+     getPendingObservations = (): Observable<ObservacionPendiente[]> => {
 
       return this.http.get<ObservacionListarPendientesDataArrayDTO>( this.urlApi + this.urlListarPendientes )
          .pipe( map ( responseAPI => responseAPI.data.map ( ObservacionMapper.fromApiToDomainListarPendiente) ))
 
      }
+
+      resolveObservation = ( observacion: ObservacionResolver ): Observable<void> => {
+      const observacionAPI = ObservacionMapper.fromToDomainToApiResolver( observacion );
+
+      return this.http.put<void>( this.urlApi + this.urlResolver, observacionAPI )
+      }
+
+      confirmObservation = ( observacion: ObservacionConfirmar ): Observable<void> => {
+         const observacionAPI = ObservacionMapper.fromDomainToApiConfirmar( observacion );
+         return this.http.put<void>( this.urlApi + this.urlConfirmar, observacionAPI )
+      }
 
 }

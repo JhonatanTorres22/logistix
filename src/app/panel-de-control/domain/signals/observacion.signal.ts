@@ -19,7 +19,9 @@ export class ObservacionSignal {
         estado: '',
         rol: '',
         usuario: '',
-        fechaObservacion: ""
+        fechaObservacion: "",
+        mensajeResuelto: "",
+        fechaResuelto: ""
     }
 
     ticketsDefault: ObservacionPendiente[] = []
@@ -33,4 +35,10 @@ export class ObservacionSignal {
     tikets = signal( this.ticketsDefault );
 
     buscador = signal(['', '']);
+
+    mensajeRespuestaTicket = signal('');
+
+    conformeIsChecked = signal( false );
+
+    rating = signal(0);
 }   

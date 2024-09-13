@@ -3,8 +3,8 @@
         <div class="row">
             <div class="col-6">
                 <ui-select
-                    classInput="small"
-                    label="Categoría"
+                    
+                    label="Seleccione una categoría"
                     class="w-full"
                     [options]="categoriaSelectedOptions()"
                     formControlName="categoria"
@@ -12,17 +12,40 @@
                     >
                 </ui-select>
             </div>
-            <div class="col-6">
-                <ui-select
-                    classInput="small"
-                    label="Sub Categoría"
-                    class="w-full"
-                    [options]="subCategoriaSelectedOptions()"
-                    formControlName="subCategoria"
-                    (selectionChange)="subCategoriaSelected( $event.value )"
-                >
-                </ui-select>
-            </div>
+            
+            @if ( formObservar.value.categoria != '' && subCategoriaSelectedOptions().length == 0 ) {
+                <div class="col-6">
+                    <ui-select
+                        label="Seleccione una sub categoría"
+                        class="w-full"
+                        [readonly]="subCategoriaSelectedOptions().length == 0"
+                        [options]="[{text:'No hay sub categorías', value: 0, disabled: true}]"
+                        formControlName="subCategoria"
+                    >
+                    </ui-select>
+                </div>
+                <div class="col-12">
+                    <ui-alert type="info">
+                        La categoría {{ formObservar.value.categoria.text }} no tiene una subcategoría asignada. Por favor, comuníquese con el área de control interno para que agregue una subcategoría adecuada que satisfaga la observación que deseas agregar.
+                    </ui-alert>
+                    <!-- <div class="bg-cyan-200 text-blue-700 px-4 py-3 border-round text-justify shadow-4"><b><i class="ti ti-alert-circle f-20 vertical-align-middle"></i> Importante: </b>La categoría {{ formObservar.value.categoria.text }} no tiene una subcategoría asignada. Por favor, comuníquese con el área de control interno para que agregue una subcategoría adecuada que satisfaga la observación que deseas agregar.</div> -->
+                </div>
+            } @else {
+                <div class="col-6">
+                    <ui-select
+                        
+                        label="Seleccione una sub categoría"
+                        class="w-full"
+                        [readonly]="subCategoriaSelectedOptions().length == 0"
+                        [options]="subCategoriaSelectedOptions()"
+                        formControlName="subCategoria"
+                        (selectionChange)="subCategoriaSelected( $event.value )"
+                    >
+                    </ui-select>
+                </div>
+            }
+            <!-- {{ formObservar.value.categoria | json }} -->
+
         </div>
         
     </form>

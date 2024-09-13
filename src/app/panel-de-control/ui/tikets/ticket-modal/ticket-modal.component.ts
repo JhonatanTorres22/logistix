@@ -7,6 +7,9 @@ import { TicketDetalleComponent } from '../ticket-detalle/ticket-detalle.compone
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
+import { ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
 @Component({
   selector: 'ticket-modal',
@@ -23,11 +26,15 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 export class TicketModalComponent {
 
   ticketSelect = this.signal.ticketSelect;
+  mensajeRespuestaTicket = this.signal.mensajeRespuestaTicket;
+  currentRol = this.authSignal.currentRol;
 
   constructor(
     private signal: ObservacionSignal,
     private alert: AlertService,
     private modal: UiModalService,
+    private repository: ObservacionRepository,
+    private authSignal: AuthSignal
   ) {
 
   }
@@ -45,6 +52,36 @@ export class TicketModalComponent {
   forzarCierre = () => {
     this.alert.sweetAlert('success', 'Confirmado', 'El mensaje fue CERRADO y ARCHIVADO correctamente');
     this.modal.getRefModal().close();
+  }
+
+  onResponderConfirm = () => {
+    this.alert.sweetAlert('question', 'Confirmación', '¿Está seguro que desea RESPONDER el ticket?')
+      .then( isConfirm => {
+        if( !isConfirm ) return;
+
+        this.responder();
+
+      })
+  }
+
+  responder = () => {
+    const resolver: ObservacionResolver = {
+      id: this.ticketSelect().id,
+      mensajeRespuesta: this.mensajeRespuestaTicket(),
+      userId: parseInt( this.currentRol().id )
+    }
+    this.repository.resolver( resolver ).subscribe({
+      next: ( response ) => {
+        console.log('response', response);
+        this.alert.showAlert('El ticket fue RESPONDIDO correctamente','success' );
+        this.modal.getRefModal().close();
+        this.mensajeRespuestaTicket.set('');
+      }, error: ( error ) => {
+        console.log('error', error);
+        this.alert.showAlert('Ocurrió un error al responder el ticket','error' );
+      }
+    })
+
   }
 
 }
