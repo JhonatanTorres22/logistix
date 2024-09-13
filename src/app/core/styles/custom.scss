@@ -1,3 +1,26 @@
 .spacer {
     flex: 1 1 auto;
 }
+
+.activeFocus {
+    animation: activeFocus 1.5s ease 1.5s infinite normal forwards;
+}
+
+
+
+@keyframes activeFocus {
+	0% {
+		opacity: 0.8;
+		transform: scale(0.2);
+	}
+
+	80% {
+		opacity: 0;
+		transform: scale(1.2);
+	}
+
+	100% {
+		opacity: 0;
+		transform: scale(2.2);
+	}
+}

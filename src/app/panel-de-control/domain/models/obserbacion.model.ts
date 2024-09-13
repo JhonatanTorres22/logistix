@@ -7,7 +7,9 @@ export interface ObservacionModel {
     subCategoriaId: number,
     mensaje: string,
     fechaObservacion: string,
-    userId: number 
+    userId: number,
+    mensajeResuelto: string,
+    fechaResuelto: string,
 
     
 }
@@ -19,10 +21,20 @@ export type Observacion = Omit<ObservacionModel, 'subCategoriaId' | 'userId'> & 
     usuario: string,
     estado: string,
 }
+
 export type ObservacionPendiente = Observacion & {
     rol: string,
     usuario: string,
     estado: string,
+}
+
+export type ObservacionResolver = Pick<Observacion, 'id' > & {
+    mensajeRespuesta: string,
+    userId: number
+}
+
+export type ObservacionConfirmar = ObservacionResolver & {
+    puntuacion: number
 }
 
 export type Ticket = Pick<ObservacionModel, 'id' | 'mensajeId' | 'ticket' | 'fechaObservacion'> & {

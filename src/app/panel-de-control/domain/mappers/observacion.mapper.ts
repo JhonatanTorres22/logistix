@@ -1,5 +1,5 @@
-import { ObservacionDTO, ObservacionInsertDTO, ObservacionPendienteDTO } from "../../infraestructure/dto/observacion.dto";
-import { Observacion, ObservacionInsert, ObservacionPendiente } from "../models/obserbacion.model";
+import { ObservacionConfirmarDTO, ObservacionDTO, ObservacionInsertDTO, ObservacionPendienteDTO, ObservacionResolverDTO } from "../../infraestructure/dto/observacion.dto";
+import { Observacion, ObservacionConfirmar, ObservacionInsert, ObservacionPendiente, ObservacionResolver } from "../models/obserbacion.model";
 
 
 export class ObservacionMapper {
@@ -20,10 +20,12 @@ export class ObservacionMapper {
             mensaje: param.detalleObservacion,
             mensajeId: param.codigoMensajeria,
             subCategoriaNombre: param.denominacionSubCategoria,
-            estado: 'Pendiente',
+            estado: param.detalleResuelto == null ? 'pendiente' : 'proceso',
             rol: param.nombreRol,
             usuario: param.nombreUsuario,
-            ticket: param.numeroTicket
+            ticket: param.numeroTicket,
+            fechaResuelto: param.fechaResuelto,
+            mensajeResuelto: param.detalleResuelto
         
         }
     }
@@ -38,8 +40,28 @@ export class ObservacionMapper {
             rol: param.nombreRol,
             subCategoriaNombre: param.denominacionSubCategoria,
             ticket: param.numeroTicket,
-            estado: 'Pendiente',
-            usuario: param.nombreUsuario
+            estado: param.detalleResuelto == null ? 'pendiente' : 'proceso',
+            usuario: param.nombreUsuario,
+            fechaResuelto: param.fechaResuelto,
+            mensajeResuelto: param.detalleResuelto
         }
     }
+
+    static fromToDomainToApiResolver( param: ObservacionResolver ): ObservacionResolverDTO {
+        return {
+            codigoObservacion: param.id,
+            descripcion: param.mensajeRespuesta,
+            usuario: param.userId
+        }
+    }
+    
+    static fromDomainToApiConfirmar( param: ObservacionConfirmar ): ObservacionConfirmarDTO {
+        return {
+            codigoObservacion: param.id,
+            descripcion: param.mensajeRespuesta,
+            usuario: param.userId,
+            puntuacion: param.puntuacion
+        }
+    }
+
 }

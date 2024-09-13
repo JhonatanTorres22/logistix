@@ -35,7 +35,9 @@ export class TicketCardComponent {
     usuario: '',
     categoriaNombre: '',
     mensaje: '',
-    subCategoriaNombre: ''
+    subCategoriaNombre: '',
+    mensajeResuelto: '',
+    fechaResuelto: ''
   }
 
 
@@ -59,7 +61,15 @@ export class TicketCardComponent {
     this.modal.openTemplate({
       template,
       titulo: ''
-    })
+    }).afterClosed().subscribe( (response) => {
+      
+      if( response == 'cancelar' ) {
+          console.log('Modal cerrado', response);
+          return
+      }
+
+        
+    } );
   }
 }
 

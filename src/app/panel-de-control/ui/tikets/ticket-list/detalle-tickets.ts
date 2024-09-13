@@ -11,7 +11,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/10/2024 17:24',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 2,
@@ -23,7 +25,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/15/2024 10:22',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 3,
@@ -35,7 +39,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/16/2024 11:35',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 4,
@@ -47,7 +53,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/17/2024 14:05',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 5,
@@ -59,7 +67,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/18/2024 15:20',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 6,
@@ -71,7 +81,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/19/2024 09:45',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 7,
@@ -83,7 +95,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/20/2024 12:50',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 8,
@@ -95,7 +109,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/21/2024 16:15',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 9,
@@ -107,7 +123,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/22/2024 08:30',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 10,
@@ -119,7 +137,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/23/2024 10:00',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 11,
@@ -131,7 +151,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/24/2024 11:25',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 12,
@@ -143,7 +165,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/25/2024 13:40',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 13,
@@ -155,7 +179,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/26/2024 15:55',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 14,
@@ -167,7 +193,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/27/2024 09:10',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 15,
@@ -179,7 +207,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/28/2024 11:25',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 16,
@@ -191,7 +221,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/29/2024 14:40',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 17,
@@ -203,7 +235,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '09/30/2024 16:50',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 18,
@@ -215,7 +249,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '10/01/2024 08:15',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 19,
@@ -227,7 +263,9 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '10/02/2024 10:25',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     },
     {
       id: 20,
@@ -239,6 +277,8 @@ export const detalleTickets: Observacion[] = [
       fechaObservacion: '10/03/2024 13:35',
       estado: '',
       rol: '',
-      usuario: ''
+      usuario: '',
+      fechaResuelto: '',
+      mensajeResuelto: ''
     }
   ];

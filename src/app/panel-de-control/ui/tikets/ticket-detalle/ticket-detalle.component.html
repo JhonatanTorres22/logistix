@@ -1,7 +1,11 @@
-<app-card>
-    <ng-template #headerTitleTemplate> #{{ ticketDetalle.ticket }} </ng-template>
-    <div class="row">
-        <div class="col-4 font-bold">Categoria </div>
+<div class="flex flex-column gap-3">
+<!-- <pre>
+    {{ ticketDetalle | json }}
+</pre> -->
+    <div class="row border-round-sm border-1 m-2 border-gray-400 m-0">
+        <div class="col-4 font-bold">N° de Ticket </div>
+        <div class="col">{{ ticketDetalle.ticket }}</div>
+        <mat-divider></mat-divider><div class="col-4 font-bold">Categoria </div>
         <div class="col">{{ ticketDetalle.categoriaNombre }}</div>
         <mat-divider></mat-divider>
         <div class="col-4 font-bold">Sub Categoria </div>
@@ -15,11 +19,64 @@
         <mat-divider></mat-divider>
         <div class="col-4 font-bold">Detalle </div>
         <div class="col" [innerHTML]="ticketDetalle.mensaje"></div>
-        <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Respuesta </div>
-        <div class="col">--- SIN RESPUESTA ---</div>
+        
+
+        <!-- <div class="col">{{ ticketDetalle.mensajeResuelto || '---- SIN RESPUESTA ----'}}</div> -->
     </div>
-</app-card>
-@if ( currentRol().rol == 'Control Interno' ) {
-    <quill-editor class="w-100 h-9rem bg-white mt-3" placeholder="" [(ngModel)]="mensaje"></quill-editor>
-}
+
+    <!-- <mat-divider></mat-divider> -->
+    <div class="border-round-sm border-gray-400 m-0 border-1 bg-{{ !ticketDetalle.mensajeResuelto ? 'cyan' : conformeIsChecked() ? 'green' : 'yellow'}}-100">
+        <div class="col-4 font-bold">Respuesta </div>
+        <div class="col" [innerHTML]="ticketDetalle.mensajeResuelto ?? '---- SIN RESPUESTA ----'"></div>
+    </div>
+
+    @if ( currentRol().rol == 'Control Interno' ) {
+        <quill-editor class="w-100 h-8rem bg-white mt-1" placeholder="" [ngModel]="mensajeRespuestaTicket()" (ngModelChange)="mensajeRespuestaTicket.set($event)"></quill-editor>
+    }
+    @if ( ticketDetalle.estado == 'pendiente' && currentRol().rol != 'Control Interno' ) {
+        <ui-alert type="info">
+            El ticket se encuentra en proceso de resolución. Por favor, espere a que el área de control interno responda su solicitud.
+        </ui-alert>
+    }
+    @if ( ticketDetalle.estado == 'proceso' && currentRol().rol != 'Control Interno' ) {
+            <div class="flex justify-content-between align-items-center">
+                <mat-slide-toggle [ngModel]="conformeIsChecked()" (ngModelChange)="conformeIsChecked.set( $event )" color="success">
+                    <span class="font-bold">{{conformeIsChecked() ? 'Si estoy conforme con la respuesta' : 'No estoy conforme con la respuesta'}}</span>
+                </mat-slide-toggle>
+                @if ( conformeIsChecked() && ticketDetalle.estado == 'proceso' ) {
+                    <div class="flex flex-column justify-conten-center text-center">
+                        <p class="clasificacion text-4xl m-0" [formGroup]="formRating" (change)="changeRating()">
+                            <input id="radio1" type="radio" formControlName="rating" value="5">
+                            <label for="radio1">★</label>
+                            <input id="radio2" type="radio" formControlName="rating" value="4">
+                            <label for="radio2">★</label>
+                            <input id="radio3" type="radio" formControlName="rating" value="3">
+                            <label for="radio3">★</label>
+                            <input id="radio4" type="radio" formControlName="rating" value="2">
+                            <label for="radio4">★</label>
+                            <input id="radio5" type="radio" formControlName="rating" value="1">
+                            <label for="radio5">★</label>
+                        </p>
+                        <div class="">
+                            <span class="{{ rating() > 0 ? '' : 'activeFocus' }} bg-yellow-500 px-3 border-round font-bold -mt-3">Califique la respuesta</span>
+                            <!-- <span class="text-gray-500 text-center">Califique la respuesta</span> -->
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            @if ( conformeIsChecked() ) {
+                <ui-alert type="success">
+                    El ticket ha sido resuelto. si está conforme con la respuesta, por favor, marque como resuelto para cerrar el ticket.
+                </ui-alert>
+                <quill-editor #editor class="w-100 h-8rem bg-white my-4" placeholder="" [ngModel]="mensajeRespuestaTicket()" (ngModelChange)="mensajeRespuestaTicket.set($event)"></quill-editor>
+            } @else {
+                <ui-alert type="warning">
+                    Si no está conforme con la respuesta, por favor, comuníquese con el área de control interno para que actualice su respuesta.
+                </ui-alert>
+            }
+            
+        }
+        <!-- {{ formRating.value | json }} -->
+          <mat-divider class="my-2"></mat-divider>
+    </div>

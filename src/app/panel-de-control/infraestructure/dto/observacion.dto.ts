@@ -7,7 +7,9 @@ export interface ObservacionModelDTO {
     fechaObservacion: string,
     codigoObservacionSubCategoria: number,
     detalleObservacion: string,
-    usuarioObservacion: number
+    usuarioObservacion: number,
+    detalleResuelto: string,
+    fechaResuelto: string,
 }
 
 
@@ -27,6 +29,15 @@ export type ObservacionPendienteDTO = ObservacionDTO & {
 
 export interface ObservacionListarDataArrayDTO {
     data: ObservacionDTO[]
+}
+
+export type ObservacionResolverDTO = Pick<ObservacionDTO, 'codigoObservacion' > & {
+    descripcion: string,
+    usuario: number
+}
+
+export type ObservacionConfirmarDTO = ObservacionResolverDTO & {
+    puntuacion: number
 }
 
 export interface ObservacionListarPendientesDataArrayDTO {

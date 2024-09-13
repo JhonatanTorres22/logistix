@@ -5,9 +5,9 @@
         <p-timeline [value]="hitos" align="alternate" styleClass="customized-timeline">
             <ng-template pTemplate="marker" let-rol>
                 <span 
-                    class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1" [ngClass]="{'myAnim': rol.orden == (rol.nMensajes + 1)}"
+                    class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1" [ngClass]="{'activeFocus': rol.orden == (rol.nMensajes + 1)}"
                     [style]="{ 'background-color': 'red' }">
-                        <!-- <i class="rol.icon" [ngClass]="{'myAnim': rol.orden == rol.nMensajes}"></i> -->
+                        <!-- <i class="rol.icon" [ngClass]="{'activeFocus': rol.orden == rol.nMensajes}"></i> -->
                         <!-- <span class="border-circle bg-green-500 circulo">.</span> -->
                         <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-2rem border-50 border-2" [ngClass]="rol.fechaCreacion != '' ? 'border-green-400' : 'border-gray-400' " />
                       

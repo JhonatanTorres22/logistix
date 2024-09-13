@@ -178,8 +178,10 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     })
   }
 
-  obtenerTipoMensaje = ( idTipoMensajeGrupo: number ) => {
-    this.repository.obtenerTipoMensaje( idTipoMensajeGrupo ).subscribe({
+  obtenerTipoMensaje = ( mensajeGrupo: UiSelect ) => {
+    console.log( mensajeGrupo );
+    
+    this.repository.obtenerTipoMensaje( parseInt( mensajeGrupo.value ) ).subscribe({
       next: ( tiposMensajes ) => {
         console.log( tiposMensajes );
         this.tipoMensajeForm.patchValue({
@@ -200,10 +202,10 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     })
   }
 
-  obtenerDestinatarios = ( idTipoMensaje: number ) => {
-    console.log( idTipoMensaje );
+  obtenerDestinatarios = ( tipoMensaje: UiSelect ) => {
+    console.log( tipoMensaje );
     
-    this.repository.nuevoMensajeA( idTipoMensaje ).subscribe({
+    this.repository.nuevoMensajeA( parseInt( tipoMensaje.value ) ).subscribe({
       next: ( destinatarios ) => {
         console.log( destinatarios );
         this.signal.listaDestinatarios.set( destinatarios );

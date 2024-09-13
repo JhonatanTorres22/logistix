@@ -21,17 +21,19 @@ import { ObservacionInsert } from 'src/app/panel-de-control/domain/models/obserb
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { UiAlertComponent } from "../../../core/components/ui-alert/ui-alert.component";
 
 @Component({
   selector: 'mensajeria-observar',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     SharedModule,
     QuillEditorComponent,
     UiButtonComponent,
     UiSelectComponent,
-   ],
+    UiAlertComponent
+],
   templateUrl: './mensajeria-observar.component.html',
   styleUrl: './mensajeria-observar.component.scss'
 })
@@ -63,7 +65,7 @@ export class MensajeriaObservarComponent implements OnInit {
   ) {
     this.formObservar = this.fb.group({
       categoria: new FormControl('', [ Validators.required]),
-      subCategoria: new FormControl('', [ Validators.required]),
+      subCategoria: new FormControl('', [ Validators.required, Validators.min(1)]),
       // mensaje: new FormControl('', [ Validators.required]),
     })
   }
@@ -71,15 +73,17 @@ export class MensajeriaObservarComponent implements OnInit {
     this.obtenerCategorias()
   }
 
-  seleccionarSubCategoria = ( idCategoria: number ) => {
-    console.log( idCategoria );
-    this.subCategoriaRepository.listar( idCategoria ).subscribe({
+  seleccionarSubCategoria = ( categoria: UiSelect ) => {
+    console.log( categoria );
+    this.subCategoriaRepository.listar( parseInt( categoria.value ) ).subscribe({
       next: ( subCategorias ) => {
         console.log( subCategorias );
         this.alert.showAlert('Listando las sub categorias', 'success', 4);
         const options = subCategorias.map( SubCategoriaMapper.fromDomainToDomainSelect );
-
         this.subCategoriaSelectedOptions.set( options )
+        if( subCategorias.length == 0 ) {
+          this.alert.sweetAlert('info', 'IMPORTANTE', 'La categoría seleccionada no tiene una subcategoría asignada. Por favor, comuníquese con el área de control interno para que agregue una subcategoría adecuada que satisfaga la observación que deseas agregar.')
+        }
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al obtener las sub categorias', 'error', 4);
