@@ -1,7 +1,9 @@
 <mat-dialog-content>
   <ticket-detalle [ticketDetalle]="observacionSelect()"></ticket-detalle>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-  <ui-button color="primary" [disabled]="!conformeIsChecked() || (mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null) || rating() == 0" (onClick)="resolverConfirm()">Marcar como Resuelto</ui-button>
-</mat-dialog-actions>
+@if ( observacionSelect().estado != 'Resuelto' && currentRol().rol != 'Control Interno' ) {
+  <mat-dialog-actions align="end">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" [disabled]="!conformeIsChecked() || (mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null || rating() == 0)" (onClick)="resolverConfirm()">Marcar como Resuelto</ui-button>
+  </mat-dialog-actions>
+}

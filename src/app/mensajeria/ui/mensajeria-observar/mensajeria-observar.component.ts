@@ -108,8 +108,9 @@ export class MensajeriaObservarComponent implements OnInit {
     })
   }
 
-  subCategoriaSelected = ( idSubCategoria: number ) => {
-    this.subCategoriaId = idSubCategoria;
+  subCategoriaSelected = ( subCategoria: UiSelect ) => {
+    // console.log( subCategoria );
+    this.subCategoriaId = parseInt( subCategoria.value );
   }
 
   submit = () => {

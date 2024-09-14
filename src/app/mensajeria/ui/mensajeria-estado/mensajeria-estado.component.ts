@@ -26,6 +26,7 @@ export class MensajeriaEstadoComponent implements OnInit {
   selectMensaje = this.signal.selectMensaje;
   observacionSelect = this.observacionSignal.observacionSelect;
   color: string = '';
+  estado: string = '';
 
   constructor(
     private modal: UiModalService,
@@ -35,17 +36,20 @@ export class MensajeriaEstadoComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.color = this.mensaje.observacionResuelta && !this.mensaje.solucionConforme ? 'yellow' : this.mensaje.solucionConforme ? 'green' : 'red';
+    this.estado = this.mensaje.observacionResuelta && !this.mensaje.solucionConforme ? 'Resuelto' : this.mensaje.solucionConforme ? 'Resuelto y Conforme' : 'Pendiente';
     if( this.small ) {
-      this.color = this.mensaje.solucionConforme ? 'green' : 'red';
+      
       return;
     }
     
-    this.setColor();
+    // this.setColor();
     console.log( this.mensaje );
+
     if( this.mensaje.observacionResuelta ) {
-      
+
       setTimeout(() => {
-        this.showModalObservacion( this.Observacion );
+        // this.showModalObservacion( this.Observacion );
       }, 500);
       
     }

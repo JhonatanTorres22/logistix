@@ -29,7 +29,7 @@
             </ui-button> -->
         }
         @case ('AVANZAR') {
-          @if ( isLast && !selectMensaje().mensajeObservado ) {
+          @if ( isLast && !selectMensaje().mensajeObservado || isLast && selectMensaje().observacionResuelta ) {
             <ui-button color="primary" borde="3xl"
                 [disabled]="disabled ? disabled : listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'RETROCEDER'"
                 [type]="listaDestinatariosResponderAflujo() && listaDestinatariosResponderAflujo()[0]?.flujoNavegacion == 'AVANZAR' ? 'default':'sweet'"
