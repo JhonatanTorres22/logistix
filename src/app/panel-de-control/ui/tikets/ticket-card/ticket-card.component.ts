@@ -4,7 +4,7 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
-import { Observacion, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { Observacion, ObservacionBase, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { detalleTickets } from '../ticket-list/detalle-tickets';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 
@@ -25,7 +25,7 @@ export class TicketCardComponent {
   // tickets: Observacion[] = detalleTickets;
   ticketSelect = this.signal.ticketSelect;
 
-  @Input() ticket: Observacion = {
+  @Input() ticket: ObservacionBase = {
     estado: '',
     fechaObservacion: '',
     id: 0,
@@ -37,7 +37,9 @@ export class TicketCardComponent {
     mensaje: '',
     subCategoriaNombre: '',
     mensajeResuelto: '',
-    fechaResuelto: ''
+    fechaResuelto: '',
+    fechaConforme: '',
+    historial: [],
   }
 
 

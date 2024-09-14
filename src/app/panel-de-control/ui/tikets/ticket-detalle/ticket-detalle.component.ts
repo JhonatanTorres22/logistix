@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, signal, ViewChild } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Observacion } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { Observacion, ObservacionConforme, ObservacionPendiente, ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 import { UiButtonComponent } from "../../../../core/components/ui-button/ui-button.component";
 import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.component';
@@ -25,9 +25,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class TicketDetalleComponent implements OnDestroy {
 
   showEditor: boolean = false;
+  showHistorial: boolean = false;
   formRating: FormGroup;
   @ViewChild('editor') editor: QuillEditorComponent;
-  @Input() ticketDetalle: Observacion = {
+  @Input() ticketDetalle: ObservacionPendiente | ObservacionConforme = {
     id: 0,
     mensajeId: 0,
     ticket: '',
@@ -39,7 +40,9 @@ export class TicketDetalleComponent implements OnDestroy {
     usuario: '',
     fechaObservacion: '',
     mensajeResuelto: '',
-    fechaResuelto: ''
+    fechaResuelto: '',
+    fechaConforme: '',
+    historial: [],
   }
 
   ticketSelect = this.signal.ticketSelect;

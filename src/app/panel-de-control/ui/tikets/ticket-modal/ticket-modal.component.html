@@ -2,8 +2,11 @@
     <ticket-detalle [ticketDetalle]="ticketSelect()"></ticket-detalle>
     <!-- {{ mensajeRespuestaTicket()}} -->
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-    <ui-button color="red" label="Forzar Cierre"  class="m-r-10" (onClick)="onCierreConfirm()"></ui-button> <!-- mat-dialog-close="cancelar" -->
-    <ui-button color="primary" (onClick)="onResponderConfirm()" [disabled]="mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null">Responder</ui-button>
-  </mat-dialog-actions>
+
+@if ( ticketSelect().fechaConforme == ''  ) {
+    <mat-dialog-actions align="end">
+        <ui-button color="red" label="Forzar Cierre"  class="m-r-10" (onClick)="onCierreConfirm()"></ui-button> <!-- mat-dialog-close="cancelar" -->
+        <ui-button color="primary" (onClick)="onResponderConfirm()" [disabled]="mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null">Responder</ui-button>
+    </mat-dialog-actions>
+}
   

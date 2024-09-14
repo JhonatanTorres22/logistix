@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { TicketCardComponent } from '../ticket-card/ticket-card.component';
-import { Observacion, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { Observacion, ObservacionBase, ObservacionConforme, ObservacionPendiente, Ticket } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { detalleTickets } from './detalle-tickets';
 import { dataTickets } from './data-tickets';
 import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/observacion.signal';
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
+import { de } from 'date-fns/locale';
 
 @Component({
   selector: 'ticket-list',
@@ -22,9 +23,13 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 })
 export class TicketListComponent implements OnInit {
 
-  ticketsPendientes: ObservacionPendiente[] = [];
+  ticketList: ObservacionPendiente[] | ObservacionConforme[] = [];
+  // ticketsPendientes: ObservacionPendiente[] = [];
+  showConformes: boolean = false;
+  listConformes: ObservacionConforme[] = [];
   filtroSelect = this.signal.filtroSelect;
-  tickets = this.signal.tikets;
+  ticketsPendientes = this.signal.ticketsPendientes;
+  ticketsConformes = this.signal.ticketsConformes;
   buscador = this.signal.buscador;
   constructor(
     private signal: ObservacionSignal,
@@ -46,6 +51,7 @@ export class TicketListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.listarPendientes();
+    this.listarConformes();
   }
 
   listarPendientes = () => {
@@ -53,8 +59,8 @@ export class TicketListComponent implements OnInit {
       next: ( tickets ) => {
         console.log( tickets );
         this.alert.showAlert('Listando los tikets pendientes', 'success', 6);
-        this.tickets.set( tickets )
-        this.ticketsPendientes = this.tickets();
+        this.ticketsPendientes.set( tickets )
+        this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al obtener los tikets pendientes....', 'error', 6)
@@ -62,33 +68,65 @@ export class TicketListComponent implements OnInit {
     })
   }
 
+  listarConformes = () => {
+    this.repository.listarConformes().subscribe({
+      next: ( tickets ) => {
+        console.log( tickets );
+        this.alert.showAlert('Listando los tikets conformes', 'success', 6);
+        this.ticketsConformes.set( tickets )
+        this.listConformes = this.ticketsConformes() as ObservacionConforme[];
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los tikets conformes....', 'error', 6)
+      }
+    })
+  }
+
   filtrar = () => {    
     if( this.filtroSelect() == 'all' || this.filtroSelect() == 'search' ) {
-      this.ticketsPendientes = this.tickets();
+      this.showConformes = false;
+      this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
       return
     }
 
-    // this.tickets = dataTickets.filter( tick => tick.estado.toLowerCase() == this.filtroSelect())
+    console.log(this.filtroSelect());
+    
+
+    switch( this.filtroSelect() ) {
+      case 'resuelto': {
+        this.showConformes = true;
+        // this.ticketList = 
+        //   this.ticketsConformes().filter( (tick: ObservacionBase) => tick.estado.toLowerCase() == 'resuelto') as ObservacionConforme[];
+          break;
+      };
+
+      default: {
+        this.showConformes = false;
+        this.ticketList = this.ticketsPendientes().filter( tick => tick.estado.toLowerCase() == this.filtroSelect()) as ObservacionPendiente[];
+      }
+    }
+
   }
   
   buscar = () => {
     let ticketFiltrado: ObservacionPendiente[] = [];
-    if( this.tickets.length == 0) {
-      // this.tickets = dataTickets
-      this.ticketsPendientes = this.tickets()
+    let ticketFiltradoConforme: ObservacionConforme[] = [];
+
+    if( this.ticketList.length == 0) {
+      this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
     }
-    const dataActual = this.ticketsPendientes;
+    const dataActual = this.ticketList;
     dataActual.map( tick => {
 
       const ticket = JSON.stringify( tick ).toLowerCase();
 
       if( ticket.includes( this.buscador()[1] ) ) {
-        ticketFiltrado.push( tick )
+        ticketFiltrado.push( tick as ObservacionPendiente );
       }
 
     } )
-    // console.log(ticketFiltrado );    
-    this.ticketsPendientes = ticketFiltrado;
+ 
+    this.ticketList = ticketFiltrado;
   }
 
 }
