@@ -65,16 +65,29 @@ export class TicketModalComponent {
   }
 
   responder = () => {
+    const mensajeHistorial = [
+      ...this.ticketSelect().historial
+    ]
+
+    // if( this.ticketSelect().mensajeResuelto ) {
+    //   const historial = JSON.parse( this.ticketSelect().mensajeResuelto );
+
+       mensajeHistorial.push( { mensaje: this.ticketSelect().mensajeResuelto, fecha: this.ticketSelect().fechaResuelto } )
+    // }
+
     const resolver: ObservacionResolver = {
       id: this.ticketSelect().id,
+      historial: this.ticketSelect().mensajeResuelto ? [...mensajeHistorial] : [],
       mensajeRespuesta: this.mensajeRespuestaTicket(),
       userId: parseInt( this.currentRol().id )
     }
+    console.log( resolver );
+    
     this.repository.resolver( resolver ).subscribe({
       next: ( response ) => {
         console.log('response', response);
         this.alert.showAlert('El ticket fue RESPONDIDO correctamente','success' );
-        this.modal.getRefModal().close();
+        this.modal.getRefModal().close('Listar');
         this.mensajeRespuestaTicket.set('');
       }, error: ( error ) => {
         console.log('error', error);
@@ -83,5 +96,6 @@ export class TicketModalComponent {
     })
 
   }
+  
 
 }

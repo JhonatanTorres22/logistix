@@ -10,6 +10,7 @@ export interface ObservacionModelDTO {
     usuarioObservacion: number,
     detalleResuelto: string,
     fechaResuelto: string,
+    fechaConforme: string,
 }
 
 
@@ -26,6 +27,10 @@ export type ObservacionPendienteDTO = ObservacionDTO & {
     nombreUsuario: string,
 }
 
+export type ObservacionConformeDTO = ObservacionPendienteDTO & {
+    fechaConforme: string,
+
+}
 
 export interface ObservacionListarDataArrayDTO {
     data: ObservacionDTO[]
@@ -42,4 +47,8 @@ export type ObservacionConfirmarDTO = ObservacionResolverDTO & {
 
 export interface ObservacionListarPendientesDataArrayDTO {
     data: ObservacionPendienteDTO[]
+}
+
+export interface ObservacionListarConformesDataArrayDTO {
+    data: ObservacionConformeDTO[]
 }

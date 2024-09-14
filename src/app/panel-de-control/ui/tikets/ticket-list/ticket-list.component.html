@@ -1,7 +1,20 @@
 <!-- {{ filtroSelect() }} -->
-<div class="h-30rem overflow-auto">
-    @for (ticket of ticketsPendientes; track ticket) {
-        <ticket-card [ticket]="ticket"></ticket-card>
-    }
-    
-</div>
+@if ( !showConformes ) {
+    <div class="h-30rem overflow-auto">
+        @for (ticket of ticketList; track ticket) {
+            <ticket-card [ticket]="ticket"></ticket-card>
+        }
+        
+    </div>
+} @else {
+    <div class="h-30rem overflow-auto">
+        @for (ticket of listConformes; track ticket) {
+            <ticket-card [ticket]="ticket"></ticket-card>
+        }
+        
+    </div>
+}
+
+<!-- {{ showConformes }}
+<pre>{{ ticketList | json}}</pre>
+<pre>{{ listConformes | json}}</pre> -->

@@ -1,9 +1,9 @@
-<app-card cardClass="my-2 bg-{{ ticket.estado == 'Resuelto' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-50" [showHeader]="false" padding="10">
+<app-card cardClass="my-2 bg-{{ ticket.estado == 'Conforme' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-50" [showHeader]="false" padding="10">
     <div class="flex align-item-start">
         <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
         <div class="flex-grow-1 m-l-10 max-w-18rem sm:max-w-21rem md:max-w-full"> <!-- max-w-full -->
           <div class="flex justify-content-between">
-            <div class="f-14 f-w-600 text-truncate">{{ ticket.usuario }} <span class="px-1 bg-{{ ticket.estado == 'Resuelto' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-200 text-{{ ticket.estado == 'Resuelto' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-{{ ticket.estado == 'Resuelto' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-round border-1 text-xs">{{ ticket.estado }}</span></div>
+            <div class="f-14 f-w-600 text-truncate">{{ ticket.usuario }} <span class="px-1 bg-{{ ticket.estado == 'Conforme' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-200 text-{{ ticket.estado == 'Conforme' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-{{ ticket.estado == 'Conforme' ? 'green' : ticket.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-round border-1 text-xs">{{ ticket.estado }}</span></div>
             <div class="f-14 f-w-600 text-truncate">#{{ ticket.ticket }}</div>
           </div>
           <div class="m-b-0 text-muted text-xs sm:text-normal">{{ ticket.rol }} </div> <!-- From: &lt;tazeanu&#64;company.com&gt; -->
