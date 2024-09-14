@@ -15,7 +15,8 @@ export class ObservacionMapper {
     static fromApiToDomainListar( param: ObservacionDTO ): ObservacionBase {
 
         // const historial: HistorialMensaje[] = param.detalleResuelto == null ? [] : JSON.parse(param.detalleResuelto);
-
+        const historial: HistorialMensaje[] = param.detalleResuelto == null ? [] : param.detalleResuelto.substring(0,1) == '[' ? JSON.parse(param.detalleResuelto)[0].historial : [];
+        const mensaje: string = param.detalleResuelto == null ? '' : param.detalleResuelto.substring(0,1) == '[' ? JSON.parse(param.detalleResuelto)[0].mensaje : param.detalleResuelto;
         return {
             categoriaNombre: param.denominacionCategoria,
             fechaObservacion: param.fechaObservacion,
@@ -23,13 +24,13 @@ export class ObservacionMapper {
             mensaje: param.detalleObservacion,
             mensajeId: param.codigoMensajeria,
             subCategoriaNombre: param.denominacionSubCategoria,
-            estado: param.detalleResuelto == null ? 'pendiente' : 'proceso',
+            estado: param.fechaConforme != null ? 'Resuelto y Conforme' : param.detalleResuelto == null ? 'Pendiente' : 'Resuelto',
             rol: param.nombreRol,
             usuario: param.nombreUsuario,
             ticket: param.numeroTicket,
             fechaResuelto: param.fechaResuelto,
-            mensajeResuelto: param.detalleResuelto,
-            historial: [],
+            mensajeResuelto: mensaje,
+            historial: historial.length == 0 ? [] : historial,
             fechaConforme: param.fechaConforme
         
         }
@@ -49,7 +50,7 @@ export class ObservacionMapper {
             rol: param.nombreRol,
             subCategoriaNombre: param.denominacionSubCategoria,
             ticket: param.numeroTicket,
-            estado: param.detalleResuelto == null ? 'Pendiente' : 'Proceso',
+            estado: param.detalleResuelto == null ? 'Pendiente' : 'Resuelto',
             usuario: param.nombreUsuario,
             fechaResuelto: param.fechaResuelto,
             mensajeResuelto: mensaje,

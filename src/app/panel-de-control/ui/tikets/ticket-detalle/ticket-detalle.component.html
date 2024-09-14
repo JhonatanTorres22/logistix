@@ -3,24 +3,23 @@
     {{ ticketDetalle | json }}
 </pre> -->
     <div class="row border-round-sm border-1 m-2 border-gray-400 m-0">
-        <div class="col-4 font-bold">N° de Ticket </div>
+        <div class="col-2 font-bold">N° de Ticket </div>
         <div class="col">{{ ticketDetalle.ticket }}</div>
-        <mat-divider></mat-divider><div class="col-4 font-bold">Categoria </div>
-        <div class="col">{{ ticketDetalle.categoriaNombre }}</div>
         <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Sub Categoria </div>
+        <div class="col-2 font-bold">Categoria </div>
+        <div class="col-5">{{ ticketDetalle.categoriaNombre }}</div>
+        <div class="col-2 font-bold">Sub Categoria </div>
         <div class="col">{{ ticketDetalle.subCategoriaNombre }}</div>
         <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Fecha</div>
-        <div class="col">{{ ticketDetalle.fechaObservacion | date: 'dd MMM yyyy, h:mm a' }}</div>
+        <div class="col-2 font-bold">Fecha</div>
+        <div class="col-5">{{ ticketDetalle.fechaObservacion | date: 'dd MMM yyyy, h:mm a' }}</div>
+        <div class="col-2 font-bold">Estado</div>
+        <div class="col"><span class="px-3 font-bold uppercase bg-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-200 text-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-round border-1">{{ticketDetalle.estado}}</span> </div>
         <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Detalle </div>
+        <div class="col-2 font-bold">Detalle </div>
         <div class="col" [innerHTML]="ticketDetalle.mensaje"></div>
         <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Estado</div>
-        <div class="col"><span class="px-3 font-bold uppercase bg-{{ ticketDetalle.estado == 'Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-200 text-{{ ticketDetalle.estado == 'Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-{{ ticketDetalle.estado == 'Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-round border-1">{{ticketDetalle.estado}}</span> </div>
-        <mat-divider></mat-divider>
-        <div class="col-4 font-bold">Fecha Conformidad</div>
+        <div class="col-2 font-bold">Fecha Conformidad</div>
         <div class="col"> {{ ticketDetalle.fechaConforme | date: 'dd MMM yyyy, h:mm a' }} </div>
         
         <!-- <pre>{{ ticketDetalle | json}}</pre> -->
@@ -31,15 +30,15 @@
 
     
 
-    @if ( ticketDetalle.estado == 'Proceso' ) {
-        <div class="border-round-sm border-gray-400 m-0 border-1 p-3 bg-{{ !ticketDetalle.mensajeResuelto ? 'cyan' : conformeIsChecked() ? 'green' : 'yellow'}}-100">
+    @if ( ticketDetalle.estado == 'Resuelto' || ticketDetalle.estado == 'Resuelto y Conforme' ) {
+        <div class="border-round-sm border-gray-400 m-0 border-1 p-3 bg-{{ (ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Resuelto' && conformeIsChecked() ? 'green' : 'yellow')  }}-100">
             <div class="flex align-item-start">
 
                 <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
                 <div class="flex-grow-1 m-l-10 max-w-18rem sm:max-w-21rem md:max-w-full"> <!-- max-w-full -->
                     <div class="flex justify-content-between">
                         <div class="f-14 f-w-600 text-truncate">Control Interno </div>
-                        @if ( ticketDetalle.historial.length < 3 ) {
+                        @if ( ticketDetalle.historial.length < 3 && currentRol().rol == 'Control Interno' ) {
                             <div class="f-14 f-w-600 text-truncate">
                                 <ui-button icon="ti ti-pencil f-18" matTooltip="Editar" (onClick)="showEditor = true"></ui-button>
                             </div>
@@ -50,6 +49,12 @@
                 </div>
             </div>
             <mat-divider class="mt-2 mb-3"></mat-divider>
+            @if ( ticketDetalle.historial.length > 0 && showHistorial == false ) {
+                <div class="flex justify-content-end">
+                    <ui-button icon="ti ti-eye" (onClick)="showHistorial = true">Ver historial de mensajes</ui-button>
+                </div>
+            }
+            
             @if ( showHistorial ) {
                 <div class="flex flex-column gap-2">
                     <p class="font-bold f-18 m-0">Historial de mensajes editados <ui-button icon="ti ti-eye-off" (onClick)="showHistorial = false"></ui-button></p>
@@ -60,13 +65,8 @@
                         </div>
                     }
                 </div>
-            } @else {
-                <div class="flex justify-content-end">
-                    <ui-button icon="ti ti-eye" (onClick)="showHistorial = true">Ver historial de mensajes</ui-button>
-                </div>
             }
             <div class="col" [innerHTML]="ticketDetalle.mensajeResuelto"></div>
-            <!-- <span>{{ ticketDetalle.fechaResuelto | date: 'dd MMM yyyy, h:mm a' }}</span> -->
         </div>
     }
 
@@ -78,7 +78,7 @@
             El ticket se encuentra en proceso de resolución. Por favor, espere a que el área de control interno responda su solicitud.
         </ui-alert>
     }
-    @if ( ticketDetalle.estado == 'Proceso' && currentRol().rol != 'Control Interno' ) {
+    @if ( ticketDetalle.estado == 'Resuelto' && currentRol().rol != 'Control Interno' ) {
             <div class="flex justify-content-between align-items-center">
                 <mat-slide-toggle [ngModel]="conformeIsChecked()" (ngModelChange)="conformeIsChecked.set( $event )" color="success">
                     <span class="font-bold">{{conformeIsChecked() ? 'Si estoy conforme con la respuesta' : 'No estoy conforme con la respuesta'}}</span>
@@ -91,7 +91,7 @@
                     El ticket ha sido resuelto. si está conforme con la respuesta, por favor, marque como resuelto para cerrar el ticket.
                 </ui-alert>
 
-                @if ( ticketDetalle.estado == 'Proceso' ) {
+                @if ( ticketDetalle.estado == 'Resuelto' ) {
                     <div class="flex flex-column justify-conten-center text-center">
                         <p class="clasificacion text-4xl m-0" [formGroup]="formRating" (change)="changeRating()">
                             <input id="radio1" type="radio" formControlName="rating" value="5">

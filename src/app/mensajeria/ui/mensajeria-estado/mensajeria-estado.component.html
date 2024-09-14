@@ -1,9 +1,9 @@
 @if ( !small ) {
     <div class="text-{{color}}-700 border-round border-{{color}}-700 border-1 max-w-max px-3 font-bold flex align-items-center gap-2 cursor-pointer hover:bg-{{color}}-200" (click)="showModalObservacion(Observacion)">
-        <i class="ti ti-alert-circle f-20"></i> Observado
+        <i class="ti ti-alert-circle f-20"></i> {{ estado == 'Pendiente' ? 'Observado' : estado == 'Resuelto' ? 'Observación Resuelta' : 'Observación Resuelta y Conforme'}}
     </div>
 } @else {
-    <div class="text-{{color}}-700 border-round max-w-max px-1 font-bold" [matTooltip]="mensaje.solucionConforme ? 'Mensaje Resuelto' : 'Mensaje Observado'"> <i class="ti ti-alert-circle f-20"></i> </div>
+    <div class="text-{{color}}-700 border-round max-w-max px-1 font-bold" [matTooltip]="estado"> <i class="ti ti-alert-circle f-20"></i> </div>
 }
 
 <ng-template #Observacion>
