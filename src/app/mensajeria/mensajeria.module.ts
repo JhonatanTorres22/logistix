@@ -19,9 +19,7 @@ import { AsignacionRepositoryImpl } from '../programas-academicos/infraestructur
   ],
   providers: [
     interceptorProviders, [
-      { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
-      { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
-      { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl }
+      
     ]
   ]
 })

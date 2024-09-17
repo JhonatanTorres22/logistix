@@ -10,6 +10,8 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
 import { ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { MensajeriaRepository } from 'src/app/mensajeria/domain/repositories/mensajeria.repository';
+import { MensajeriaCerrarArchivar } from 'src/app/mensajeria/domain/models/mensajeria.model';
 
 @Component({
   selector: 'ticket-modal',
@@ -28,12 +30,14 @@ export class TicketModalComponent {
   ticketSelect = this.signal.ticketSelect;
   mensajeRespuestaTicket = this.signal.mensajeRespuestaTicket;
   currentRol = this.authSignal.currentRol;
+  renderizarTickets = this.signal.renderizarTickets;
 
   constructor(
     private signal: ObservacionSignal,
     private alert: AlertService,
     private modal: UiModalService,
     private repository: ObservacionRepository,
+    private mensajeriaRepository: MensajeriaRepository,
     private authSignal: AuthSignal
   ) {
 
@@ -44,14 +48,37 @@ export class TicketModalComponent {
       .then( isConfirm => {
         if( !isConfirm ) return;
 
-        this.forzarCierre();
+        this.responder().then( isResuelto => {
+          if( !isResuelto ) return;
+          this.forzarCierre();
+        } );
 
       })
   }
 
   forzarCierre = () => {
-    this.alert.sweetAlert('success', 'Confirmado', 'El mensaje fue CERRADO y ARCHIVADO correctamente');
-    this.modal.getRefModal().close();
+
+    const cerrarArchivarMensaje: MensajeriaCerrarArchivar = {
+      idMensaje: this.ticketSelect().mensajeId,
+      usuarioId: parseInt( this.currentRol().id )
+    }
+
+    console.log( cerrarArchivarMensaje );
+    
+
+    this.mensajeriaRepository.forzarCierre( cerrarArchivarMensaje ).subscribe({
+      next: ( response ) => {
+        console.log('response', response);
+        this.alert.sweetAlert('success', 'Confirmado', 'El mensaje fue CERRADO y ARCHIVADO correctamente');
+        this.modal.getRefModal().close('Listar');
+          this.renderizarTickets.set('Listar');
+          this.mensajeRespuestaTicket.set('');
+      }, error: ( error ) => {
+        console.log('error', error);
+        this.alert.showAlert('Ocurrió un error al cerrar el ticket','error' );
+      }
+    })
+
   }
 
   onResponderConfirm = () => {
@@ -59,21 +86,45 @@ export class TicketModalComponent {
       .then( isConfirm => {
         if( !isConfirm ) return;
 
-        this.responder();
+        this.responder().then( isResuelto => {
+          if( !isResuelto ) return;
+          this.modal.getRefModal().close('Listar');
+          this.renderizarTickets.set('Listar');
+          this.mensajeRespuestaTicket.set('');
+        });
 
       })
   }
 
   responder = () => {
+    
+    return new Promise<boolean>( (resolve, reject) => {
+
+      this.repository.resolver( this.updateHistorial() ).subscribe({
+        next: ( response ) => {
+          console.log('response', response);
+          this.alert.showAlert('El ticket fue RESPONDIDO correctamente','success' );
+          
+          resolve( true )
+        }, error: ( error ) => {
+          console.log('error', error);
+          resolve( false )
+          this.alert.showAlert('Ocurrió un error al responder el ticket','error' );
+        }
+      })
+
+    })
+    
+
+  }
+
+  updateHistorial = (): ObservacionResolver => {
+
     const mensajeHistorial = [
       ...this.ticketSelect().historial
     ]
 
-    // if( this.ticketSelect().mensajeResuelto ) {
-    //   const historial = JSON.parse( this.ticketSelect().mensajeResuelto );
-
-       mensajeHistorial.push( { mensaje: this.ticketSelect().mensajeResuelto, fecha: this.ticketSelect().fechaResuelto } )
-    // }
+    mensajeHistorial.push( { mensaje: this.ticketSelect().mensajeResuelto, fecha: this.ticketSelect().fechaResuelto } )
 
     const resolver: ObservacionResolver = {
       id: this.ticketSelect().id,
@@ -82,18 +133,8 @@ export class TicketModalComponent {
       userId: parseInt( this.currentRol().id )
     }
     console.log( resolver );
-    
-    this.repository.resolver( resolver ).subscribe({
-      next: ( response ) => {
-        console.log('response', response);
-        this.alert.showAlert('El ticket fue RESPONDIDO correctamente','success' );
-        this.modal.getRefModal().close('Listar');
-        this.mensajeRespuestaTicket.set('');
-      }, error: ( error ) => {
-        console.log('error', error);
-        this.alert.showAlert('Ocurrió un error al responder el ticket','error' );
-      }
-    })
+
+    return resolver;
 
   }
   

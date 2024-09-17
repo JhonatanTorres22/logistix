@@ -1,3 +1,6 @@
+@if ( !showConformes && ticketList.length == 0 ) {
+    <ui-card-not-items text="No hay tickets" class="mt-2"></ui-card-not-items>
+}
 <!-- {{ filtroSelect() }} -->
 @if ( !showConformes ) {
     <div class="h-30rem overflow-auto">
@@ -14,6 +17,7 @@
         
     </div>
 }
+
 
 <!-- {{ showConformes }}
 <pre>{{ ticketList | json}}</pre>

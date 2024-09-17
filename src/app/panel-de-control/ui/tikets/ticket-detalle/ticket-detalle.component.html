@@ -14,7 +14,15 @@
         <div class="col-2 font-bold">Fecha</div>
         <div class="col-5">{{ ticketDetalle.fechaObservacion | date: 'dd MMM yyyy, h:mm a' }}</div>
         <div class="col-2 font-bold">Estado</div>
-        <div class="col"><span class="px-3 font-bold uppercase bg-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-200 text-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-{{ ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Pendiente' ? 'red' : 'yellow' }}-700 border-round border-1">{{ticketDetalle.estado}}</span> </div>
+        <div class="col">
+            <span class="px-3 font-bold uppercase
+            bg-{{ ( ticketDetalle.estado == 'Resuelto y Conforme' || ticketDetalle.estado == 'Conforme' ) ?
+                'green' : ticketDetalle.estado == 'Pendiente' ?
+                    'red' : 'yellow' }}-200 text-{{ ( ticketDetalle.estado == 'Resuelto y Conforme' || ticketDetalle.estado == 'Conforme' ) 
+                        ? 'green' : ticketDetalle.estado == 'Pendiente' 
+                            ? 'red' : 'yellow' }}-700 border-{{ ( ticketDetalle.estado == 'Resuelto y Conforme' || ticketDetalle.estado == 'Conforme' )
+                                ? 'green' : ticketDetalle.estado == 'Pendiente' 
+                                    ? 'red' : 'yellow' }}-700 border-round border-1">{{ticketDetalle.estado}}</span> </div>
         <mat-divider></mat-divider>
         <div class="col-2 font-bold">Detalle </div>
         <div class="col" [innerHTML]="ticketDetalle.mensaje"></div>
@@ -29,9 +37,9 @@
     <!-- <mat-divider></mat-divider> -->
 
     
-
+    <!-- {{ ticketDetalle.estado }} -->
     @if ( ticketDetalle.estado == 'Resuelto' || ticketDetalle.estado == 'Resuelto y Conforme' ) {
-        <div class="border-round-sm border-gray-400 m-0 border-1 p-3 bg-{{ (ticketDetalle.estado == 'Resuelto y Conforme' ? 'green' : ticketDetalle.estado == 'Resuelto' && conformeIsChecked() ? 'green' : 'yellow')  }}-100">
+        <div class="border-round-sm border-gray-400 m-0 border-1 p-3 bg-{{ ( (ticketDetalle.estado == 'Resuelto y Conforme') ? 'green' : ticketDetalle.estado == 'Resuelto' && conformeIsChecked() ? 'green' : 'yellow')  }}-100">
             <div class="flex align-item-start">
 
                 <img src="assets/images/user/avatar-1.png" alt="user-image" class="img-user w-2rem sm:w-3rem border-50" />
@@ -69,8 +77,8 @@
             <div class="col" [innerHTML]="ticketDetalle.mensajeResuelto"></div>
         </div>
     }
-
-    @if ( currentRol().rol == 'Control Interno' && ticketDetalle.estado == 'Pendiente' || showEditor ) {
+    <!-- currentRol().rol == 'Control Interno' && ticketDetalle.estado == 'Pendiente' || showEditor -->
+    @if ( currentRol().rol == 'Control Interno' && ticketDetalle.estado != 'Conforme' || showEditor ) { 
         <quill-editor class="w-100 h-8rem bg-white mt-1" placeholder="" [ngModel]="mensajeRespuestaTicket()" (ngModelChange)="mensajeRespuestaTicket.set($event)"></quill-editor>
     }
     @if ( ticketDetalle.estado == 'Pendiente' && currentRol().rol != 'Control Interno' ) {
@@ -78,7 +86,7 @@
             El ticket se encuentra en proceso de resolución. Por favor, espere a que el área de control interno responda su solicitud.
         </ui-alert>
     }
-    @if ( ticketDetalle.estado == 'Resuelto' && currentRol().rol != 'Control Interno' ) {
+    @if ( ticketDetalle.estado == 'Resuelto' && currentRol().rol != 'Control Interno' && tipoBandeja() != 'Archivados' ) {
             <div class="flex justify-content-between align-items-center">
                 <mat-slide-toggle [ngModel]="conformeIsChecked()" (ngModelChange)="conformeIsChecked.set( $event )" color="success">
                     <span class="font-bold">{{conformeIsChecked() ? 'Si estoy conforme con la respuesta' : 'No estoy conforme con la respuesta'}}</span>
