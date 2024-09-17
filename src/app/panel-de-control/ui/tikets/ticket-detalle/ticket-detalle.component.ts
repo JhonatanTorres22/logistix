@@ -8,6 +8,8 @@ import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/obser
 import { UiButtonComponent } from "../../../../core/components/ui-button/ui-button.component";
 import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { M } from 'msw/lib/core/HttpResponse-B07UKAkU';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 
 @Component({
   selector: 'ticket-detalle',
@@ -50,9 +52,11 @@ export class TicketDetalleComponent implements OnDestroy {
   mensajeRespuestaTicket = this.signal.mensajeRespuestaTicket;
   rating = this.signal.rating;
   conformeIsChecked = this.signal.conformeIsChecked;
+  tipoBandeja = this.mensajeriaSignal.tipoBandeja;
 
   constructor(
     private signal: ObservacionSignal,
+    private mensajeriaSignal: MensajeriaSignal,
     private authSignal: AuthSignal,
     private fb: FormBuilder,
   ) {

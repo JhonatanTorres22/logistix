@@ -9,6 +9,7 @@ import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/obser
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { de } from 'date-fns/locale';
+import { UiCardNotItemsComponent } from "../../../../core/components/ui-card-not-items/ui-card-not-items.component";
 
 @Component({
   selector: 'ticket-list',
@@ -17,7 +18,8 @@ import { de } from 'date-fns/locale';
     CommonModule,
     SharedModule,
     TicketCardComponent,
-  ],
+    UiCardNotItemsComponent
+],
   templateUrl: './ticket-list.component.html',
   styleUrl: './ticket-list.component.scss'
 })
@@ -31,6 +33,7 @@ export class TicketListComponent implements OnInit {
   ticketsPendientes = this.signal.ticketsPendientes;
   ticketsConformes = this.signal.ticketsConformes;
   buscador = this.signal.buscador;
+  renderizarTickets = this.signal.renderizarTickets;
   constructor(
     private signal: ObservacionSignal,
     private repository: ObservacionRepository,
@@ -38,6 +41,14 @@ export class TicketListComponent implements OnInit {
   ) {
 
     effect( () => {
+
+      if( this.renderizarTickets() == 'Listar' ) {
+        this.listarConformes();
+        this.listarPendientes();
+        this.renderizarTickets.set('');
+        return;
+      }
+
       console.log( this.buscador());
       if( this.buscador()[0] != 'Buscador' || this.buscador()[1] == '' ) {
         this.filtrar();
@@ -46,7 +57,7 @@ export class TicketListComponent implements OnInit {
 
       this.buscar();
 
-    })
+    }, { allowSignalWrites: true } );
 
   }
   ngOnInit(): void {

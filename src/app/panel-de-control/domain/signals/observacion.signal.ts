@@ -45,5 +45,7 @@ export class ObservacionSignal {
 
     conformeIsChecked = signal( false );
 
+    renderizarTickets = signal('');
+
     rating = signal(0);
 }   

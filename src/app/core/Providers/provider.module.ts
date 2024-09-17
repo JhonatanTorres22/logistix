@@ -28,6 +28,8 @@ import { SubCategoriaRepository } from "src/app/panel-de-control/domain/reposito
 import { SubCategoriaRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/subCategoria.repository.impl";
 import { ObservacionRepository } from "src/app/panel-de-control/domain/repositories/observacion.repository";
 import { ObservacionRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/observacion.repository.impl";
+import { MensajeriaRepository } from "src/app/mensajeria/domain/repositories/mensajeria.repository";
+import { MensajeriaRepositoryImpl } from "src/app/mensajeria/infraestructure/repositories/mensajeria.repository.impl";
 
 
 
@@ -51,6 +53,9 @@ import { ObservacionRepositoryImpl } from "src/app/panel-de-control/infraestruct
             { provide: CategoriaRepository, useClass: CategoriaRepositoryImpl },
             { provide: SubCategoriaRepository, useClass: SubCategoriaRepositoryImpl },
             { provide: ObservacionRepository, useClass: ObservacionRepositoryImpl },
+            { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
+            { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
+            { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl }
 
         ]
     ]

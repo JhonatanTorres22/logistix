@@ -227,10 +227,12 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     this.listaDestinatarios.set( this.signal.listaDestinatariosDefault );
   }
 
-  getAsunto = ( id: number ): UiSelect => {
-    const asuntoSelected = this.tiposMensajes().filter( tipo => tipo.value == id.toString());
-    return asuntoSelected[0];
-  }
+  // getAsunto = ( id: any ): UiSelect => {
+  //   console.log( id );
+    
+  //   const asuntoSelected = this.tiposMensajes().filter( tipo => tipo.value == id.toString());
+  //   return asuntoSelected[0];
+  // }
 
   getDestinatario = ( id: number ): MensajeriaNuevoMensajeList => {
     if( id ) {
@@ -265,7 +267,7 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
     let mensaje: MensajeriaEnviarNuevoMensaje = {
       idTipoMensajeRol: this.selectedDestinatario().idTipoMensajeRol,
       flujoNavegacion: 'Avanzar',
-      asunto: this.getAsunto( this.tipoMensajeForm.value.tipoMensaje ).text + ' ' + this.semestreSelect().codigo,
+      asunto: this.tipoMensajeForm.value.tipoMensaje.text + ' ' + this.semestreSelect().codigo,
       idRolEmisor: parseInt( this.authSignal.currentRol().id ),
       idRolReceptor: this.selectedDestinatario().idUsuarioRol,
       mensaje: this.mensaje,
@@ -400,15 +402,22 @@ export class MensajeriaNewComponent implements OnInit, OnDestroy {
   }
 
   obtenerTipoCard() {
-    const tipoGrupo = this.tipoMensajeForm.value.tipoMensajeGrupo;
-    const asunto = this.getAsunto( this.tipoMensajeForm.value.tipoMensaje  );
+    const tipoGrupo = this.tipoMensajeForm.value.tipoMensajeGrupo.value;
+    const asunto = this.tipoMensajeForm.value.tipoMensaje.text;
+
+    console.log( tipoGrupo);
+    console.log( asunto);
+    
 
     switch( parseInt(tipoGrupo) ) {
       
-      case 1: { this.nombrePrograma = asunto.text.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');  this.tipoCard = 'ALTA'}; break;
-      case 2: { this.nombrePrograma = asunto.text.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); this.tipoCard = 'VALIDAR' }; break;
-      case 3: { this.nombrePrograma = asunto.text.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); this.tipoCard = 'CAMBIAR' }; break;
+      case 1: { this.nombrePrograma = asunto.replace('DAR DE ALTA A DIRECTOR DE ESCUELA DE ', '');  this.tipoCard = 'ALTA'}; break;
+      case 2: { this.nombrePrograma = asunto.replace('VALIDAR PLAN DE ESTUDIOS DE LA ESCUELA DE ', ''); this.tipoCard = 'VALIDAR' }; break;
+      case 3: { this.nombrePrograma = asunto.replace('CAMBIAR EL PLAN DE ESTUDIOS DE ', ''); this.tipoCard = 'CAMBIAR' }; break;
     }
+
+    console.log( this.tipoCard );
+    
 
   }
 

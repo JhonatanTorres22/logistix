@@ -5,8 +5,10 @@
 
 @if ( ticketSelect().fechaConforme == ''  ) {
     <mat-dialog-actions align="end">
-        <ui-button color="red" label="Forzar Cierre"  class="m-r-10" (onClick)="onCierreConfirm()"></ui-button> <!-- mat-dialog-close="cancelar" -->
-        <ui-button color="primary" (onClick)="onResponderConfirm()" [disabled]="mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null">Responder</ui-button>
+        <ui-button color="red" label="Forzar Cierre"  class="m-r-10" [disabled]="mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null" (onClick)="onCierreConfirm()"></ui-button> <!-- mat-dialog-close="cancelar" -->
+        <ui-button color="primary" (onClick)="onResponderConfirm()" [disabled]="mensajeRespuestaTicket() == '' || mensajeRespuestaTicket() == null">{{ ticketSelect().mensajeResuelto == '' || ticketSelect().mensajeResuelto == null ? 'Resolver' : 'Actualizar Respuesta'  }}</ui-button>
     </mat-dialog-actions>
 }
-  
+<!-- <pre>
+    {{ ticketSelect() | json }}
+</pre> -->
