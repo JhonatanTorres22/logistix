@@ -86,7 +86,7 @@
             El ticket se encuentra en proceso de resolución. Por favor, espere a que el área de control interno responda su solicitud.
         </ui-alert>
     }
-    @if ( ticketDetalle.estado == 'Resuelto' && currentRol().rol != 'Control Interno' && tipoBandeja() != 'Archivados' ) {
+    @if ( ticketDetalle.estado == 'Resuelto' && currentRol().rol != 'Control Interno' && tipoBandeja() == 'Recibidos' ) {
             <div class="flex justify-content-between align-items-center">
                 <mat-slide-toggle [ngModel]="conformeIsChecked()" (ngModelChange)="conformeIsChecked.set( $event )" color="success">
                     <span class="font-bold">{{conformeIsChecked() ? 'Si estoy conforme con la respuesta' : 'No estoy conforme con la respuesta'}}</span>

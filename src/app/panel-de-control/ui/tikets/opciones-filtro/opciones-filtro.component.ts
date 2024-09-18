@@ -19,7 +19,7 @@ import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/obser
 })
 export class OpcionesFiltroComponent {
 
-  filtro: string = 'all'
+  filtro: string = 'pendiente'
   filtroSelect = this.signal.filtroSelect;
   buscador = this.signal.buscador;
 

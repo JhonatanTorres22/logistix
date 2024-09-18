@@ -26,9 +26,12 @@
                         </div>
                       </li>
                     </ul>
-                    <ul class="absolute right-0 bottom-0 text-right mr-2">
+                    <ul class="absolute right-0 bottom-0 mr-2" style="text-align: -webkit-right;">
                       @if ( mensaje.archivo != null ) {
                         <li><i class="ti ti-paperclip m-r-10 pt-2 f-14" matTooltip="Hay archivo adjunto"></i></li>
+                      }
+                      @if ( mensaje.mensajeObservado ) {
+                        <li><mensajeria-estado [small]="true" [mensaje]="mensaje"></mensajeria-estado></li>
                       }
                       <li class="list-inline-item" matTooltip="Fecha de recepción">
                         <span class="text-muted bg-accent-300 text-gray-600 px-2 border-round">Recibido el {{ mensaje.fecha | date: 'dd MMM yyyy, h:mm a' }}</span>
@@ -71,7 +74,7 @@
               }
               
               @if( mensaje.mensajeObservado  ) {
-                <mensajeria-estado [mensaje]="selectMensaje()"></mensajeria-estado>
+                <mensajeria-estado [mensaje]="mensaje"></mensajeria-estado>
               }
               <!-- <pre>
                 {{ mensaje | json }}

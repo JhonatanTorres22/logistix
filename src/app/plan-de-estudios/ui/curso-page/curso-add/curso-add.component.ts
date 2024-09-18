@@ -138,34 +138,44 @@ export class CursoAddComponent {
 
   // life cycle event
   ngOnInit() {
-
-    this.obtenerCiclos();
-      this.formCurso ? this.pathValueFormEdit() : '';
-
+    console.log( this.cursoCicloSelect() );
+    
+    this.obtenerCiclos().then( res  => {
+      if( !res ) { return }
       this.formCurso.patchValue({
-        idCiclo: this.cursoCicloSelect().idCiclo.toString()
+        // idCiclo: this.cursoCicloSelect().idCiclo.toString()
+        idCiclo: this.optionsCiclos.find( ciclo => ciclo.value == this.cursoCicloSelect().idCiclo.toString() )
+
       })
+    });
+      this.formCurso ? this.pathValueFormEdit() : '';
       this.cursoDetails().id != 0 ? this.prefijoCodigoCurso = this.cursoDetails().codigoCurso : this.prefijoCodigoCurso = 'P'
  
   }
 
   obtenerCiclos() {
-    this.cicloRepository.obtener().subscribe({
-      next: ( ciclos ) => {
-        console.log( ciclos );
-        const ciclosOptions: UiSelect[] = ciclos.map( ciclo => {
-          return {
-            value: ciclo.id.toString(),
-            text: ciclo.cicloLetra,
-            disabled: false
-          }
-        })
 
-        this.optionsCiclos = ciclosOptions;
-      }, error: ( error ) => {
-        console.log( error );
-        
-      }
+    return new Promise<boolean>( (resolve, reject) => {
+
+      this.cicloRepository.obtener().subscribe({
+        next: ( ciclos ) => {
+          console.log( ciclos );
+          const ciclosOptions: UiSelect[] = ciclos.map( ciclo => {
+            return {
+              value: ciclo.id.toString(),
+              text: ciclo.cicloLetra,
+              disabled: false
+            }
+          })
+          resolve(true);
+          this.optionsCiclos = ciclosOptions;
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al obtener los ciclos', 'error', 6);
+          resolve(false);
+        }
+      })
+
     })
   }
 
@@ -184,13 +194,13 @@ export class CursoAddComponent {
         switch( tipo ) {
           case 'crear': {
             const dataCurso: CursoCrear = {
-              idCiclo: parseInt( this.formCurso.value.idCiclo ),
+              idCiclo: parseInt( this.formCurso.value.idCiclo.value ),
               descripcion: this.formCurso.value.descripcion,
               idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
               codigoCurso: this.formCurso.value.codigoCurso,
-              competencia: this.formCurso.value.competencia,
-              tipoCurso: this.formCurso.value.tipoCurso,
-              tipoEstudio: this.formCurso.value.tipoEstudio,
+              competencia: this.formCurso.value.competencia.value,
+              tipoCurso: this.formCurso.value.tipoCurso.value,
+              tipoEstudio: this.formCurso.value.tipoEstudio.value,
               nombreCurso: this.formCurso.value.nombreCurso,
               horasTeoricas: parseInt( this.formCurso.value.horasTeoricas ),
               horasPracticas: parseInt( this.formCurso.value.horasPracticas ),
@@ -210,9 +220,9 @@ export class CursoAddComponent {
               id: this.cursoDetails().id,
               // idCiclo: parseInt( this.formCurso.value.idCiclo ),
               codigoCurso: this.formCurso.value.codigoCurso,
-              competencia: this.formCurso.value.competencia,
-              tipoCurso: this.formCurso.value.tipoCurso,
-              tipoEstudio: this.formCurso.value.tipoEstudio,
+              competencia: this.formCurso.value.competencia.value,
+              tipoCurso: this.formCurso.value.tipoCurso.value,
+              tipoEstudio: this.formCurso.value.tipoEstudio.value,
               nombreCurso: this.formCurso.value.nombreCurso,
               horasTeoricas: this.formCurso.value.horasTeoricas,
               horasPracticas: this.formCurso.value.horasPracticas,
@@ -233,13 +243,19 @@ export class CursoAddComponent {
   calcular() {
     console.log( this.formCurso.value.horasTeoricas );
     const total = parseInt( this.formCurso.value.horasTeoricas ) + parseInt( this.formCurso.value.horasPracticas );
+    const totalCreditos = parseInt( this.formCurso.value.horasTeoricas ) + (parseInt( this.formCurso.value.horasPracticas ) / 2) ?? 0;
     this.formCurso.patchValue({
-      totalHoras: total
+      totalHoras: total,
+      totalCreditos: totalCreditos
     });
     
   }
 
   pathValueFormEdit = () => {
+
+    const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == this.cursoDetails().tipoCurso );
+    const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == this.cursoDetails().tipoEstudio );
+    const competencia = this.optionsCompetencia.find( tipo => tipo.value == this.cursoDetails().competencia );
 
     this.formCurso.patchValue({
       programa: this.cursoDetails().idPrograma,
@@ -247,9 +263,9 @@ export class CursoAddComponent {
       codigoCurso: this.cursoDetails().codigoCurso,
       nombreCurso: this.cursoDetails().nombreCurso,
       descripcion: this.cursoDetails().descripcion,
-      tipoEstudio: this.cursoDetails().tipoEstudio,
-      tipoCurso: this.cursoDetails().tipoCurso,
-      competencia: this.cursoDetails().competencia,
+      tipoEstudio: tipoEstudio,
+      tipoCurso: tipoCurso,
+      competencia: competencia,
       horasTeoricas: this.cursoDetails().horasTeoricas.toString(),
       horasPracticas: this.cursoDetails().horasPracticas.toString(),
       totalHoras: this.cursoDetails().totalHoras.toString(),

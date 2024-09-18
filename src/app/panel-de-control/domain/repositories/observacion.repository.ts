@@ -9,4 +9,5 @@ export abstract class ObservacionRepository {
     abstract listarConformes(): Observable<ObservacionConforme[]>;
     abstract resolver( observacion: ObservacionResolver ): Observable<void>;
     abstract confirmar( observacion: ObservacionConfirmar ): Observable<void>;
+    abstract listarCierresForzados(): Observable<ObservacionBase[]>;
 }
