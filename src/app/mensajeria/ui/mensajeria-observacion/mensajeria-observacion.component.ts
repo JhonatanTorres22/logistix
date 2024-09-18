@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaSignal } from '../../domain/signals/mensajeria.signal';
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
@@ -10,6 +10,7 @@ import { TicketDetalleComponent } from "../../../panel-de-control/ui/tikets/tick
 import { ObservacionConfirmar, ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { MensajeriaHistorialMensajes } from '../../domain/models/mensajeria.model';
 
 
 @Component({
@@ -25,6 +26,8 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
   styleUrl: './mensajeria-observacion.component.scss'
 })
 export class MensajeriaObservacionComponent implements OnInit {
+
+  @Input() mensaje: MensajeriaHistorialMensajes;
 
   selectMensaje = this.signal.selectMensaje;
   observacionSelect = this.observacionSignal.observacionSelect;
@@ -50,7 +53,7 @@ export class MensajeriaObservacionComponent implements OnInit {
 
 
   listarObservacion = () => {
-    this.repository.listarxId( this.selectMensaje().idMensaje ).subscribe({
+    this.repository.listarxId( this.mensaje.idMensaje ).subscribe({
       next: ( observacion ) => {
         console.log( observacion );
         this.alert.showAlert('Listando detalle de la observación', 'success');

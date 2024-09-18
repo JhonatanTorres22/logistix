@@ -42,6 +42,7 @@ export interface ObservacionBase {
 export interface ObservacionPendiente extends ObservacionBase {}
 
 export interface ObservacionConforme extends ObservacionBase  {}
+// export interface ObservacionRechazados extends ObservacionBase  {}
 
 export type ObservacionResolver = Pick<Observacion, 'id' > & {
     mensajeRespuesta: string,

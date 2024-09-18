@@ -26,8 +26,9 @@ export class ObservacionSignal {
         historial: []
     }
 
-    ticketsPendientesDefault: ObservacionPendiente[] = []
-    ticketsConformesDefault: ObservacionConforme[] = []
+    ticketsPendientesDefault: ObservacionPendiente[] = [];
+    ticketsConformesDefault: ObservacionConforme[] = [];
+    ticketsCierreForzadoDefault: ObservacionBase[] = [];
 
 
     observacionSelect = signal( this.observacionDefault );
@@ -38,6 +39,7 @@ export class ObservacionSignal {
 
     ticketsPendientes = signal( this.ticketsPendientesDefault );
     ticketsConformes = signal( this.ticketsConformesDefault );
+    ticketsCierreForzados = signal( this.ticketsCierreForzadoDefault );
 
     buscador = signal(['', '']);
 

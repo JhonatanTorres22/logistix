@@ -29,6 +29,7 @@ export class ObservacionService {
   urlResolver: string;
   urlConfirmar: string;
   urlListarConformes: string;
+  urlListarCierresForzado: string;
 
   constructor(private http: HttpClient) {
     this.urlApi = environment.EndPoint;
@@ -38,6 +39,7 @@ export class ObservacionService {
     this.urlResolver = 'api/Observacion/Resuelta';
     this.urlConfirmar = 'api/Observacion/Conforme';
     this.urlListarConformes = 'api/Observacion/ListarConformes';
+    this.urlListarCierresForzado = 'api/Observacion/ListarCierresForzados';
   }
 
   insertObservation = (observacion: ObservacionInsert): Observable<void> => {
@@ -73,5 +75,11 @@ export class ObservacionService {
   confirmObservation = (observacion: ObservacionConfirmar): Observable<void> => {
     const observacionAPI = ObservacionMapper.fromDomainToApiConfirmar(observacion);
     return this.http.put<void>(this.urlApi + this.urlConfirmar, observacionAPI);
+  };
+
+  getCierresForzados = (): Observable<ObservacionBase[]> => {
+    return this.http
+      .get<ObservacionListarDataArrayDTO>(this.urlApi + this.urlListarCierresForzado)
+      .pipe(map((responseAPI) => responseAPI.data.map(ObservacionMapper.fromApiToDomainListar)));
   };
 }

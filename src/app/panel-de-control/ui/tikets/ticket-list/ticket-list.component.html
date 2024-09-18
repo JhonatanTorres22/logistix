@@ -1,16 +1,18 @@
-@if ( !showConformes && ticketList.length == 0 ) {
+@if ( !showConformes && ticketList.length == 0 && !showCierreForzados && ticketsConformes.length == 0 ) {
     <ui-card-not-items text="No hay tickets" class="mt-2"></ui-card-not-items>
 }
 <!-- {{ filtroSelect() }} -->
-@if ( !showConformes ) {
-    <div class="h-30rem overflow-auto">
+@if ( !showConformes && !showCierreForzados ) {
+    <div class="h-30rem overflow-auto" id="pendiente">
         @for (ticket of ticketList; track ticket) {
             <ticket-card [ticket]="ticket"></ticket-card>
         }
         
     </div>
-} @else {
-    <div class="h-30rem overflow-auto">
+} 
+
+@if ( showConformes ) {
+    <div class="h-30rem overflow-auto" id="conforme">
         @for (ticket of listConformes; track ticket) {
             <ticket-card [ticket]="ticket"></ticket-card>
         }
@@ -18,6 +20,14 @@
     </div>
 }
 
+@if ( showCierreForzados ) {
+    <div class="h-30rem overflow-auto" id="forzado">
+        @for (ticket of listCierreForzados; track ticket) {
+            <ticket-card [ticket]="ticket"></ticket-card>
+        }
+        
+    </div>
+}
 
 <!-- {{ showConformes }}
 <pre>{{ ticketList | json}}</pre>

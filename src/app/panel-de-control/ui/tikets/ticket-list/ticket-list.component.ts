@@ -28,10 +28,13 @@ export class TicketListComponent implements OnInit {
   ticketList: ObservacionPendiente[] | ObservacionConforme[] = [];
   // ticketsPendientes: ObservacionPendiente[] = [];
   showConformes: boolean = false;
+  showCierreForzados: boolean = false;
   listConformes: ObservacionConforme[] = [];
+  listCierreForzados: ObservacionBase[] = [];
   filtroSelect = this.signal.filtroSelect;
   ticketsPendientes = this.signal.ticketsPendientes;
   ticketsConformes = this.signal.ticketsConformes;
+  ticketsCierreForzados = this.signal.ticketsCierreForzados;
   buscador = this.signal.buscador;
   renderizarTickets = this.signal.renderizarTickets;
   constructor(
@@ -45,6 +48,7 @@ export class TicketListComponent implements OnInit {
       if( this.renderizarTickets() == 'Listar' ) {
         this.listarConformes();
         this.listarPendientes();
+        this.listarCierreForzados();
         this.renderizarTickets.set('');
         return;
       }
@@ -63,6 +67,7 @@ export class TicketListComponent implements OnInit {
   ngOnInit(): void {
     this.listarPendientes();
     this.listarConformes();
+    this.listarCierreForzados();
   }
 
   listarPendientes = () => {
@@ -93,8 +98,22 @@ export class TicketListComponent implements OnInit {
     })
   }
 
+  listarCierreForzados = () => {
+    this.repository.listarCierresForzados().subscribe({
+      next: ( tickets ) => {
+        console.log( tickets );
+        this.alert.showAlert('Listando los tikets con cierre forzado', 'success', 6);
+        this.ticketsCierreForzados.set( tickets )
+        this.listCierreForzados = this.ticketsCierreForzados();
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los tikets con cierre forzado....', 'error', 6)
+      }
+    })
+  }
+
   filtrar = () => {    
-    if( this.filtroSelect() == 'all' || this.filtroSelect() == 'search' ) {
+    if( this.filtroSelect() == 'search' ) {
       this.showConformes = false;
       this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
       return
@@ -104,15 +123,23 @@ export class TicketListComponent implements OnInit {
     
 
     switch( this.filtroSelect() ) {
-      case 'resuelto': {
+      case 'conforme': {
         this.showConformes = true;
+        this.showCierreForzados = false;
         // this.ticketList = 
         //   this.ticketsConformes().filter( (tick: ObservacionBase) => tick.estado.toLowerCase() == 'resuelto') as ObservacionConforme[];
           break;
       };
 
+      case 'cierreForzado': {
+        this.showCierreForzados = true;
+        this.showConformes = false;
+      }; break
+
       default: {
         this.showConformes = false;
+        this.showCierreForzados = false;
+
         this.ticketList = this.ticketsPendientes().filter( tick => tick.estado.toLowerCase() == this.filtroSelect()) as ObservacionPendiente[];
       }
     }

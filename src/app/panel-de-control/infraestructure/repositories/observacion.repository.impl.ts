@@ -11,6 +11,11 @@ export class ObservacionRepositoryImpl implements ObservacionRepository {
     
     constructor(private readonly service: ObservacionService) {}
 
+    listarCierresForzados(): Observable<ObservacionBase[]> {
+        return this.service.getCierresForzados();
+    }
+    
+  
     listarConformes(): Observable<ObservacionConforme[]> {
 
         return this.service.getConformedObservations();
