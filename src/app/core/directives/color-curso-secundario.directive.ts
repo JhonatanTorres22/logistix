@@ -31,7 +31,7 @@ export class ColorCursoSecundarioDirective implements OnInit {
 
     this.cursos?.map( curso => {
       if( curso.codigoCurso === this.curso.codigoCurso ) {
-        this.element.nativeElement.classList.add('bg-green-200', 'text-green-900');
+        this.element.nativeElement?.classList.add('bg-green-200', 'text-green-900');
         // document.getElementById('check-'+curso.idCursoPlan)?.setAttribute('disabled', 'true');
         console.log( this.element.nativeElement );
 
@@ -41,8 +41,8 @@ export class ColorCursoSecundarioDirective implements OnInit {
         console.log( lastDiv );
         // lastDiv.setAttribute('disabled', 'true');
         const checkbox = lastDiv?.querySelector('input[type="checkbox"]');
-        checkbox.setAttribute('disabled', 'true');
-        checkbox.classList.add('hidden');
+        // checkbox.setAttribute('disabled', 'true');
+        checkbox?.classList.add('hidden');
         // setTimeout(() => {
         
           
