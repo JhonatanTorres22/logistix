@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, OnInit, TemplateRef, viewChild, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, Input, OnInit, TemplateRef, viewChild, ViewChild } from '@angular/core';
 import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -40,6 +40,7 @@ import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio
 })
 export class CursoListComponent implements OnInit {
 
+  @Input() readonly: boolean = false;
   cursosByCiclos = this.signal.cursosByCiclos;
   cicloList = this.cicloSignal.cicloList;
   cursosList = this.signal.cursosList;
@@ -329,24 +330,34 @@ export class CursoListComponent implements OnInit {
     // this.buttons.nativeElement.classList.remove('hidden')
     // console.log( this.buttons.nativeElement );
     // const buttonId = 
-    document.getElementById(curso.id.toString())?.classList.remove('hidden')
-    document.getElementById(curso.id.toString())?.classList.add('flex')
+
     curso.preRequisitos.map( cursoPre => {
       document.getElementById('pre-'+cursoPre.id.toString() )?.classList.add( 'bg-yellow-200', 'text-yellow-700');
       document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.add('absolute','-mb-4');
     })
+    
+    if( this.readonly ) {
+      return
+    }
+
+    document.getElementById(curso.id.toString())?.classList.remove('hidden')
+    document.getElementById(curso.id.toString())?.classList.add('flex')
 
   }
 
   removeClass = ( curso: Curso ) => {
-    // this.buttons.nativeElement.classList.add('hidden')
-    document.getElementById(curso.id.toString())?.classList.add('hidden');
-    document.getElementById(curso.id.toString())?.classList.remove('flex');
+    
     curso.preRequisitos.map( cursoPre => {
       document.getElementById('pre-'+cursoPre.id.toString() )?.classList.remove( 'bg-yellow-200', 'text-yellow-700');
       document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.remove('absolute');
 
     })
+    if( this.readonly ) {
+      return
+    }
+    // this.buttons.nativeElement.classList.add('hidden')
+    document.getElementById(curso.id.toString())?.classList.add('hidden');
+    document.getElementById(curso.id.toString())?.classList.remove('flex');
 
 
 

@@ -32,6 +32,8 @@ import { MensajeriaRepository } from "src/app/mensajeria/domain/repositories/men
 import { MensajeriaRepositoryImpl } from "src/app/mensajeria/infraestructure/repositories/mensajeria.repository.impl";
 import { CursoPlanRepository } from "src/app/plan-de-estudios/domain/repositories/curso-plan.repository";
 import { CursoPlanRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/curso-plan.repository.impl";
+import { EquivalenciaRepository } from "src/app/plan-de-estudios/domain/repositories/equivalencia.repository";
+import { EquivalenciaRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/equivalencia.repository.impl";
 
 
 
@@ -58,7 +60,8 @@ import { CursoPlanRepositoryImpl } from "src/app/plan-de-estudios/infraestructur
             { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
             { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
             { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl },
-            { provide: CursoPlanRepository, useClass: CursoPlanRepositoryImpl }
+            { provide: CursoPlanRepository, useClass: CursoPlanRepositoryImpl },
+            { provide: EquivalenciaRepository, useClass: EquivalenciaRepositoryImpl }
 
         ]
     ]

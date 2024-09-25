@@ -1,6 +1,6 @@
-<ui-button color="blue" icon="ti ti-save f-16" (onClick)="guardar()">Guardar {{ this.estado.getEstado }}</ui-button>
+<!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="guardar()">Guardar {{ this.estado.getEstado }}</ui-button>
 {{ planEstudioSelect().nombre }}
-{{ planEstudioStepper().nombre }}
+{{ planEstudioStepper().nombre }} -->
 <mat-stepper linear #stepper>
 
 
@@ -15,23 +15,19 @@
           <button mat-button matStepperNext>Next</button>
         </div>
       </form>
-
-    @if ( showBtnActivarEdicion ) {
-        <div class="flex justify-content-end px-4">
-            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
-        </div>
-    }
-
+      <ng-template matStepContent>
+          
+        @if ( showBtnActivarEdicion ) {
+              <div class="flex justify-content-end px-4">
+                  <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
+              </div>
+        }
       
-    <curso-list></curso-list>
-      
-       <!-- @else {
-        <malla-curricular-list></malla-curricular-list>
-      } -->
+            
+        <curso-list [readonly]="showBtnActivarEdicion"></curso-list>
 
-      <!-- @if ( planEstudioUltimoConResolucion() ) {
-        <malla-curricular-list></malla-curricular-list>
-      } -->
+      </ng-template>
+      
     </mat-step>
     <mat-step [stepControl]="formAsignar" [editable]="isEditable">
       <form [formGroup]="formAsignar" hidden>
@@ -46,138 +42,148 @@
           <button mat-button matStepperNext>Next</button>
         </div>
       </form>
-      @if ( formAsignar.value.asignacion == '') {
-          <app-card [showHeader]="false" cardClass="bg-red-50">
-            <div class="flex justify-content-between">
-                <p class="f-20">Asignación de Cursos al Plan de Estudios</p>
-                <i class="ti ti-file-alert f-44 text-orange-700" matTooltip="Asignación de cursos pendientes"></i>
-            </div>
-            <p class="f-14">¿Estás seguro que deseas Asignar los cursos al Plan de Estudios?</p>
-            <div class="flex justify-content-end">
-                <ui-button color="blue" icon="ti ti-save f-16" (onClick)="asignarConfirm()">Asignar Cursos</ui-button>
-            </div>
-          </app-card>
-      } @else {
-            <app-card [showHeader]="false" cardClass="bg-green-50">
+      <ng-template matStepContent>
+          @if ( formAsignar.value.asignacion == '') {
+              <app-card [showHeader]="false" cardClass="bg-red-50">
                 <div class="flex justify-content-between">
-                    <p class="f-20">Plan de Estudios Asignado!</p>
-                    <i class="ti ti-file-check f-44 text-green-900" matTooltip="Cursos asignados"></i>
+                    <p class="f-20">Asignación de Cursos al Plan de Estudios</p>
+                    <i class="ti ti-file-alert f-44 text-orange-700" matTooltip="Asignación de cursos pendientes"></i>
                 </div>
-                <p class="f-14">El plan de estudios ya fué asignado, puede continuar con el registro de las equivalencias</p>
-
+                <p class="f-14">¿Estás seguro que deseas Asignar los cursos al Plan de Estudios?</p>
                 <div class="flex justify-content-end">
-                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="next()">Continuar</ui-button>
+                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="asignarConfirm()">Asignar Cursos</ui-button>
                 </div>
-            </app-card>
-      }
+              </app-card>
+          } @else {
+                <app-card [showHeader]="false" cardClass="bg-green-50">
+                    <div class="flex justify-content-between">
+                        <p class="f-20">Plan de Estudios Asignado!</p>
+                        <i class="ti ti-file-check f-44 text-green-900" matTooltip="Cursos asignados"></i>
+                    </div>
+                    <p class="f-14">El plan de estudios ya fué asignado, puede continuar con el registro de las equivalencias</p>
+    
+                    <div class="flex justify-content-end">
+                        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="next()">Continuar</ui-button>
+                    </div>
+                </app-card>
+          }
+      </ng-template>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Registro de Equivalencias</ng-template>
-      <div class="row">
-        <div class="col-6">
-            <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
-                <ng-template #headerTitleTemplate>
-            
-                    <div>{{ planEstudioSelect().nombre }}</div>
-                    <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button>
-            
-                </ng-template>
-                <div class="row text-center bg-accent-300 align-items-center">
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
-                    <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Nombre Asignatura</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
-                        <div class="flex gap-3 justify-content-center">
-                            <div>HT</div>
-                            <div>HP</div>
-                            <div>TH</div>
-                        </div>
-                    </div>
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">CRED.</div>
-                </div>
-
-
-                @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first ) {
-                    @if ( !isFirst ) {
-                        <mat-divider></mat-divider>
-                    }
-                    <div class="row text-center">
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.cicloRomano }}</div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
-                        <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10">{{ curso.tipoCurso }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10">
-                            <div class="flex gap-4">
-                                <div>{{ curso.horasTeoricas }}</div>
-                                <div>{{ curso.horasPracticas }}</div>
-                                <div>{{ curso.totalHoras }}</div>
+      <ng-template matStepContent>
+          <div class="row">
+            <div class="col-6">
+                <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+                    <ng-template #headerTitleTemplate>
+                
+                        <div>{{ planEstudioSelect().nombre }}</div>
+                        <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Primaria" (onClick)="guardarPrimariosConfirm()"></ui-button>
+                
+                    </ng-template>
+                    <div class="row text-center bg-accent-300 align-items-center">
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
+                        <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Nombre Asignatura</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
+                            <div class="flex gap-3 justify-content-center">
+                                <div>HT</div>
+                                <div>HP</div>
+                                <div>TH</div>
                             </div>
                         </div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.totalCreditos }}</div>
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">CRED.</div>
                     </div>
-                }
-            </app-card>
-          </div>
-          <div class="col-6">
-            <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
-                <ng-template #headerTitleTemplate>
-            
-                    <div>{{ planEstudioUltimoConResolucion().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
-                    <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button>
-            
-                </ng-template>
-                <div class="row text-center bg-accent-300 align-items-center">
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
-                    <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Nombre Asignatura</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
-                    <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
-                        <div class="flex gap-3 justify-content-center">
-                            <div>HT</div>
-                            <div>HP</div>
-                            <div>TH</div>
-                        </div>
-                    </div>
-                    <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">CRED.</div>
-                </div>
-
-
-                @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first ) {
-                    @if ( !isFirst ) {
-                        <mat-divider></mat-divider>
-                    }
-                    <div class="row text-center">
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.cicloRomano }}</div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
-                        <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10">{{ curso.tipoCurso }}</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10">
-                            <div class="flex gap-4">
-                                <div>{{ curso.horasTeoricas }}</div>
-                                <div>{{ curso.horasPracticas }}</div>
-                                <div>{{ curso.totalHoras }}</div>
+    
+                    <!-- <pre>
+                        {{ cursosPrimarios | json }}
+                    </pre> -->
+    
+                    @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first ) {
+                        @if ( !isFirst ) {
+                            <mat-divider></mat-divider>
+                        }
+                        <div class="row text-center" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaUltimo">
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10"> {{ curso.cicloRomano }}</div>
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
+                            <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10">{{ curso.tipoCurso }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10">
+                                <div class="flex gap-4">
+                                    <div>{{ curso.horasTeoricas }}</div>
+                                    <div>{{ curso.horasPracticas }}</div>
+                                    <div>{{ curso.totalHoras }}</div>
+                                </div>
+                            </div>
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10 check">{{ curso.totalCreditos }}
+                                @if ( curso.equivalencias.length == 0 ) {
+                                    <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox>
+                                } @else {
+                                    <mat-icon class="text-green-500">done</mat-icon>
+                                }
                             </div>
                         </div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.totalCreditos }}</div>
+                    }
+                </app-card>
+              </div>
+              <div class="col-6">
+                <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+                    <ng-template #headerTitleTemplate>
+                
+                        <div>{{ planEstudioUltimoConResolucion().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
+                        <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button>
+                
+                    </ng-template>
+                    <div class="row text-center bg-accent-300 align-items-center">
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
+                        <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Nombre Asignatura</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
+                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
+                            <div class="flex gap-3 justify-content-center">
+                                <div>HT</div>
+                                <div>HP</div>
+                                <div>TH</div>
+                            </div>
+                        </div>
+                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">CRED.</div>
                     </div>
-                }
-            </app-card>
+    
+    
+                    @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first ) {
+                        @if ( !isFirst ) {
+                            <mat-divider></mat-divider>
+                        }
+                        <div class="row text-center" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaActual">
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.cicloRomano }}</div>
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
+                            <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10">{{ curso.tipoCurso }}</div>
+                            <div class="col-2 border-3xl border-round text-accent-700 f-10">
+                                <div class="flex gap-4">
+                                    <div>{{ curso.horasTeoricas }}</div>
+                                    <div>{{ curso.horasPracticas }}</div>
+                                    <div>{{ curso.totalHoras }}</div>
+                                </div>
+                            </div>
+                            <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.totalCreditos }}</div>
+                        </div>
+                    }
+                </app-card>
+              </div>
           </div>
-      </div>
-      <!-- <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
-      </div> -->
+      </ng-template>
+
     </mat-step>
   </mat-stepper>
 
-  <pre>
-    <!-- {{ planEstudioStepper() | json }} -->
+  <!-- <pre>
+    {{ planEstudioStepper() | json }}
     {{ planEstudioSelect() | json}}
     {{ planEstudioUltimoConResolucion() | json}}
-  </pre>
+  </pre> -->

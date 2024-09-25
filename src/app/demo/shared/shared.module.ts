@@ -57,6 +57,7 @@ import { RemoveHtmlDirective } from 'src/app/core/directives/remove-html.directi
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ColorClassDirective } from 'src/app/core/directives/color-class.directive';
 import { HoverClassDirective } from 'src/app/core/directives/hover-class.directive';
+import { ColorCursoSecundarioDirective } from 'src/app/core/directives/color-curso-secundario.directive';
 
 const MaterialModules = [
   MatToolbarModule,
@@ -106,6 +107,7 @@ const Directives = [
   RemoveHtmlDirective,
   ColorClassDirective,
   HoverClassDirective,
+  ColorCursoSecundarioDirective,
 
 
 ]
