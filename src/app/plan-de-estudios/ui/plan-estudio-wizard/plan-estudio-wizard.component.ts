@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -17,8 +17,8 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MatStepper } from '@angular/material/stepper';
 import { CursoPlanRepository } from '../../domain/repositories/curso-plan.repository';
 import { CursoPlanEquivalencia } from '../../domain/models/curso-plan.model';
-import { parse } from 'date-fns';
-
+// import { parse } from 'date-fns';
+import * as d3 from "d3";
 @Component({
   selector: 'app-plan-estudio-wizard',
   standalone: true,
@@ -32,7 +32,7 @@ import { parse } from 'date-fns';
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
 })
-export class PlanEstudioWizardComponent implements OnInit {
+export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
 
   cursosPlanByCiclos = this.cursoSignal.cursosPlanByCiclos;
   planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
@@ -78,7 +78,10 @@ export class PlanEstudioWizardComponent implements OnInit {
     })
   }
   ngOnInit(): void {
-
+    
+    // this.initArrowSVG();
+    // window.addEventListener('resize', this.redrawArrows.bind(this));
+    // this.ngAfterViewInit()
     // setTimeout(() => {
     //   // if( this.cursosPlanByCiclos().length > 0 ) {
     //   //   console.log('Design');
@@ -91,8 +94,10 @@ export class PlanEstudioWizardComponent implements OnInit {
     //   // this.obtenerCursoPlanUltimo();
     // }, 2000);
 
-
     this.obtenerCursoPlanEquivalenciaActual();
+    setTimeout(() => {
+      this.ngAfterViewInit()
+    }, 500);
   }
 
   estado = new Replacement();
@@ -251,5 +256,173 @@ export class PlanEstudioWizardComponent implements OnInit {
     
   } 
 
+  // CONEXIÓN DE LAS FLECHAS
+
+  selectedLeftCard: CursoPlanEquivalencia
+  selectedRightCard: CursoPlanEquivalencia;
+  setearCursoPlanEquivalencia: CursoPlanEquivalencia = {
+    idCursoPlan: 0,
+    nombreCurso: '',
+    codigoCurso: '',
+    tipoCurso: '',
+    tipoEstudio: '',
+    horasTeoricas: 0,
+    horasPracticas: 0,
+    totalHoras: 0,
+    totalCreditos: 0,
+    cicloRomano: '',
+    cicloNumero: '',
+    cicloLetra: '',
+    equivalencias: []
+  }
+  connections: { leftCardId: number, rightCardId: number }[] = []; // Array de conexiones
+  
+  ngAfterViewInit = () => {
+    this.inicioFlechaSVG();
+    window.addEventListener('resize', this.redibujarFlechaXZoom.bind(this));
+  }
+
+  inicioFlechaSVG = () => {
+    const svg = d3.select('#arrowContainer')
+      .attr('width', '100%')
+      .attr('height', '100%');
+
+    svg.append('defs').append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '-0 -5 10 10')
+      .attr('refX', 10)
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('xoverflow', 'visible')
+      .append('svg:path')
+      .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+      .attr('fill', 'black')
+      .style('stroke', 'none');
+  }
+
+  seleccionarCursoPlanProceso = (card: CursoPlanEquivalencia) => {
+    this.selectedLeftCard = card;
+    console.log('Selected Left Card:', card);
+    this.cursosSeleccionadosParaDibujar();
+  }
+
+  seleccionarCursoPlanUltimo(card: CursoPlanEquivalencia): void {
+    this.selectedRightCard = card;
+    console.log('Selected Right Card:', card);
+    this.cursosSeleccionadosParaDibujar();
+  }
+
+  cursosSeleccionadosParaDibujar = () => {
+    if (this.selectedLeftCard && this.selectedRightCard) {
+      this.dibujarFlechasEntreCursos();
+    }
+  }
+  dibujarFlechasEntreCursos = () => {
+    const svg = d3.select('#arrowContainer');
+
+    const leftCardElement = document.getElementById(`cardLeft-${this.selectedLeftCard.idCursoPlan}`);
+    const rightCardElement = document.getElementById(`cardRight-${this.selectedRightCard.idCursoPlan}`);
+
+    // Asegúrate de que el contenedor esté correctamente referenciado
+    const container = document.getElementById('arrowContainer'); // Asegúrate de tener el contenedor correcto
+
+    // Verifica si el contenedor es null
+    if (!container) {
+      console.error('El contenedor de SVG no se encontró.');
+      return; // Salir si el contenedor es null
+    }
+    const containerRect = container.getBoundingClientRect();
+    if (leftCardElement && rightCardElement) {
+      const leftRect = leftCardElement.getBoundingClientRect();
+      const rightRect = rightCardElement.getBoundingClientRect();
+
+      const startX = leftRect.right - containerRect.left - 20; // Ajusta la posición en relación al contenedor
+      const startY = leftRect.top - containerRect.top + leftRect.height / 2; // Ajusta la posición en relación al contenedor
+      const endX = rightRect.left - containerRect.left; // Ajusta la posición en relación al contenedor
+      const endY = rightRect.top - containerRect.top + rightRect.height / 2; // Ajusta la posición en relación al contenedor
+
+
+      // Verificar si la tarjeta derecha ya está conectada a alguna tarjeta izquierda
+      const existingRightConnection = this.connections.find(connection => connection.rightCardId === this.selectedRightCard.idCursoPlan);
+
+      if (existingRightConnection) {
+        this.alert.sweetAlert('info', '¿IMPORTANTE!', 'Este curso ya se encuentra asociado a otro')
+        // Si el card de la derecha ya está conectado, mostrar una alerta y no permitir la nueva conexión
+
+        this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
+        this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+        return;
+      }
+
+      // Verificar si la tarjeta izquierda ya está conectada
+      const existingLeftConnectionIndex = this.connections.findIndex(connection => connection.leftCardId === this.selectedLeftCard.idCursoPlan);
+
+      // Si la tarjeta izquierda ya está conectada, eliminar su conexión anterior
+      if (existingLeftConnectionIndex !== -1) {
+        const existingLeftConnection = this.connections[existingLeftConnectionIndex];
+        const existingArrowId = `arrow-${existingLeftConnection.leftCardId}-${existingLeftConnection.rightCardId}`;
+        svg.select(`#${existingArrowId}`).remove(); // Eliminar la flecha existente
+        this.connections.splice(existingLeftConnectionIndex, 1); // Eliminar la conexión del array
+      }
+
+      // Dibujar la nueva conexión
+      const arrowId = `arrow-${this.selectedLeftCard.idCursoPlan}-${this.selectedRightCard.idCursoPlan}`;
+      svg.append('line')
+        .attr('id', arrowId)
+        .attr('x1', startX)
+        .attr('y1', startY)
+        .attr('x2', endX)
+        .attr('y2', endY)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2)
+        .attr('marker-end', 'url(#arrowhead)');
+
+      // Agregar la nueva conexión al array
+      this.connections.push({ leftCardId: this.selectedLeftCard.idCursoPlan, rightCardId: this.selectedRightCard.idCursoPlan });
+      console.log('Conexiones actuales:', this.connections);
+      this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
+      this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+    }
+  }
+
+  redibujarFlechaXZoom = () => {
+    const svg = d3.select('#arrowContainer');
+    svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
+    this.connections.forEach(connection => {
+      const leftCardElement = document.getElementById(`cardLeft-${connection.leftCardId}`);
+      const rightCardElement = document.getElementById(`cardRight-${connection.rightCardId}`);
+      console.log(leftCardElement, 'left');
+      console.log(rightCardElement, 'right');
+
+      const container = document.getElementById('arrowContainer'); // Asegúrate de tener el contenedor correcto
+
+      // Verifica si el contenedor es null
+      if (!container) {
+        console.error('El contenedor de SVG no se encontró.');
+        return; // Salir si el contenedor es null
+      }
+      const containerRect = container.getBoundingClientRect();
+      if (leftCardElement && rightCardElement) {
+        const leftRect = leftCardElement.getBoundingClientRect();
+        const rightRect = rightCardElement.getBoundingClientRect();
+
+        const startX = leftRect.right - containerRect.left - 20; // Ajusta la posición en relación al contenedor
+        const startY = leftRect.top - containerRect.top + leftRect.height / 2; // Ajusta la posición en relación al contenedor
+        const endX = rightRect.left - containerRect.left; // Ajusta la posición en relación al contenedor
+        const endY = rightRect.top - containerRect.top + rightRect.height / 2; // Ajusta la posición en relación al contenedor
+
+        svg.append('line')
+          .attr('x1', startX)
+          .attr('y1', startY)
+          .attr('x2', endX)
+          .attr('y2', endY)
+          .attr('stroke', 'black')
+          .attr('stroke-width', 2)
+          .attr('marker-end', 'url(#arrowhead)');
+      }
+    });
+  }
 }
 
