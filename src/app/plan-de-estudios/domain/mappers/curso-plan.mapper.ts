@@ -13,9 +13,9 @@ export class CursoPlanMapper {
             horasPracticas: param.hp,
             totalHoras: param.tHoras,
             totalCreditos: param.tCreditos,
-            cicloRomano: param.denominacionResumida,
-            cicloNumero: param.denominacionExtendida,
-            cicloLetra: param.definicion,
+            cicloRomano: param.definicion,
+            cicloNumero: param.denominacionResumida,
+            cicloLetra: param.denominacionExtendida,
             equivalencias: param.eqs.map(eq => ({ nombreCurso: eq.nombreCursoPlanEquivalencia }))
         };
     }
