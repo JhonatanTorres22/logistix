@@ -64,8 +64,8 @@
             }
             
             @if ( showHistorial ) {
-                <div class="flex flex-column gap-2">
-                    <p class="font-bold f-18 m-0">Historial de mensajes editados <ui-button icon="ti ti-eye-off" (onClick)="showHistorial = false"></ui-button></p>
+                <div class="flex flex-column gap-2 pb-4 ml-4">
+                    <div class="font-bold f-18 m-0 flex justify-content-between align-items-center">Historial de mensajes editados <ui-button icon="ti ti-eye-off" (onClick)="showHistorial = false"></ui-button></div>
                     @for (mensaje of ticketDetalle.historial; track mensaje) {
                         <div class="bg-yellow-200 p-2 border-round border-left-3">
                             <div [innerHTML]="mensaje.mensaje"></div>
@@ -78,7 +78,7 @@
         </div>
     }
     <!-- currentRol().rol == 'Control Interno' && ticketDetalle.estado == 'Pendiente' || showEditor -->
-    @if ( currentRol().rol == 'Control Interno' && ticketDetalle.estado != 'Conforme' || showEditor ) { 
+    @if ( currentRol().rol == 'Control Interno' && ticketDetalle.estado != 'Conforme' && ticketDetalle.historial.length < 3 || showEditor ) { 
         <quill-editor class="w-100 h-8rem bg-white mt-1" placeholder="" [ngModel]="mensajeRespuestaTicket()" (ngModelChange)="mensajeRespuestaTicket.set($event)"></quill-editor>
     }
     @if ( ticketDetalle.estado == 'Pendiente' && currentRol().rol != 'Control Interno' ) {

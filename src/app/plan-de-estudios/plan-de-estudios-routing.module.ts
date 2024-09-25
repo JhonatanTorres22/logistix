@@ -8,6 +8,11 @@ const routes: Routes = [
   },{
     path: 'malla-curricular',
     loadComponent: () => import('./ui/malla-curricular-page/malla-curricular-page.component').then( c => c.MallaCurricularPageComponent)
+  },
+  {
+    path: 'disenar',
+    loadComponent: () => import('./ui/plan-estudio-wizard/plan-estudio-wizard.component').then( c => c.PlanEstudioWizardComponent)
+
   }
 ];
 

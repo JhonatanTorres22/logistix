@@ -8,7 +8,7 @@ import { CursoPlanEliminar, CursoPlanListar, PlanEstudio, PlanEstudioCursoInsert
 import { PlanEstidoRepositoryImpl } from '../../infraestructure/repositories/plan-estudio.repository.impl';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { AlertService } from 'src/app/demo/services/alert.service';
-import { CursoSingal } from '../../domain/signal/curso.signal';
+import { CursoSignal } from '../../domain/signal/curso.signal';
 import { Curso } from '../../domain/models/curso.model';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
@@ -16,18 +16,21 @@ import { uiModalTemplateData } from 'src/app/core/components/ui-modal/ui-modal.i
 import { PlanEstudioListComponent } from '../plan-estudio-list/plan-estudio-list.component';
 import { PlanEstudioSignal } from '../../domain/signal/plan-estudio.signal';
 import { Router } from '@angular/router';
+import { PlanEstudioCardComponent } from "../plan-estudio-card/plan-estudio-card.component";
 
 @Component({
   selector: 'curso-page',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     SharedModule,
     CursoListComponent,
     UiButtonIconComponent,
     UiButtonComponent,
     CicloPageComponent,
-    PlanEstudioListComponent ],
+    PlanEstudioListComponent,
+    PlanEstudioCardComponent
+],
   templateUrl: './curso-page.component.html',
   styleUrl: './curso-page.component.scss'
 })
@@ -39,12 +42,12 @@ export class CursoPageComponent implements OnDestroy {
   isModal = this.signal.isModal;
   planEstudioSelect =  this.signal.planEstudioSelect;
   cursosList = this.cursoSignal.cursosList;
-
-
+  planesDeEstudio = this.signal.planesDeEstudio;
+  planEstudioSinResolucion: PlanEstudio;
   constructor(
     private planEstudioRepository: PlanEstidoRepositoryImpl,
     private authSignal: AuthSignal,
-    private cursoSignal: CursoSingal,
+    private cursoSignal: CursoSignal,
     private signal: PlanEstudioSignal,
     private modal: UiModalService,
     private alert: AlertService,
@@ -165,6 +168,8 @@ export class CursoPageComponent implements OnDestroy {
   } 
 
   showPlanes = ( template: TemplateRef<any> ) => {
+    this.planEstudioSinResolucion = this.planesDeEstudio().find( plan => plan.resolucion == null ) ?? this.signal.planEstudioDefault;
+    this.planEstudioSelect.set( this.planEstudioSinResolucion );
     this.isModal.set( true );
     this.modal.openTemplate( {
       template,

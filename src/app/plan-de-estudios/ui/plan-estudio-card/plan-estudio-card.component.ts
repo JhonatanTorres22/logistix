@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import { Component, effect, Input, TemplateRef, ViewChild } from '@angular/core';
 import { PlanEstudio, PlanEstudioEliminar } from '../../domain/models/plan-estudio.model';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -14,6 +14,8 @@ import { PlanEstudioAddComponent } from '../plan-estudio-add/plan-estudio-add.co
 import { MallaCurricularSideComponent } from '../malla-curricular-page/malla-curricular-side/malla-curricular-side.component';
 import { PlanEstudioPerfilEgresadoComponent } from "../plan-estudio-perfil-egresado/plan-estudio-perfil-egresado.component";
 import { environment } from 'src/environments/environment';
+import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.component';
+import { pl } from 'date-fns/locale';
 
 @Component({
   selector: 'plan-estudio-card',
@@ -24,24 +26,32 @@ import { environment } from 'src/environments/environment';
     PlanEstudioAddComponent,
     MallaCurricularSideComponent,
     UiButtonComponent,
-    PlanEstudioPerfilEgresadoComponent
+    UiAlertComponent,
+    PlanEstudioPerfilEgresadoComponent,
+    PlanEstudioCardComponent
 ],
   templateUrl: './plan-estudio-card.component.html',
   styleUrl: './plan-estudio-card.component.scss'
 })
 export class PlanEstudioCardComponent {
 
+  @ViewChild('ultimoPlanConRCU') ultimoPlanConRCU: TemplateRef<any>;
+
   @Input() planEstudio: PlanEstudio;
+  @Input() tipo: string;
   planesDeEstudio = this.signal.planesDeEstudio;
   planEstudioEdit = this.signal.planEstudioEdit;  
   planEstudioSelect =  this.signal.planEstudioSelect;
+  planEstudioStepper = this.signal.planEstudioStepper;  
   renderizarPor = this.signal.renderizarPor;
   semestreSelect = this.semestreSignal.semestreSelect;
   isModal = this.signal.isModal;
+  isModalOfItself = this.signal.isModalOfItself;
   idSemestres = this.authSignal.idSemestres;
   currentInfoDirector = this.authSignal.currentInfoDirector;
   idPrograma = this.signal.programaId;
   openMallaCursos = this.signal.openMallaCursos;
+  planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   idProgramaSelect: number = 0;
 
   constructor(
@@ -52,18 +62,29 @@ export class PlanEstudioCardComponent {
     private semestreSignal: SemestreSignal,
     private authSignal: AuthSignal,
     private modal: UiModalService 
-  ) {}
+  ) {
+    effect( () => {
+      // console.log( this.planEstudioSelect() );
+      localStorage.setItem('selectPlanEstudio', JSON.stringify(this.planEstudioSelect()));
+      
+    } )
+  }
 
 
   verMalla = ( plan: PlanEstudio) => {
 
     this.planEstudioSelect.set( plan );
-    if( !this.isModal() ) {
+    if( !this.isModal() && !this.isModalOfItself() ) {
       this.router.navigate(['plan-de-estudios/malla-curricular']);
       return
     }
-    
+    if( this.isModalOfItself() ) {
+
+      console.log( this.ultimoPlanConRCU );
+      // this.ultimoPlanConRCU.elementRef.nativeElement.classList.add('hidden');
+      document.getElementsByClassName('cdk-overlay-container')[0].classList.add('hidden');
     this.openMallaCursos.set( true );
+    }
   }
 
   showFormEdit = ( plan: PlanEstudio, template: TemplateRef<any>, tipo: string ) => {
@@ -134,6 +155,46 @@ export class PlanEstudioCardComponent {
     }
     window.open(`${environment.EndPoint}Archivos/${plan.archivo}`, "_blank")
     return;
-  } 
+  }
+
+  duplicarConfirm = ( ultimoPlanConRCU: TemplateRef<any>, planEstudio: PlanEstudio) => {
+
+    this.planEstudioStepper.set( planEstudio );
+    this.planEstudioSelect.set( planEstudio );
+    console.log( planEstudio);
+    
+    // console.log( this.planEstudioUltimoConResolucion() );
+    // if( this.planEstudioUltimoConResolucion().id == 0 ) {
+      this.router.navigate(['plan-de-estudios/disenar']);
+      return;
+    // }
+
+    // this.isModalOfItself.set( true );
+    // this.modal.openTemplate( {
+    //   template: ultimoPlanConRCU,
+    //   titulo: 'Diseñar Plan de Estudio'
+    // }).afterClosed().subscribe( response => {
+    //   this.isModalOfItself.set( false );
+    //   if( response == 'cancelar' ) {
+    //     return
+    //   }
+
+    // });
+  }
+
+  duplicar = ( plan: PlanEstudio ) => {
+    console.log( plan );
+    
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea DUPLICAR este Plan de Estudios?')
+      .then( isConfirm => {
+        if( !isConfirm ) return
+        
+        this.planEstudioSelect.set( plan );
+        this.router.navigate(['plan-de-estudios/disenar']);
+        this.modal.getRefModal().close('cerrar');
+    })
+
+
+  }
 
 }

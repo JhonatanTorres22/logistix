@@ -41,7 +41,7 @@
       }
 
       
-      @if ( option.cierraProceso && !showCancelar ) {
+      @if ( (option.cierraProceso && !showCancelar) && (!selectMensaje().mensajeObservado || selectMensaje().solucionConforme) ) {
         <ui-button color="primary" borde="3xl" type="sweet" (onClick)="onCerrarProcesoConfirm()" [disabled]="(isModal() && !checkInfoSuccess()) || (isModal() && !isCompletedProcess())">
           <div class="flex align-item-center"> <i class="f-18 ti ti-arrow-big-right m-r-5"></i> {{ option.cierraProceso ? 'Aprobar y Archivar' : 'Continuar y Avanzar'}} </div>
         </ui-button>

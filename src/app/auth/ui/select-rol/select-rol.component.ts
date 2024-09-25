@@ -8,6 +8,7 @@ import { AuthService } from '../../infraestructure/services/auth.service';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { ListarInfoDirectorRepository } from '../../domain/repositories/listarInfoDirector.repository';
 import { AuthSignal } from '../../domain/signals/auth.signal';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class SelectRolComponent {
   constructor(
     private auth: AuthSignal,
     private repository: ListarInfoDirectorRepository,
+    private planEstudioSignal: PlanEstudioSignal,
     private router: Router,
     private authService: AuthService,
     private mensajeria: MensajeriaSignal
@@ -52,6 +54,7 @@ export class SelectRolComponent {
     this.mensajeria.setMensajeriaDataAsignacionDefault();
     // localStorage.setItem('current')
     localStorage.setItem('mensajeriaData', JSON.stringify(this.mensajeria.mensajeriaAsignacionDefault));
+    localStorage.setItem('selectPlanEstudio', JSON.stringify(this.planEstudioSignal.planEstudioDefault));
 
     this.router.navigate(['/dashboard']);
     

@@ -17,6 +17,7 @@ import { ProgramaRepository } from 'src/app/programas-academicos/domain/reposito
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { forEach } from 'lodash';
+import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
 
 @Component({
   selector: 'app-nav-bar',
@@ -33,6 +34,8 @@ export class NavBarComponent implements OnInit {
   idPrograma = this.PlanEstudioSignal.programaId;
   facultadesList = this.facultadSignal.facultadesList;
   programasGlobal = this.programaSignal.programasGlobal;
+  planesDeEstudio = this.PlanEstudioSignal.planesDeEstudio;
+  planEstudioUltimoConResolucion = this.PlanEstudioSignal.planEstudioUltimoConResolucion;
   constructor(
     private semestreRepository: SemestreAcademicoRepository,
     private semestreSignal: SemestreSignal,
@@ -42,6 +45,7 @@ export class NavBarComponent implements OnInit {
     private facultadSignal: FacultadSignal,
     private programaSignal: ProgramaSignal,
     private programaRepository: ProgramaRepository,
+    private planEstudioRepository: PlanEstudioRepository,
     private auth: AuthSignal,
     private repository: ListarInfoDirectorRepository,
   ) {}
@@ -68,7 +72,7 @@ export class NavBarComponent implements OnInit {
     return new Promise( resolve => {
       this.facultadRepository.obtenerFacultades().subscribe({
         next: ( facultades ) => {
-          console.log( facultades );
+          // console.log( facultades );
           this.facultadesList.set( facultades );
 
           if( this.facultadesList().length == 0 ) {
@@ -92,7 +96,7 @@ export class NavBarComponent implements OnInit {
           return [ ...programasActual, ...programas]
         });
 
-        console.log( this.programasGlobal() );
+        // console.log( this.programasGlobal() );
         
       }
     });
@@ -117,24 +121,40 @@ export class NavBarComponent implements OnInit {
     if(rolSeleccionado === 'Dir'){
       this.repository.obtener(parseInt( this.auth.currentRol().id )).subscribe({
         next: (infoDirector) => {
-          console.log( infoDirector );
+          // console.log( infoDirector );
           
-          // this.infoDirector = infoDirector;
           localStorage.setItem('currentInfoDirector', JSON.stringify(infoDirector));
-          // this.planesDeEstudio.set([]);
-          // this.semestresAcademicos.set( [] )
+
           if( infoDirector.length == 0 ) {
-            // this.auth.idSemestres.set([]);
             throw('El director no tiene programa asignado');
           }
           this.currentInfoDirector.set(infoDirector);
           this.idPrograma.set( this.currentInfoDirector()[0].idProgramaAcademico )
+          if( this.idPrograma() != 0 ) {
+            this.obtenerPlanesDeEstudios();
+          }
           console.log( this.idPrograma() );
         }
       });
     }
   }
   
+  obtenerPlanesDeEstudios() {
+    
+    this.planEstudioRepository.obtener( this.idPrograma() ).subscribe({
+      next: ( planes ) => {
+        // console.log( planes );
+        this.planesDeEstudio.set( planes )
+        // console.log(this.planesDeEstudio().filter( plan => plan.resolucion !== null ));
+        // console.log( this.planesDeEstudio() );
+        
+        this.planEstudioUltimoConResolucion.set( this.planesDeEstudio().filter( plan => plan.resolucion !== null )[ this.planesDeEstudio().length - 2] ?? this.PlanEstudioSignal.planEstudioDefault ) 
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los planes de estudios', 'error', 6);
+      }
+    })
+  }
 
 
 }

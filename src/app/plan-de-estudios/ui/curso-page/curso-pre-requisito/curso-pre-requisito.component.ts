@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { UiButtonComponent } from "../../../../core/components/ui-button/ui-button.component";
 import { Curso, CursoAddPreRequisito, CursoDeletePreRequisito } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
@@ -28,7 +28,7 @@ export class CursoPreRequisitoComponent implements OnInit {
   currentRol = this.authSignal.currentRol;
 
   constructor(
-    private signal: CursoSingal,
+    private signal: CursoSignal,
     private authSignal: AuthSignal,
     private repository: CursoRepository,
     private alert: AlertService,

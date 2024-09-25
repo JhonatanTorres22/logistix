@@ -17,6 +17,9 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { UsuarioRolSignal } from '../../domain/signals/usuario-rol.signal';
+import { ro } from 'date-fns/locale';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -38,29 +41,30 @@ export class UserRolComponent implements OnInit {
   @Input() message: string = ''
   usuariosRol: UsuarioRol[];
 
+  buscador: string = '';
+
   formAsignarRol: FormGroup;
-  roles: Rol[] = []
+  listaRoles: Rol[] = []
   newRoles: Rol[] = [];
   deleteRoles: UsuarioRol[] = [];
   /* DRAG AND DROP START */
 
   currentRol = this.auth.currentRol;
-  currentData = this.auth.currentUserData
+  currentData = this.auth.currentUserData;
+  roles = this.signal.roles;
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
   done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
   /* DRAG AND DROP END */
 
   constructor(
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<UserRolComponent>,
     private authService: AuthService,
     private usuarioRolRepository: UsuarioRolRepository,
     private fb: FormBuilder,
     private rolRepository: RolRepository,
-    private usuarioRepository: UsuarioRepository,
-    private usuariosRolDomainService: UsuariosRolDomainService,
+    private modal: UiModalService,
     private auth: AuthSignal,
+    private signal: UsuarioRolSignal,
     private alertService: AlertService
 
   ) {
@@ -128,7 +132,8 @@ export class UserRolComponent implements OnInit {
           return roles
         }, [])
 
-        this.roles = rol
+        this.listaRoles = rol;
+        this.roles.set( this.listaRoles );
         // console.log(rol);
         
       }, error: ( error ) => {
@@ -155,7 +160,7 @@ export class UserRolComponent implements OnInit {
               this.activarRolUser(rol);
               setTimeout(() => {
                 this.authService.logout();
-                this.dialogRef.close()
+                this.modal.getRefModal().close();
               }, 300);
             }
           })
@@ -172,7 +177,8 @@ export class UserRolComponent implements OnInit {
               this.suspenderRolUser(rol)
               setTimeout(() => {
                 this.authService.logout();
-                this.dialogRef.close()
+                this.modal.getRefModal().close();
+
               }, 300);
             }
           })
@@ -242,7 +248,8 @@ export class UserRolComponent implements OnInit {
                 return
               }
               this.authService.logout();
-              this.dialogRef.close()
+              this.modal.getRefModal().close();
+
               })
             }
             this.obtenerUsuarios();
@@ -300,7 +307,8 @@ export class UserRolComponent implements OnInit {
               this.eliminarRolUsuario(eliminarRol, isLast);
               setTimeout(() => {
                 this.authService.logout();
-                this.dialogRef.close()
+                this.modal.getRefModal().close();
+
               }, 300);
             }
           })
@@ -332,19 +340,19 @@ export class UserRolComponent implements OnInit {
         if (isLast) {
           this.alertService.sweetAlert('success', '¡Correcto!', 'Los roles fueron asignados correctamente.' ).then( isConfirm => {
             if(isConfirm){
-              if(this.data.message == 'Director' || this.data.message == 'Decano'){
-                this.router.navigate(['/programas-academicos']);
-                this.dialogRef.close()
-              }
+              // if(this.data.message == 'Director' || this.data.message == 'Decano'){
+              //   this.router.navigate(['/programas-academicos']);
+              //   this.dialogRef.close()
+              // }
             }
           });
           this.obtenerUsuarios();
           this.obtenerRoles();
           this.newRoles = [];
 
-          if(this.data.message == 'Director' || this.data.message == 'Decano'){
-            this.router.navigate(['/configuracion/usuarios']);
-          }
+          // if(this.data.message == 'Director' || this.data.message == 'Decano'){
+          //   this.router.navigate(['/configuracion/usuarios']);
+          // }
         }
       }, error: ( error ) => {
         console.log( error );
@@ -387,9 +395,6 @@ export class UserRolComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       
-      // console.log(event.container.id);
-      // console.log(this.deleteRoles);
-      
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -404,41 +409,65 @@ export class UserRolComponent implements OnInit {
           console.log('asignar');
           console.log(event);
           
-          event.container.data.forEach( (rol: any) => {
+          event.container.data.forEach( (rol: any, index) => {
             // console.log(rol.usuario);
+            console.log( index, ' - ' ,rol );
+            // if( index == 0 ) {
+            // }
             if( rol.usuario ) {
+              if( rol.estado != '' ) {
+                this.deleteRoles = this.deleteRoles.filter( rolDelete => rolDelete.rol != rol.rol );
+                this.roles.update( roles => {
+                  console.log('asignado');
+                  const asignados = Object.values({...event.container.data});
+                  console.log( asignados );
+                  
+                  return roles.filter( rolSignal => rolSignal.rol !== rol.rol)
+
+                } )
+                console.log( this.roles() );
+                return
+              }
               console.log('no es asignado');
+              // console.log( this.roles() );
+
               return  
             }
 
             console.log(rol);
             this.newRoles.push( rol );
-
+            this.roles.update( roles => {
+              return roles.filter( rolSignal => rolSignal.rol !== rol.rol)
+            })
             
           })
-          // this.newRoles.push
-          // const newUser: any = this.newRoles;
-          // event.container.addItem(event.item);
-          // this.usuariosRol.push(newUser);
-          // this.newRoles = [];
+
         }; break;
 
         case 'eliminar': {
           this.deleteRoles = [];
-          // console.log(event.container.data);
+
           console.log('eliminar');
-          event.container.data.forEach( (rol: any) => {
-            // console.log(rol.usuario);
+
+          event.container.data.forEach( (rol: any, index) => {
+            
+            console.log(index, ' - ',rol);
+            // if( index == 0 ) {
+              
+            // }
+            this.newRoles = this.newRoles.filter( rolNew => rolNew.rol != rol.rol );
+            
             if( !rol.usuario ) {
               console.log('no es asignado');
+
+            console.log( this.listaRoles);
+            this.roles.set( this.listaRoles );
+
               return  
             }
-            
-            // console.log(rol);
+
             this.deleteRoles.push( rol );
             console.log(this.deleteRoles);
-            
-            
           })
           
         }; break;
@@ -446,5 +475,20 @@ export class UserRolComponent implements OnInit {
     }
   }
   /*  DRAG AND DROP END */
+
+  filtrar = ($event: any) => {
+    console.log($event);
+    console.log( this.roles() );
+    
+    this.listaRoles = this.roles();
+
+    const searchTerms = $event.toLowerCase().split(' ');
+    console.log( this.listaRoles);
+    
+    this.listaRoles = this.listaRoles.filter(rol => {
+        const rolName = rol.rol.toLowerCase();
+        return searchTerms.every((term: string) => rolName.includes(term));
+    });
+}
 
 }

@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,6 +17,9 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UsuarioLocalService } from '../../infraestructure/services/usuario-local.service';
 import { Router } from '@angular/router';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { User } from 'src/app/@theme/types/user';
+import { UserRolComponent } from '../user-rol/user-rol.component';
+import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 
 export interface PeriodicElement {
   id: number;
@@ -33,14 +36,15 @@ export interface PeriodicElement {
 @Component({
   selector: 'user-list',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, UserRolComponent],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent {
-
+  @ViewChild('userRol') userRol: TemplateRef<any>;
   currentRol = this.authSignal.currentRol;
   usuarios: Usuario[] = [];
+  usuarioSelected: Usuario;
   mensajeAsignarRolDirectoroDecano: string;
 
   // public props
@@ -65,6 +69,7 @@ export class UserListComponent {
     private authSignal: AuthSignal,
     private usuarioRepository: UsuarioRepository,
     public dialog: MatDialog,
+    private modal: UiModalService,
     private usuarioDomainService: UsuariosDomainService,
     private mock: UsuarioLocalService
   ) {}
@@ -148,11 +153,10 @@ export class UserListComponent {
 
     // open dialog customer details view
   customerDetails = ( usuario: Usuario): void => {
-    this.dialog.open( UserDetailsComponent, {
-      width: '800px',
-      height: '600px',
-      disableClose: true,
-      data: {usuario, component: 'user-rol', message:this.mensajeAsignarRolDirectoroDecano}
+    this.usuarioSelected = usuario;
+    this.modal.openTemplate( {
+     template: this.userRol,
+     titulo: 'Detalles del Usuario',
     });
   }
 

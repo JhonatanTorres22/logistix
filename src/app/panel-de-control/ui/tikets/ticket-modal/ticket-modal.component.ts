@@ -8,7 +8,7 @@ import { ObservacionSignal } from 'src/app/panel-de-control/domain/signals/obser
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositories/observacion.repository';
-import { ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
+import { ObservacionBase, ObservacionResolver } from 'src/app/panel-de-control/domain/models/obserbacion.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MensajeriaRepository } from 'src/app/mensajeria/domain/repositories/mensajeria.repository';
 import { MensajeriaCerrarArchivar } from 'src/app/mensajeria/domain/models/mensajeria.model';
@@ -88,7 +88,7 @@ export class TicketModalComponent {
 
         this.responder().then( isResuelto => {
           if( !isResuelto ) return;
-          this.modal.getRefModal().close('Listar');
+          // this.modal.getRefModal().close('Listar');
           this.renderizarTickets.set('Listar');
           this.mensajeRespuestaTicket.set('');
         });
@@ -104,7 +104,14 @@ export class TicketModalComponent {
         next: ( response ) => {
           console.log('response', response);
           this.alert.showAlert('El ticket fue RESPONDIDO correctamente','success' );
-          
+          const ticket: ObservacionBase = {
+            ...this.ticketSelect(),
+            mensajeResuelto: this.mensajeRespuestaTicket(),
+            fechaResuelto: new Date().toISOString(),
+            estado: 'Resuelto',
+            historial: [...this.updateHistorial().historial]
+          }
+          this.ticketSelect.set( ticket );
           resolve( true )
         }, error: ( error ) => {
           console.log('error', error);
@@ -133,6 +140,7 @@ export class TicketModalComponent {
       userId: parseInt( this.currentRol().id )
     }
     console.log( resolver );
+    
 
     return resolver;
 

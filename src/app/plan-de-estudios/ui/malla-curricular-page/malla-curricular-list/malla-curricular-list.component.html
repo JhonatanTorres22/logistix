@@ -1,19 +1,17 @@
 <p></p>
-@if ( !isModal() ) {
+@if ( !isModal() && !isModalOfItself() && currentRuta() !== '/plan-de-estudios/disenar' ) {
     <h1>{{ planEstudioSelect().nombre }}</h1>
     <ui-button color="blue" icon="ti ti-arrow-back-up f-16" (onClick)="volver()" tooltip="Volver"></ui-button>
     <mat-divider class="my-2"></mat-divider>
 
-<!-- <br>
-<ciclo-page></ciclo-page>
--->
 <div class="flex justify-content-end gap-2">
     <ui-button color="blue" icon="ti ti-folder f-16" [routerLink]="['/cursos']" tooltip="Gestionar Cursos"></ui-button>
     <ui-button color="red" icon="ti ti-trash f-16" (onClick)="onEliminarConfirm()" [disabled]="cursosPlan.length == 0" tooltip="Eliminar Cursos"></ui-button>
 </div>
 }
 
-@if ( cursosPlanByCiclos().length == 0 ) {
+
+@if ( cursosPlanByCiclos().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
 <div class="row">
@@ -23,19 +21,10 @@
             <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
                 <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
                     {{ciclo.ciclo || 'Ciclo' }}
-                      <!-- Ciclo I -->
                 </div>
             </div>
             <div class="flex flex-column gap-2 example-list"
 >
-                <!-- <div class="flex flex-column align-item-center justify-content-between border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
-                    style="min-height: 5rem; max-height: 7rem;">
-                    <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
-                    <div class="f-8 m-0 capitalize text-center f-w-600">{{ ciclo.ciclo }}</div>
-                    <div class="flex justify-content-around my-2 gap-2 f-10">
-                        {{ curso.descripcion }}
-                    </div>
-                </div> -->
                 @for ( curso of ciclo.cursos; track curso) {
                     
                     <div
@@ -65,5 +54,4 @@
 
     }
 </div>
-
-<!-- <pre>{{ planEstudioSelect() | json }}</pre> -->
+<pre>{{ cursosPlan() | json }}</pre>

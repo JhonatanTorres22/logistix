@@ -22,6 +22,7 @@ export class MallaCurricularSideComponent implements OnInit {
 
   openMallaCursos = this.signal.openMallaCursos;
   planEstudioSelect = this.signal.planEstudioSelect
+  isModalOfItself = this.signal.isModalOfItself;
 
   constructor(
     private signal: PlanEstudioSignal
@@ -41,7 +42,14 @@ export class MallaCurricularSideComponent implements OnInit {
 
   cerrar = () => {
     // this.openMallaCursos.set( false );
+    if( this.isModalOfItself() ) {
+      this.showModalPlanEstudioCard();
+    }
     this.malla.close();
+  }
+
+  showModalPlanEstudioCard = () => {
+    document.getElementsByClassName('cdk-overlay-container')[0].classList.remove('hidden');
   }
   
 }
