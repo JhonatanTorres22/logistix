@@ -10,6 +10,7 @@ import { ObservacionRepository } from 'src/app/panel-de-control/domain/repositor
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { de } from 'date-fns/locale';
 import { UiCardNotItemsComponent } from "../../../../core/components/ui-card-not-items/ui-card-not-items.component";
+import { BuscadorContext, Buscar } from './buscador.strategy';
 
 @Component({
   selector: 'ticket-list',
@@ -54,11 +55,11 @@ export class TicketListComponent implements OnInit {
       }
 
       console.log( this.buscador());
-      if( this.buscador()[0] != 'Buscador' || this.buscador()[1] == '' ) {
-        this.filtrar();
-        return;
-      }
-
+      // if( this.buscador()[0] != 'Buscador' || this.buscador()[1] == '' ) {
+      //   this.filtrar();
+      //   return;
+      // }
+      this.filtrar();
       this.buscar();
 
     }, { allowSignalWrites: true } );
@@ -147,24 +148,71 @@ export class TicketListComponent implements OnInit {
   }
   
   buscar = () => {
-    let ticketFiltrado: ObservacionPendiente[] = [];
-    let ticketFiltradoConforme: ObservacionConforme[] = [];
 
-    if( this.ticketList.length == 0) {
-      this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
+    switch( this.buscador()[0] ) {
+      case 'conforme': {
+        if( this.listConformes.length == 0 || this.buscador()[1] == '' ) {
+            this.listConformes = this.ticketsConformes() as ObservacionPendiente[];
+          }
+        const buscar = new BuscadorContext( new Buscar() );
+        this.listConformes = buscar.buscar( 'conforme', this.buscador()[1], this.listConformes );
+      }; break;
+
+      case 'cierreForzado': {
+        if( this.listCierreForzados.length == 0 || this.buscador()[1] == '' ) {
+          this.listCierreForzados = this.ticketsCierreForzados();
+        }
+        const buscar = new BuscadorContext( new Buscar() );
+        this.listCierreForzados = buscar.buscar( 'cierreForzado', this.buscador()[1], this.listCierreForzados );
+      }; break;
+
+      case 'pendiente': {
+        if( this.ticketList.length == 0 || this.buscador()[1] == '' ) {
+          // this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
+        this.ticketList = this.ticketsPendientes().filter( tick => tick.estado.toLowerCase() == this.filtroSelect()) as ObservacionPendiente[];
+
+        }
+        const buscar = new BuscadorContext( new Buscar() );
+        this.ticketList = buscar.buscar( 'pendiente', this.buscador()[1], this.ticketList );
+      }; break;
+
+      case 'resuelto': {
+        if( this.ticketList.length == 0 || this.buscador()[1] == '' ) {
+          // this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
+        this.ticketList = this.ticketsPendientes().filter( tick => tick.estado.toLowerCase() == this.filtroSelect()) as ObservacionPendiente[];
+
+        }
+        const buscar = new BuscadorContext( new Buscar() );
+        this.ticketList = buscar.buscar( 'resuelto', this.buscador()[1], this.ticketList );
+      }; break;
+    
     }
-    const dataActual = this.ticketList;
-    dataActual.map( tick => {
+    
+    
+    
+    
 
-      const ticket = JSON.stringify( tick ).toLowerCase();
 
-      if( ticket.includes( this.buscador()[1] ) ) {
-        ticketFiltrado.push( tick as ObservacionPendiente );
-      }
 
-    } )
+
+    // let ticketFiltrado: ObservacionPendiente[] = [];
+    // let ticketFiltradoConforme: ObservacionConforme[] = [];
+
+    // if( this.ticketList.length == 0) {
+    //   this.ticketList = this.ticketsPendientes() as ObservacionPendiente[];
+    // }
+    // const dataActual = this.ticketList;
+    // dataActual.map( tick => {
+
+    //   const ticket = JSON.stringify( tick ).toLowerCase();
+
+    //   if( ticket.includes( this.buscador()[1] ) ) {
+    //     ticketFiltrado.push( tick as ObservacionPendiente );
+    //   }
+
+    // } )
  
-    this.ticketList = ticketFiltrado;
+    // this.ticketList = ticketFiltrado;
   }
 
 }

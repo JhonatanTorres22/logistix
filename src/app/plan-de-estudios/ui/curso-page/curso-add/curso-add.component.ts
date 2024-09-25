@@ -8,7 +8,7 @@ import { KanbanLayoutService } from 'src/app/demo/pages/application/kanban/kanba
 import { KanbanService } from 'src/app/demo/pages/application/kanban/kanban.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Curso, CursoByCiclo, CursoCrear, CursoEditar } from 'src/app/plan-de-estudios/domain/models/curso.model';
-import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { CursoListComponent } from '../curso-list/curso-list.component';
 import { UiModalTemplateComponent } from 'src/app/core/components/ui-modal-template/ui-modal-template.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
@@ -99,7 +99,7 @@ export class CursoAddComponent {
   constructor(
     private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
     private repository: CursoRepository,
-    private signal: CursoSingal,
+    private signal: CursoSignal,
     private auth: AuthSignal,
     private modal: UiModalService,
     private validation: CursoValidation,

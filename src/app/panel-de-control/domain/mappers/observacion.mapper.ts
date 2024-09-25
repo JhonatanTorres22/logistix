@@ -36,6 +36,30 @@ export class ObservacionMapper {
         }
     }
 
+    static fromApiToDomainListarCierreForzado( param: ObservacionDTO ): ObservacionBase {
+
+        // const historial: HistorialMensaje[] = param.detalleResuelto == null ? [] : JSON.parse(param.detalleResuelto);
+        const historial: HistorialMensaje[] = param.detalleResuelto == null ? [] : param.detalleResuelto.substring(0,1) == '[' ? JSON.parse(param.detalleResuelto)[0].historial : [];
+        const mensaje: string = param.detalleResuelto == null ? '' : param.detalleResuelto.substring(0,1) == '[' ? JSON.parse(param.detalleResuelto)[0].mensaje : param.detalleResuelto;
+        return {
+            categoriaNombre: param.denominacionCategoria,
+            fechaObservacion: param.fechaObservacion,
+            id: param.codigoObservacion,
+            mensaje: param.detalleObservacion,
+            mensajeId: param.codigoMensajeria,
+            subCategoriaNombre: param.denominacionSubCategoria,
+            estado: 'Cierre Forzado',
+            rol: param.nombreRol,
+            usuario: param.nombreUsuario,
+            ticket: param.numeroTicket,
+            fechaResuelto: param.fechaResuelto,
+            mensajeResuelto: mensaje,
+            historial: historial.length == 0 ? [] : historial,
+            fechaConforme: param.fechaConforme
+        
+        }
+    }
+
     static fromApiToDomainListarPendiente( param: ObservacionPendienteDTO ): ObservacionPendiente {
         // console.log( param.detalleResuelto.substring(0,1) );
         

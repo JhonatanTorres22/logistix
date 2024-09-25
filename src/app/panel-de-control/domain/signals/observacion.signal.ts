@@ -35,7 +35,7 @@ export class ObservacionSignal {
 
     ticketSelect = signal( this.observacionDefault );
 
-    filtroSelect = signal( 'all');
+    filtroSelect = signal( 'pendiente');
 
     ticketsPendientes = signal( this.ticketsPendientesDefault );
     ticketsConformes = signal( this.ticketsConformesDefault );

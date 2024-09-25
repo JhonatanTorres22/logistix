@@ -7,7 +7,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Curso, CursoBuscarPlan, CursoByCiclo, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
-import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { CursoService } from 'src/app/plan-de-estudios/infraestructure/services/curso.service';
 import { CursoAddComponent } from '../curso-add/curso-add.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
@@ -49,6 +49,7 @@ export class CursoListComponent implements OnInit {
   renderizarCursos = this.signal.renderizarCursos;
   preRequisitos = this.signal.preRequisitos;
   isModal = this.planEstudioSignal.isModal;
+  planesDeEstudio = this.planEstudioSignal.planesDeEstudio;
   accionCurso: 'ELIMINAR' | 'EDITAR';
 
   @ViewChild('templatePlan') templatePlan: TemplateRef<any>
@@ -62,7 +63,7 @@ export class CursoListComponent implements OnInit {
     private service: CursoService,
     private cicloRepository: CicloRepository,
     private alert: AlertService,
-    private signal: CursoSingal,
+    private signal: CursoSignal,
     private planEstudioSignal: PlanEstudioSignal,
     private cicloSignal: CicloSingal,
     private modal: UiModalService

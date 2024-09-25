@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
-import { CursoSingal } from "../signal/curso.signal";
+import { CursoSignal } from "../signal/curso.signal";
 import { ValidacionComprobarDuplicadoService } from "src/app/programas-academicos/domain/services/validacion-comprobar-duplicado.service";
 
 @Injectable({
@@ -10,7 +10,7 @@ import { ValidacionComprobarDuplicadoService } from "src/app/programas-academico
 
 export class CursoValidation {
     constructor(
-        private cursoSignal : CursoSingal,
+        private cursoSignal : CursoSignal,
         private validarDuplicadoService:ValidacionComprobarDuplicadoService
     ){}
 
@@ -18,10 +18,10 @@ export class CursoValidation {
     // maxLengthCiclo: string
     maxLengthCodigoCurso: number = 7;
     minLengthCodigoCurso: number = 7;
-    expRegCodigoCurso: RegExp =/^P\d+$/;
+    expRegCodigoCurso: RegExp =/^.*\d+$/;
     expRegCodigoCursoBlockToInput: RegExp = /^(?!P)[^0-9]|[^0-9P]|(?<=^P.*)P/g;
     minTotalHoras: number = 2;
-    minCreditos: number = 3;
+    minCreditos: number = 2;
     maxLengthNombreCurso: number = 50;
     minLengthNombreCurso: number = 6;
     expRegNombreCurso: RegExp =/^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;

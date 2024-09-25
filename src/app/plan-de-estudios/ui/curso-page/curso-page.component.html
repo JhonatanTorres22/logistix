@@ -13,9 +13,10 @@
 
 <ng-template #planEstudioList>
     <mat-dialog-content>
-        <plan-estudio-list></plan-estudio-list>
+        <!-- <plan-estudio-list></plan-estudio-list> -->
+        <plan-estudio-card [planEstudio]="planEstudioSinResolucion"></plan-estudio-card>
     </mat-dialog-content>
-    {{ planEstudioSelect().resolucion }}
+    <!-- {{ planEstudioSelect().resolucion }} -->
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
         <ui-button color="primary" [label]="planEstudioSelect().id != 0 ? 'Asignar' : 'Seleccione un Plan'" [disabled]="planEstudioSelect().id == 0 || planEstudioSelect().resolucion !== null" (onClick)="onSubmit()"></ui-button>

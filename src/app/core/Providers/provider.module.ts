@@ -30,6 +30,8 @@ import { ObservacionRepository } from "src/app/panel-de-control/domain/repositor
 import { ObservacionRepositoryImpl } from "src/app/panel-de-control/infraestructure/repositories/observacion.repository.impl";
 import { MensajeriaRepository } from "src/app/mensajeria/domain/repositories/mensajeria.repository";
 import { MensajeriaRepositoryImpl } from "src/app/mensajeria/infraestructure/repositories/mensajeria.repository.impl";
+import { CursoPlanRepository } from "src/app/plan-de-estudios/domain/repositories/curso-plan.repository";
+import { CursoPlanRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/curso-plan.repository.impl";
 
 
 
@@ -55,7 +57,8 @@ import { MensajeriaRepositoryImpl } from "src/app/mensajeria/infraestructure/rep
             { provide: ObservacionRepository, useClass: ObservacionRepositoryImpl },
             { provide: MensajeriaRepository, useClass: MensajeriaRepositoryImpl},
             { provide: UsuarioRolRepository, useClass: UsuarioRolRepositoryImp },
-            { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl }
+            { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl },
+            { provide: CursoPlanRepository, useClass: CursoPlanRepositoryImpl }
 
         ]
     ]

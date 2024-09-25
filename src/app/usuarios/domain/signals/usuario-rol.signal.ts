@@ -1,5 +1,7 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, WritableSignal } from "@angular/core";
 import { UsuarioRol } from "../models/usuario-rol.model";
+import { Rol } from "src/app/roles/domain/models/rol.model";
+
 
 
 @Injectable({
@@ -28,4 +30,6 @@ export class UsuarioRolSignal {
     setUsuariosRolesList = ( usuarios: UsuarioRol[] ) => {
         this.usuariosList.set( usuarios );
     }
+    rolesDefault: Rol[] = [];
+    roles = signal( this.rolesDefault );
 }

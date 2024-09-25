@@ -61,7 +61,7 @@ export class AuthenticationService {
       semestreSignal.setSelectSemestre( JSON.parse( localStorage.getItem('currentSemestre')! ))
     }
 
-
+    planEstudio.planEstudioSelect.set( JSON.parse(localStorage.getItem('selectPlanEstudio')!) );
     // const expToken = JSON.parse(localStorage.getItem('currentUserData')!).exp;
     auth.currentExpirarToken.set(parseInt(JSON.parse(localStorage.getItem('currentUserData')!)?.exp + '000'));
     

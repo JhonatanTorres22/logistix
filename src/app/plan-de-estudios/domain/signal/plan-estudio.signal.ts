@@ -47,12 +47,14 @@ export class PlanEstudioSignal {
     planEstudioSinResolucion: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
     planEstudioPorAprobar: WritableSignal<PlanEstudioEditCU> = signal( this.planEstudioPorAprobarDefault );
     planEstudioSelect: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
-
+    planEstudioStepper: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
+    planEstudioUltimoConResolucion: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
     planEstudio: WritableSignal<PlanEstudio> = signal( this.planEstudioDefault );
 
     programaId = signal(0);
 
     isModal = signal( false );
+    isModalOfItself = signal( false );
 
     openMallaCursos = signal ( false );
 

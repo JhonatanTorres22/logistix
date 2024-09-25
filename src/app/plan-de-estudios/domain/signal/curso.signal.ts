@@ -1,6 +1,7 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
 import { Curso, CursoByCiclo, CursoCrear } from "../models/curso.model";
 import { Ciclo } from "../models/ciclo.model";
+import { CursoPlanListar } from "../models/plan-estudio.model";
 
 
 
@@ -8,7 +9,7 @@ import { Ciclo } from "../models/ciclo.model";
     providedIn: 'root'
 })
 
-export class CursoSingal {
+export class CursoSignal {
 
 
     cursoListDefault: Curso[] = [];
@@ -58,6 +59,9 @@ export class CursoSingal {
         cursos: []
     }
 
+    cursoPlanDefault: CursoPlanListar[] = [];
+    
+
     preRequisitoDefault: Curso[] = []
 
     cursoByCliclosDefault: CursoByCiclo[] = []
@@ -65,6 +69,8 @@ export class CursoSingal {
     cursosByCiclo = signal( this.cursoByClicloDefault );
     cursosByCiclos = signal( this.cursoByCliclosDefault );
     cursosPlanByCiclos = signal( this.cursoByCliclosDefault );
+
+    cursosPlan = signal( this.cursoPlanDefault );
 
     cursoSelect = signal( this.cursoDafault );
     cursoSelectPreRequisito = signal( this.cursoDafault );

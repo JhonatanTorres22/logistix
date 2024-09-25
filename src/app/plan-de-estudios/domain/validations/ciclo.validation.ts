@@ -24,7 +24,7 @@ export class CicloValidation {
     expRegCicloLetraBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
 
     MaxLengthDefinicion: number = 20;
-    MinLengthDefinicion: number = 5;
+    MinLengthDefinicion: number = 1;
     expRegDefinicion: RegExp = /[A-Za-z]{5,20}/;
     expRegDefinicionBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
 

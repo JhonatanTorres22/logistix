@@ -80,6 +80,6 @@ export class ObservacionService {
   getCierresForzados = (): Observable<ObservacionBase[]> => {
     return this.http
       .get<ObservacionListarDataArrayDTO>(this.urlApi + this.urlListarCierresForzado)
-      .pipe(map((responseAPI) => responseAPI.data.map(ObservacionMapper.fromApiToDomainListar)));
+      .pipe(map((responseAPI) => responseAPI.data.map(ObservacionMapper.fromApiToDomainListarCierreForzado)));
   };
 }

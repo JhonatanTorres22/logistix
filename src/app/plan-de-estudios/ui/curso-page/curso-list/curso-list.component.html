@@ -64,23 +64,17 @@
                                             <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
                                             <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-2rem px-1" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
                                             <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-2rem px-1" (onClick)="eliminarConfirm( curso )"></ui-button>
-                                            <ui-button
+                                            @if ( ciclo.idCiclo != 1 ) {
+                                                <ui-button
                                                 color="green"
                                                 tooltip="Agregar Pre Requisito"
-                                                
                                                 classButton="h-2rem px-1"
-                                                
                                                 matBadgeColor="warn"
                                                 matBadgeOverlap="false"
                                                 (onClick)="addPreRequisito( curso )">
                                                 <span class="f-10 p-1 border-50">{{ curso.preRequisitos.length }}</span>
-                                                <!-- icon="ti ti-shield-lock f-12" -->
-                                                <!--
-                                                    [matBadge]="curso.preRequisitos.length"
-                                                    matBadgePosition="after"
-                                                    [matBadgeHidden]="curso.preRequisitos.length == 0"
-                                                -->
                                             </ui-button>
+                                            }
                                             
                                         </div>
                                     }
@@ -112,7 +106,8 @@
 
     <ng-template #templatePlan let-data>
         <div class="bg-yellow-500 text-white-700 font-bold text-center">NO ES POSIBLE {{ accionCurso }} EL CURSO</div>
-        <plan-estudio-card [planEstudio]="planEstudioEncontrado"></plan-estudio-card>
+        <plan-estudio-card [planEstudio]="planEstudioEncontrado" tipo="asignar"></plan-estudio-card>
     </ng-template>
 <!-- {{ isModal() }} -->
 <!-- } -->
+<!-- <pre>{{ planesDeEstudio() | json}}</pre> -->

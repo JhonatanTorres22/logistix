@@ -6,7 +6,7 @@ import { CursoPageComponent } from '../../curso-page/curso-page.component';
 import { UiButtonComponent } from "../../../../core/components/ui-button/ui-button.component";
 import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
 import { CursoByCiclo, Curso } from 'src/app/plan-de-estudios/domain/models/curso.model';
-import { CursoSingal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { PlanEstidoRepositoryImpl } from 'src/app/plan-de-estudios/infraestructure/repositories/plan-estudio.repository.impl';
 import { CursoPlanListar, PlanEstudioCursoInsertar } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
@@ -17,6 +17,7 @@ import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { Router } from '@angular/router';
 import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-items/ui-card-not-items.component';
+import { RutasSignal } from 'src/app/core/signals/rutas.signal';
 
 @Component({
   selector: 'malla-curricular-list',
@@ -34,26 +35,30 @@ import { UiCardNotItemsComponent } from 'src/app/core/components/ui-card-not-ite
 export class MallaCurricularListComponent implements OnInit {
 
   cursosPlanByCiclos = this.cursoSignal.cursosPlanByCiclos;
-  cursosPlan: CursoPlanListar[] = []
+  // cursosPlan: CursoPlanListar[] = []
+  cursosPlan = this.cursoSignal.cursosPlan;
   cicloList = this.cicloSignal.cicloList;
   planEstudioSelect = this.signal.planEstudioSelect;
   idPrograma = this.signal.programaId;
   isModal = this.signal.isModal;
+  isModalOfItself = this.signal.isModalOfItself;
+  currentRuta = this.rutaSignal.currentRuta;
 
   constructor(
     private cursosRepository: CursoRepository,
-    private cursoSignal: CursoSingal,
+    private cursoSignal: CursoSignal,
     private planEstudioRepository: PlanEstidoRepositoryImpl,
     private cicloRepository: CicloRepository,
     private cicloSignal: CicloSingal,
     private authSignal: AuthSignal,
     private signal: PlanEstudioSignal,
+    private rutaSignal: RutasSignal,
     private alert: AlertService,
     private router: Router
   ) {
     effect( () => {
       if( this.planEstudioSelect().id !== 0 ) {
-        console.log( this.planEstudioSelect() );
+        // console.log( this.planEstudioSelect() );
         this.obtener();
       }
       
@@ -75,9 +80,9 @@ export class MallaCurricularListComponent implements OnInit {
     this.planEstudioRepository.obtenerCursoPlan( this.planEstudioSelect().id ).subscribe({
       next: ( cursosPlan ) => {
 
-        this.cursosPlan = cursosPlan;
+        this.cursosPlan.set( cursosPlan );
         console.log( cursosPlan );
-        const cursoByCiclo = cursosPlan.reduce( ( a: CursoByCiclo[], b: Curso ) => {
+        const cursoByCiclo = this.cursosPlan().reduce( ( a: CursoByCiclo[], b: Curso ) => {
 
           const existeCiclo = a.findIndex( a => a.idCiclo == b.idCiclo);
             if( existeCiclo == -1 ) {
