@@ -17,8 +17,14 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MatStepper } from '@angular/material/stepper';
 import { CursoPlanRepository } from '../../domain/repositories/curso-plan.repository';
 import { CursoPlanEquivalencia } from '../../domain/models/curso-plan.model';
-// import { parse } from 'date-fns';
+
 import * as d3 from "d3";
+
+import { parse } from 'date-fns';
+import { EquivalenciaRepository } from '../../domain/repositories/equivalencia.repository';
+import { EquivalenciaPrimarioInsert } from '../../domain/models/equivalencia.model';
+
+
 @Component({
   selector: 'app-plan-estudio-wizard',
   standalone: true,
@@ -41,6 +47,28 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
   planEstudioStepper = this.signal.planEstudioStepper;
   cursosPlan = this.cursoSignal.cursosPlan;
   currentRol = this.authSignal.currentRol;
+  
+  // CONEXIÓN DE LAS FLECHAS
+
+  selectedLeftCard: CursoPlanEquivalencia
+  selectedRightCard: CursoPlanEquivalencia;
+  setearCursoPlanEquivalencia: CursoPlanEquivalencia = {
+    idCursoPlan: 0,
+    nombreCurso: '',
+    codigoCurso: '',
+    tipoCurso: '',
+    tipoEstudio: '',
+    horasTeoricas: 0,
+    horasPracticas: 0,
+    totalHoras: 0,
+    totalCreditos: 0,
+    cicloRomano: '',
+    cicloNumero: '',
+    cicloLetra: '',
+    equivalencias: []
+  }
+  connections: { leftCardId: number, rightCardId: number }[] = []; // Array de conexiones
+  
   private _formBuilder = inject(FormBuilder);
   formDisenar: FormGroup;
   formAsignar: FormGroup;
@@ -49,6 +77,8 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
 
   cursosPlanEquivalenciaActual: CursoPlanEquivalencia[] = [];
   cursosPlanEquivalenciaUltimo: CursoPlanEquivalencia[] = [];
+
+  cursosPrimarios: EquivalenciaPrimarioInsert[] = [];
 
   // @ViewChild('stepper') stepper: 
   @ViewChild('stepper')
@@ -61,6 +91,7 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
   constructor(
     private planEstudioRepository: PlanEstudioRepository,
     private CursoPlanRepository: CursoPlanRepository,
+    private EquivalenciaRepository: EquivalenciaRepository,
     private cursoSignal: CursoSignal,
     private signal: PlanEstudioSignal,
     private authSignal: AuthSignal,
@@ -95,9 +126,13 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
     // }, 2000);
 
     this.obtenerCursoPlanEquivalenciaActual();
+
     setTimeout(() => {
       this.ngAfterViewInit()
     }, 500);
+
+    this.obtenerCursoPlanActual();
+
   }
 
   estado = new Replacement();
@@ -146,7 +181,7 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
     this.CursoPlanRepository.obtenerCursoPlanEquivalencia( this.planEstudioSelect().id ).subscribe({
       next: ( cursosPlanEquivalencia ) => {
         // console.log(cursosPlanEquivalencia);
-        
+        this.formAsignar.patchValue({asignacion: ''});
         if( cursosPlanEquivalencia.length != 0 ) {
           this.formAsignar.patchValue({asignacion: 'Asignar'});
         }
@@ -221,61 +256,111 @@ export class PlanEstudioWizardComponent implements OnInit, AfterViewInit {
         }
 
         this.eliminarCursoPlan()
-          // .then( isDeleted => {
-          //   if( !isDeleted ) {
-          //     return
-          //   }
+          .then( isDeleted => {
+            if( !isDeleted ) {
+              return
+            }
 
-          //   this.showBtnActivarEdicion = false;
-          // })
+            this.showBtnActivarEdicion = false;
+            this.obtenerCursoPlanEquivalenciaActual();
+          })
       })
   }
 
   eliminarCursoPlan = () => {
-    // const cursosEliminar: CursoPlanEliminar[] = this.cursosPlan.map( curso => {
-    //   return {
-    //     idCursoPlan: curso.id,
-    //     usuarioId: parseInt( this.authSignal.currentRol().id )
-    //   }
-    // })
+    const cursosEliminar: CursoPlanEliminar[] = this.cursosPlanEquivalenciaActual.map( curso => {
+      return {
+        idCursoPlan: curso.idCursoPlan,
+        usuarioId: parseInt( this.authSignal.currentRol().id )
+      }
+    })
 
-    // return new Promise<boolean> ( resolve => {
+    return new Promise<boolean> ( resolve => {
 
-    //   this.planEstudioRepository.eliminarCursoPlan( cursosEliminar ).subscribe({
-    //     next: ( response ) => {
-    //       console.log( response );
-    //       resolve( true );
-    //     }, error: ( error ) => {
-    //       console.log( error );
-    //       this.alert.showAlert('Ocurrió un error al eliminar los cursos del plan de estudios', 'error', 6)
-    //       resolve( false )
-    //     }
-    //   });
+      this.planEstudioRepository.eliminarCursoPlan( cursosEliminar ).subscribe({
+        next: ( response ) => {
+          console.log( response );
+          resolve( true );
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al eliminar los cursos del plan de estudios', 'error', 6)
+          resolve( false )
+        }
+      });
 
-    // });
+    });
     
   } 
 
-  // CONEXIÓN DE LAS FLECHAS
 
-  selectedLeftCard: CursoPlanEquivalencia
-  selectedRightCard: CursoPlanEquivalencia;
-  setearCursoPlanEquivalencia: CursoPlanEquivalencia = {
-    idCursoPlan: 0,
-    nombreCurso: '',
-    codigoCurso: '',
-    tipoCurso: '',
-    tipoEstudio: '',
-    horasTeoricas: 0,
-    horasPracticas: 0,
-    totalHoras: 0,
-    totalCreditos: 0,
-    cicloRomano: '',
-    cicloNumero: '',
-    cicloLetra: '',
-    equivalencias: []
+  obtenerCursoPlanActual = () => {
+    this.planEstudioRepository.obtenerCursoPlan( this.planEstudioSelect().id ).subscribe({
+      next: ( cursos ) => {
+        this.cursosPlan.set( cursos );
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al listar los cursos del plan de estudios', 'error', 6)
+      }
+    });
   }
-  connections: { leftCardId: number, rightCardId: number }[] = []; // Array de conexiones
+
+  guardarPrimariosConfirm = () => {
+
+    this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea guardar los cursos primarios')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.guardarCursosPrimarios();
+      })
+
+  }
+
+  guardarCursosPrimarios = () => {
+
+    
+    // const cursosPrimarios: EquivalenciaPrimarioInsert[] = this.cursosPlanEquivalenciaActual.map( curso => {
+    //   return {
+    //     cursoPlanId: curso.idCursoPlan,
+    //     userId: parseInt( this.authSignal.currentRol().id )
+    //   }
+    // })
+
+    // const cursosPrimario: CursoPlanEquivalencia[] = this.cursosPlanEquivalenciaActual.reduce( ( acc: CursoPlanEquivalencia[], curso: CursoPlanEquivalencia ) => {
+    //   const existe = acc.find( c => c. == curso.idCursoPlan );
+    //   if()
+
+    //   return acc
+    // }, [] );
+    console.log( this.cursosPrimarios );
+    
+    this.EquivalenciaRepository.insertarEquivalenciaPrimario( this.cursosPrimarios ).subscribe({
+      next: ( data ) => {
+        console.log( data );
+        this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
+        this.obtenerCursoPlanEquivalenciaActual();
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al guardar los cursos primarios', 'error', 6);
+      }
+    });
+
+  }
+
+  update = ( value: boolean, curso: CursoPlanEquivalencia ) => {
+    console.log( 'Check: ', value, 'Curso: ', curso );
+    if( !value ) {
+      this.cursosPrimarios = this.cursosPrimarios.filter( c => c.cursoPlanId != curso.idCursoPlan );
+      return
+    }
+    this.cursosPrimarios.push({
+      cursoPlanId: curso.idCursoPlan,
+      userId: parseInt( this.authSignal.currentRol().id )
+    });
+  }
+
+  
   
   ngAfterViewInit = () => {
     this.inicioFlechaSVG();

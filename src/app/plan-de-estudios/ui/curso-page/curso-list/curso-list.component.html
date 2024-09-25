@@ -7,14 +7,33 @@
 
     }
 
-    <!-- {{ idPrograma() }} -->
+ 
+     <!-- <div class="flex gap-2">
+         @for (ciclo of cursosByCiclos(); track ciclo) {
+             @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) {
+                <div class="col-1  border-round text-center">
+                    <span class="bg-bluegray-900 text-white">{{ ciclo.ciclo }}</span>
+                    <div class="flex flex-column gap-2 example-list"
+                        cdkDropList
+                        [cdkDropListData]="ciclo.cursos"
+                        (cdkDropListDropped)="drop($event)">
+                        @for ( curso of ciclo.cursos; track curso) {
+                            <div class="text-black">
+                                {{ curso.nombreCurso }}
+                            </div>
+                        }
+                    </div>
+                </div>
+             }
+         }
+     </div> -->
+ 
 
-    <!-- {{cursoSelectPreRequisito().id != 0}} -->
     @for (ciclo of cursosByCiclos(); track ciclo) {
         @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) {
-            <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
+            <div class="flex flex-column flex-1 hover:scale">
     
-                <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
+                <div class="flex flex-column gap-2 my-2">
                     <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
                         {{ ciclo.ciclo }}
                     </div>
@@ -24,12 +43,7 @@
                     [cdkDropListData]="ciclo.cursos"
                     (cdkDropListDropped)="drop($event)">
                     @for ( curso of ciclo.cursos; track curso) {
-                        <!-- <pre>{{ curso | json }}</pre> -->
-                            <!-- @if ( !preRequisitos().includes( curso )) { -->
-                                <!-- <p>{{ cursoSelectPreRequisito() | json }} Si</p> -->
-                                <!-- [cdkDragStartDelay]="1000" -->
 
-                                <!-- [ngClass]="{'justify-content-center': cursoSelectPreRequisito().id !== 0}" -->
                                 <div
                                 
                                     cdkDrag
@@ -46,22 +60,21 @@
                                     </div>
                                     <div class="flex-1 f-12 m-0 capitalize text-center f-w-600">{{ curso.nombreCurso }}</div>
                                     @if( curso.preRequisitos.length > 0 ) {
-                                        <!-- <mat-divider class="py-2"></mat-divider> -->
-                                        <!-- <span class="font-bold f-8">Pre Requisito:</span> -->
+
                                         <div class="flex justify-content-around mb-2 gap-2">
                                             @for (CursoPreRequisito of curso.preRequisitos; track CursoPreRequisito) {
-                                                <!-- <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ CursoPreRequisito.codigoCurso }}</div> -->
+                                              
                                                 <div class="f-8 m-0 capitalize text-center f-w-600  bg-accent-400 text-accent-700 border-round px-1" [id]="'pre-requisito'+CursoPreRequisito.id">{{ CursoPreRequisito.codigoCurso }}</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
                                             }
                                         </div>
                                     } @else {
                                         <div class="flex justify-content-around mb-2 gap-2">
-                                            <div class="f-8 m-0 capitalize text-center f-w-600 text-white border-round px-1">.</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
+                                            <div class="f-8 m-0 capitalize text-center f-w-600 text-white border-round px-1">.</div>
                                         </div>
                                     }
                                     @if( cursoSelectPreRequisito().id == 0 ) {
                                         <div class="justify-content-around my-2 gap-1 hidden fadein animation-duration-400" [id]="curso.id">
-                                            <!-- <i class="ti ti-shield-lock"></i> {{ curso.horasTeoricas}} -->
+                            
                                             <ui-button color="blue" tooltip="Editar" icon="ti ti-pencil f-12" classButton="h-2rem px-1" (onClick)="openFormCurso( template1, ciclo, curso )"></ui-button>
                                             <ui-button color="red" tooltip="Eliminar" icon="ti ti-trash f-12" classButton="h-2rem px-1" (onClick)="eliminarConfirm( curso )"></ui-button>
                                             @if ( ciclo.idCiclo != 1 ) {
@@ -80,7 +93,7 @@
                                     }
                                     
                                 </div>
-                            <!-- } -->
+                
                   
                         }
         
@@ -95,19 +108,15 @@
     }
     
     <curso-pre-requisito></curso-pre-requisito>
-    <!-- @if ( openCursoPreRequisito() == true ) {
-    } -->
+
 </div>
 <ng-template #template1 let-data>
     <curso-add></curso-add>
 </ng-template>
 
-<!-- @if (planEstudioEncontrado) { -->
+
 
     <ng-template #templatePlan let-data>
         <div class="bg-yellow-500 text-white-700 font-bold text-center">NO ES POSIBLE {{ accionCurso }} EL CURSO</div>
         <plan-estudio-card [planEstudio]="planEstudioEncontrado" tipo="asignar"></plan-estudio-card>
     </ng-template>
-<!-- {{ isModal() }} -->
-<!-- } -->
-<!-- <pre>{{ planesDeEstudio() | json}}</pre> -->
