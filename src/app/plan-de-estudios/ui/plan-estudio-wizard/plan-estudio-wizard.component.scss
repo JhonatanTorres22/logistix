@@ -1,0 +1,15 @@
+  
+.arrow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 500%;
+    pointer-events: none; /* Las flechas no deben interferir con los eventos del ratón */
+  }
+  #arrowContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999999999; /* Asegura que las flechas estén detrás de los cards */
+  }

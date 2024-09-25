@@ -71,6 +71,7 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Registro de Equivalencias</ng-template>
+
       <ng-template matStepContent>
           <div class="row">
             <div class="col-6">
@@ -105,7 +106,7 @@
                         @if ( !isFirst ) {
                             <mat-divider></mat-divider>
                         }
-                        <div class="row text-center" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaUltimo">
+                        <div class="row text-center" [attr.id]="'cardLeft-' + curso.idCursoPlan" (click)="seleccionarCursoPlanProceso(curso)" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaUltimo">
                             <div class="col-1 border-3xl border-round text-accent-700 f-10"> {{ curso.cicloRomano }}</div>
                             <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
                             <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
@@ -148,17 +149,19 @@
                                 <div>HT</div>
                                 <div>HP</div>
                                 <div>TH</div>
+
                             </div>
                         </div>
                         <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">CRED.</div>
                     </div>
+
     
     
                     @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first ) {
                         @if ( !isFirst ) {
                             <mat-divider></mat-divider>
                         }
-                        <div class="row text-center" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaActual">
+                        <div class="row text-center" [attr.id]="'cardRight-' + curso.idCursoPlan" (click)="seleccionarCursoPlanUltimo(curso)" ColorCursoSecundario [curso]="curso" [cursos]="cursosPlanEquivalenciaActual">
                             <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.cicloRomano }}</div>
                             <div class="col-1 border-3xl border-round text-accent-700 f-10">{{ curso.codigoCurso }}</div>
                             <div class="col-3 border-3xl border-round text-accent-700 f-10 text-left pl-3">{{ curso.nombreCurso }}</div>
@@ -176,10 +179,12 @@
                     }
                 </app-card>
               </div>
+             <svg id="arrowContainer" class="arrow-container"></svg>
           </div>
       </ng-template>
 
     </mat-step>
+
   </mat-stepper>
 
   <!-- <pre>
