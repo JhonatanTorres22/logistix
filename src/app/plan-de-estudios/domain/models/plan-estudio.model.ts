@@ -1,5 +1,3 @@
-import { Curso } from "./curso.model"
-
 export interface PlanEstudio {
     id: number,
     idProgramaAcademico: number,
@@ -37,18 +35,4 @@ export type PlanEstudioEliminar = {
     usuarioId: number
 }
 
-export type PlanEstudioCursoInsertar = {
-    idPlanEstudio: number,
-    idCurso: number,
-    usuarioId: number
-}
-
-
-export type CursoPlanListar = Curso;
-
-
-export interface CursoPlanEliminar {
-    idCursoPlan: number,
-    usuarioId: number
-}
 

@@ -1,0 +1,25 @@
+<!-- <pre>
+    {{ cursosDesfasados | json }}
+</pre> -->
+<mat-radio-group [ngModel]="cursoDesfasadoSelected()" (ngModelChange)="cursoDesfasadoSelected.set( $event )">
+    @for (curso of cursosDesfasados; track curso; let i = $index) {
+      <div class="price-check m-b-15 w-full sm:w-25rem">
+        <mat-radio-button color="primary" class="w-100" [value]="curso">
+          <div class="row align-item-center">
+            <div class="col-12">
+              <div class="flex align-item-center popular m-b-0 font-bold"
+                >{{ curso.nombreCurso }}
+              </div>
+              <span class="text-muted m-b-0">{{ curso.codigoCurso }}</span>
+              <!-- @if (curso.condicion === 'CREADO') {
+                <span class="mat-small px-3 text-white bg-orange-500 b-rad-5">{{ curso.condicion }}</span>
+              } -->
+            </div>
+
+          </div>
+        </mat-radio-button>
+      </div>
+    }
+  </mat-radio-group>
+
+  <ui-card-not-items *ngIf="!cursosDesfasados.length" text="No hay cursos desfadaos"></ui-card-not-items>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, TemplateRef, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, TemplateRef } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreAcademico, SemestreAcademicoAperturar } from 'src/app/programas-academicos/domain/models/semestre-academico.model';
@@ -73,7 +73,6 @@ export class SemestreListComponent implements OnInit {
     private semestreRepository: SemestreAcademicoRepository,
     // private semestreSignal: semestreSignal,
     private auth: AuthSignal,
-    private datePipe: DatePipe,
     private semestreSignal: SemestreSignal
   ) {
     this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
@@ -121,16 +120,7 @@ export class SemestreListComponent implements OnInit {
   obtenerSemestres = () => {
     this.semestreAcademicoRepository.obtenerSemestres().subscribe({
       next: ( semestres ) => {
-          console.log(semestres,'lista de semestres');
-          // this.existeSemestreCreado = semestres.length > 0;
-          // if( semestres.length == 0 ) {
-          //   this.semestreSignal.setSemestreAcademicoDefault();
-          //   return;
-          // }
-          // semestres.forEach( semestre => {
 
-          // })
-          // this.semestreSelect = semestres.find(semestre => semestre.id === this.semestreSeleccionado().id)
           this.semestreSignal.setSemestresAcademicos(semestres);
 
           if(this.semestresAcademicos().length > 0){
@@ -139,18 +129,7 @@ export class SemestreListComponent implements OnInit {
               this.semestreSelect = semestreMarcado;            
             }            
           }
-          // this.semestreSelect = {
-          //   id: 0,
-          //   codigo: '',
-          //   nombre: '',
-          //   condicion: '',
-          //   usuarioId: 0,
-          // };
 
-          
-          // this.semestreAcademicoList = this.semestreSignal.semestresAcademicos();
-          
-          // this.semestreSignal.setSemestreAcademico(semestres[0]);
       }, error: ( error ) => {
           console.log(error);
           
@@ -160,55 +139,44 @@ export class SemestreListComponent implements OnInit {
 
   openModalSemestre ( semestre: SemestreAcademico, template: TemplateRef<any>) {
     let titleModal = 'Editar Semestre';
-    console.log(semestre,'semestre');
     this.semestreEdit = semestre;
 
     this.showFormAgregarSemestre = !semestre;
 
     semestre ? this.semestreSignal.semestreSelect.set(semestre) : (titleModal = 'Crear Semestre' )
-    console.log(this.showFormAgregarSemestre);
+
     this.modal.openTemplate({
       template,
       titulo:titleModal
     }).afterClosed().subscribe( resp => {
       if(resp == 'cancelar'){
-        console.log(resp);
         this.semestreSignal.setSelectSemestreDefault();
       }
     })
   }
 
   openShowFormCrearSemestre = ( event?: EventEmitter<string> | string) => {
-
-    console.log(event);
-    
     
       switch( event ) {
         case 'Add': {
-          
-          console.log('Semestre Creado');
           this.limpiarDatosSemestre()
           this.showFormAgregarSemestre = false;
          this.obtenerSemestres();
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editado');
           this.limpiarDatosSemestre()
           this.showFormAgregarSemestre = false;
           this.obtenerSemestres();
         } break;
 
         case 'Open': {
-          console.log('open');
-          
           this.showFormAgregarSemestre = true;
           this.limpiarDatosSemestre()
           
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.limpiarDatosSemestre()
           this.showFormAgregarSemestre = false;
         }
@@ -216,21 +184,14 @@ export class SemestreListComponent implements OnInit {
   }
 
   openShowFormEditarSemestre = ( semestre: SemestreAcademico, event?: EventEmitter<string> | string) => {
-
-    
-
-    console.log(event);
-    
     
       switch( event ) {
         case 'Add': {
-          console.log('Semestre Creado');
           this.showFormAgregarSemestre = false;
          this.obtenerSemestres();
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editado');
           this.showFormAgregarSemestre = false;
           this.obtenerSemestres();
         } break;
@@ -244,7 +205,6 @@ export class SemestreListComponent implements OnInit {
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.showFormAgregarSemestre = false;
         }
       }
@@ -261,7 +221,6 @@ export class SemestreListComponent implements OnInit {
     dialogRef.afterClosed().subscribe( semestreEditado => {
       if( semestreEditado == 'cancelar' ) return
       
-        console.log(semestreEditado);
         this.obtenerSemestres();
 
     })

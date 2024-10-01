@@ -41,20 +41,20 @@ export class CursoPreRequisitoComponent implements OnInit {
       this.openCursoPreRequisito() ? this.curso.open() : ''
       this.openCursoPreRequisito.set( false );
       let preRequisitosDelCurso: Curso[] = [];
-      console.log( this.cursoSelectPreRequisito().preRequisitos.length );
+      // console.log( this.cursoSelectPreRequisito().preRequisitos.length );
       
-      if( this.cursoSelectPreRequisito().preRequisitos.length > 0 ) {
-        const preRequisitos = this.cursosList().map( curso => {
+      // if( this.cursoSelectPreRequisito().preRequisitos.length > 0 ) {
+      //   const preRequisitos = this.cursosList().map( curso => {
     
-          this.cursoSelectPreRequisito().preRequisitos.map( pre => {
-            if( pre.id == curso.id ) {
-              preRequisitosDelCurso.push( curso )
-            }
-          })
-        })
-        console.log( preRequisitosDelCurso );
-        this.preRequisitos.set( preRequisitosDelCurso )
-      }
+      //     this.cursoSelectPreRequisito().preRequisitos.map( pre => {
+      //       if( pre.id == curso.id ) {
+      //         preRequisitosDelCurso.push( curso )
+      //       }
+      //     })
+      //   })
+      //   console.log( preRequisitosDelCurso );
+      //   this.preRequisitos.set( preRequisitosDelCurso )
+      // }
 
     }, { allowSignalWrites: true })
   }

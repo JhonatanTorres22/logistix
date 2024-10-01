@@ -15,11 +15,10 @@ export interface CursoDTO {
     hp: number,
     tHoras: number,
     tCreditos: number,
-    prerequisito: CursoPreRequisitoDTO[]
+    // prerequisito: CursoPreRequisitoDTO[]
 }
 
 
-export type CursoPreRequisitoDTO = Pick<CursoDTO, 'codigoCurso' | 'codigoInterno' | 'nombre'>
 
 
 export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito' | 'denominacionResumidaCiclo'> & {
@@ -28,6 +27,21 @@ export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito' | 'den
     // idTipoEstudio: string,
     usuario: number
 }
+
+export type CursoRenovarDTO = CursoCrearDTO & {
+    codigoCurso: number
+}
+
+export interface CursoDesfasarDTO {
+    codigoCurso: number,
+    usuario: number
+}
+
+export type CursoRevertirDesfaseDTO = CursoDesfasarDTO
+
+export type CursoRevertirRenovacionDTO = CursoDesfasarDTO;
+
+
 export type CursoEditarDTO = Omit<CursoCrearDTO, 'codigoCiclo'>  & {
     codigoCurso: number,
     usuario: number
@@ -53,3 +67,11 @@ export interface CursoEncontradoEnPlanDataArrayDTO {
 }
 
 export type CursoDeletePreRequisitoDTO = CursoAddPreRequisitoDTO;
+
+
+export type CursoDesfasadoDTO = Omit<CursoDTO, 'prerequisito'>
+
+export interface CursoDesfasadoDataArrayDTO {
+    
+        data: CursoDesfasadoDTO[]
+}

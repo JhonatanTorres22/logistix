@@ -1,14 +1,24 @@
 <mat-dialog-content>
     <div class="p-10">
+        <!-- <pre>
+            {{ cursoOption() | json }}
+        </pre> -->
         <form [formGroup]="formCurso">
+            <div class="flex gap-2 justify-content-end">
+                <!-- <ui-button-icon color="primary" icon="ti ti-close" tooltip="Cerrar"></ui-button-icon> -->
+            </div>
             <div class="flex gap-2">
                 <!-- <ui-input class="w-full" label="Programa" formControlName="programa" ></ui-input> -->
-                 @if (this.cursoDetails().id == 0) {
-                     <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" ></ui-select>
+                 @if (this.cursoDetails().id == 0 && !readonlyCiclo) {
+                     <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" [readonly]="readonlyCiclo"></ui-select>
                  }
-                <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
-                [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
-                
+                 <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
+                 [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
+                 @if( cursoOption().id != 0 ) {
+                     <ui-input [ngModel]="codigoCursoAnterior" class="w-full" label="Codigo Anterior" formControlName="codigoCursoAnterior" [readonly]="true"></ui-input>
+                     
+                 }
+                <!-- <div class="border-round border-1 border-gray-400 px-3">{{ codigoCursoAnterior }}</div> -->
             </div>
             <div class="flex gap-2">
                 <ui-input class="w-full" label="Nombre del Curso" formControlName="nombreCurso" [maxlength]="maxLengthNombreCurso" [minlength]="minLengthNombreCurso" 
@@ -44,6 +54,10 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-  <ui-button color="primary" [label]="cursoDetails().id != 0 ? 'Editar' : 'Crear'" [disabled]="formCurso.invalid" (onClick)="onSubmit()"></ui-button>
+    @if ( cursoOption().id != 0 ) {
+        <ui-button color="secondary" label="Limpiar Formulario" (onClick)="limpiar()" class="m-r-10"></ui-button>
+    } @else {
+        <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    }
+  <ui-button color="primary" [label]="readonlyCiclo ? 'Renovar' : cursoDetails().id != 0 ? 'Editar' : 'Crear'" [disabled]="formCurso.invalid" (onClick)="onSubmit()"></ui-button>
 </mat-dialog-actions>

@@ -1,21 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, WritableSignal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipListboxChange } from '@angular/material/chips';
-import { DateAdapter, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
+import { DateAdapter, ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { DataModal, DataModalGeneric } from 'src/app/demo/interfaces/data-modal.interface';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { TipoDocumento, Usuario } from 'src/app/usuarios/domain/models/usuario.model';
-import { UsuarioService } from 'src/app/usuarios/infraestructure/services/usuario.service';
 import { UsuariosDomainService } from '../../domain/services/usuarios-domain.service';
 import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UsuariosDomainValidacionesService } from '../../domain/services/usuarios-domain-validaciones.service';
 import { UsuarioRepository } from '../../domain/repositories/usuario.repository';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 
-import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { UiInputFechaComponent } from 'src/app/core/components/ui-input-fecha/ui-input-fecha.component';
 export interface Sexo {
@@ -165,8 +162,6 @@ export class UserAddComponent {
     };
 
     this.usuarioToEdit = this.data;
-
-    // console.log(this.usuarioToEdit);
     
   }
 
@@ -193,7 +188,6 @@ export class UserAddComponent {
       this.hayUsuarioExistente = this.usuarioToEdit.id == 0;
     } 
 
-    // console.log(this.usuarioToEdit);
     
     this.usuarioToEdit && this.usuarioToEdit?.id != 0 ? this.pathValueFormUserAdd() : ''
 
@@ -202,7 +196,7 @@ export class UserAddComponent {
 
   }
   pathValueFormUserAdd = () => {
-    console.log(this.usuarioToEdit);
+
     this.usuarioToEdit.sexo = this.usuarioToEdit.sexo.substring(0,1);
     this.formUserAdd.patchValue({
       apellidoPaterno: this.usuarioToEdit.apellidoPaterno.trim(),
@@ -224,7 +218,6 @@ export class UserAddComponent {
   }
 
   onSubmit = () => {
-    console.log(this.formUserAdd.value);
     
     if( this.formUserAdd.invalid ) {
       this.alertService.showAlert('El formulario está incompleto o contiene errores', 'error');
@@ -233,7 +226,7 @@ export class UserAddComponent {
     const tipoAccionForm = this.usuarioToEdit.id != 0 ? 'Editar' : 'Crear';
     this.alertService.sweetAlert('question', 'Confirmar', `¿Está seguro que desea ${tipoAccionForm.toUpperCase()} el usuario?`)
       .then( result => {
-        console.log(result);
+   
         if( !result ) {
           return
         }
@@ -272,7 +265,6 @@ export class UserAddComponent {
 
     this.usuarioRepository.agregarUsuario( newUser ).subscribe({
       next: ( data ) => {
-        console.log(data);
         this.alertService.sweetAlert('success', 'Correcto', 'Usuario creado correctamente');
         this.usuarioDomainService.agregarUsuario( newUser );
         this.component == 'decano-list' || this.component == 'director-list' ? this.cerrarFormulario.emit( 'Add' ) : this.dialogRef.close( data );
@@ -288,24 +280,20 @@ export class UserAddComponent {
   userEdit = ( userEdit: Usuario ) => {
     this.usuarioRepository.editarUsuario( userEdit ).subscribe({
       next: (data) =>{
-        console.log(data);
         this.alertService.sweetAlert('success', 'Correcto', 'Usuario editado correctamente');
         this.component == 'decano-list' || this.component == 'director-list' ? this.cerrarFormulario.emit( 'Edit' ) : this.dialogRef.close( data );
       }, error: (error) => {
-        console.log(error,'********');
         this.alertService.sweetAlert('error', 'Error', error)
       }
     })
   }
 
   onChangeTipoDocumento = ( nuevoTipoDocumentoSeleccionado: TipoDocumento ) => {
-    // console.log(event);
     this.usuarioDomainValidacionService.setTipoDocumento = nuevoTipoDocumentoSeleccionado;
     this.maxLengthNumeroDocumento = this.usuarioDomainValidacionService.getMaxLength;
   }
 
   onNewSexoSelected = ( event: MatChipListboxChange ) => {
-    console.log(event);
     this.formUserAdd.value.sexo = event.value
     
   }
@@ -319,12 +307,9 @@ export class UserAddComponent {
       return;
     }
     let key;
-    // console.log(event);
     
     if (event.type === 'paste') {
       key = event.clipboardData.getData('text/plain');
-      // console.log(key);
-      // key.replace()
 
     } else {
       key = event.keyCode;
@@ -359,7 +344,6 @@ export class UserAddComponent {
     this.validarSoloNumeros(event).then( result => {
     
       setTimeout(() => {
-        console.log(this.formUserAdd.value.numeroDocumento.length);
     
         if( this.formUserAdd.value.numeroDocumento.length < this.minLengthNumeroDocumento ) {
           this.hayUsuarioExistente = true
@@ -369,7 +353,6 @@ export class UserAddComponent {
         };
         this.usuarioRepository.buscarNumeroDocumento( this.formUserAdd.value.numeroDocumento ).subscribe({
           next: ( data ) => {
-            console.log(data);
 
             if(this.usuarioToEdit?.numeroDocumento == data.numeroDocumento) return;
 

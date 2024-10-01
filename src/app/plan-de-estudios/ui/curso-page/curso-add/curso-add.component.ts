@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, WritableSignal, effect } from '@angular/core';
+import { Component, Input, ViewChild, WritableSignal, effect } from '@angular/core';
 import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { KanbanItem, KanbanProfile, KanbanColumn, KanbanUserStory, KanbanComment } from 'src/app/@theme/types/kanban-type';
@@ -7,7 +7,7 @@ import { uiModalTemplateData } from 'src/app/core/components/ui-modal/ui-modal.i
 import { KanbanLayoutService } from 'src/app/demo/pages/application/kanban/kanban-layout.service';
 import { KanbanService } from 'src/app/demo/pages/application/kanban/kanban.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Curso, CursoByCiclo, CursoCrear, CursoEditar } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { Curso, CursoByCiclo, CursoCrear, CursoEditar, CursoRenovar } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { CursoListComponent } from '../curso-list/curso-list.component';
 import { UiModalTemplateComponent } from 'src/app/core/components/ui-modal-template/ui-modal-template.component';
@@ -28,21 +28,26 @@ import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ci
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { UiButtonIconComponent } from "../../../../core/components/ui-button-icon/ui-button-icon.component";
 
 
 
 @Component({
   selector: 'curso-add',
   standalone: true,
-  imports: [ CommonModule, SharedModule, UiButtonComponent, UiInputComponent, UiSelectComponent ],
+  imports: [CommonModule, SharedModule, UiButtonComponent, UiInputComponent, UiSelectComponent, UiButtonIconComponent],
   templateUrl: './curso-add.component.html',
   styleUrl: './curso-add.component.scss'
 })
 export class CursoAddComponent {
-  prefijoCodigoCurso: string = ''
+
+  @Input() readonlyCiclo: boolean = false;
+  prefijoCodigoCurso: string = '';
+  codigoCursoAnterior: string = '';
 
   cursoDetails: WritableSignal<Curso> = this.signal.cursoSelect;
   cursoCicloSelect: WritableSignal<CursoByCiclo> = this.signal.cursoCicloSelect;
+  cursoOption = this.signal.cursoOption;
   idPrograma = this.planEstudioSignal.programaId;
 
 
@@ -111,7 +116,8 @@ export class CursoAddComponent {
     this.formCurso = new FormGroup({
       // programa: new FormControl('', [Validators.required]),
       idCiclo: new FormControl('', [Validators.required]),
-      codigoCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthCodigoCurso ), Validators.minLength( this.minLengthCodigoCurso ), Validators.pattern(this.expRegCodigoCurso)]),
+      codigoCursoAnterior: new FormControl(''),
+      codigoCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthCodigoCurso ), Validators.minLength( this.minLengthCodigoCurso ), Validators.pattern(this.expRegCodigoCurso), validation.duplicado]),
       nombreCurso: new FormControl('', [ Validators.required, Validators.maxLength( this.maxLengthNombreCurso ), Validators.minLength( this.minLengthNombreCurso ), Validators.pattern(this.expRegNombreCurso), validation.duplicado]),
       descripcion: new FormControl('', [Validators.required, Validators.pattern(this.expRegDescripcion)]),
       tipoEstudio: new FormControl('', [ Validators.required ]),
@@ -138,7 +144,7 @@ export class CursoAddComponent {
 
   // life cycle event
   ngOnInit() {
-    console.log( this.cursoCicloSelect() );
+    // console.log( this.cursoCicloSelect() );
     
     this.obtenerCiclos().then( res  => {
       if( !res ) { return }
@@ -148,7 +154,12 @@ export class CursoAddComponent {
 
       })
     });
-      this.formCurso ? this.pathValueFormEdit() : '';
+    console.log( this.formCurso);
+      const cursoFormPathValue = this.cursoDetails().id != 0 ? this.cursoDetails() : this.cursoOption().id != 0 ? this.cursoOption() : '';
+      // this.formCurso ? this.pathValueFormEdit( cursoFormPathValue ) : '';
+      cursoFormPathValue ? this.pathValueFormEdit( cursoFormPathValue ) : '';
+      this.cursoOption().id != 0 ? this.formCurso.controls['codigoCursoAnterior'].disable() : '';
+      this.codigoCursoAnterior = this.cursoOption().codigoCurso;
       this.cursoDetails().id != 0 ? this.prefijoCodigoCurso = this.cursoDetails().codigoCurso : this.prefijoCodigoCurso = 'P'
  
   }
@@ -179,12 +190,59 @@ export class CursoAddComponent {
     })
   }
 
+  limpiar = () => {
+    this.formCurso.patchValue({
+      nombreCurso: '',
+      descripcion: '',
+      tipoEstudio: '',
+      tipoCurso: '',
+      competencia: '',
+      horasTeoricas: '',
+      horasPracticas: '',
+      totalHoras: '',
+      totalCreditos: ''
+    });
+  }
+
   onSubmit() {
+
+    
+
     console.log('Guardando... ', this.formCurso.value);
     if( this.formCurso.invalid ) {
       this.alert.showAlert('El formulario esta incompleto o los datos ingresados no son válidos', 'error', 6);
       return
     }
+
+    if( this.cursoOption().id != 0 ) {
+      console.log( this.cursoOption() );
+      
+      const cursoRenovar: CursoRenovar = {
+        ...this.formCurso.value,
+        idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
+        idCiclo: parseInt( this.formCurso.value.idCiclo.value ),
+        competencia: this.formCurso.value.competencia.value,
+        tipoCurso: this.formCurso.value.tipoCurso.value,
+        tipoEstudio: this.formCurso.value.tipoEstudio.value,
+        horasTeoricas: parseInt( this.formCurso.value.horasTeoricas ),
+        horasPracticas: parseInt( this.formCurso.value.horasPracticas ),
+        cursoId: this.cursoOption().id,
+        usuarioId: parseInt( this.auth.currentRol().id )
+      }
+
+      this.alert.sweetAlert('question', 'Confirmar', `¿Está seguro que desea Renovar el curso?`)
+      .then( isConfirm => {
+        if( !isConfirm ) { return }
+
+        this.renovar( cursoRenovar );
+        console.log( cursoRenovar );
+        return
+        
+      })
+
+      return
+      
+    } 
 
     const tipo = this.cursoDetails().id != 0 ?'editar' : 'crear';
     this.alert.sweetAlert('question', 'Confirmar', `¿Está seguro que desea ${ tipo } el curso?`)
@@ -251,25 +309,25 @@ export class CursoAddComponent {
     
   }
 
-  pathValueFormEdit = () => {
+  pathValueFormEdit = ( curso: Curso ) => {
 
-    const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == this.cursoDetails().tipoCurso );
-    const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == this.cursoDetails().tipoEstudio );
-    const competencia = this.optionsCompetencia.find( tipo => tipo.value == this.cursoDetails().competencia );
+    const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == curso.tipoCurso );
+    const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == curso.tipoEstudio );
+    const competencia = this.optionsCompetencia.find( tipo => tipo.value == curso.competencia );
 
     this.formCurso.patchValue({
-      programa: this.cursoDetails().idPrograma,
-      ciclo: this.cursoDetails().idCiclo,
-      codigoCurso: this.cursoDetails().codigoCurso,
-      nombreCurso: this.cursoDetails().nombreCurso,
-      descripcion: this.cursoDetails().descripcion,
+      programa: curso.idPrograma,
+      ciclo: curso.idCiclo,
+      codigoCurso: curso.codigoCurso,
+      nombreCurso: curso.nombreCurso,
+      descripcion: curso.descripcion,
       tipoEstudio: tipoEstudio,
       tipoCurso: tipoCurso,
       competencia: competencia,
-      horasTeoricas: this.cursoDetails().horasTeoricas.toString(),
-      horasPracticas: this.cursoDetails().horasPracticas.toString(),
-      totalHoras: this.cursoDetails().totalHoras.toString(),
-      totalCreditos: this.cursoDetails().totalCreditos.toString()
+      horasTeoricas: curso.horasTeoricas.toString(),
+      horasPracticas: curso.horasPracticas.toString(),
+      totalHoras: curso.totalHoras.toString(),
+      totalCreditos: curso.totalCreditos.toString()
 
     });
 
@@ -302,6 +360,19 @@ export class CursoAddComponent {
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al agregar el curso', 'error', 6);
+      }
+    })
+  }
+
+  renovar = ( curso: CursoRenovar ) => {
+    this.repository.renovar( curso ).subscribe({
+      next: ( data ) => {
+        console.log( data );
+        this.alert.showAlert('Curso renovado de manera correcta', 'success', 6);
+        this.modal.getRefModal().close('Renovar');
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al renovar el curso', 'error', 6);
       }
     })
   }

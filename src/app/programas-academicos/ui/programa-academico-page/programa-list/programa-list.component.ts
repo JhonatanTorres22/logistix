@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, WritableSignal } from '@angular/core';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { ProgramaAcademicoAddComponent } from '../programa-add/programa-add.component';
-import { Programa, ProgramaEliminar, ProgramaFacultad } from 'src/app/programas-academicos/domain/models/programa.model';
+import { ProgramaEliminar, ProgramaFacultad } from 'src/app/programas-academicos/domain/models/programa.model';
 import { ProgramaRepository } from 'src/app/programas-academicos/domain/repositories/programa.repository';
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { AlertService } from 'src/app/demo/services/alert.service';
@@ -12,7 +12,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facultad.signal';
 import { Facultad } from 'src/app/programas-academicos/domain/models/facultad.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
-import { reject } from 'lodash';
 import { FacultadRepository } from 'src/app/programas-academicos/domain/repositories/facultad.repository';
 import { AsignacionPrograma } from 'src/app/programas-academicos/domain/models/asignacion.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
@@ -34,10 +33,9 @@ export class ProgramaAcademicoListComponent {
   facultadSelect: WritableSignal<Facultad> = this.facultadSignal.facultadSelect;
   idFacultad: WritableSignal<number> = this.facultadSignal.idFacultad;
   asignaciones = this.asignacionSignal.asignaciones
-  // programaes: 
+
   programaSelect: ProgramaFacultad = {
     id: 0,
-    // idFacultad: 0,
     definicion: '',
     nombre: '',
     usuarioId: 0
@@ -71,19 +69,15 @@ export class ProgramaAcademicoListComponent {
     }
   }
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
-
-    console.log(event);
     
       switch( event ) {
         case 'Add': {
-          console.log('Programa Creado');
           this.limpiarDatosProgramaAcademico();
           this.showFormAgregarPrograma = false;
          this.obtenerProgramas();
         } break;
 
         case 'Edit': {       
-            console.log('Programa Editado');
             this.limpiarDatosProgramaAcademico();
             this.showFormAgregarPrograma = false;
             this.obtenerProgramas();
@@ -96,7 +90,6 @@ export class ProgramaAcademicoListComponent {
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.limpiarDatosProgramaAcademico();
           this.showFormAgregarPrograma = false;
         }
@@ -107,7 +100,6 @@ export class ProgramaAcademicoListComponent {
     this.facultadSelectVerificar().then( suscess => {
       this.programaRepository.obtenerProgramas( this.facultadSelect().id ).subscribe({
         next: ( programas ) => {
-          console.log(programas);
           this.programaSignal.setProgramaesList( programas );
           
 
@@ -130,16 +122,11 @@ export class ProgramaAcademicoListComponent {
     return new Promise<boolean>( ( resolve, reject ) => {
 
       const isFacultadAsignada = this.idFacultad() && this.idFacultad() != 0;
-      console.log(this.idFacultad());
-      console.log(isFacultadAsignada);
       
       if ( !isFacultadAsignada ) {
-        console.log('No es asignada');
-        
         resolve( true )
         return
       }
-      console.log('Si es asignada');
 
       this.obtenerFacultades().then( isSuccss => {
         if( !isSuccss ) return
@@ -147,7 +134,6 @@ export class ProgramaAcademicoListComponent {
       
         const facultadSelectReconstruida = this.facultadSignal.facultadesList().filter( facultad => facultad.id == this.idFacultad() );
         this.facultadSignal.setSelectFacultad( facultadSelectReconstruida[0] );
-        console.log(facultadSelectReconstruida);
         
         resolve( true );
 
@@ -162,7 +148,6 @@ export class ProgramaAcademicoListComponent {
 
       this.facultadRepository.obtenerFacultades().subscribe({
         next: ( facultades ) => {
-          console.log(facultades);
           this.facultadSignal.setFacultadesList( facultades );
           resolve( true )
 
@@ -179,17 +164,13 @@ export class ProgramaAcademicoListComponent {
   
   openShowFormEditarPrograma = ( programa: ProgramaFacultad, event?: EventEmitter<string> | string) => {
 
-    console.log(event);
-    
       switch( event ) {
         case 'Add': {
-          console.log('Semestre Creado');
           this.showFormAgregarPrograma = false;
          this.obtenerProgramas();
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editado');
           this.showFormAgregarPrograma = false;
           this.obtenerProgramas();
         } break;
@@ -198,11 +179,9 @@ export class ProgramaAcademicoListComponent {
           this.showFormAgregarPrograma = true;
           this.programaEdit = programa;
           this.programaSignal.setProgramaEdit( programa );
-          // this.pathValueFormSemestreEdit();
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.showFormAgregarPrograma = false;
         }
       }
@@ -227,7 +206,6 @@ export class ProgramaAcademicoListComponent {
 
     this.programaRepository.eliminarPrograma( programaEliminar ).subscribe({
       next: ( data ) => {
-        console.log( data );
         this.alertService.sweetAlert('success', '¡CORRECTO!', 'Programa académico eliminado correctamente');
         this.limpiarDatosProgramaAcademico();
         if(programa.id === this.programaSeleccionado().id){
@@ -250,7 +228,6 @@ export class ProgramaAcademicoListComponent {
       if( !isConfirm ) return;
       this.programaSignal.setSelectPrograma(  this.programaSelect );
       this.dialogRef.close('seleccionado');
-      // this.aperturarSemestre();
     
     })
   }

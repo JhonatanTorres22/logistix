@@ -5,7 +5,7 @@ import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Curso, CursoBuscarPlan, CursoByCiclo, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { Curso, CursoBuscarPlan, CursoByCiclo, CursoDesfasar, CursoEliminar, CursoExcel, CursoRevertirRenovacion } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoRepository } from 'src/app/plan-de-estudios/domain/repositories/curso.repository';
 import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { CursoService } from 'src/app/plan-de-estudios/infraestructure/services/curso.service';
@@ -20,6 +20,15 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { CursoPreRequisitoComponent } from '../curso-pre-requisito/curso-pre-requisito.component';
 import { PlanEstudioCardComponent } from "../../plan-estudio-card/plan-estudio-card.component";
 import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
+import { CicloPageComponent } from '../../ciclo-page/ciclo-page.component';
+import { UiUploaderFilesComponent } from 'src/app/core/components/ui-uploader-files/ui-uploader-files.component';
+
+import { read, utils, WorkBook, WorkSheet } from 'xlsx';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 
 @Component({
@@ -33,7 +42,9 @@ import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio
     CursoAddComponent,
     UiModalTemplateComponent,
     CursoPreRequisitoComponent,
-    PlanEstudioCardComponent
+    CicloPageComponent,
+    PlanEstudioCardComponent,
+    UiUploaderFilesComponent,
 ],
   templateUrl: './curso-list.component.html',
   styleUrl: './curso-list.component.scss'
@@ -41,7 +52,8 @@ import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio
 export class CursoListComponent implements OnInit {
 
   @Input() readonly: boolean = false;
-  cursosByCiclos = this.signal.cursosByCiclos;
+  cursoOption = this.signal.cursoOption;
+  cursosByCiclo = this.signal.cursosByCiclo;
   cicloList = this.cicloSignal.cicloList;
   cursosList = this.signal.cursosList;
   idPrograma = this.planEstudioSignal.programaId;
@@ -51,12 +63,15 @@ export class CursoListComponent implements OnInit {
   preRequisitos = this.signal.preRequisitos;
   isModal = this.planEstudioSignal.isModal;
   planesDeEstudio = this.planEstudioSignal.planesDeEstudio;
+  file = this.mensajeriaSignal.file;
+
+  
   accionCurso: 'ELIMINAR' | 'EDITAR';
 
   @ViewChild('templatePlan') templatePlan: TemplateRef<any>
+  // @ViewChild('templatePlan') templatePlan: TemplateRef<any>
 
-
-  planEstudioEncontrado: PlanEstudio;
+  planEstudioEncontrado: PlanEstudio | undefined;
 
   constructor( 
     private authSignal: AuthSignal,
@@ -66,6 +81,7 @@ export class CursoListComponent implements OnInit {
     private alert: AlertService,
     private signal: CursoSignal,
     private planEstudioSignal: PlanEstudioSignal,
+    private mensajeriaSignal: MensajeriaSignal,
     private cicloSignal: CicloSingal,
     private modal: UiModalService
 
@@ -75,8 +91,7 @@ export class CursoListComponent implements OnInit {
       console.log( this.renderizarCursos );
 
       console.log( this.preRequisitos() );
-      
-      
+  
       switch( this.renderizarCursos() ) {
         case 'Obtener': {
           this.obtener();
@@ -91,7 +106,10 @@ export class CursoListComponent implements OnInit {
   ngOnInit(): void {
     this.obtener();
     this.obtenerCiclos();
+    
   }
+
+  
 
 
   obtener() {
@@ -101,13 +119,14 @@ export class CursoListComponent implements OnInit {
         this.cursosList.set( cursos )
         const cursoByCiclo = cursos.reduce( ( a: CursoByCiclo[], b: Curso ) => {
 
-          const existeCiclo = a.findIndex( a => a.idCiclo == b.idCiclo);
+          const existeCiclo = a.findIndex( a => a.ciclo == b.definicionCiclo);
             if( existeCiclo == -1 ) {
 
               const newCiclo: CursoByCiclo = {
-                // ciclo: b.id,
+                cicloNumero: 0,
                 idCiclo: b.idCiclo,
                 ciclo: b.definicionCiclo,
+                cursosPlan: [],
                 cursos: [b]
               }
               a.push( newCiclo )
@@ -120,7 +139,7 @@ export class CursoListComponent implements OnInit {
           return a
         }, [] )
         console.log( cursoByCiclo );
-        this.cursosByCiclos.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
+        this.cursosByCiclo.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
         // if( this.cursoSelectPreRequisito().id != 0 ) {
         //   this.cursoSelectPreRequisito.update( curso => curso.id ==  )
         // } 
@@ -131,18 +150,6 @@ export class CursoListComponent implements OnInit {
       }
     })
   }
-
-  // obtenerMSW() {
-  //   this.service.obtenerMSW().subscribe({
-  //     next: ( data ) => {
-  //       console.log(data);
-        
-  //     }, error: ( error ) => {
-  //       console.log( error );
-        
-  //     }
-  //   })
-  // }
 
 
   drop(event: CdkDragDrop<string[]>) {
@@ -159,21 +166,27 @@ export class CursoListComponent implements OnInit {
   }
 
 
-  openFormCurso( template: TemplateRef<any>, ciclo?: CursoByCiclo, curso?: Curso, ) {
 
+  openFormCurso( template: TemplateRef<any>, accion: string, cicloAdd?: CursoByCiclo ) {
+    const curso = {...this.cursoOption()};
+    const ciclo = {...this.signal.cursoCicloSelect()};
+
+    this.cursoOption.set( this.signal.cursoDafault );
     console.log( curso );
     let titleModal = 'Editar Curso';
 
-    if( !curso ) {
-      ciclo ? this.signal.cursoCicloSelect.set( ciclo ) : '';
-      curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
+    if( accion == 'Crear') {
+      cicloAdd ? this.signal.cursoCicloSelect.set( cicloAdd ) : '';
+      // curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
+      titleModal = 'Crear Curso';
+
       this.openModalFormCurso( template, titleModal );
 
       return
     }
 
     this.accionCurso = 'EDITAR';
-    this.buscarCursoEnPlan( curso! ).then( tienePlanEstudio =>{
+    this.buscarCursoEnPlan( curso.id! ).then( tienePlanEstudio =>{
       this.isModal.set( true );
       if( tienePlanEstudio ) {
         
@@ -186,8 +199,9 @@ export class CursoListComponent implements OnInit {
       }
 
       ciclo ? this.signal.cursoCicloSelect.set( ciclo ) : '';
-      curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
-      
+      // curso ? this.signal.cursoSelect.set( curso ) : titleModal = 'Crear Curso';
+      titleModal = 'Editar Curso';
+      this.signal.cursoSelect.set( curso )
       this.openModalFormCurso( template, titleModal )
 
     })
@@ -239,9 +253,10 @@ export class CursoListComponent implements OnInit {
     
   }
 
-  eliminarConfirm = (curso: Curso) => {
-
-    this.buscarCursoEnPlan( curso ).then( tienePlanEstudio =>{
+  eliminarConfirm = () => {
+    //Se quito el parametro curso: Curso por que ahora se obtiene el curso desde el signal cuando hace clic derecho
+    const curso = this.cursoOption();
+    this.buscarCursoEnPlan( curso.id ).then( tienePlanEstudio =>{
       this.isModal.set( true );
       if( tienePlanEstudio ) {
         this.accionCurso = 'ELIMINAR';
@@ -287,11 +302,11 @@ export class CursoListComponent implements OnInit {
     
   }
 
-  buscarCursoEnPlan = ( curso: CursoBuscarPlan ) => {
+  buscarCursoEnPlan = ( cursoId: number ) => {
 
     return new Promise<boolean>( resolve  => {
       
-      this.repository.buscarCursoEnPlanEstudios( curso ).subscribe({
+      this.repository.buscarCursoEnPlanEstudios( cursoId ).subscribe({
         next: ( response ) => {
           console.log( response );
           // this.alert.showAlert('Buscando....', 'info', 2)
@@ -327,40 +342,143 @@ export class CursoListComponent implements OnInit {
   }
 
   hoverClass = ( curso: Curso) => {
-    // this.buttons.nativeElement.classList.remove('hidden')
-    // console.log( this.buttons.nativeElement );
-    // const buttonId = 
 
-    curso.preRequisitos.map( cursoPre => {
-      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.add( 'bg-yellow-200', 'text-yellow-700');
-      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.add('absolute','-mb-4');
-    })
+    // curso.preRequisitos.map( cursoPre => {
+    //   document.getElementById('pre-'+cursoPre.id.toString() )?.classList.add( 'bg-yellow-200', 'text-yellow-700');
+    //   document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.add('absolute','-mb-4');
+    // })
     
-    if( this.readonly ) {
-      return
-    }
+    // if( this.readonly ) {
+    //   return
+    // }
 
-    document.getElementById(curso.id.toString())?.classList.remove('hidden')
-    document.getElementById(curso.id.toString())?.classList.add('flex')
+    // document.getElementById(curso.id.toString())?.classList.remove('hidden')
+    // document.getElementById(curso.id.toString())?.classList.add('flex')
 
   }
 
   removeClass = ( curso: Curso ) => {
     
-    curso.preRequisitos.map( cursoPre => {
-      document.getElementById('pre-'+cursoPre.id.toString() )?.classList.remove( 'bg-yellow-200', 'text-yellow-700');
-      document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.remove('absolute');
+    // curso.preRequisitos.map( cursoPre => {
+    //   document.getElementById('pre-'+cursoPre.id.toString() )?.classList.remove( 'bg-yellow-200', 'text-yellow-700');
+    //   document.getElementById('pre-requisito'+cursoPre.id.toString())?.classList.remove('absolute');
+
+    // })
+    // if( this.readonly ) {
+    //   return
+    // }
+
+    // document.getElementById(curso.id.toString())?.classList.add('hidden');
+    // document.getElementById(curso.id.toString())?.classList.remove('flex');
+
+  }
+
+  renovar = ( template: TemplateRef<any> ) => {
+    
+    this.buscarCursoEnPlan( this.cursoOption().id ).then( tienePlanEstudio =>{
+      if( !tienePlanEstudio ) {
+        this.alert.sweetAlert('info', 'ATENCIÓN', `El curso ${ this.cursoOption().nombreCurso } no se encuentra en un plan de estudios, no se puede renovar`);
+        return
+      }
+
+      this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea renovar el curso?')
+      .then( isConfirm => {
+        if(!isConfirm){
+          this.cursoOption.set( this.signal.cursoDafault );
+          return
+        }
+        
+        this.modal.openTemplate({
+          template,
+          titulo: 'Renovar Curso'
+        }).afterClosed().subscribe( resp => {
+          console.log(resp);
+          if( resp == 'cancelar') {
+            this.cursoOption.set( this.signal.cursoDafault );
+            return
+          }
+          
+          this.obtener();
+        } )
+
+      })
 
     })
-    if( this.readonly ) {
-      return
-    }
-    // this.buttons.nativeElement.classList.add('hidden')
-    document.getElementById(curso.id.toString())?.classList.add('hidden');
-    document.getElementById(curso.id.toString())?.classList.remove('flex');
+    
+    
+  }
+
+  desfasarConfirm = ( ) => {
+    // console.log('Implementación pendiente... :)');
+    
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea desfasar el curso?')
+      .then( isConfirm => {
+        if(!isConfirm){
+          this.cursoOption.set( this.signal.cursoDafault );
+          return
+        }
+        const curso: CursoEliminar = {
+          id: this.cursoOption().id,
+          usuarioId: parseInt( this.authSignal.currentRol().id )
+        }
+        this.desfasar( curso )
+      })
+
+  }
+
+  desfasar = ( curso: CursoDesfasar  ) => {
+    this.repository.desfasar( curso ).subscribe({
+      next: ( data ) => {
+        console.log(data);
+        this.alert.showAlert('El curso fue desfasado de manera correcta', 'success', 6);
+        this.obtener()
+        
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al desfasar el curso', 'error', 6);
+
+      }
+    })
+  }
+
+  revertirConfirm = () => {
+    this.alert.sweetAlert('question', 'Confirmar', 'Al revertir este curso será ELIMINADO, y en su lugar volverá a estar activo el curso anterior. ¿Está seguro que desea revertir curso?')
+      .then( isConfirm => {
+        if(!isConfirm){
+          this.cursoOption.set( this.signal.cursoDafault );
+          return
+        }
+        const curso: CursoRevertirRenovacion = {
+          id: this.cursoOption().id,
+          usuarioId: parseInt( this.authSignal.currentRol().id )
+        }
+        this.revertirRenovacion( curso )
+      })
+  }
+
+  revertirRenovacion = ( curso: CursoRevertirRenovacion  ) => {
+    this.repository.revertirRenovacion( curso ).subscribe({
+      next: ( data ) => {
+        console.log(data);
+        this.alert.showAlert('El curso fue revertido de manera correcta', 'success', 6);
+        this.obtener()
+        
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al revertir el curso', 'error', 6);
+
+      }
+    })
+  }
+
+  openOptions = ( event: any, curso: Curso, ciclo: CursoByCiclo ) => {
 
 
+    this.cursoOption.set( curso );
+    this.signal.cursoCicloSelect.set( ciclo );
 
+    // console.log( event );
+    // console.log( curso );
   }
 
 

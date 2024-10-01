@@ -110,31 +110,21 @@ export class UserRolComponent implements OnInit {
   obtenerRoles = () => {
     this.rolRepository.obtenerRoles().subscribe({
       next: (roles) => {
-        // console.log(roles);
+
         const rol = roles.reduce( (roles: Rol[], rol: Rol) => {
 
           if( this.usuariosRol.findIndex( rolUser => rolUser.rol == rol.rol)  == -1 ) {
-            // console.log(rol, ' - ');
+
             
             roles.push(rol)
           }
 
-        //   const rolesPendiente = this.usuariosRol.map( rolUser => {
-        //     let newRol = [];
-        //      if (rolUser.id !== rol.id ) {
-        //       newRol.push( rol )
-        //     }
-        //     return newRol
-        //  });
-        //   console.log(rolesPendiente);
-          
-          // roles.filter(rol => rol.id == rol.id)
           return roles
         }, [])
 
         this.listaRoles = rol;
         this.roles.set( this.listaRoles );
-        // console.log(rol);
+
         
       }, error: ( error ) => {
         console.log(error);
@@ -190,7 +180,7 @@ export class UserRolComponent implements OnInit {
   }
 
   changeAltaRol = ($event: MatSlideToggleChange, rol: Rol) => {
-    console.log($event.checked);
+
     const alta = $event.checked ? 'DAR ALTA' : 'DAR BAJA';
     
     if ($event.checked) {
@@ -219,7 +209,7 @@ export class UserRolComponent implements OnInit {
 
     this.usuarioRolRepository.activarRolUser( rolActivar ).subscribe({
       next: ( data ) => {
-        console.log( data );
+
         this.alertService.showAlert(`El rol ${ rol.rol}, fue activado`, 'success');
         this.obtenerUsuarios();
 
@@ -239,7 +229,7 @@ export class UserRolComponent implements OnInit {
     }
     this.usuarioRolRepository.darAltaRolUser( rolAlta ).subscribe({
       next: ( data ) => {
-        console.log( data );
+
         this.alertService.sweetAlert('success', '¡Correcto!', `El rol ${ rol.rol} fue dado de alta correctamente` ).then(isConfirm => {
           if(isConfirm){
             if(rol.usuario === this.currentData().ApellidosyNombres){
@@ -270,7 +260,6 @@ export class UserRolComponent implements OnInit {
     }
     this.usuarioRolRepository.suspenderRolUser( rolSuspender ).subscribe({
       next: ( data ) => {
-        console.log( data );
         this.alertService.showAlert(`El rol ${ rol.rol}, fue suspendido`, 'success');
         this.obtenerUsuarios();
         this.obtenerRoles();
@@ -330,13 +319,13 @@ export class UserRolComponent implements OnInit {
       })
 
     })
-    // this.newRoles.forEach
+
   }
 
   asignarRolUsuario = ( asignarRol: UsuarioRolAgregar, isLast: boolean) => {
     this.usuarioRolRepository.asignarRolToUser( asignarRol ).subscribe({
       next: ( data ) => {
-        console.log(data);
+
         if (isLast) {
           this.alertService.sweetAlert('success', '¡Correcto!', 'Los roles fueron asignados correctamente.' ).then( isConfirm => {
             if(isConfirm){
@@ -365,7 +354,7 @@ export class UserRolComponent implements OnInit {
   eliminarRolUsuario = ( eliminarRolUsuario: UsuarioRolEliminar, isLast: boolean ) => {
     this.usuarioRolRepository.eliminarRolUser( eliminarRolUsuario ).subscribe({
       next: (data) => {
-        console.log(data);
+
         if (isLast) {
           this.alertService.showAlert('Los roles fueron eliminados correctamente.', 'success');
           this.obtenerUsuarios();
@@ -405,31 +394,23 @@ export class UserRolComponent implements OnInit {
       switch( tipo ) {
         case 'asignar': {
           this.newRoles = [];
-          // console.log(event.container.data);
-          console.log('asignar');
-          console.log(event);
           
           event.container.data.forEach( (rol: any, index) => {
-            // console.log(rol.usuario);
-            console.log( index, ' - ' ,rol );
-            // if( index == 0 ) {
-            // }
+
             if( rol.usuario ) {
               if( rol.estado != '' ) {
                 this.deleteRoles = this.deleteRoles.filter( rolDelete => rolDelete.rol != rol.rol );
                 this.roles.update( roles => {
-                  console.log('asignado');
+
                   const asignados = Object.values({...event.container.data});
-                  console.log( asignados );
                   
                   return roles.filter( rolSignal => rolSignal.rol !== rol.rol)
 
                 } )
-                console.log( this.roles() );
+
                 return
               }
-              console.log('no es asignado');
-              // console.log( this.roles() );
+
 
               return  
             }
@@ -447,27 +428,19 @@ export class UserRolComponent implements OnInit {
         case 'eliminar': {
           this.deleteRoles = [];
 
-          console.log('eliminar');
-
           event.container.data.forEach( (rol: any, index) => {
-            
-            console.log(index, ' - ',rol);
-            // if( index == 0 ) {
-              
-            // }
+
             this.newRoles = this.newRoles.filter( rolNew => rolNew.rol != rol.rol );
             
             if( !rol.usuario ) {
-              console.log('no es asignado');
 
-            console.log( this.listaRoles);
             this.roles.set( this.listaRoles );
 
               return  
             }
 
             this.deleteRoles.push( rol );
-            console.log(this.deleteRoles);
+
           })
           
         }; break;
@@ -477,14 +450,11 @@ export class UserRolComponent implements OnInit {
   /*  DRAG AND DROP END */
 
   filtrar = ($event: any) => {
-    console.log($event);
-    console.log( this.roles() );
-    
+
     this.listaRoles = this.roles();
 
     const searchTerms = $event.toLowerCase().split(' ');
-    console.log( this.listaRoles);
-    
+
     this.listaRoles = this.listaRoles.filter(rol => {
         const rolName = rol.rol.toLowerCase();
         return searchTerms.every((term: string) => rolName.includes(term));

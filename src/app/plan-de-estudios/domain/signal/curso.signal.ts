@@ -1,9 +1,5 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
-import { Curso, CursoByCiclo, CursoCrear } from "../models/curso.model";
-import { Ciclo } from "../models/ciclo.model";
-import { CursoPlanListar } from "../models/plan-estudio.model";
-
-
+import { Curso, CursoByCiclo, CursoCrear, CursoDesfasado, CursoExcel } from "../models/curso.model";
 
 @Injectable({
     providedIn: 'root'
@@ -44,43 +40,59 @@ export class CursoSignal {
         horasPracticas: 0,
         totalHoras: 0,
         totalCreditos: 0,
-        preRequisitos: []
+        // preRequisitos: []
     }
+
+    cursoDesfasadoDefault: CursoDesfasado = {
+        id: 0,
+        idPrograma: 0,
+        descripcion: '',
+        idCiclo: 0,
+        definicionCiclo: '',
+        codigoCurso: '',
+        nombreCurso: '',
+        tipoEstudio: '',
+        tipoCurso: '',
+        competencia: '',
+        horasTeoricas: 0,
+        horasPracticas: 0,
+        totalHoras: 0,
+        totalCreditos: 0,
+    }
+
     cursoCicloSelectDefault: CursoByCiclo = {
 
         ciclo: '',
+        cicloNumero: 0,
         cursos: [],
+        cursosPlan: [],
         idCiclo: 0
         
     }
-    cursoByClicloDefault: CursoByCiclo = {
-        ciclo: '',
-        idCiclo: 0,
-        cursos: []
-    }
 
-    cursoPlanDefault: CursoPlanListar[] = [];
-    
+    cursoByClicloDefault: CursoByCiclo[] = []
 
     preRequisitoDefault: Curso[] = []
 
     cursoByCliclosDefault: CursoByCiclo[] = []
 
     cursosByCiclo = signal( this.cursoByClicloDefault );
-    cursosByCiclos = signal( this.cursoByCliclosDefault );
-    cursosPlanByCiclos = signal( this.cursoByCliclosDefault );
-
-    cursosPlan = signal( this.cursoPlanDefault );
 
     cursoSelect = signal( this.cursoDafault );
+
     cursoSelectPreRequisito = signal( this.cursoDafault );
 
     cursosList: WritableSignal<Curso[]> = signal( this.cursoListDefault );
+
     preRequisitos = signal( this.preRequisitoDefault )
 
     cursoCicloSelect = signal<CursoByCiclo>( this.cursoCicloSelectDefault );
 
     openCursoPreRequisito = signal( false );
+
+    cursoOption = signal( this.cursoDafault );
+
+    cursoDesfasadoSelected = signal( this.cursoDesfasadoDefault );
 
     setCursos( cursoList: Curso[]) {
         this.cursosList.set( cursoList )
@@ -95,5 +107,8 @@ export class CursoSignal {
     }
 
     renderizarCursos = signal( '' );
+
+    cursosImportExcelDefault: CursoExcel[] = [];
+    cursosImportExcel = signal( this.cursosImportExcelDefault );
 
 }

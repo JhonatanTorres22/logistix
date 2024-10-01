@@ -7,7 +7,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { UsuarioRol } from 'src/app/usuarios/domain/models/usuario-rol.model';
 import { UsuarioRolRepository } from 'src/app/usuarios/domain/repositories/usuario-rol.repository';
-import { UsuariosDomainService } from 'src/app/usuarios/domain/services/usuarios-domain.service';
 import { UsuariosRolDomainService } from 'src/app/usuarios/domain/services/usuarios-rol-domain.service';
 import { UsuariosRolValidations } from 'src/app/usuarios/domain/validations/usuarios-rol.validations';
 import { RolesAsignarComponent } from '../roles-asignar/roles-asignar.component';
@@ -59,10 +58,7 @@ export class RolesListComponent {
   obtenerUsuariosRol = (): void => {
     this.usuarioRolRepository.obtenerUsuariosRol().subscribe({
       next: (usuariosRol: UsuarioRol[] ) => {
-          console.log(usuariosRol);
-          // this.usuarios = usuarios;
 
-          // this.usuarioDomainService.setUsuarios = usuarios; 
           this.usuariosRolDomainService.setUsuariosRol( usuariosRol );
           this.dataSource.data = this.usuariosRolDomainService.usuariosRol();
           
@@ -81,7 +77,6 @@ export class RolesListComponent {
     });
 
     dialogRef.afterClosed().subscribe( (result: any) => {
-      console.log(result);
       
       if( result == 'cancelar') {
         return

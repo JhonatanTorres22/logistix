@@ -121,7 +121,6 @@ export class ProgramaAcademicoAddComponent {
       this.alertService.showAlert('El formulario está incompleto o no complen con los valores esperados')
       return;
     }
-    console.log(this.formPrograma.value);
 
     this.alertService.sweetAlert('question', 'Confirmación', `Está seguro que desea ${ tipoAccionForm } la Programa`)
     .then( isConfirm => {

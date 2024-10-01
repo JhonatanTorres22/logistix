@@ -77,6 +77,7 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
     // this.idProgramaSelect = 0;
     // this.idSemestres.set([]);
     // this.idPrograma.set( 0 );
+    this.isModal.set( false );
 
   }
 

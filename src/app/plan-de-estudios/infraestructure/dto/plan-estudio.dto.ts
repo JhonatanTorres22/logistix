@@ -41,20 +41,3 @@ export type PlanEstudioEliminarDTO = {
     usuario: number
 }
 
-export type PlanEstudioCursoInsertarDTO = {
-    codigoPlanDeEstudio: number,
-    codigoCurso: number,
-    usuario: number
-}
-
-
-export type CursoPlanListarDTO = CursoDTO; 
-
-export interface CursoPlanListarDataArrayDTO {
-    data: CursoPlanListarDTO[]
-}
-
-export interface CursoPlanEliminarDTO {
-    codigoCursoPlan: number,
-    usuario: number
-}

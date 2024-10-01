@@ -9,7 +9,7 @@ import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.s
 import { LocalAddComponent } from '../local-add/local-add.component';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AsignacionLocal, AsignacionPrograma, AsignarNuevoPrograma, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
+import { AsignacionLocal, ListarLocalesAsignados } from 'src/app/programas-academicos/domain/models/asignacion.model';
 import { AsignacionSignal } from 'src/app/programas-academicos/domain/signals/asignacion.signal';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 
@@ -73,17 +73,14 @@ constructor(
 
   openShowFormCrearPrograma = ( event?: EventEmitter<string> | string) => {
 
-    console.log(event);
       switch( event ) {
         case 'Add': {
-          console.log('Programa Creado');
           this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
          this.obtenerLocales();
         } break;
 
         case 'Edit': {
-          console.log('Programa Editado');
           this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
           this.obtenerLocales();
@@ -96,7 +93,6 @@ constructor(
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.limpiarDatosLocales();
           this.showFormAgregarPrograma = false;
         }
@@ -115,7 +111,6 @@ constructor(
             })
           });
         });
-        console.log(this.localesAsignados,'lista de locales asignados');
       }, error: ( error ) => {
         console.log(error);
         this.alertService.showAlert('Ocurrió un error, no se pudo listar los locales', 'error');
@@ -141,18 +136,14 @@ constructor(
 
   
   openShowFormEditarPrograma = ( programa: Local, event?: EventEmitter<string> | string) => {
-
-    console.log(event);
     
       switch( event ) {
         case 'Add': {
-          console.log('Semestre Creado');
           this.showFormAgregarPrograma = false;
          this.obtenerLocales();
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editado');
           this.showFormAgregarPrograma = false;
           this.obtenerLocales();
         } break;
@@ -165,7 +156,6 @@ constructor(
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.showFormAgregarPrograma = false;
         }
       }
@@ -196,7 +186,6 @@ constructor(
         this.localesChecked.length = 0;
         const localesActualizados = this.localesSelect().filter(localFiltro => localFiltro.id !== local.id);
         this.signal.setSelectLocales(localesActualizados);
-        console.log(localesActualizados,'locales actualizados');
         this.obtenerLocales();
       }, error: ( error ) => {
         console.log( error );
@@ -213,17 +202,14 @@ constructor(
     .then( isConfirm => {
       if( !isConfirm ) return;
       this.signal.setSelectLocales( this.localesChecked );
-      console.log(this.signal.localesSelect());
       
-      // this.signal.setSelectLocal(  this.localSelect );
       this.dialogRef.close('seleccionado');
-      // this.aperturarSemestre();
+
     
     })
   }
 
   onLocalChecked = ( localCheked: Local, checked: boolean ) => {
-    console.log(checked, localCheked);
     
     checked ? this.localesChecked.push( localCheked) : this.localesChecked = this.localesChecked.filter( local => local.id != localCheked.id);
 

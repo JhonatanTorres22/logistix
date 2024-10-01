@@ -65,19 +65,16 @@ export class FacultadListComponent implements OnInit{
   }
 
   openShowFormCrearFacultad = ( event?: EventEmitter<string> | string) => {
-
-    console.log(event);
     
       switch( event ) {
         case 'Add': {
-          console.log('Facultad Creado');
+
           this.limpiarDatosFacultad()
           this.showFormAgregarFacultad = false;
          this.obtenerFacultades();
         } break;
 
         case 'Edit': {
-          console.log('Facultad Editadooooooooo');
           this.obtenerFacultades();
           this.limpiarDatosFacultad();
           this.facultadSelect = this.facultadEdit
@@ -90,7 +87,6 @@ export class FacultadListComponent implements OnInit{
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.limpiarDatosFacultad()
           this.showFormAgregarFacultad = false;
         }
@@ -100,7 +96,6 @@ export class FacultadListComponent implements OnInit{
   obtenerFacultades = () => {
     this.facultadRepository.obtenerFacultades().subscribe({
       next: ( facultades ) => {
-        console.log(facultades);
         this.facultadSignal.setFacultadesList( facultades );
         
         if (this.facultades().length > 0) {
@@ -118,18 +113,14 @@ export class FacultadListComponent implements OnInit{
 
   
   openShowFormEditarFacultad = ( facultad: Facultad, event?: EventEmitter<string> | string) => {
-
-    console.log(event);
     
       switch( event ) {
         case 'Add': {
-          console.log('Semestre Creado');
           this.showFormAgregarFacultad = false;
          this.obtenerFacultades();
         } break;
 
         case 'Edit': {
-          console.log('Semestre Editadoooooooo');
           this.showFormAgregarFacultad = false;
           this.obtenerFacultades();
         } break;
@@ -143,7 +134,6 @@ export class FacultadListComponent implements OnInit{
         } break;
 
         case 'Cancelar': {
-          console.log('Cancelar');
           this.showFormAgregarFacultad = false;
         }
       }
@@ -168,12 +158,10 @@ export class FacultadListComponent implements OnInit{
 
     this.facultadRepository.eliminarFacultad( facultadEliminar ).subscribe({
       next: ( data ) => {
-        console.log( data );
         this.alertService.sweetAlert('success', '¡ELIMINADO!', 'La facultad fue eliminada correctamente')
         this.limpiarDatosFacultad();
         if(facultad.id === this.facultadSeleccionado().id){
           this.facultadSignal.setSelectFacultad(this.facultadSelect)
-          console.log(this.facultadSelect); 
         }
         this.obtenerFacultades();
       }, error: ( error ) => {
@@ -202,7 +190,6 @@ export class FacultadListComponent implements OnInit{
   facultadesAsignadas = () => {
     this.listaFacultadesAsignadas = [];
     this.asignaciones().forEach(facultad => {
-      console.log(facultad.nombreFacultad);
       this.listaFacultadesAsignadas.push(facultad)
     })
   }

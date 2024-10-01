@@ -59,7 +59,6 @@ export class ProgramaCardComponent {
   openModalDirector = ( template: TemplateRef<any> ) => {
     this.programaSelect.set( this.programaSignal.programa )
     this.programaEditDirector.set( this.programa )
-    // console.log('Abrir modal Director...', this.programa );
     let titleModal = 'Seleccione el nuevo Director de Escuela';
     this.modal.openTemplate( {
       template,
@@ -74,7 +73,6 @@ export class ProgramaCardComponent {
   }
 
   openModalLocal = ( asignacion: Asignacion, programa: AsignacionPrograma ) => {
-    console.log('abrir modal LOCAL list');
     const dialogRef = this.dialog.open( LocalListComponent, {
       width: '800px',
       height: '460px',
@@ -84,8 +82,6 @@ export class ProgramaCardComponent {
 
     dialogRef.afterClosed().subscribe( data => {
       if( data !== 'seleccionado' ) return;
-      // console.log(data);
-      // console.log(this.localesSelect());
 
       const locales = this.localesSelect().map( local => local.id );     
       const newPrograma: AsignarNuevoPrograma = {
@@ -109,9 +105,6 @@ export class ProgramaCardComponent {
         this.programaSignal.setSelectProgramaDefault();
         this.localSignal.setSelectLocalesDefault();
         this.directorSignal.setSelectDirectorDefault();
-
-        // this.obtener( this.semestreSelect().id );
-        console.log('Nuevo local asignado...... renderizar asignaciones');
         
         this.renderizarAsignaciones.set('Obtener');
       }, error: (error) => {
@@ -140,8 +133,6 @@ export class ProgramaCardComponent {
 
 
   eliminarPrograma = ( asignacion: Asignacion, programa: AsignacionPrograma, idLocal?:number ) => {
-    console.log(asignacion);
-    console.log(idLocal);
     
     const locales = idLocal ? [idLocal] : programa.locales.map( local => local.idLocal);
     const eliminarPrograma: AsignacionEliminar = {
@@ -152,11 +143,9 @@ export class ProgramaCardComponent {
       idSemestre: this.semestreSelect().id,
       usuarioId: parseInt( this.auth.currentRol().id )
     }
-    console.log(eliminarPrograma);
     
     this.asignacionRepository.eliminar( eliminarPrograma ).subscribe({
       next: (data) => {
-        console.log(data);
         this.alert.sweetAlert('success', 'Correcto', 'Se eliminó correctamente');
         this.programaSignal.setSelectProgramaDefault();
         this.localSignal.setSelectLocalesDefault();

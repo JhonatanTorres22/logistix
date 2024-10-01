@@ -1,5 +1,5 @@
-import { EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
-import { EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
+import { EquivalenciaDeleteDTO, EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
+import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
 
 export class EquivalenciaMapper {
     
@@ -15,8 +15,18 @@ export class EquivalenciaMapper {
         return {
             codigoCursoPlan: param.cursoPlanId,
             codigoCursoPlanEquivalencia: param.cursoPlanEquivalenciaId,
+            porcentajeModificacion: param.porcentajeModificacion,
             usuario: param.userId
         }
     }
 
+    static fromApiToDomainDelete( param: EquivalenciaDelete ): EquivalenciaDeleteDTO {
+
+        return {
+            codigoCursoPlan: param.cursoPlanId,
+            codigoCursoPlanEquivalencia: param.cursoPlanEquivalenciaId,
+            usuario: param.userId
+        }
+
+    }
 }

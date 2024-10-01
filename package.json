@@ -55,6 +55,7 @@
     "rxjs": "~7.8.1",
     "sweetalert2": "^11.11.0",
     "uploader": "^3.48.2",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {

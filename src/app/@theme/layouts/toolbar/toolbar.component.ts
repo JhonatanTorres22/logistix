@@ -18,6 +18,8 @@ import { FacultadSignal } from 'src/app/programas-academicos/domain/signals/facu
 import { ProgramaSignal } from 'src/app/programas-academicos/domain/signals/programa.signal';
 import { forEach } from 'lodash';
 import { PlanEstudioRepository } from 'src/app/plan-de-estudios/domain/repositories/plan-estudio.repository';
+import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
+import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
 
 @Component({
   selector: 'app-nav-bar',
@@ -36,18 +38,24 @@ export class NavBarComponent implements OnInit {
   programasGlobal = this.programaSignal.programasGlobal;
   planesDeEstudio = this.PlanEstudioSignal.planesDeEstudio;
   planEstudioUltimoConResolucion = this.PlanEstudioSignal.planEstudioUltimoConResolucion;
+  cicloList = this.cicloSignal.cicloList;
+
   constructor(
     private semestreRepository: SemestreAcademicoRepository,
-    private semestreSignal: SemestreSignal,
-    private alert: AlertService,
-    private PlanEstudioSignal: PlanEstudioSignal,
     private facultadRepository: FacultadRepository,
-    private facultadSignal: FacultadSignal,
-    private programaSignal: ProgramaSignal,
     private programaRepository: ProgramaRepository,
     private planEstudioRepository: PlanEstudioRepository,
-    private auth: AuthSignal,
+    private cicloRepository: CicloRepository,
     private repository: ListarInfoDirectorRepository,
+
+    private semestreSignal: SemestreSignal,
+    private PlanEstudioSignal: PlanEstudioSignal,
+    private facultadSignal: FacultadSignal,
+    private programaSignal: ProgramaSignal,
+    private cicloSignal: CicloSingal,
+    private auth: AuthSignal,
+
+    private alert: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -152,6 +160,15 @@ export class NavBarComponent implements OnInit {
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al obtener los planes de estudios', 'error', 6);
+      }
+    })
+  }
+
+  obtenerCiclos = () => {
+    this.cicloRepository.obtener().subscribe({
+      next: ( ciclos ) => {
+        console.log( ciclos );
+
       }
     })
   }

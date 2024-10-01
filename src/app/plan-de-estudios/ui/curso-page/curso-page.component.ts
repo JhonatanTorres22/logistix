@@ -4,19 +4,18 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { CursoListComponent } from './curso-list/curso-list.component';
 import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
 import { CicloPageComponent } from '../ciclo-page/ciclo-page.component';
-import { CursoPlanEliminar, CursoPlanListar, PlanEstudio, PlanEstudioCursoInsertar } from '../../domain/models/plan-estudio.model';
-import { PlanEstidoRepositoryImpl } from '../../infraestructure/repositories/plan-estudio.repository.impl';
+import { PlanEstudio } from '../../domain/models/plan-estudio.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { CursoSignal } from '../../domain/signal/curso.signal';
-import { Curso } from '../../domain/models/curso.model';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
-import { uiModalTemplateData } from 'src/app/core/components/ui-modal/ui-modal.interface';
 import { PlanEstudioListComponent } from '../plan-estudio-list/plan-estudio-list.component';
 import { PlanEstudioSignal } from '../../domain/signal/plan-estudio.signal';
 import { Router } from '@angular/router';
 import { PlanEstudioCardComponent } from "../plan-estudio-card/plan-estudio-card.component";
+import { CursoPlanListar, PlanEstudioCursoInsertar, CursoPlanEliminar } from '../../domain/models/curso-plan.model';
+import { CursoPlanRepository } from '../../domain/repositories/curso-plan.repository';
 
 @Component({
   selector: 'curso-page',
@@ -36,7 +35,7 @@ import { PlanEstudioCardComponent } from "../plan-estudio-card/plan-estudio-card
 })
 export class CursoPageComponent implements OnDestroy {
 
-  cursosByCiclos = this.cursoSignal.cursosByCiclos;
+  cursosByCiclo = this.cursoSignal.cursosByCiclo;
   // cursos: Curso[] = [];
   cursosPlan: CursoPlanListar[] = [];
   isModal = this.signal.isModal;
@@ -45,10 +44,12 @@ export class CursoPageComponent implements OnDestroy {
   planesDeEstudio = this.signal.planesDeEstudio;
   planEstudioSinResolucion: PlanEstudio;
   constructor(
-    private planEstudioRepository: PlanEstidoRepositoryImpl,
+    private cursoPlanRepository: CursoPlanRepository,
+
     private authSignal: AuthSignal,
     private cursoSignal: CursoSignal,
     private signal: PlanEstudioSignal,
+
     private modal: UiModalService,
     private alert: AlertService,
     private router: Router
@@ -70,7 +71,7 @@ export class CursoPageComponent implements OnDestroy {
     });
     
     console.log( cursos );
-    this.planEstudioRepository.insertarCursoPlan(cursos).subscribe({
+    this.cursoPlanRepository.insertarCursoPlan(cursos).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos fueron asignados al plan de estudios', 'success', 6)
@@ -124,7 +125,7 @@ export class CursoPageComponent implements OnDestroy {
   isDisponible = ( plan: PlanEstudio ) => {
 
     return new Promise<boolean>( ( resolve) => {
-      this.planEstudioRepository.obtenerCursoPlan( plan.id ).subscribe({
+      this.cursoPlanRepository.obtenerCursoPlan( plan.id ).subscribe({
         next: ( cursos ) => {
           if( cursos.length == 0 ) {
             resolve( true );
@@ -145,14 +146,15 @@ export class CursoPageComponent implements OnDestroy {
   eliminarCursoPlan = () => {
     const cursosEliminar: CursoPlanEliminar[] = this.cursosPlan.map( curso => {
       return {
-        idCursoPlan: curso.id,
+        // idCursoPlan: curso.id, VERIFICAR FUNCIONAMIENTO
+        idCursoPlan: curso.idCursoPlan,
         usuarioId: parseInt( this.authSignal.currentRol().id )
       }
     })
 
     return new Promise<boolean> ( resolve => {
 
-      this.planEstudioRepository.eliminarCursoPlan( cursosEliminar ).subscribe({
+      this.cursoPlanRepository.eliminarCursoPlan( cursosEliminar ).subscribe({
         next: ( response ) => {
           console.log( response );
           resolve( true );

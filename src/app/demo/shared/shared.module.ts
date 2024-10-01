@@ -40,6 +40,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { CdkMenuModule } from '@angular/cdk/menu';
+
 
 // third party import
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -94,7 +96,8 @@ const MaterialModules = [
   MatTableModule,
   MatAutocompleteModule,
   MatChipsModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  CdkMenuModule
 ];
 
 const PrimeNgModules = [

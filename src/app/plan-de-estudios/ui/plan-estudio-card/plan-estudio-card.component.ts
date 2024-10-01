@@ -72,7 +72,8 @@ export class PlanEstudioCardComponent {
 
 
   verMalla = ( plan: PlanEstudio) => {
-
+    console.log( plan );
+    
     this.planEstudioSelect.set( plan );
     if( !this.isModal() && !this.isModalOfItself() ) {
       this.router.navigate(['plan-de-estudios/malla-curricular']);
@@ -83,8 +84,14 @@ export class PlanEstudioCardComponent {
       console.log( this.ultimoPlanConRCU );
       // this.ultimoPlanConRCU.elementRef.nativeElement.classList.add('hidden');
       document.getElementsByClassName('cdk-overlay-container')[0].classList.add('hidden');
-    this.openMallaCursos.set( true );
+      this.openMallaCursos.set( true );
+
+      return;
+
     }
+
+    this.openMallaCursos.set( true );
+
   }
 
   showFormEdit = ( plan: PlanEstudio, template: TemplateRef<any>, tipo: string ) => {
