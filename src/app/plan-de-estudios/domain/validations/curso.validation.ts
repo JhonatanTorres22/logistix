@@ -8,18 +8,23 @@ import { ValidacionComprobarDuplicadoService } from "src/app/programas-academico
     providedIn: 'root'
 })
 
+
+
 export class CursoValidation {
+      cursoOption = this.cursoSignal.cursoOption;
+
     constructor(
         private cursoSignal : CursoSignal,
         private validarDuplicadoService:ValidacionComprobarDuplicadoService
+        
     ){}
 
     // maxLengthPrograma:string
     // maxLengthCiclo: string
-    maxLengthCodigoCurso: number = 7;
-    minLengthCodigoCurso: number = 7;
-    expRegCodigoCurso: RegExp =/^.*\d+$/;
-    expRegCodigoCursoBlockToInput: RegExp = /^(?!P)[^0-9]|[^0-9P]|(?<=^P.*)P/g;
+    maxLengthCodigoCurso: number = 8;
+    minLengthCodigoCurso: number = 8;
+    expRegCodigoCurso: RegExp = /^P\d{2}(?![A-Za-z]$)([A-Za-z0-9]*A[A-Za-z0-9]*A?[A-Za-z0-9]*)?\d{1,2}$/;
+    expRegCodigoCursoBlockToInput: RegExp =  /[^P\dA-Za-z0-9]|(?<=^P\d{2})[^A-Za-z0-9]?(?=\d{4})/g;
     minTotalHoras: number = 2;
     minCreditos: number = 2;
     maxLengthNombreCurso: number = 50;
@@ -83,7 +88,7 @@ export class CursoValidation {
 
     duplicadoNombreCurso(control: AbstractControl): { [key: string]: boolean } | null {
         const listaCursos = this.cursoSignal.cursosList();
-        const cursoEditar = this.cursoSignal.cursoSelect();
+        const cursoEditar = this.cursoSignal.cursoSelect().id !== 0 ? this.cursoSignal.cursoSelect() : this.cursoOption();
         return this.validarDuplicadoService.duplicadoNombre(control, listaCursos, cursoEditar, 'nombreCurso');
       }
 

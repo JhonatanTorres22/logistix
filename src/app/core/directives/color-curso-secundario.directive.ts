@@ -29,20 +29,26 @@ export class ColorCursoSecundarioDirective implements OnInit {
       return;
     }
 
-    this.cursos?.map( curso => {
+    this.cursos?.map( ( curso, index ) => {
       if( curso.codigoCurso === this.curso.codigoCurso ) {
-        this.element.nativeElement?.classList.add('bg-green-200', 'text-green-900');
         // document.getElementById('check-'+curso.idCursoPlan)?.setAttribute('disabled', 'true');
+        
         console.log( this.element.nativeElement );
-
+        
         // Seleccionar el último div y el checkbox dentro de él
         const lastDiv = this.element.nativeElement.querySelector('.check');
         // Navegar al siguiente div
         console.log( lastDiv );
         // lastDiv.setAttribute('disabled', 'true');
-        const checkbox = lastDiv?.querySelector('input[type="checkbox"]');
+        // const checkbox = this.element.nativeElement.querySelector('input[type="checkbox"]');
+        setTimeout(() => {
+          const checkbox = document.querySelector(`#check-${curso.idCursoPlan}`);
+          this.element.nativeElement?.classList.remove('bg-white', 'text-black');
+          checkbox?.classList.add('hidden');
+          console.log( index + 1, ' - ', checkbox );
+        }, 600);
+        
         // checkbox.setAttribute('disabled', 'true');
-        checkbox?.classList.add('hidden');
         // setTimeout(() => {
         
           
@@ -53,7 +59,18 @@ export class ColorCursoSecundarioDirective implements OnInit {
         //     checkbox.setAttribute('checked', 'true');
         //   }
         // }, 400);
+
+      
         
+      } else {
+        if( curso.equivalencias?.length == 0 ) {
+          
+          this.element.nativeElement?.classList.add('bg-white', 'text-black');
+          this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
+        
+        }
+
+
       }
     })
   }

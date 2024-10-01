@@ -2,7 +2,7 @@
     <!-- @if ( openMallaCursos() ) { -->
       <div class="header-title">
         <div class="kanban-header-title">
-          <h4>{{ planEstudioSelect().nombre }}</h4>
+          <h4>{{ planEstudioSelect()?.nombre }}</h4>
           <div class="flex align-item-center hei-10">
             <button mat-icon-button (click)="cerrar()" class="modal-close">
               <i class="ti ti-x f-20 "></i>

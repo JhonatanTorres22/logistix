@@ -142,7 +142,7 @@ export class LocalAddComponent {
       this.alertService.showAlert('El formulario está incompleto o no complen con los valores esperados')
       return;
     }
-    console.log(this.formLocal.value);
+
 
     this.alertService.sweetAlert('question', 'Confirmación', `Está seguro que desea ${ tipoAccionForm } la Local`)
     .then( isConfirm => {
@@ -204,14 +204,12 @@ export class LocalAddComponent {
         const localIndex = this.localesSelect().findIndex(local => local.id === editLocal.id);
         if (localIndex !== -1) {
           this.localesSelect()[localIndex] = editLocal;
-          console.log(this.localesSelect(), '****');
         } 
         this.asignaciones().forEach(asignacion => {
           asignacion.programas.forEach(programa => {
             programa.locales.forEach(local => {
               if(local.idLocal === editLocal.id){
                 local.nombreLocal = editLocal.nombre
-                console.log(local.nombreLocal,'**');
               }
             })
           });

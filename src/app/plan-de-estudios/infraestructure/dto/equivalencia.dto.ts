@@ -7,5 +7,12 @@ export interface EquivalenciaPrimarioInsertDTO {
 export interface EquivalenciaSecundarioInsertDTO {
     codigoCursoPlan: number,
     codigoCursoPlanEquivalencia: number,
+    porcentajeModificacion: number,
+    usuario: number,
+}
+
+export interface EquivalenciaDeleteDTO {
+    codigoCursoPlan: number,
+    codigoCursoPlanEquivalencia: number,
     usuario: number,
 }

@@ -39,7 +39,6 @@ export class UsuarioService {
 
     agregarUsuario = ( usuario: UsuarioCrear): Observable<Usuario> => {
         const apiUsuario = UsuarioMapper.formDomainToApiCrear( usuario );
-        console.log(apiUsuario);
         
         return this.http.post<UsuarioDTO>(this.urlApi + this.urlAgregarUsuario, apiUsuario)
             .pipe( map( UsuarioMapper.formApiToDomain ))
@@ -47,9 +46,6 @@ export class UsuarioService {
 
     editarUsuario = ( usuario: Usuario ): Observable<void> => {
         const apiUsuarioEdit = UsuarioMapper.formDomainToApi( usuario );
-        console.log(apiUsuarioEdit);
-        
-        console.log(apiUsuarioEdit);
 
         return this.http.put<void>(this.urlApi + this.urlEditarUsuario, apiUsuarioEdit)
        

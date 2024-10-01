@@ -37,16 +37,13 @@ export class ProgramaAcademicoPageComponent {
   }
 
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
-    // this.facultadSignal.setIdFacultad( this.idFacultad )
-    // console.log(this.idFacultad);
+
     
   }
 
   openModalPrograma = () => {
     this.facultadSignal.setIdFacultad( this.idFacultad );
     this.facultadSignal.setIdFacultadYaAsignado( this.idFacultad );
-    console.log('abrir modal programa list');
     const dialogRef = this.dialog.open( ProgramaAcademicoListComponent, {
       width: '800px',
       // height: '460px',

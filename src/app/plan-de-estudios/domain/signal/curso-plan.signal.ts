@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { CursoPlanEquivalencia } from "../models/curso-plan.model";
+import { CursoPlanBase, CursoPlanByCiclo, CursoPlanEquivalencia, CursoPlanListar, CursoPlanPreRequisito, EquivalenciaValidar } from "../models/curso-plan.model";
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +7,7 @@ import { CursoPlanEquivalencia } from "../models/curso-plan.model";
 
 export class CursoPlanSignal {
 
-    cursoPlanEquivalenciaDefault: CursoPlanEquivalencia = {
+    cursoPlanEquivalenciaDefault: CursoPlanBase = {
         idCursoPlan: 0,
         nombreCurso: '',
         codigoCurso: '',
@@ -18,12 +18,46 @@ export class CursoPlanSignal {
         totalHoras: 0,
         totalCreditos: 0,
         cicloRomano: '',
-        cicloNumero: '',
+        cicloNumero: 0,
         cicloLetra: '',
-        equivalencias: []
+        equivalencias: [],
+        color: '',
+        estado: '',
+
+        competencia: '',
+        descripcion: '',
+        preRequisitos: []
     }
 
+    cursoPlanPreRequisitoDefault: CursoPlanBase[] = [];
+
+    cursoPlanDefault: CursoPlanListar[] = [];
+    preRequisitoCursoPlanDefault: CursoPlanBase[] = [];
+
+    cursoPlanByClicloDefault: CursoPlanByCiclo[] = [];
+
+    cursosPlanByCiclo = signal( this.cursoPlanByClicloDefault );
+    cursosPlanPreRequisitoByCiclo = signal( this.cursoPlanByClicloDefault );
+
+
+    cursosPlan = signal( this.cursoPlanDefault );
+    cursosPlanPreRequisito = signal( this.preRequisitoCursoPlanDefault )
+
+    
     cursoPlanEquivalenciaSelected = signal<CursoPlanEquivalencia>(this.cursoPlanEquivalenciaDefault);
     cursoPlanEquivalenciaUltimo = signal<CursoPlanEquivalencia>(this.cursoPlanEquivalenciaDefault);
-
+    
+    
+    
+    cursoPlanEquivalenciaValidarDefault: EquivalenciaValidar = {
+        pendientes: 0,
+        totalPendientes: 0,
+        equivalenciaTerminada: false,
+        cursosActualPendientes: [],
+        cursosUltimoPendientes: []
+    }
+    
+    cursoPlanEquivalenciaValidar = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
+    
+    // cursosPlanPreRequisito = signal( this.cursoPlanPreRequisitoDefault );
 }

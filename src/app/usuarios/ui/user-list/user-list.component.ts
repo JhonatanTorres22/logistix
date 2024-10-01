@@ -101,8 +101,6 @@ export class UserListComponent {
   obtenerUsuarios = (): void => {
     this.usuarioRepository.obtenerUsuarios().subscribe({
       next: (usuarios: Usuario[] ) => {
-          // console.log(usuarios);
-          // this.usuarios = usuarios;
 
           this.usuarioDomainService.setUsuarios = usuarios; 
           this.dataSource.data = this.usuarioDomainService.getListaDeUsuarios;
@@ -123,7 +121,6 @@ export class UserListComponent {
     });
 
     dialogRef.afterClosed().subscribe( result => {
-      // console.log(result);
       
       if( result == 'cancelar') {
         return
@@ -142,7 +139,6 @@ export class UserListComponent {
     });
 
     dialogRef.afterClosed().subscribe( result => {
-      console.log(result);
       
       if( result == 'cancelar') {
         return

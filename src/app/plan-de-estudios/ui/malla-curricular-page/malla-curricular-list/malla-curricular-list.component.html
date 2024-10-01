@@ -11,40 +11,84 @@
 }
 
 
-@if ( cursosPlanByCiclos().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
+@if ( cursosPlanPreRequisitoByCiclo().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
-<div class="row">
-    @for (ciclo of cursosPlanByCiclos(); track ciclo) {
-        <div class="flex flex-column flex-1 hover:scale"> <!-- flex flex-column flex-1 -->
+<div class="row w-12">
+
+    <div class="flex gap-2">
+        @for (ciclo of cursosPlanPreRequisitoByCiclo(); track ciclo) {
+            <!-- @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) { -->
+               <div class="col-1 text-center">
+                   <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
+                   <div class="flex flex-column gap-2 example-list align-items-center"
+                       cdkDropList
+                       [cdkDropListData]="ciclo.cursosPlan"
+                       (cdkDropListDropped)="drop($event)">
+                       @for ( curso of ciclo.cursosPlan; track curso) {
+                           <div 
+                               cdkDrag
+                               [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 100000 : 0"
+                               [cdkDragDisabled]="cursosPlanPreRequisito().includes( curso )"
+                               (mouseenter)="hoverClass( curso )"
+                               (mouseleave)="removeClass( curso )"
+                               (dblclick)="!isModal() ? selectPreRequisitoPadre( curso ) : ''"
+                               (click)="cursoPreRequisito?.idCursoPlan != 0 ? selectPreRequsitoHijo( curso ) : ''"
+                               [id]="'pre-'+curso?.idCursoPlan"
+                             
+                               [ngClass]="
+                                {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idCursoPlan),
+                                    'bg-green-200 border-yellow-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idCursoPlan) && preRequisitosFromCursoSelect.length > 0,
+                                    'bg-blue-200': curso.preRequisitos.length > 0,
+                                    'border-3 border-yellow-500': cursoPreRequisito?.idCursoPlan == curso.idCursoPlan,
+                                    'border-1 border-dashed border-gray-400': cursoPreRequisito?.idCursoPlan != curso.idCursoPlan,
+                                }"
+                               [attr.id]="'card-' + curso.idCursoPlan"
+                               class="
+                                text-black f-8
+                                border-1 border-round
+                                w-full
+                                h-4rem
+                                align-content-center
+                                font-semibold px-1
+                                
+                                shadow-3"
+                                >
+                           
+                               <div>{{ curso.nombreCurso }}</div>
+                               <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
+                           </div>
+                       }
+                   </div>
+                   <!-- <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( templateCursoAdd, 'Crear', ciclo )"></ui-button-icon> -->
+               </div>
+            <!-- } -->
+
+
+        }
+    </div>
+
+    <!-- @for (ciclo of cursosPlanByCiclos(); track ciclo) {
+        <div class="flex flex-column flex-1 hover:scale">
     
-            <div class="flex flex-column gap-2 my-2"> <!-- flex flex-column gap-2 my-2 -->
+            <div class="flex flex-column gap-2 my-2">
                 <div class="flex flex-1 align-item-center justify-content-center border-1 border-round p-5 border-gray-400 bg-gray-900 text-white">
                     {{ciclo.ciclo || 'Ciclo' }}
                 </div>
             </div>
             <div class="flex flex-column gap-2 example-list"
 >
-                @for ( curso of ciclo.cursos; track curso) {
+                @for ( curso of ciclo.cursosPlan; track curso) {
                     
                     <div
                         (mouseenter)="hoverClass( curso )"
                         (mouseleave)="removeClass( curso )"
-                        [id]="'pre-'+curso.id"
+                        [id]="'pre-'+curso.idCursoPlan"
                         class="flex flex-column align-item-center justify-content-start border-1 border-gray-600 border-round p-2 border-gray-400 cursor-pointer card-curso box"
                         style="min-height: 7rem; max-height: 7rem;">
                         <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ curso.codigoCurso }}</div>
                         <div class="f-10 m-0 capitalize text-center font-bold">{{ curso.nombreCurso }}</div>
-                        @if( curso.preRequisitos.length > 0 ) {
-                            <mat-divider class="py-2"></mat-divider>
-                            <span class="font-bold f-8">Pre Requisito:</span>
-                            <div class="flex justify-content-around my-2 gap-2">
-                                @for (CursoPreRequisito of curso.preRequisitos; track CursoPreRequisito) {
-                                    <!-- <div class="f-8 bg-primary-200 text-primary-500 px-2 mb-1 f-w-500 border-round">{{ CursoPreRequisito.codigoCurso }}</div> -->
-                                    <div class="f-8 m-0 capitalize text-center f-w-600  bg-accent-400 text-accent-700 border-round px-1" [id]="'pre-requisito'+CursoPreRequisito.id">{{ CursoPreRequisito.codigoCurso }}</div> <!-- + ' - ' +CursoPreRequisito.nombreCurso  -->
-                                }
-                            </div>
-                        }
+
                     </div>
     
                 }
@@ -52,6 +96,14 @@
 
         </div>
 
-    }
+    } -->
 </div>
-<pre>{{ cursosPlan() | json }}</pre>
+<!-- <div class="row">
+    <div class="col-6">
+        <pre>{{ cursoPreRequisito | json }}</pre>
+    </div>
+    <div class="col-6">
+        <pre>{{ preRequisitosFromCursoSelect | json }}</pre>
+
+    </div>
+</div> -->

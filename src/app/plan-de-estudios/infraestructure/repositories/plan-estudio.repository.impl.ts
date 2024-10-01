@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { PlanEstudioRepository } from "../../domain/repositories/plan-estudio.repository";
 import { Observable } from "rxjs";
-import { CursoPlanEliminar, CursoPlanListar, PlanEstudio, PlanEstudioAdd, PlanEstudioCursoInsertar, PlanEstudioEditCU, PlanEstudioEditDE, PlanEstudioEliminar } from "../../domain/models/plan-estudio.model";
+import { PlanEstudio, PlanEstudioAdd, PlanEstudioEditCU, PlanEstudioEditDE, PlanEstudioEliminar } from "../../domain/models/plan-estudio.model";
 import { PlanEstudioService } from "../services/plan-estudio.service";
 
 @Injectable({
@@ -33,18 +33,6 @@ export class PlanEstidoRepositoryImpl implements PlanEstudioRepository {
     
     eliminar(eliminar: PlanEstudioEliminar): Observable<void> {
         return this.service.eliminar( eliminar );
-    }
-    
-    insertarCursoPlan( cursosPlan: PlanEstudioCursoInsertar[] ): Observable<void> {
-        return this.service.insertarCursoPlanEstudio( cursosPlan );
-    }
-
-    obtenerCursoPlan( idPlan: number ): Observable<CursoPlanListar[]> {
-        return this.service.obtenerCursoPlan( idPlan );
-    }
-    
-    eliminarCursoPlan( cursos: CursoPlanEliminar[] ): Observable<void> {
-        return this.service.eliminarCursoPlan( cursos );
     }
     
 }

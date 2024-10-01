@@ -117,7 +117,6 @@ export class SemestreAddComponent implements OnInit {
       this.alertService.showAlert('El formulario está incompleto o no complen con los valores esperados')
       return;
     }
-    console.log(this.formSemestre.value);
 
     this.alertService.sweetAlert('question', 'Confirmación', `Está seguro que desea ${ tipoAccionForm } el semestre`)
     .then( isConfirm => {

@@ -3,7 +3,7 @@ import { EquivalenciaRepository } from "../../domain/repositories/equivalencia.r
 import { Observable } from "rxjs";
 
 import { EquivalenciaService } from "../services/equivalencia.service";
-import { EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
+import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
 
 
 @Injectable({
@@ -11,6 +11,7 @@ import { EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../
 })
 
 export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
+
 
     private readonly service = inject( EquivalenciaService )
 
@@ -22,4 +23,7 @@ export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
         return this.service.insertarSecundarios(equivalencia);
     }
 
+    eliminarEquivalencia(equivalencia: EquivalenciaDelete): Observable<void> {
+        return this.service.eliminarEquivalencia(equivalencia);
+    }
 }

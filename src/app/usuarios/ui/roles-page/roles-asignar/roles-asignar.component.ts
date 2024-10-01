@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -42,8 +42,6 @@ export class RolesAsignarComponent implements OnInit {
   obtenerRoles = () => {
     this.rolRepository.obtenerRoles().subscribe({
       next: (roles) => {
-
-        console.log(roles);
         this.roles = roles;
 
       }, error: ( error ) => {
@@ -57,7 +55,6 @@ export class RolesAsignarComponent implements OnInit {
   obtenerUsuarios = () => {
     this.usuarioRepository.obtenerUsuarios().subscribe({
       next: (usuarios) => {
-        console.log(usuarios);
         this.usuarios = usuarios
       }, error: ( error ) => {
         console.log( error );

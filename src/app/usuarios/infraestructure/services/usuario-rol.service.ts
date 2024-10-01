@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UsuarioRol, UsuarioRolAgregar, UsuarioRolAlta, UsuarioRolEliminar, UsuarioRolSuspender } from "../../domain/models/usuario-rol.model";
-import { UsuarioRolDTO, UsuarioRolDataArrayDTO } from "../dto/usuario-rol.dto";
+import { UsuarioRolDataArrayDTO } from "../dto/usuario-rol.dto";
 import { UsuarioRolMapper } from "../../domain/mappers/usuario-rol.mapper";
 
 
@@ -65,8 +65,6 @@ export class UsuarioRolService {
 
     darAltaRolUser = ( darAltaRolUsuario: UsuarioRolAlta ): Observable<void> => {
         const darAltaRolUsuarioAPI = UsuarioRolMapper.fromDomainToApiDarAltaRol( darAltaRolUsuario );
-        console.log( darAltaRolUsuarioAPI );
-        
 
         return this.http.put<void>( this.urlApi + this.urlDarAltaUsuarioRol, darAltaRolUsuarioAPI );
     }

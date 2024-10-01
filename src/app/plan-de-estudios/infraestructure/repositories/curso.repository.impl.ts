@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CursoRepository } from "../../domain/repositories/curso.repository";
 import { Observable } from "rxjs";
-import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoCrear, CursoDeletePreRequisito, CursoEditar, CursoEliminar, CursoEncontradoEnPlan } from "../../domain/models/curso.model";
+import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoCrear, CursoDeletePreRequisito, CursoDesfasado, CursoDesfasar, CursoEditar, CursoEliminar, CursoEncontradoEnPlan, CursoRenovar, CursoRevertirDesfase, CursoRevertirRenovacion } from "../../domain/models/curso.model";
 import { CursoService } from "../services/curso.service";
 
 
@@ -13,8 +13,7 @@ import { CursoService } from "../services/curso.service";
 
     constructor( private service: CursoService) {
 
-    }
-    
+    }         
     
     obtenerPorPrograma( idPrograma: number ): Observable<Curso[]> {
        return this.service.obtenerPorPrograma( idPrograma );
@@ -22,6 +21,26 @@ import { CursoService } from "../services/curso.service";
       
       agregar(curso: CursoCrear): Observable<void> {
          return this.service.agregar( curso );
+      }
+
+      agregarMasive(cursos: CursoCrear[]): Observable<void> {
+         return this.service.agregarMasive( cursos );
+      }
+      
+      renovar(curso: CursoRenovar): Observable<void> {
+         return this.service.renovar( curso );
+      }
+
+      desfasar(curso: CursoDesfasar): Observable<void> {
+         return this.service.desfasar( curso );
+      }
+
+      revertirDesfase(curso: CursoRevertirDesfase): Observable<void> {
+         return this.service.revertirDesfase( curso );
+      }
+
+      revertirRenovacion(curso: CursoRevertirRenovacion): Observable<void> {
+         return this.service.revertirRenovacion( curso );
       }
       
       editar(curso: CursoEditar): Observable<void> {
@@ -40,7 +59,12 @@ import { CursoService } from "../services/curso.service";
          return this.service.deletePreRequisito( cursoPreRequisito )
       }
 
-      buscarCursoEnPlanEstudios(curso: CursoBuscarPlan): Observable<CursoEncontradoEnPlan[]> {
-         return this.service.buscarCursoPlanEstudios( curso )
+      buscarCursoEnPlanEstudios(idCurso: number): Observable<CursoEncontradoEnPlan[]> {
+         return this.service.buscarCursoPlanEstudios( idCurso )
       }
+
+      obtenerCursosDesfasados( idPrograma: number ): Observable<CursoDesfasado[]> {
+         return this.service.obtenerCursosDesfasados( idPrograma )
+      }
+
  }

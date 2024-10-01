@@ -1,10 +1,8 @@
-import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Input, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
+import { Component, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { ModalComponent } from '../components/modal/modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SemestreAcademico, SemestreAcademicoEliminar } from '../../domain/models/semestre-academico.model';
+import { SemestreAcademico } from '../../domain/models/semestre-academico.model';
 import { SemestreAcademicoRepository } from '../../domain/repositories/semestre-academico.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SemestreSignal } from '../../domain/signals/semestre.signal';
@@ -44,7 +42,6 @@ export class SemestreAcademicoPageComponent {
     private alertService: AlertService
   ) {
       const semestre = JSON.parse(localStorage.getItem('currentSemestre')!);
-      // console.log(semestre);
       semestre ? this.semestreSignal.setSelectSemestre( semestre ) : ''
     // this.existeSemestreCreado = this.semestreAcademico ? true : false;
   }
@@ -54,11 +51,9 @@ export class SemestreAcademicoPageComponent {
   }
 
   obtenerSemestres = () => {
-    console.log('Obteniendo semestres', this.semestreSelect());
     
     this.semestreAcademicoRepository.obtenerSemestres().subscribe({
       next: ( semestres ) => {
-          // console.log(semestres);
           this.existeSemestreCreado = semestres.length > 0;
           if( semestres.length == 0 ) {
             this.semestreSignal.setSemestreAcademicoDefault();
@@ -66,7 +61,6 @@ export class SemestreAcademicoPageComponent {
           }
 
           semestres.forEach( semestre => {
-            // console.log(semestre);
             if( semestre.condicion == 'APERTURADO') {
               this.semestreSignal.setSemestreAcademicoAperturado( semestre );
             }
@@ -81,7 +75,6 @@ export class SemestreAcademicoPageComponent {
   }
 
   openModalSemestre = () => {
-    console.log('abrir modal semestre list');
     const dialogRef = this.dialog.open( SemestreListComponent, {
       width: '800px',
       // height: '460px',
@@ -109,7 +102,7 @@ export class SemestreAcademicoPageComponent {
   }
 
   openModalCreaSemestre = () => {
-    console.log('abrir modal semestre add');
+
     const dialogRef = this.dialog.open( SemestreAddComponent, {
       width: '600px',
       height: '360px',
@@ -117,11 +110,9 @@ export class SemestreAcademicoPageComponent {
     } );
 
     dialogRef.afterClosed().subscribe( semestreCreado => {
-      console.log(semestreCreado);
 
       if( semestreCreado == 'cancelar' ) return
       
-        console.log(semestreCreado);
         this.obtenerSemestres();
       })
   }
@@ -137,7 +128,6 @@ export class SemestreAcademicoPageComponent {
     dialogRef.afterClosed().subscribe( semestreEditado => {
       if( semestreEditado == 'cancelar' ) return
       
-        console.log(semestreEditado);
         this.obtenerSemestres();
 
     })
@@ -163,7 +153,6 @@ export class SemestreAcademicoPageComponent {
 
     this.semestreAcademicoRepository.eliminarSemestre( semestreEliminar ).subscribe({
       next: ( data ) => {
-        console.log( data );
         this.alertService.showAlert('Semestre eliminado correctamente', 'success');
         this.obtenerSemestres();
       }, error: ( error ) => {
