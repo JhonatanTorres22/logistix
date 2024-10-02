@@ -15,10 +15,11 @@
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
 <div class="row w-12">
-
+<!-- {{ isModal() }} -->
     <div class="flex gap-2">
         @for (ciclo of cursosPlanPreRequisitoByCiclo(); track ciclo) {
             <!-- @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) { -->
+
                <div class="col-1 text-center">
                    <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
                    <div class="flex flex-column gap-2 example-list align-items-center"

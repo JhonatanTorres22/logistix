@@ -21,9 +21,13 @@
                 @if ( showBtnActivarEdicion ) {
                     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
                 } @else {
-                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button>
+                    
                     <ciclo-page></ciclo-page>
                     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
+                }
+
+                @if ( !showBtnActivarEdicion && cursosByCiclo().length == 0 ) {
+                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button>
                 }
             
             </div>
@@ -297,7 +301,7 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-        <ui-button color="primary" label="Importar" (onClick)="guardarCursosImport()"></ui-button>
+        <ui-button color="primary" label="Importar" (onClick)="guardarCursosImport()" [disabled]="file().files.length == 0"></ui-button>
     </mat-dialog-actions>
 </ng-template>
 <!-- <pre>
