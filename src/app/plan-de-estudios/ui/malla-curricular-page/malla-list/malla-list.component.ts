@@ -29,7 +29,7 @@ import { CursoImportTemplateComponent } from '../../curso-page/curso-import-temp
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { CursoMallaByCiclo, Malla, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
-
+import { select } from 'd3-selection';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -47,6 +47,8 @@ import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal
   styleUrl: './malla-list.component.scss'
 })
 export class MallaListComponent  implements OnInit {
+  conexionesPreRequisitos: { desde: number; hacia: number }[] = [];
+  mostrarFlecha: boolean = true;
 
   @Input() readonly: boolean = false;
   @Input() preRequisito: boolean = false;
@@ -370,6 +372,13 @@ export class MallaListComponent  implements OnInit {
       next: ( cursosPlan ) => {
         console.log( cursosPlan );
         
+        setTimeout(() => {
+          setTimeout(() => {
+            window.addEventListener('resize', this.dibujarConexionesPreRequisitos.bind(this));
+          }, 700);
+          this.inicioFlechaSVG();
+          this.conexionAutomaticaCurso()
+        }, 400);
         this.cursosMallaPreRequisito.set( cursosPlan );
         const cursoByCiclo = this.cursosMallaPreRequisito().reduce( ( a: CursoMallaByCiclo[], b: Malla ) => {
           console.log( b);
@@ -572,6 +581,7 @@ export class MallaListComponent  implements OnInit {
         console.log( response );
         this.alert.showAlert('Se elimino correctamente el prerequisito', 'success', 5);
         this.resetPreRequisito();
+        this.obtenerMallaPreRequisitos()
 
       }, error: ( error ) => {
         console.log( error );
@@ -594,6 +604,90 @@ export class MallaListComponent  implements OnInit {
   }
 
 
+  inicioFlechaSVG ()  {
+    const svg = select('#arrowContainer')
+      .attr('width', '100%')
+      .attr('height', '100%');
+
+      svg.append('defs').append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '-2 -5 12 10') // Ajusta el viewBox si cambias el d
+      .attr('refX', 8) // Cambia refX para centrar mejor la flecha
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .attr('markerWidth', 6) // Aumenta el ancho de la punta
+      .attr('markerHeight', 6) // Aumenta la altura de la punta
+      .attr('xoverflow', 'visible')
+      .append('svg:path')
+      .attr('d', 'M 0,-4 L 10 ,0 L 0,4') // Ajusta la forma de la flecha
+      .attr('fill', 'black')
+      .style('stroke', 'none');
+  }
+
+  conexionAutomaticaCurso () {
+    // Limpiar todas las conexiones previas
+    this.conexionesPreRequisitos = [];
+    // Recorre los ciclos y cursos para establecer las nuevas conexiones
+    this.cursosMallaPreRequisitoByCiclo().forEach(ciclo => {
+      ciclo.cursosMalla.forEach(curso => {
+        if (curso.preRequisitos.length > 0) {
+          curso.preRequisitos.forEach(preReq => {
+            this.conexionesPreRequisitos.push({ desde: preReq.idMalla, hacia: curso.idMalla });
+          });
+        }
+      });
+    });
+    // Dibujar todas las nuevas conexiones
+    this.dibujarConexionesPreRequisitos();
+  }
+
+  visibilidadFlechaPreRequisito () {
+    this.mostrarFlecha = !this.mostrarFlecha;
+    this.dibujarConexionesPreRequisitos(); // Redibujar las flechas
+  }
+
+  dibujarConexionesPreRequisitos  () {
+    if (!this.mostrarFlecha) {
+      const svg = select('#arrowContainer');
+      svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
+      return; // No hacer nada más
+    }
+
+    const svgElement = document.getElementById('arrowContainer');
+    if (!svgElement) {
+      console.error('SVG container not found!');
+      return; // Salir de la función si no se encuentra el SVG
+    }
+
+    const svg = select(svgElement);
+    svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
+
+    const svgRect = svgElement.getBoundingClientRect();
+
+    this.conexionesPreRequisitos.forEach(connection => {
+      const fromElement = document.getElementById(`card-${connection.desde}`);
+      const toElement = document.getElementById(`card-${connection.hacia}`);
+
+      if (fromElement && toElement) {
+        const fromRect = fromElement.getBoundingClientRect();
+        const toRect = toElement.getBoundingClientRect();
+
+        const startX = fromRect.right - svgRect.left;
+        const startY = fromRect.top + fromRect.height / 2 - svgRect.top;
+        const endX = toRect.left - svgRect.left;
+        const endY = toRect.top + toRect.height / 2 - svgRect.top;
+
+        svg.append('line')
+          .attr('x1', startX)
+          .attr('y1', startY)
+          .attr('x2', endX)
+          .attr('y2', endY)
+          .attr('stroke', 'black')
+          .attr('stroke-width', 2)
+          .attr('marker-end', 'url(#arrowhead)');
+      }
+    });
+  }
 
 
 }

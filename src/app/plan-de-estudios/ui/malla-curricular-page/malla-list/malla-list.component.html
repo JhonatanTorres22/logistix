@@ -10,6 +10,9 @@
 </div>
 }
 <div class="flex justify-content-end gap-2 -mr-3 px-0">
+    @if (preRequisito) {
+        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="visibilidadFlechaPreRequisito()"> {{ mostrarFlecha ? 'Ocultar Flechas' : 'Mostrar Flechas' }}</ui-button>
+    }
     @if ( readonly ) {
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
     } @else {
@@ -132,6 +135,7 @@
  
             } 
             
+            <svg id="arrowContainer" class="arrow-container"></svg>
         }
     </div>
 </div>
