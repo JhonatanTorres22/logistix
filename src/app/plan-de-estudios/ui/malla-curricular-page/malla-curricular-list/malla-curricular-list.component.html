@@ -15,15 +15,20 @@
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
 
+
 <div class="flex justify-content-end gap-2 -mr-3 px-0">
     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="visibilidadFlechaPreRequisito()"> {{ mostrarFlecha ? 'Ocultar Flechas' : 'Mostrar Flechas' }}</ui-button>
 </div>
 <div class="row w-12">
     <!-- {{ conexionesPreRequisitos | json }} -->
+
+<!-- {{ isModal() }} -->
+
     <div class="flex gap-2">
         @for (ciclo of cursosPlanPreRequisitoByCiclo(); track ciclo) {
             {{ cursosPlanPreRequisitoByCiclo | json}}
             <!-- @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) { -->
+
                <div class="col-1 text-center">
                    <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
                    <div class="flex flex-column gap-2 example-list align-items-center"

@@ -1,5 +1,6 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
 import { Curso, CursoByCiclo, CursoCrear, CursoDesfasado, CursoExcel } from "../models/curso.model";
+import { Malla } from "../models/malla.model";
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +44,8 @@ export class CursoSignal {
         // preRequisitos: []
     }
 
+    
+
     cursoDesfasadoDefault: CursoDesfasado = {
         id: 0,
         idPrograma: 0,
@@ -81,6 +84,7 @@ export class CursoSignal {
     cursoSelect = signal( this.cursoDafault );
 
     cursoSelectPreRequisito = signal( this.cursoDafault );
+    
 
     cursosList: WritableSignal<Curso[]> = signal( this.cursoListDefault );
 

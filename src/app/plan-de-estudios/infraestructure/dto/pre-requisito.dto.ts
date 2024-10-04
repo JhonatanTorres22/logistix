@@ -6,3 +6,13 @@ export interface PreRequisitoInsertDTO {
 
 
 export type PreRequisitoDeleteDTO = PreRequisitoInsertDTO;
+
+export interface CursoMallaPreRequisitoInsertDTO {
+    codigoMalla: number,
+    codigoMallaPreRequisito: number,
+    usuario: number
+}
+
+
+export type CursoMallaPreRequisitoDeleteDTO = CursoMallaPreRequisitoInsertDTO;
+

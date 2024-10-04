@@ -30,6 +30,8 @@ import { CicloPageComponent } from '../ciclo-page/ciclo-page.component';
 import { CursoImportTemplateComponent } from "../curso-page/curso-import-template/curso-import-template.component";
 import { CicloSingal } from '../../domain/signal/ciclo.signal';
 import { Ciclo } from '../../domain/models/ciclo.model';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { MallaListComponent } from '../malla-curricular-page/malla-list/malla-list.component';
 
 
 @Component({
@@ -43,7 +45,8 @@ import { Ciclo } from '../../domain/models/ciclo.model';
     CursoListComponent,
     CicloPageComponent,
     CursoDesfasadoListComponent,
-    CursoImportTemplateComponent
+    CursoImportTemplateComponent,
+    MallaListComponent,
 ],
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
@@ -79,6 +82,9 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosImportExcel = this.cursoSignal.cursosImportExcel;
   cicloList = this.cicloSignal.cicloList;
   currentInfoDirector = this.authSignal.currentInfoDirector;
+  cursosByCiclo = this.cursoSignal.cursosByCiclo;
+  file = this.mensajeriaSignal.file;
+
 
   
   loading: boolean = false;
@@ -143,6 +149,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     private authSignal: AuthSignal,
     private cursoPlanSignal: CursoPlanSignal,
     private cicloSignal: CicloSingal,
+    private mensajeriaSignal: MensajeriaSignal,
     
     private modal: UiModalService,
     private alert: AlertService,
@@ -378,30 +385,40 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   guardarCursosImport = () => {
     console.log( this.cursosImportExcel());
-    const cursos: CursoCrear[] = this.cursosImportExcel().map( curso => {
-      const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == curso.ciclo )?.id;
-      const programaId = this.currentInfoDirector()[0].idProgramaAcademico;
 
-      return {
-        idPrograma: programaId,
-        idCiclo: cicloId!,
-        codigoCurso: curso.codigo_curso,
-        nombreCurso: curso.nombre_curso,
-        tipoEstudio: curso.tipo_estudio,
-        tipoCurso: curso.tipo_curso,
-        competencia: curso.competencia,
-        horasTeoricas: curso.ht,
-        descripcion: curso.nombre_curso,
-        horasPracticas: curso.hp,
-        totalHoras: curso.th,
-        totalCreditos: curso.creditos,
-        usuarioId: parseInt( this.authSignal.currentRol().id )
-      }
+    this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea guardar los cursos importados')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
 
-    });
+        const cursos: CursoCrear[] = this.cursosImportExcel().map( curso => {
+          const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == curso.ciclo )?.id;
+          const programaId = this.currentInfoDirector()[0].idProgramaAcademico;
+    
+          return {
+            idPrograma: programaId,
+            idCiclo: cicloId!,
+            codigoCurso: curso.codigo_curso,
+            nombreCurso: curso.nombre_curso,
+            tipoEstudio: curso.tipo_estudio,
+            tipoCurso: curso.tipo_curso,
+            competencia: curso.competencia,
+            horasTeoricas: curso.ht,
+            descripcion: curso.nombre_curso,
+            horasPracticas: curso.hp,
+            totalHoras: curso.th,
+            totalCreditos: curso.creditos,
+            usuarioId: parseInt( this.authSignal.currentRol().id )
+          }
+    
+        });
+    
+        // console.log( cursos );
+        this.insertarCursosMasivos( cursos );
+      } )
 
-    // console.log( cursos );
-    this.insertarCursosMasivos( cursos );
+    
     
   }
 
@@ -410,6 +427,9 @@ export class PlanEstudioWizardComponent implements OnInit {
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos fueron guardados correctamente', 'success', 6);
+        this.modal.getRefModal().close('Obtener');
+        this.file.set( this.mensajeriaSignal.fileDefault );
+        this.renderizarCursos.set( 'Obtener' );
         // this.obtenerCursoPlanActual();
       }, error: ( error ) => {
         console.log( error );

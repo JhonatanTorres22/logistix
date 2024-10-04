@@ -33,7 +33,8 @@ import { select } from 'd3-selection'; // Para seleccionar elementos del DOM
     CicloPageComponent,
     CursoPageComponent,
     UiCardNotItemsComponent,
-    UiButtonComponent],
+    UiButtonComponent
+  ],
   templateUrl: './malla-curricular-list.component.html',
   styleUrl: './malla-curricular-list.component.scss'
 })

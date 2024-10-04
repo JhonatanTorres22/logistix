@@ -42,6 +42,7 @@ export class CursoPlanSignal {
 
     cursosPlan = signal( this.cursoPlanDefault );
     cursosPlanPreRequisito = signal( this.preRequisitoCursoPlanDefault )
+    
 
     
     cursoPlanEquivalenciaSelected = signal<CursoPlanEquivalencia>(this.cursoPlanEquivalenciaDefault);

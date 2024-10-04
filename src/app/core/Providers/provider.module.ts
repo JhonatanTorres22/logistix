@@ -36,6 +36,8 @@ import { EquivalenciaRepository } from "src/app/plan-de-estudios/domain/reposito
 import { EquivalenciaRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/equivalencia.repository.impl";
 import { PreRequisitoRepository } from "src/app/plan-de-estudios/domain/repositories/pre-requisito.repository";
 import { PreRequisitoRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/pre-requisito.repository.impl";
+import { MallaRepository } from "src/app/plan-de-estudios/domain/repositories/malla.repository";
+import { MallaRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/malla.repository.impl";
 
 
 
@@ -64,7 +66,8 @@ import { PreRequisitoRepositoryImpl } from "src/app/plan-de-estudios/infraestruc
             { provide: AsignacionRepository, useClass: AsignacionRepositoryImpl },
             { provide: CursoPlanRepository, useClass: CursoPlanRepositoryImpl },
             { provide: EquivalenciaRepository, useClass: EquivalenciaRepositoryImpl },
-            { provide: PreRequisitoRepository, useClass: PreRequisitoRepositoryImpl }
+            { provide: PreRequisitoRepository, useClass: PreRequisitoRepositoryImpl },
+            { provide: MallaRepository, useClass: MallaRepositoryImpl }
 
         ]
     ]
