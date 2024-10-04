@@ -23,7 +23,7 @@ import { CursoPlanSignal } from 'src/app/plan-de-estudios/domain/signal/curso-pl
 import { CursoPlanBase, CursoPlanByCiclo, CursoPlanListar, CursoPlanPreRequisito } from 'src/app/plan-de-estudios/domain/models/curso-plan.model';
 import { CursoPreRequisitoSelected, PreRequisitoDelete, PreRequisitoInsert } from 'src/app/plan-de-estudios/domain/models/pre-requisito.model';
 import { PreRequisitoRepository } from 'src/app/plan-de-estudios/domain/repositories/pre-requisito.repository';
-
+import { select } from 'd3-selection'; // Para seleccionar elementos del DOM
 @Component({
   selector: 'malla-curricular-list',
   standalone: true,
@@ -39,6 +39,10 @@ import { PreRequisitoRepository } from 'src/app/plan-de-estudios/domain/reposito
   styleUrl: './malla-curricular-list.component.scss'
 })
 export class MallaCurricularListComponent implements OnInit {
+
+  conexionesPreRequisitos: { desde: number; hacia: number }[] = [];
+  mostrarFlecha: boolean = true;
+
 
   cursoPreRequisito: PreRequisitoInsert;
   preRequisitosFromCursoSelect: number[] = [];
@@ -96,8 +100,6 @@ export class MallaCurricularListComponent implements OnInit {
     console.log('Init');
     // console.log( this.planEstudioSelect() );
     this.obtenerCursosPorPlanEstudioPrerequisito();
-    
-    
   }
 
 
@@ -145,11 +147,17 @@ export class MallaCurricularListComponent implements OnInit {
   obtenerCursosPorPlanEstudioPrerequisito() {
     this.cursoPlanRepository.obtenerCursoPlanPreRequisito( this.planEstudioSelect().id ).subscribe({
       next: ( cursosPlan ) => {
-
+        setTimeout(() => {
+          setTimeout(() => {
+            window.addEventListener('resize', this.dibujarConexionesPreRequisitos.bind(this));
+          }, 700);
+          this.inicioFlechaSVG();
+          this.conexionAutomaticaCurso()
+        }, 300);
         this.cursosPlanPreRequisito.set( cursosPlan );
         console.log( cursosPlan );
         const cursoByCiclo = this.cursosPlanPreRequisito().reduce( ( a: CursoPlanByCiclo[], b: CursoPlanBase ) => {
-          console.log( b);
+          // console.log( b);
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
@@ -361,6 +369,91 @@ export class MallaCurricularListComponent implements OnInit {
   }
 
 
+  inicioFlechaSVG(): void {
+    const svg = select('#arrowContainer')
+      .attr('width', '100%')
+      .attr('height', '100%');
 
+    svg.append('defs').append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '-0 -5 10 10')
+      .attr('refX', 10)
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('xoverflow', 'visible')
+      .append('svg:path')
+      .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+      .attr('fill', 'black')
+      .style('stroke', 'none');
+  }
+  conexionAutomaticaCurso(): void {
+    // Limpiar todas las conexiones previas
+    this.conexionesPreRequisitos = [];
 
+    // Recorre los ciclos y cursos para establecer las nuevas conexiones
+    this.cursosPlanPreRequisitoByCiclo().forEach(ciclo => {
+      ciclo.cursosPlan.forEach(curso => {
+        if (curso.preRequisitos.length > 0) {
+          curso.preRequisitos.forEach(preReq => {
+            this.conexionesPreRequisitos.push({ desde: preReq.idCursoPlan, hacia: curso.idCursoPlan });
+          });
+        }
+      });
+    });
+
+    // Dibujar todas las nuevas conexiones
+    this.dibujarConexionesPreRequisitos();
+  }
+
+  visibilidadFlechaPreRequisito(): void {
+    this.mostrarFlecha = !this.mostrarFlecha;
+    this.dibujarConexionesPreRequisitos(); // Redibujar las flechas
+  }
+  dibujarConexionesPreRequisitos(): void {
+
+    if (!this.mostrarFlecha) {
+      const svg = select('#arrowContainer');
+      svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
+      return; // No hacer nada más
+    }
+
+    const svgElement = document.getElementById('arrowContainer');
+
+    if (!svgElement) {
+      console.error('SVG container not found!');
+      return; // Salir de la función si no se encuentra el SVG
+    }
+
+    const svg = select(svgElement);
+    svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
+
+    const svgRect = svgElement.getBoundingClientRect();
+
+    this.conexionesPreRequisitos.forEach(connection => {
+      const fromElement = document.getElementById(`card-${connection.desde}`);
+      const toElement = document.getElementById(`card-${connection.hacia}`);
+
+      if (fromElement && toElement) {
+        const fromRect = fromElement.getBoundingClientRect();
+        const toRect = toElement.getBoundingClientRect();
+
+        const startX = fromRect.right - svgRect.left;
+        const startY = fromRect.top + fromRect.height / 2 - svgRect.top;
+        const endX = toRect.left - svgRect.left;
+        const endY = toRect.top + toRect.height / 2 - svgRect.top;
+
+        svg.append('line')
+          .attr('x1', startX)
+          .attr('y1', startY)
+          .attr('x2', endX)
+          .attr('y2', endY)
+          .attr('stroke', 'black')
+          .attr('stroke-width', 2)
+          .attr('marker-end', 'url(#arrowhead)');
+      }
+    });
+  }
 }
+
