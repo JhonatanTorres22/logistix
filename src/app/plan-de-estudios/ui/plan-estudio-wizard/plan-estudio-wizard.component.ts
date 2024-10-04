@@ -20,7 +20,7 @@ import { CursoPlanBase, CursoPlanEliminar, CursoPlanEquivalencia, EquivalenciaVa
 import * as d3 from "d3";
 
 import { EquivalenciaRepository } from '../../domain/repositories/equivalencia.repository';
-import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
+import { CursoMallaEquivalenciaPrimarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { CursoDesfasadoListComponent } from "../curso-desfasado-list/curso-desfasado-list.component";
 import { CursoRepository } from '../../domain/repositories/curso.repository';
@@ -32,6 +32,10 @@ import { CicloSingal } from '../../domain/signal/ciclo.signal';
 import { Ciclo } from '../../domain/models/ciclo.model';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { MallaListComponent } from '../malla-curricular-page/malla-list/malla-list.component';
+import { MallaRepository } from '../../domain/repositories/malla.repository';
+import { MallaSignal } from '../../domain/signal/malla.signal';
+import { Malla } from '../../domain/models/malla.model';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -125,7 +129,11 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosPlanEquivalenciaActual: CursoPlanEquivalencia[] = [];
   cursosPlanEquivalenciaUltimo: CursoPlanEquivalencia[] = [];
 
+  cursosMallaEquivalenciaActual: Malla[] = [];
+  cursosMallaEquivalenciaUltimo: Malla[] = [];
+
   cursosPrimarios: EquivalenciaPrimarioInsert[] = [];
+  cursosPrimariosMalla: CursoMallaEquivalenciaPrimarioInsert[] = [];
   estado = new Replacement();
 
   isEditable = true;
@@ -143,6 +151,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     private CursoPlanRepository: CursoPlanRepository,
     private EquivalenciaRepository: EquivalenciaRepository,
     private cursoRepository: CursoRepository,
+    private mallaRepository: MallaRepository,
 
     private signal: PlanEstudioSignal,
     private cursoSignal: CursoSignal,
@@ -150,9 +159,11 @@ export class PlanEstudioWizardComponent implements OnInit {
     private cursoPlanSignal: CursoPlanSignal,
     private cicloSignal: CicloSingal,
     private mensajeriaSignal: MensajeriaSignal,
+    private mallaSignal: MallaSignal,
     
     private modal: UiModalService,
     private alert: AlertService,
+    private router: Router,
   ) {
     this.formDisenar = this._formBuilder.group({
       firstCtrl: ['1', Validators.required],
@@ -165,15 +176,16 @@ export class PlanEstudioWizardComponent implements OnInit {
     });
     effect( () => {
       console.log( 'Effect: ', this.planEstudioUltimoConResolucion() );
-      this.obtenerCursoPlanEquivalenciaUltimo();
+      // this.obtenerCursoPlanEquivalenciaUltimo();
+      this.obtenerMallaEquivalenciaUltimo();
     })
   }
   ngOnInit(): void {
 
-    this.obtenerCursoPlanEquivalenciaActual();
-
-    this.obtenerCursoPlanActual();
-
+    // this.obtenerCursoPlanEquivalenciaActual();
+    // this.obtenerCursoPlanActual();
+    this.obtenerMallaEquivalenciaUltimo();
+    this.obtenerMallaEquivalenciaActual();
   }
 
 
@@ -246,6 +258,32 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.cursosPlanEquivalenciaUltimo = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
         console.log( 'Plan Ultimo: ', cursosPlanEquivalencia );
 
+      }, error: ( error ) => {
+        console.log( error );
+        
+      }
+    })
+  }
+
+  obtenerMallaEquivalenciaUltimo = () => {
+    this.mallaRepository.getMallaEquivalencias( this.planEstudioUltimoConResolucion().id ).subscribe({
+      next: ( cursosPlanEquivalencia ) => {
+        this.cursosMallaEquivalenciaUltimo = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
+        console.log( 'Plan Ultimo: ', cursosPlanEquivalencia );
+
+      }, error: ( error ) => {
+        console.log( error );
+        
+      }
+    })
+  }
+
+  obtenerMallaEquivalenciaActual = () => {
+    this.mallaRepository.getMallaEquivalencias( this.planEstudioSelect().id ).subscribe({
+      next: ( cursosPlanEquivalencia ) => {
+        this.cursosMallaEquivalenciaActual = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
+        console.log( 'Plan Actual: ', cursosPlanEquivalencia );
+        this.showBtnActivarEdicion = this.cursosMallaEquivalenciaActual.length == 0 ? false : true;
       }, error: ( error ) => {
         console.log( error );
         
@@ -453,11 +491,22 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   guardarCursosPrimarios = () => {
     
-    this.EquivalenciaRepository.insertarEquivalenciaPrimario( this.cursosPrimarios ).subscribe({
+    // this.EquivalenciaRepository.insertarEquivalenciaPrimario( this.cursosPrimarios ).subscribe({
+    //   next: ( data ) => {
+    //     console.log( data );
+    //     this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
+    //     this.obtenerCursoPlanEquivalenciaActual();
+    //   }, error: ( error ) => {
+    //     console.log( error );
+    //     this.alert.showAlert('Ocurrió un error al guardar los cursos primarios', 'error', 6);
+    //   }
+    // });
+
+    this.EquivalenciaRepository.insertarEquivalenciaPrimarioMalla( this.cursosPrimariosMalla ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
-        this.obtenerCursoPlanEquivalenciaActual();
+        this.obtenerMallaEquivalenciaActual();
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al guardar los cursos primarios', 'error', 6);
@@ -474,6 +523,19 @@ export class PlanEstudioWizardComponent implements OnInit {
     }
     this.cursosPrimarios.push({
       cursoPlanId: curso.idCursoPlan,
+      userId: parseInt( this.authSignal.currentRol().id )
+    });
+  }
+
+  updateMalla = ( value: any, curso: Malla ) => {
+    console.log( 'Check: ', value.target.checked, 'Curso: ', curso );
+    if( !value.target.checked ) {
+      this.cursosPrimariosMalla = this.cursosPrimariosMalla.filter( c => c.idMalla != curso.idMalla );
+      return
+    }
+    this.cursosPrimariosMalla.push({
+      idMalla: curso.idMalla,
+      porcentajeModificacion: 0,
       userId: parseInt( this.authSignal.currentRol().id )
     });
   }
@@ -614,6 +676,32 @@ export class PlanEstudioWizardComponent implements OnInit {
     });
   }
 
+  finalizarProceso = () => {
+    this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea finalizar el proceso de diseño del plan de estudios')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.finalizarProcesoDiseño();
+      })
+  }
+
+  finalizarProcesoDiseño = () => {
+    this.alert.sweetAlert('info', 'Proceso Finalizado', 'El proceso de diseño del plan de estudios ha finalizado')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.router.navigate(['/mensajeria']);
+        // this.estado.approve(false);
+        // this.formDisenar.patchValue({firstCtrl: this.estado.getEstado});
+        // this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
+      })
+  }
+
+
   // ngAfterViewInit = () => {
   //   setTimeout(() => {
   //     console.log('AFTER');
@@ -655,19 +743,30 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   addLine = () => {
     
-    // document.getElementById(`arrowhead`)?.remove();
-    this.cursosPlanEquivalenciaActual.forEach( (curso, index, { length }) => {
-      const cursoExiste = this.cursosPlanEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
-      if( cursoExiste ) {
-        document.getElementById(`arrow-${curso.idCursoPlan}-${cursoExiste.idCursoPlan}`)?.remove();
-        this.dibujarFlechasEntreCursos( curso.idCursoPlan, cursoExiste.idCursoPlan );
-      }
-      if( index == length - 1 ) {
-        this.loading = false;
-      }
+    // this.cursosPlanEquivalenciaActual.forEach( (curso, index, { length }) => {
+    //   const cursoExiste = this.cursosPlanEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
+    //   if( cursoExiste ) {
+    //     document.getElementById(`arrow-${curso.idCursoPlan}-${cursoExiste.idCursoPlan}`)?.remove();
+    //     this.dibujarFlechasEntreCursos( curso.idCursoPlan, cursoExiste.idCursoPlan );
+    //   }
+    //   if( index == length - 1 ) {
+    //     this.loading = false;
+    //   }
+    // })
+
+
+    this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
+        const cursoExiste = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
+        if( cursoExiste ) {
+          document.getElementById(`arrow-${curso.idMalla}-${cursoExiste.idMalla}`)?.remove();
+          this.dibujarFlechasEntreCursos( curso.idMalla, cursoExiste.idMalla );
+        }
+        if( index == length - 1 ) {
+          this.loading = false;
+          console.log('terminó');
+        }
     })
-    // this.dibujarFlechasEntreCursos( 31 );
-    // this.connections.push({ leftCardId: 1291, rightCardId: 31 });
+
   }
 
   cursosSeleccionadosParaDibujar = () => {

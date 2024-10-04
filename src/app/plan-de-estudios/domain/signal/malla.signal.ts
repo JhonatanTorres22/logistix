@@ -11,7 +11,7 @@ export class MallaSignal {
     cursoMallaPreRequisitoByCicloDefault: CursoMallaByCiclo[] = [];
 
     cursoMallaDefault: Malla = {
-            
+        orden: 0,
         idMalla: 0,
         codigoCurso: '',
         nombreCurso: '',
@@ -38,4 +38,6 @@ export class MallaSignal {
     cursosMallaPreRequisito = signal<Malla[]>(this.mallaDefault);
     cursosMallaByCiclo = signal<CursoMallaByCiclo[]>(this.cursoMallaByCicloDefault);
     cursosMallaPreRequisitoByCiclo = signal<CursoMallaByCiclo[]>(this.cursoMallaPreRequisitoByCicloDefault);
+
+    loading = signal<boolean>(false);
 }

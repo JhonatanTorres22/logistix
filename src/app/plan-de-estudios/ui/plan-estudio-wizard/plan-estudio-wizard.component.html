@@ -104,7 +104,7 @@
              }
             <!-- <button (click)="addLine()">Add Connection</button> -->
              <div class="flex justify-content-end gap-2">
-                <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimarios.length == 0">Guardar Equivalencia Primaria</ui-button>
+                <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
                 <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidar().equivalenciaTerminada">Guardar Equivalencia Secundaria</ui-button>
              </div>
             <div class="col-6">
@@ -137,7 +137,8 @@
                     </div>
     
                     
-                    @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) {
+                    @for (curso of cursosMallaEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) {
+                    <!-- @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) { -->
                         @if ( !isFirst ) {
                             <mat-divider></mat-divider>
                         }
@@ -217,12 +218,14 @@
                     </div>
 
     
-    
-                    @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) {
+                    <!-- <pre>{{ cursosPrimariosMalla | json}}</pre> -->
+                    @for (curso of cursosMallaEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) {
+                    <!-- @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) { -->
                         @if ( !isFirst ) {
                             <mat-divider></mat-divider>
                         }
-                        <div
+                        <label [for]="'check-'+curso.idMalla">
+                        <div 
                             class="row text-center align-items-center"
                             [ngClass]="
                             {
@@ -236,47 +239,48 @@
                             [curso]="curso"
                             [cursos]="cursosPlanEquivalenciaUltimo"
                         >
-                            <div class="col-1 border-3xl border-round f-10">
-                                <div class="flex gap-2 align-items-center">
-                                    @switch ( curso.estado ) {
-                                        @case ( 'RENOVADO' ) {
-                                            <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
+                                <div class="col-1 border-3xl border-round f-10">
+                                    <div class="flex gap-2 align-items-center">
+                                        @switch ( curso.estado ) {
+                                            @case ( 'RENOVADO' ) {
+                                                <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
+                                            }
+                                            @case ( 'DESFASADO' ) {
+                                                <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 -ml-2"></i>
+                                            }
+                                            @case ( 'ACTIVO' ) {
+                                                <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
+                                            }
                                         }
-                                        @case ( 'DESFASADO' ) {
-                                            <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 -ml-2"></i>
+                                        {{ curso.cicloRomano }}
+                                    </div>
+                                </div>
+                                <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
+                                <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
+                                <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+                                <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
+                                <div class="col-2 border-3xl border-round f-10">
+                                    <div class="flex gap-3 justify-content-rigth">
+                                        <div>{{ curso.horasTeoricas }}</div>
+                                        <div>{{ curso.horasPracticas }}</div>
+                                        <div>{{ curso.totalHoras }}</div>
+                                        <div>{{ curso.totalCreditos }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-1 border-3xl border-round f-10">
+                                    <div class="flex gap-2">
+                                        
+                                        @if ( curso.equivalencias.length == 0 ) {
+                                            <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
+                                            <input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">
+                                        } @else {
+                                            <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
+                                            <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
                                         }
-                                        @case ( 'ACTIVO' ) {
-                                            <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
-                                        }
-                                    }
-                                    {{ curso.cicloRomano }}
+                                    </div>    
                                 </div>
                             </div>
-                            <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
-                            <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
-                            <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
-                            <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
-                            <div class="col-2 border-3xl border-round f-10">
-                                <div class="flex gap-3 justify-content-rigth">
-                                    <div>{{ curso.horasTeoricas }}</div>
-                                    <div>{{ curso.horasPracticas }}</div>
-                                    <div>{{ curso.totalHoras }}</div>
-                                    <div>{{ curso.totalCreditos }}</div>
-                                </div>
-                            </div>
-                            <div class="col-1 border-3xl border-round f-10">
-                                <div class="flex gap-2">
-                                    
-                                    @if ( curso.equivalencias.length == 0 ) {
-                                        <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
-                                        <input type="checkbox" [id]="'check-'+curso.idCursoPlan" (change)="update($event, curso)">
-                                    } @else {
-                                        <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
-                                        <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
-                                    }
-                                </div>    
-                            </div>
-                        </div>
+                        </label>
                     }
                 </app-card>
               </div>
@@ -284,6 +288,47 @@
           </div>
       </ng-template>
 
+    </mat-step>
+
+    <mat-step [stepControl]="formAsignar" [editable]="isEditable">
+      <form [formGroup]="formAsignar" hidden>
+        <ng-template matStepLabel>Finalizar Proceso</ng-template>
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="asignacion" placeholder="Ex. 1 Main St, New York, NY"
+                 required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+      <ng-template matStepContent>
+          @if ( formAsignar.value.asignacion == '') {
+              <app-card [showHeader]="false" cardClass="bg-red-50">
+                <div class="flex justify-content-between">
+                    <p class="f-20">Finalizar el Proceso de Creación de Plan de Estudios</p>
+                    <i class="ti ti-file-alert f-44 text-orange-700" matTooltip="Asignación de cursos pendientes"></i>
+                </div>
+                <p class="f-14">Al finalizar el proceso, todos los componentes del Plan de Estudios quedarán en modo de solo lectura y ud. no podrá realizar ningún cambios a futuro ¿Estás seguro que deseas dar por Finalizado el proceso de creación del Plan de Estudios?</p>
+                <div class="flex justify-content-end">
+                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="finalizarProceso()">Finalizar y Responder Mensaje</ui-button>
+                </div>
+              </app-card>
+          } @else {
+                <app-card [showHeader]="false" cardClass="bg-green-50">
+                    <div class="flex justify-content-between">
+                        <p class="f-20">Plan de Estudios Asignado!</p>
+                        <i class="ti ti-file-check f-44 text-green-900" matTooltip="Cursos asignados"></i>
+                    </div>
+                    <p class="f-14">El plan de estudios ya fué asignado, puede continuar con el registro de las equivalencias</p>
+    
+                    <div class="flex justify-content-end">
+                        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="next()">Continuar</ui-button>
+                    </div>
+                </app-card>
+          }
+      </ng-template>
     </mat-step>
 
 </mat-stepper>

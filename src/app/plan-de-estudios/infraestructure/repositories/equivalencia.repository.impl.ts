@@ -3,7 +3,7 @@ import { EquivalenciaRepository } from "../../domain/repositories/equivalencia.r
 import { Observable } from "rxjs";
 
 import { EquivalenciaService } from "../services/equivalencia.service";
-import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
 
 
 @Injectable({
@@ -11,7 +11,6 @@ import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioI
 })
 
 export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
-
 
     private readonly service = inject( EquivalenciaService )
 
@@ -26,4 +25,15 @@ export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
     eliminarEquivalencia(equivalencia: EquivalenciaDelete): Observable<void> {
         return this.service.eliminarEquivalencia(equivalencia);
     }
+
+    insertarEquivalenciaPrimarioMalla(equivalencia: CursoMallaEquivalenciaPrimarioInsert[]): Observable<void> {
+        return this.service.insertarPrimariosMalla(equivalencia);
+    }
+    insertarEquivalenciaSecundarioMalla(equivalencia: CursoMallaEquivalenciaSecundarioInsert[]): Observable<void> {
+        return this.service.insertarSecundariosMalla(equivalencia);
+    }
+    eliminarEquivalenciaMalla(equivalencia: CursoMallaEquivalenciaDelete): Observable<void> {
+        return this.service.eliminarEquivalenciaMalla(equivalencia);
+    }
+
 }

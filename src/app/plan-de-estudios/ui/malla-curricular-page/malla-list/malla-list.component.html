@@ -10,10 +10,14 @@
 </div>
 }
 <div class="flex justify-content-end gap-2 -mr-3 px-0">
+
     @if (preRequisito) {
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="visibilidadFlechaPreRequisito()"> {{ mostrarFlecha ? 'Ocultar Flechas' : 'Mostrar Flechas' }}</ui-button>
     }
-    @if ( readonly ) {
+    <!-- @if ( readonly ) { -->
+
+    @if ( showBtnActivarEdicion ) {
+
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
     } @else {
         
@@ -22,7 +26,7 @@
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
     }
 
-    @if ( !readonly && cursosMallaByCiclo().length == 0 ) {
+    @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button>
     }
     <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button> -->
@@ -33,7 +37,7 @@
 @if ( cursosMallaByCiclo().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
-<div class="row w-12">
+<div class="row w-12 -mx-5">
 
     <div class="flex gap-2">
 
@@ -197,7 +201,9 @@
 
 <ng-template #templateCursoImport let-data>
     <mat-dialog-content>
+
         <curso-import-template></curso-import-template>
+
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
