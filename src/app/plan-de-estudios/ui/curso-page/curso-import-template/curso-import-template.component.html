@@ -1,5 +1,8 @@
 @if (  file().files.length == 0 ) {
     <ui-uploader-files></ui-uploader-files>
+    <div class="flex justify-content-center mt-2">
+      <ui-button color="blue" (onClick)="descargarPlantilla()">Descargar Plantilla</ui-button>
+    </div>
 } @else {
     
     <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">

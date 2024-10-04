@@ -92,6 +92,11 @@ export class CursoImportTemplateComponent {
     })();
   }
 
+  descargarPlantilla = () => {
+    window.open('./assets/plan-de-estudios/plantilla_plan_estudios.xlsx');
+    // window.location.href = 'proyecto-academico.autonomadeica.edu.pe/plantilla_plan_estudios.xlsx';
+  }
+
   validar = () => {
     
   }

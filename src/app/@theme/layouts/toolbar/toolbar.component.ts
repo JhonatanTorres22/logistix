@@ -74,6 +74,8 @@ export class NavBarComponent implements OnInit {
       });
       
     })
+
+    this.obtenerCiclos();
   }
 
   obtenerFacultades = () => {
@@ -168,7 +170,10 @@ export class NavBarComponent implements OnInit {
     this.cicloRepository.obtener().subscribe({
       next: ( ciclos ) => {
         console.log( ciclos );
-
+        this.cicloList.set( ciclos );
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al obtener los ciclos', 'error', 6);
       }
     })
   }

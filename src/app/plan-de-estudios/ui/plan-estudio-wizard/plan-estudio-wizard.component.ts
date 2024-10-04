@@ -31,6 +31,7 @@ import { CursoImportTemplateComponent } from "../curso-page/curso-import-templat
 import { CicloSingal } from '../../domain/signal/ciclo.signal';
 import { Ciclo } from '../../domain/models/ciclo.model';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { MallaListComponent } from '../malla-curricular-page/malla-list/malla-list.component';
 
 
 @Component({
@@ -44,7 +45,8 @@ import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.s
     CursoListComponent,
     CicloPageComponent,
     CursoDesfasadoListComponent,
-    CursoImportTemplateComponent
+    CursoImportTemplateComponent,
+    MallaListComponent,
 ],
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
