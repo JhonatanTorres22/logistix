@@ -5,15 +5,18 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { MallaCurricularListComponent } from '../malla-curricular-list/malla-curricular-list.component';
+import { MallaListComponent } from "../malla-list/malla-list.component";
 
 @Component({
   selector: 'malla-curricular-side',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     SharedModule,
     MallaCurricularListComponent,
-    UiButtonComponent],
+    UiButtonComponent,
+    MallaListComponent
+],
   templateUrl: './malla-curricular-side.component.html',
   styleUrl: './malla-curricular-side.component.scss'
 })

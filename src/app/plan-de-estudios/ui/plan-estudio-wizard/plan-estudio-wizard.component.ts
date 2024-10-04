@@ -35,6 +35,7 @@ import { MallaListComponent } from '../malla-curricular-page/malla-list/malla-li
 import { MallaRepository } from '../../domain/repositories/malla.repository';
 import { MallaSignal } from '../../domain/signal/malla.signal';
 import { Malla } from '../../domain/models/malla.model';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -162,6 +163,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     
     private modal: UiModalService,
     private alert: AlertService,
+    private router: Router,
   ) {
     this.formDisenar = this._formBuilder.group({
       firstCtrl: ['1', Validators.required],
@@ -489,11 +491,22 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   guardarCursosPrimarios = () => {
     
-    this.EquivalenciaRepository.insertarEquivalenciaPrimario( this.cursosPrimarios ).subscribe({
+    // this.EquivalenciaRepository.insertarEquivalenciaPrimario( this.cursosPrimarios ).subscribe({
+    //   next: ( data ) => {
+    //     console.log( data );
+    //     this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
+    //     this.obtenerCursoPlanEquivalenciaActual();
+    //   }, error: ( error ) => {
+    //     console.log( error );
+    //     this.alert.showAlert('Ocurrió un error al guardar los cursos primarios', 'error', 6);
+    //   }
+    // });
+
+    this.EquivalenciaRepository.insertarEquivalenciaPrimarioMalla( this.cursosPrimariosMalla ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
-        this.obtenerCursoPlanEquivalenciaActual();
+        this.obtenerMallaEquivalenciaActual();
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al guardar los cursos primarios', 'error', 6);
@@ -662,6 +675,32 @@ export class PlanEstudioWizardComponent implements OnInit {
       }
     });
   }
+
+  finalizarProceso = () => {
+    this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea finalizar el proceso de diseño del plan de estudios')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.finalizarProcesoDiseño();
+      })
+  }
+
+  finalizarProcesoDiseño = () => {
+    this.alert.sweetAlert('info', 'Proceso Finalizado', 'El proceso de diseño del plan de estudios ha finalizado')
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.router.navigate(['/mensajeria']);
+        // this.estado.approve(false);
+        // this.formDisenar.patchValue({firstCtrl: this.estado.getEstado});
+        // this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
+      })
+  }
+
 
   // ngAfterViewInit = () => {
   //   setTimeout(() => {
