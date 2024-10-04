@@ -16,3 +16,24 @@ export interface EquivalenciaDeleteDTO {
     codigoCursoPlanEquivalencia: number,
     usuario: number,
 }
+
+
+
+export interface CursoMallaEquivalenciaPrimarioInsertDTO {
+    codigoMalla: number,
+    porcentajeModificacion: number,
+    usuario: number,
+}
+
+export interface CursoMallaEquivalenciaSecundarioInsertDTO {
+    codigoMalla: number,
+    codigoMallaEquivalencia: number,
+    porcentajeModificacion: number,
+    usuario: number,
+}
+
+export interface CursoMallaEquivalenciaDeleteDTO {
+    codigoMalla: number,
+    codigoMallaEquivalencia: number,
+    usuario: number,
+}

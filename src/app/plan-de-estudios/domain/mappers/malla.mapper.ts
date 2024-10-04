@@ -1,9 +1,10 @@
-import { MallaDeleteDTO, MallaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
+import { MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
 import { Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 
 export class MallaMapper {
     static fromApiToDomainList( param: MallaDTO ): Malla {
         return {
+            orden: 0,
             idMalla: param.codigoCursoPlan,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombre,
@@ -27,6 +28,7 @@ export class MallaMapper {
 
     static fromApiToDomainPreRequisito( param: MallaPreRequisitoDTO ): Malla {
         return {
+            orden: 0,
             idMalla: param.codigoMalla,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
@@ -66,6 +68,37 @@ export class MallaMapper {
         return {
             codigoMalla: param.idMalla,
             usuario: param.userId
+        }
+    }
+
+
+    static fromApiToDomainEquivalencia( param: MallaEquivalenciaDTO ): Malla {
+        return {
+            orden: param.orden,
+            idMalla: param.codigoMalla,
+            codigoCurso: param.codigoInterno,
+            nombreCurso: param.nombreCurso,
+            tipoCurso: param.tipoDeCurso,
+            tipoEstudio: param.tipoDeEstudio,
+            horasTeoricas: param.ht,
+            horasPracticas: param.hp,
+            totalHoras: param.tHoras,
+            totalCreditos: param.tCreditos,
+            estado: param.estado,
+            cicloRomano: param.definicion,
+            cicloNumero: parseInt(param.denominacionResumida),
+            cicloLetra: param.denominacionExtendida,
+            competencia: '',
+            descripcion: '',
+            equivalencias: param.equivalencia.map( equiv => {
+                return {
+                    idMalla: equiv.codigoMallaEquivalencia,
+                    nombreCurso: equiv.nombreMallaEquivalencia,
+                    porcentajeModificacion: equiv.porcentajeModificacion
+                }
+            }),
+            color: '',
+            preRequisitos: []
         }
     }
 }

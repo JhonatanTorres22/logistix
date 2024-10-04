@@ -20,6 +20,10 @@ export class MallaRepositoryImpl implements MallaRepository {
         return this.service.getMallaPreRequisitos(idPlan);
     }
 
+    getMallaEquivalencias(idPlan: number): Observable<Malla[]> {
+        return this.service.getMallaEquivalencias(idPlan);
+    }
+
     insertMalla(malla: MallaInsert[]): Observable<void> {
         return this.service.insertMalla(malla);
     }

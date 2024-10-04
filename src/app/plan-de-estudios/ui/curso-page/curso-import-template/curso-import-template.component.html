@@ -1,120 +1,132 @@
-@if (  file().files.length == 0 ) {
-    <ui-uploader-files></ui-uploader-files>
-    <div class="flex justify-content-center mt-2">
-      <ui-button color="blue" (onClick)="descargarPlantilla()">Descargar Plantilla</ui-button>
-    </div>
-} @else {
-    
-    <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
-        <ng-template #headerTitleTemplate>
-            <div>Lista de Curso</div>
-            <ui-button color="primary" icon="ti ti-file-search" matTooltip="Validar cursos" (onClick)="validar()"></ui-button>
-        </ng-template>
-        <div class="p-b-5">
-            <div class="table-containe table-reponsive">
-                <div class="table-search p-0">
-                  <mat-form-field appearance="outline" class="w-100">
-                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar curso...." #input />
-                  </mat-form-field>
-                </div>
-                <div class="table-responsive">
-                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    
-                    <!-- Name Column -->
-                    <ng-container matColumnDef="ciclo">
-                      <th mat-header-cell *matHeaderCellDef> Ciclo </th>
-                      <td mat-cell *matCellDef="let curso">{{ curso.ciclo }}</td>
-                    </ng-container>
-    
-    
-                    <ng-container matColumnDef="orden">
-                      <th mat-header-cell *matHeaderCellDef> Orden </th>
-                      <td mat-cell *matCellDef="let curso" class="text-nowrap"> {{ curso.orden }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="codigo_curso">
-                      <th mat-header-cell *matHeaderCellDef> Cod. Curso </th>
-                      <td mat-cell *matCellDef="let curso"> {{ curso.codigo_curso }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="nombre_curso">
-                        <th mat-header-cell *matHeaderCellDef> Nombre del Curso </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.nombre_curso }} </td>
-                    </ng-container>
-                    
-                    <ng-container matColumnDef="ht">
-                        <th mat-header-cell *matHeaderCellDef> HT </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.ht }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="hp">
-                        <th mat-header-cell *matHeaderCellDef> HP </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.hp }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="th">
-                        <th mat-header-cell *matHeaderCellDef> TH </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.ht }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="creditos">
-                        <th mat-header-cell *matHeaderCellDef> Créditos </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.creditos }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="tipo_curso">
-                        <th mat-header-cell *matHeaderCellDef> Tipo de Curso </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.tipo_curso }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="tipo_estudio">
-                        <th mat-header-cell *matHeaderCellDef> Tipo de Estudio </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.tipo_estudio }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="competencia">
-                        <th mat-header-cell *matHeaderCellDef> Competencia </th>
-                        <td mat-cell *matCellDef="let curso"> {{ curso.competencia }} </td>
-                    </ng-container>
-    
-                    <ng-container matColumnDef="action">
-                      <th mat-header-cell *matHeaderCellDef class="text-center">  </th>
-                      <td mat-cell *matCellDef="let usuario">
-                        <div class="text-center text-nowrap">
-                          <ul class="list-inline p-l-0">
-                            <li class="list-inline-item m-r-10" matTooltip="Asignar Rol">
-                              <a href="javascript:" class="avatar avatar-xs text-muted">
-                                <i class="ti ti-eye f-18"></i>
-                              </a>
-                            </li>
-                             
-                              <li class="list-inline-item m-r-10" matTooltip="Editar" >
+
+  
+  @if( !loading() ) {
+
+    @if (  file().files.length == 0 ) {
+      <ui-uploader-files></ui-uploader-files>
+      <div class="flex justify-content-center mt-2">
+        <ui-button color="blue" (onClick)="descargarPlantilla()">Descargar Plantilla</ui-button>
+      </div>
+    } @else {
+
+      <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+          <ng-template #headerTitleTemplate>
+              <div>Lista de Curso</div>
+              <ui-button color="primary" icon="ti ti-file-search" matTooltip="Validar cursos" (onClick)="validar()"></ui-button>
+          </ng-template>
+          <div class="p-b-5">
+              <div class="table-containe table-reponsive">
+                  <div class="table-search p-0">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar curso...." #input />
+                    </mat-form-field>
+                  </div>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="ciclo">
+                        <th mat-header-cell *matHeaderCellDef> Ciclo </th>
+                        <td mat-cell *matCellDef="let curso">{{ curso.ciclo }}</td>
+                      </ng-container>
+      
+      
+                      <ng-container matColumnDef="orden">
+                        <th mat-header-cell *matHeaderCellDef> Orden </th>
+                        <td mat-cell *matCellDef="let curso" class="text-nowrap"> {{ curso.orden }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="codigo_curso">
+                        <th mat-header-cell *matHeaderCellDef> Cod. Curso </th>
+                        <td mat-cell *matCellDef="let curso"> {{ curso.codigo_curso }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="nombre_curso">
+                          <th mat-header-cell *matHeaderCellDef> Nombre del Curso </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.nombre_curso }} </td>
+                      </ng-container>
+                      
+                      <ng-container matColumnDef="ht">
+                          <th mat-header-cell *matHeaderCellDef> HT </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.ht }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="hp">
+                          <th mat-header-cell *matHeaderCellDef> HP </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.hp }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="th">
+                          <th mat-header-cell *matHeaderCellDef> TH </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.ht }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="creditos">
+                          <th mat-header-cell *matHeaderCellDef> Créditos </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.creditos }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="tipo_curso">
+                          <th mat-header-cell *matHeaderCellDef> Tipo de Curso </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.tipo_curso }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="tipo_estudio">
+                          <th mat-header-cell *matHeaderCellDef> Tipo de Estudio </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.tipo_estudio }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="competencia">
+                          <th mat-header-cell *matHeaderCellDef> Competencia </th>
+                          <td mat-cell *matCellDef="let curso"> {{ curso.competencia }} </td>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef class="text-center">  </th>
+                        <td mat-cell *matCellDef="let usuario">
+                          <div class="text-center text-nowrap">
+                            <ul class="list-inline p-l-0">
+                              <li class="list-inline-item m-r-10" matTooltip="Asignar Rol">
                                 <a href="javascript:" class="avatar avatar-xs text-muted">
-                                  <i class="ti ti-edit-circle f-18"></i>
+                                  <i class="ti ti-eye f-18"></i>
                                 </a>
                               </li>
-                            
-    
-                          </ul>
-                        </div>
-                      </td>
-                    </ng-container>
-    
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    
-                    <!-- Row shown when there is no matching data. -->
-                    <tr class="mat-row" *matNoDataRow>
-                      <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
-                    </tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                              
+                                <li class="list-inline-item m-r-10" matTooltip="Editar" >
+                                  <a href="javascript:" class="avatar avatar-xs text-muted">
+                                    <i class="ti ti-edit-circle f-18"></i>
+                                  </a>
+                                </li>
+                              
+      
+                            </ul>
+                          </div>
+                        </td>
+                      </ng-container>
+      
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      
+                      <!-- Row shown when there is no matching data. -->
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                      </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                  </div>
                 </div>
-              </div>
-        </div>
-    </app-card>
+          </div>
+      </app-card>
+
+    }
     
-}
+  } @else {
+    <div class="flex justify-content-center p-4">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  }
+
+
 
 
   <!-- <pre>{{ rows | json}}</pre> -->

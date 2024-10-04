@@ -34,6 +34,24 @@ export interface MallaPreRequisitoDTO {
     prerequisito: CursoMallaPreRequisitoDTO[]
 }
 
+export interface MallaEquivalenciaDTO {
+    orden: number,
+    codigoMalla: number,
+    nombreCurso: string,
+    codigoInterno: string,
+    tipoDeCurso: string,
+    tipoDeEstudio: string,
+    ht: number,
+    hp: number,
+    tHoras: number,
+    tCreditos: number,
+    estado: string,
+    denominacionResumida: string
+    denominacionExtendida: string,
+    definicion: string,
+    equivalencia: EquivalenciaMallaDTO[]
+}
+
 export type CursoMallaPreRequisitoDTO = {
     codigoMallaPreRequisito: number,
     nombreMallaPreRequisito: string
@@ -52,8 +70,8 @@ export interface MallaDeleteDTO {
 }
 
 export interface EquivalenciaMallaDTO {
-    codigoCursoPlanEquivalencia: number,
-    nombreCursoPlanEquivalencia: string,
+    codigoMallaEquivalencia: number,
+    nombreMallaEquivalencia: string,
     porcentajeModificacion: number
 }
 
@@ -61,6 +79,11 @@ export interface MallaDataArrayDTO {
     data: MallaDTO[]
 }
 
+
 export interface MallaPreRequisitoDataArrayDTO {
     data: MallaPreRequisitoDTO[]
+}
+
+export interface MallaEquivalenciaDataArrayDTO {
+    data: MallaEquivalenciaDTO[]
 }
