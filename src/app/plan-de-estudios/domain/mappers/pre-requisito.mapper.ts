@@ -1,5 +1,5 @@
-import { PreRequisitoDeleteDTO, PreRequisitoInsertDTO } from "../../infraestructure/dto/pre-requisito.dto";
-import { PreRequisitoDelete, PreRequisitoInsert } from "../models/pre-requisito.model";
+import { CursoMallaPreRequisitoDeleteDTO, CursoMallaPreRequisitoInsertDTO, PreRequisitoDeleteDTO, PreRequisitoInsertDTO } from "../../infraestructure/dto/pre-requisito.dto";
+import { CursoMallaPreRequisitoDelete, CursoMallaPreRequisitoInsert, PreRequisitoDelete, PreRequisitoInsert } from "../models/pre-requisito.model";
 
 export class PreRequisitoMapper {
     static fromDomainToApiInsert(param: PreRequisitoInsert): PreRequisitoInsertDTO {
@@ -14,6 +14,22 @@ export class PreRequisitoMapper {
         return {
             codigoCursoPlan: param.idCursoPlan,
             codigoCursoPlanPreRequisito: param.idCursoPlanPreRequisito,
+            usuario: param.userId
+        };
+    }
+
+    static fromDomainToApiInsertMalla(param: CursoMallaPreRequisitoInsert): CursoMallaPreRequisitoInsertDTO {
+        return {
+            codigoMalla: param.idMalla,
+            codigoMallaPreRequisito: param.idMallaPreRequisito,
+            usuario: param.userId
+        };
+    }
+
+    static fromApiToDomainDeleteMalla(param: CursoMallaPreRequisitoDelete ): CursoMallaPreRequisitoDeleteDTO {
+        return {
+            codigoMalla: param.idMalla,
+            codigoMallaPreRequisito: param.idMallaPreRequisito,
             usuario: param.userId
         };
     }

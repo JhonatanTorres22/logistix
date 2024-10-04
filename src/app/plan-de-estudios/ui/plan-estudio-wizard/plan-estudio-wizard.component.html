@@ -17,12 +17,13 @@
       </form>
       <ng-template matStepContent>
             <h1>{{ planEstudioSelect().nombre }}</h1>
-            <div class="flex justify-content-end gap-2 -mr-3 px-0">
+            <!-- <div class="flex justify-content-end gap-2 -mr-3 px-0">
                 @if ( showBtnActivarEdicion ) {
                     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
                 } @else {
                     
                     <ciclo-page></ciclo-page>
+                    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursos()">Agregar Cursos</ui-button>
                     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
                 }
 
@@ -30,14 +31,15 @@
                     <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button>
                 }
             
-            </div>
+            </div> -->
             
-        <curso-list [readonly]="showBtnActivarEdicion"></curso-list> <!-- QUITAR NEGACIÓN PARA OCULTAR LOS BOTONES-->
+        <!-- <curso-list [readonly]="showBtnActivarEdicion"></curso-list> -->
+        <malla-list [readonly]="showBtnActivarEdicion"></malla-list>
 
       </ng-template>
       
     </mat-step>
-    <mat-step [stepControl]="formAsignar" [editable]="isEditable">
+    <!-- <mat-step [stepControl]="formAsignar" [editable]="isEditable">
       <form [formGroup]="formAsignar" hidden>
         <ng-template matStepLabel>Asignación de Cursos al Plan de Estudios</ng-template>
         <mat-form-field>
@@ -76,7 +78,7 @@
                 </app-card>
           }
       </ng-template>
-    </mat-step>
+    </mat-step> -->
     <mat-step>
         <form [formGroup]="formAsignarPreRequisitos" hidden>
             <ng-template matStepLabel>Asignación de Pre-requisitos</ng-template>
@@ -87,7 +89,8 @@
             </mat-form-field>
           </form>
           <ng-template matStepContent>
-            <malla-curricular-list></malla-curricular-list>
+            <!-- <malla-curricular-list></malla-curricular-list> -->
+            <malla-list [preRequisito]="true"></malla-list>
           </ng-template>
     </mat-step>
     <mat-step>

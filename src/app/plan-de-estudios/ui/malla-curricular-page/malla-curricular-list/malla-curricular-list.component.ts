@@ -33,7 +33,8 @@ import { PreRequisitoRepository } from 'src/app/plan-de-estudios/domain/reposito
     CicloPageComponent,
     CursoPageComponent,
     UiCardNotItemsComponent,
-    UiButtonComponent],
+    UiButtonComponent
+  ],
   templateUrl: './malla-curricular-list.component.html',
   styleUrl: './malla-curricular-list.component.scss'
 })
