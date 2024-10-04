@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
-import { MallaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
+import { MallaDataArrayDTO, MallaEquivalenciaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
 import { environment } from "src/environments/environment";
 import { MallaMapper } from "../../domain/mappers/malla.mapper";
 
@@ -15,6 +15,7 @@ export class MallaService {
     private urlApi: string;
     private urlGetMalla: string;
     private urlGetMallaPreRequisitos: string;
+    private urlGetMallaEquivalencias: string;
     private urlInsertMalla: string;
     private urlDeleteMalla: string;
         
@@ -24,8 +25,10 @@ export class MallaService {
             this.urlApi = environment.EndPoint;
             this.urlGetMalla = 'api/Malla/Listar?codigoPlanDeEstudio=';
             this.urlGetMallaPreRequisitos = 'api/PreRequisito/ListarxPlanDeEstudio2?CodigoPlanDeEstudio=';
+            this.urlGetMallaEquivalencias = 'api/Equivalencia/Listar2?CodigoPlanDeEstudio=';
             this.urlInsertMalla = 'api/Malla/Insertar';
             this.urlDeleteMalla = 'api/Malla/Eliminar';
+
         }
         
         getMalla(idPlan: number): Observable<Malla[]> {
@@ -38,6 +41,11 @@ export class MallaService {
                 .pipe( map( response => response.data.map( MallaMapper.fromApiToDomainPreRequisito )) );
         }
         
+        getMallaEquivalencias(idPlan: number): Observable<Malla[]> {
+            return this.http.get<MallaEquivalenciaDataArrayDTO>(this.urlApi + this.urlGetMallaEquivalencias + idPlan)
+                .pipe( map( response => response.data.map( MallaMapper.fromApiToDomainEquivalencia )) );
+        }
+
         insertMalla(malla: MallaInsert[]): Observable<void> {
             const mallaAPI = malla.map( MallaMapper.fromDomainToApiInsert );
             return this.http.post<void>(this.urlApi + this.urlInsertMalla, mallaAPI);

@@ -1,5 +1,5 @@
 export interface Malla {
-
+    orden: number,
     idMalla: number,
     codigoCurso: string,
     nombreCurso: string,
@@ -38,7 +38,7 @@ export interface MallaDelete {
 
 
 export interface EquivalenciaMalla {
-    idCursoPlan: number,
+    idMalla: number,
     nombreCurso: string,
     porcentajeModificacion: number,
 }

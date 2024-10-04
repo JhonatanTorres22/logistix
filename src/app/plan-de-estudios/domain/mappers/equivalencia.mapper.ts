@@ -1,5 +1,5 @@
-import { EquivalenciaDeleteDTO, EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
-import { EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
+import { CursoMallaEquivalenciaDeleteDTO, CursoMallaEquivalenciaPrimarioInsertDTO, CursoMallaEquivalenciaSecundarioInsertDTO, EquivalenciaDeleteDTO, EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
 
 export class EquivalenciaMapper {
     
@@ -20,7 +20,7 @@ export class EquivalenciaMapper {
         }
     }
 
-    static fromApiToDomainDelete( param: EquivalenciaDelete ): EquivalenciaDeleteDTO {
+    static fromDomainToApiDelete( param: EquivalenciaDelete ): EquivalenciaDeleteDTO {
 
         return {
             codigoCursoPlan: param.cursoPlanId,
@@ -29,4 +29,31 @@ export class EquivalenciaMapper {
         }
 
     }
+
+    static fromDomainToApiPrimarioInsertMalla( param: CursoMallaEquivalenciaPrimarioInsert ): CursoMallaEquivalenciaPrimarioInsertDTO {
+        return {
+            codigoMalla: param.idMalla,
+            porcentajeModificacion: param.porcentajeModificacion,
+            usuario: param.userId
+        }
+
+    }
+
+    static fromDomainToApiSecundarioInsertMalla( param: CursoMallaEquivalenciaSecundarioInsert ): CursoMallaEquivalenciaSecundarioInsertDTO {
+        return {
+            codigoMalla: param.idMalla,
+            codigoMallaEquivalencia: param.idMallaEquivalencia,
+            porcentajeModificacion: param.porcentajeModificacion,
+            usuario: param.userId
+        }
+    }
+
+    static fromDomainToApiDeleteMalla( param: CursoMallaEquivalenciaDelete ): CursoMallaEquivalenciaDeleteDTO {
+        return {
+            codigoMalla: param.idMalla,
+            codigoMallaEquivalencia: param.idMallaEquivalencia,
+            usuario: param.userId
+        }
+    }
+
 }

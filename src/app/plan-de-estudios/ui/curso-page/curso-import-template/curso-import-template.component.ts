@@ -9,6 +9,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { CursoExcel } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
+import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { read, utils } from 'xlsx';
 
 @Component({
@@ -37,10 +38,12 @@ export class CursoImportTemplateComponent {
 
   file = this.mensajeriaSignal.file;
   cursosImportExcel = this.signal.cursosImportExcel;
+  loading = this.mallaSignal.loading;
 
   constructor(
     private mensajeriaSignal: MensajeriaSignal,
-    private signal: CursoSignal
+    private signal: CursoSignal,
+    private mallaSignal: MallaSignal
   ) {
 
     effect(() => {
