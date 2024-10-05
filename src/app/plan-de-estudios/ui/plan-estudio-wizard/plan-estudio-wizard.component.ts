@@ -37,6 +37,7 @@ import { MallaSignal } from '../../domain/signal/malla.signal';
 import { Malla } from '../../domain/models/malla.model';
 import { Router } from '@angular/router';
 import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card.component';
+import { ExportarPdfPlanDeEstudioComponent } from '../exportar-pdf-plan-de-estudio/exportar-pdf-plan-de-estudio.component';
 
 
 @Component({
@@ -52,6 +53,7 @@ import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card
     CursoDesfasadoListComponent,
     CursoImportTemplateComponent,
     MallaListComponent,
+    ExportarPdfPlanDeEstudioComponent
 ],
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
