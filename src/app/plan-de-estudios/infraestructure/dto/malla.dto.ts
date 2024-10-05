@@ -1,4 +1,5 @@
 export interface MallaDTO {
+    orden: number,
     codigoMalla: number,
     codigoCurso: number,
     codigoInterno: string,

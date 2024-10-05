@@ -151,6 +151,20 @@ export class CursoListComponent implements OnInit {
     })
   }
 
+  eliminarCursosConfirm = () => {
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea eliminar el curso?').then(isConfirm => {
+      if(!isConfirm){return}
+      const eliminarCurso: CursoEliminar = {
+        id : this.cursoOption().id!,
+        usuarioId: parseInt( this.authSignal.currentRol().id )
+      }     
+      this.eliminar( eliminarCurso )
+    })
+  }
+
+  eliminarCursos = ( curso : CursoEliminar ) => {
+    
+  }
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {

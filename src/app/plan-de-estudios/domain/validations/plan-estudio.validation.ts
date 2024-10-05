@@ -34,7 +34,7 @@ export class PlanEstudioValidation {
 
     maxLengthDescripcionGrado: number = 40;
     maxLengthDescripcionTitulo: number = 40;
-    maxLengthDetallePerfil: number = 80;
+    maxLengthDetallePerfil: number = 500;
     // maxLengthIdProgramaAcademico: number = 40;
     maxLengthNombre: number = 40;
     // maxLengthUsuarioId: number = 0;
