@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { CursoPlanEquivalencia } from 'src/app/plan-de-estudios/domain/models/curso-plan.model';
+import { Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
 
 @Directive({
   selector: '[ColorCursoSecundario]',
@@ -7,8 +8,8 @@ import { CursoPlanEquivalencia } from 'src/app/plan-de-estudios/domain/models/cu
 })
 export class ColorCursoSecundarioDirective implements OnInit {
 
-  @Input() curso: CursoPlanEquivalencia;
-  @Input() cursos: CursoPlanEquivalencia[]
+  @Input() curso: Malla;
+  @Input() cursos: Malla[]
 
   constructor( private element: ElementRef ) {
     
@@ -42,7 +43,7 @@ export class ColorCursoSecundarioDirective implements OnInit {
         // lastDiv.setAttribute('disabled', 'true');
         // const checkbox = this.element.nativeElement.querySelector('input[type="checkbox"]');
         setTimeout(() => {
-          const checkbox = document.querySelector(`#check-${curso.idCursoPlan}`);
+          const checkbox = document.querySelector(`#check-${curso.idMalla}`);
           this.element.nativeElement?.classList.remove('bg-white', 'text-black');
           checkbox?.classList.add('hidden');
           console.log( index + 1, ' - ', checkbox );

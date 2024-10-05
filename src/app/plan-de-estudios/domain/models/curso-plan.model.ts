@@ -1,3 +1,5 @@
+import { Malla } from "./malla.model"
+
 export type PlanEstudioCursoInsertar = {
     idPlanEstudio: number,
     idCurso: number,
@@ -67,8 +69,8 @@ export interface EquivalenciaValidar {
     pendientes: number,
     totalPendientes: number,
     equivalenciaTerminada: boolean,
-    cursosActualPendientes: CursoPlanEquivalencia[],
-    cursosUltimoPendientes: CursoPlanEquivalencia[],
+    cursosActualPendientes: Malla[],
+    cursosUltimoPendientes: Malla[],
 
 }
 

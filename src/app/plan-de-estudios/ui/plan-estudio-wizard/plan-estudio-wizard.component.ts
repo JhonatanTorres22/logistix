@@ -96,10 +96,12 @@ export class PlanEstudioWizardComponent implements OnInit {
   loading: boolean = false;
   // CONEXIÓN DE LAS FLECHAS
 
-  selectedLeftCard: CursoPlanEquivalencia
-  selectedRightCard: CursoPlanEquivalencia;
-  setearCursoPlanEquivalencia: CursoPlanEquivalencia = {
-    idCursoPlan: 0,
+  selectedLeftCard: Malla
+  selectedRightCard: Malla;
+  setearCursoPlanEquivalencia: Malla = {
+    orden: 0,
+    idMalla: 0,
+    idCurso: 0,
     nombreCurso: '',
     codigoCurso: '',
     tipoCurso: '',
@@ -732,13 +734,13 @@ export class PlanEstudioWizardComponent implements OnInit {
       .style('stroke', 'none');
   }
 
-  seleccionarCursoPlanProceso = (card: CursoPlanEquivalencia) => {
+  seleccionarCursoPlanProceso = (card: Malla) => {
     this.selectedLeftCard = card;
     console.log('Selected Left Card:', card);
     this.cursosSeleccionadosParaDibujar();
   }
 
-  seleccionarCursoPlanUltimo(card: CursoPlanEquivalencia): void {
+  seleccionarCursoPlanUltimo(card: Malla): void {
     this.selectedRightCard = card;
     console.log('Selected Right Card:', card);
     this.cursosSeleccionadosParaDibujar();
@@ -775,34 +777,34 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosSeleccionadosParaDibujar = () => {
 
     if (this.selectedLeftCard && this.selectedRightCard) {
-      this.dibujarFlechasEntreCursos( this.selectedRightCard.idCursoPlan, this.selectedLeftCard.idCursoPlan );
+      this.dibujarFlechasEntreCursos( this.selectedRightCard.idMalla, this.selectedLeftCard.idMalla );
     }
   }
 
-  equivalenciaSecundariasTotall: CursoPlanEquivalencia[] = [];
+  equivalenciaSecundariasTotall: Malla[] = [];
 
   dibujarFlechasEntreCursos = ( right: number, left: number) => {
 
     const equivalenciasIds = new Set<number>();
-    this.cursosPlanEquivalenciaActual.forEach(curso => {
+    this.cursosMallaEquivalenciaActual.forEach(curso => {
       curso.equivalencias.forEach(equivalencia => {
-        equivalenciasIds.add( equivalencia.idCursoPlan);
+        equivalenciasIds.add( equivalencia.idMalla);
       });
     });
 
-    this.equivalenciaSecundariasTotall = this.cursosPlanEquivalenciaUltimo.filter(curso => !equivalenciasIds.has(curso.idCursoPlan));
+    this.equivalenciaSecundariasTotall = this.cursosMallaEquivalenciaUltimo.filter(curso => !equivalenciasIds.has(curso.idMalla));
     // console.log( this.equivalenciaSecundariasTotall );
     
     // console.log('Conexiones actuales: ', this.connections);
-    const equivalenciaSecundariasTotal = this.cursosPlanEquivalenciaUltimo.filter( curso => curso.estado == 'RENOVADO' );
+    const equivalenciaSecundariasTotal = this.cursosMallaEquivalenciaUltimo.filter( curso => curso.estado == 'RENOVADO' );
     // console.log( equivalenciaSecundariasTotal );
     
-    const equivalenciaSecundariasPendientes = equivalenciaSecundariasTotal.filter( curso => !this.connections.map( c => c.leftCardId ).includes( curso.idCursoPlan ) );
-    const cursosActualPendientes = this.cursosPlanEquivalenciaActual.filter( curso => !this.connections.map( c => c.rightCardId ).includes( curso.idCursoPlan ) );
+    const equivalenciaSecundariasPendientes = equivalenciaSecundariasTotal.filter( curso => !this.connections.map( c => c.leftCardId ).includes( curso.idMalla ) );
+    const cursosActualPendientes = this.cursosMallaEquivalenciaActual.filter( curso => !this.connections.map( c => c.rightCardId ).includes( curso.idMalla ) );
     // console.log( cursosActualPendientes );
     
     const dataEquivalenciaValidar: EquivalenciaValidar = {
-      cursosActualPendientes: cursosActualPendientes.filter( curso => this.connections.map( c => c.rightCardId ).includes( curso.idCursoPlan ) ),
+      cursosActualPendientes: cursosActualPendientes.filter( curso => this.connections.map( c => c.rightCardId ).includes( curso.idMalla ) ),
       cursosUltimoPendientes: equivalenciaSecundariasTotal,
       equivalenciaTerminada: equivalenciaSecundariasPendientes.length == 0 &&  equivalenciaSecundariasTotal.length > 0 ? true : false,
       pendientes: equivalenciaSecundariasPendientes.length,
@@ -814,7 +816,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
     if( equivalenciaSecundariasTotal.length == 0 ) {
       console.log('No hay cursos secundarios');
-      return
+      // return
     }
 
     const svg = d3.select('#arrowContainer');
@@ -884,6 +886,8 @@ export class PlanEstudioWizardComponent implements OnInit {
       this.connections.push({ leftCardId: left, rightCardId: right });
       this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
       this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+      // console.log( this.connections );
+      
     }
     
     

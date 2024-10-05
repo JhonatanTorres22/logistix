@@ -1,3 +1,4 @@
+import { p } from "msw/lib/core/GraphQLHandler-COiPfZ8k";
 import { MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
 import { Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 
@@ -5,7 +6,7 @@ export class MallaMapper {
     static fromApiToDomainList( param: MallaDTO ): Malla {
         return {
             orden: 0,
-            idMalla: param.codigoCursoPlan,
+            idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombre,
@@ -31,7 +32,7 @@ export class MallaMapper {
         return {
             orden: 0,
             idMalla: param.codigoMalla,
-            idCurso: 0,
+            idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
             tipoCurso: param.tipoDeCurso,
