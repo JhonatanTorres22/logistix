@@ -28,14 +28,13 @@ import { pl } from 'date-fns/locale';
     UiButtonComponent,
     UiAlertComponent,
     PlanEstudioPerfilEgresadoComponent,
-    PlanEstudioCardComponent
 ],
   templateUrl: './plan-estudio-card.component.html',
   styleUrl: './plan-estudio-card.component.scss'
 })
 export class PlanEstudioCardComponent {
 
-  @ViewChild('ultimoPlanConRCU') ultimoPlanConRCU: TemplateRef<any>;
+  // @ViewChild('ultimoPlanConRCU') ultimoPlanConRCU: TemplateRef<any>;
 
   @Input() planEstudio: PlanEstudio;
   @Input() tipo: string;
@@ -81,7 +80,7 @@ export class PlanEstudioCardComponent {
     }
     if( this.isModalOfItself() ) {
 
-      console.log( this.ultimoPlanConRCU );
+      // console.log( this.ultimoPlanConRCU );
       // this.ultimoPlanConRCU.elementRef.nativeElement.classList.add('hidden');
       document.getElementsByClassName('cdk-overlay-container')[0].classList.add('hidden');
       this.openMallaCursos.set( true );

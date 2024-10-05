@@ -11,6 +11,8 @@ import { CursoExcel } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { CursoSignal } from 'src/app/plan-de-estudios/domain/signal/curso.signal';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { read, utils } from 'xlsx';
+import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
+import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 
 @Component({
   selector: 'curso-import-template',
@@ -20,6 +22,7 @@ import { read, utils } from 'xlsx';
     SharedModule,
     UiButtonComponent,
     UiUploaderFilesComponent,
+    PlanEstudioCardComponent,
 
   ],
   templateUrl: './curso-import-template.component.html',
@@ -39,10 +42,11 @@ export class CursoImportTemplateComponent {
   file = this.mensajeriaSignal.file;
   cursosImportExcel = this.signal.cursosImportExcel;
   loading = this.mallaSignal.loading;
-
+  planEstudioUltimoConResolucion = this.planEstudioSignal.planEstudioUltimoConResolucion;
   constructor(
     private mensajeriaSignal: MensajeriaSignal,
     private signal: CursoSignal,
+    private planEstudioSignal: PlanEstudioSignal,
     private mallaSignal: MallaSignal
   ) {
 

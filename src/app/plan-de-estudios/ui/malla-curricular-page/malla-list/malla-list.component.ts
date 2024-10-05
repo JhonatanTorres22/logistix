@@ -10,7 +10,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 
-import { Curso, CursoCrear, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { Curso, CursoCrear, CursoDesfasar, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { PreRequisitoInsert, PreRequisitoDelete, CursoMallaPreRequisitoInsert, CursoMallaPreRequisitoDelete } from 'src/app/plan-de-estudios/domain/models/pre-requisito.model';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 import { CursoPlanRepository } from 'src/app/plan-de-estudios/domain/repositories/curso-plan.repository';
@@ -30,18 +30,22 @@ import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.s
 import { CursoMallaByCiclo, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { select } from 'd3-selection';
+import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
+import { MallaImportComponent } from '../malla-import/malla-import.component';
 @Component({
   selector: 'malla-list',
   standalone: true,
   imports: [ 
     CommonModule,
     SharedModule,
+    PlanEstudioCardComponent,
     CicloPageComponent,
     CursoPageComponent,
     UiCardNotItemsComponent,
     UiUploaderFilesComponent,
     CursoImportTemplateComponent,
-    UiButtonComponent
+    MallaImportComponent,
+    UiButtonComponent,
   ],
   templateUrl: './malla-list.component.html',
   styleUrl: './malla-list.component.scss'
@@ -59,6 +63,7 @@ export class MallaListComponent  implements OnInit {
   cursoPreRequisito: CursoMallaPreRequisitoInsert;
   preRequisitosFromCursoSelect: number[] = [];
   showBtnActivarEdicion: boolean = false;
+  cursosMallaUltimoConResolucion: Malla[] = [];
 
   cursosPlanByCiclo = this.cursoPlanSignal.cursosPlanByCiclo;
   cursosPlanPreRequisitoByCiclo = this.cursoPlanSignal.cursosPlanPreRequisitoByCiclo;
@@ -75,8 +80,13 @@ export class MallaListComponent  implements OnInit {
   currentInfoDirector = this.authSignal.currentInfoDirector;
   file = this.mensajeriaSignal.file;
   renderizarCursos = this.cursoSignal.renderizarCursos;
+  planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursoSelectPreRequisito = this.cursoSignal.cursoSelectPreRequisito; //YA NO SE USA
   cursoMallaSelectPreRequisito = this.mallaSignal.cursoMallaSelectPreRequisito;
+  cursoMallaOption = this.mallaSignal.cursoMallaOption;
+  cursoMallaCicloSelect = this.mallaSignal.cursoMallaCicloSelect;
+  planesDeEstudio = this.signal.planesDeEstudio;
+
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
 
 
@@ -121,7 +131,7 @@ export class MallaListComponent  implements OnInit {
 
   ngOnInit(): void {
 
-    this.obtenerMalla();
+    this.obtenerMalla( this.planEstudioSelect().id );
 
     this.obtenerCursos()
 
@@ -270,14 +280,18 @@ export class MallaListComponent  implements OnInit {
     console.log( this.cursosList() );
     console.log( this.cursosImportExcel() );
     
+    // let orden = 1;
+    // let ciclo = 1;
     const cursoMalla: MallaInsert[] = this.cursosList().map( (curso, index, {length}) => {
-
+      // ciclo = ciclo == curso.idCiclo;
+      // orden = index + 1;
       const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == this.cursosImportExcel()[index].ciclo )?.id;
       // console.log( curso.codigoCurso == this.cursosImportExcel()[index].codigo_curso );
       // console.log( curso.nombreCurso == this.cursosImportExcel()[index].nombre_curso );
       if( curso.codigoCurso != this.cursosImportExcel()[index].codigo_curso || curso.nombreCurso != this.cursosImportExcel()[index].nombre_curso ) {
         console.log('No son iguales');
         return {
+          orden: 0,
           idPlanEstudio: 0,
           idCurso: 0,
           idCiclo: 0,
@@ -286,6 +300,7 @@ export class MallaListComponent  implements OnInit {
       }
 
       const malla: MallaInsert = {
+        orden: index + 1,
         idPlanEstudio: this.planEstudioSelect().id,  //index != 10 ? this.planEstudioSelect().id : 0,
         idCurso: curso.id,
         idCiclo: cicloId!,
@@ -318,10 +333,10 @@ export class MallaListComponent  implements OnInit {
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos fueron guardados correctamente', 'success', 6);
-        this.modal.getRefModal().close('Obtener');
+        this.modal.getRefModal()?.close('Obtener');
         this.file.set( this.mensajeriaSignal.fileDefault );
         // this.renderizarCursos.set( 'Obtener' );
-        this.obtenerMalla();
+        this.obtenerMalla( this.planEstudioSelect().id);
         this.loading.set( false );
 
       }, error: ( error ) => {
@@ -331,13 +346,25 @@ export class MallaListComponent  implements OnInit {
     });
   }
 
+  openOptions = ( event: any, curso: Malla, ciclo: CursoMallaByCiclo ) => {
+
+    console.log( event);
+    
+    this.cursoMallaOption.set( curso );
+    this.cursoMallaCicloSelect.set( ciclo );
+
+    // console.log( event );
+    // console.log( curso );
+  }
+
   revertirDesfaseConfirm = () => {
 
   }
   /* */
 
-  obtenerMalla() {
-    this.mallaRepository.getMalla( this.planEstudioSelect().id ).subscribe({
+  obtenerMalla( idPlan: number) {
+    
+    this.mallaRepository.getMalla( idPlan ).subscribe({
       next: ( cursosPlan ) => {
         console.log( cursosPlan );
         
@@ -371,6 +398,26 @@ export class MallaListComponent  implements OnInit {
         
       }
     })
+  }
+
+  obtenerMallaUltimoConResolucionToImport( idPlan: number) {
+
+    return new Promise<boolean>( resolve => {
+
+      this.mallaRepository.getMalla( idPlan ).subscribe({
+        next: ( cursosPlan ) => {
+          console.log( cursosPlan );
+          
+          this.cursosMallaUltimoConResolucion =  cursosPlan;
+          resolve( true );
+        }, error: ( error ) => {
+          console.log(error);
+          resolve( false );
+        }
+      })
+
+    })
+
   }
 
   obtenerMallaPreRequisitos = () => {
@@ -447,7 +494,9 @@ export class MallaListComponent  implements OnInit {
     console.log( curso );
     
     curso.preRequisitos.map( cursoPre => {
-      document.getElementById('card-'+cursoPre?.idMalla.toString() )?.classList.add( 'bg-blue-200', 'text-blue-700');
+      document.getElementById('card-'+cursoPre?.idMalla.toString() )?.classList.add( 'border-blue-500', 'font-bold' , 'border-3', 'border-solid');
+      document.getElementById('card-'+cursoPre.idMalla.toString() )?.classList.remove( 'border-gray-400', 'border-1', 'border-dashed');
+
       // document.getElementById('pre-requisito'+cursoPre?.idMalla.toString())?.classList.add('absolute','-mb-4');
     })
     
@@ -464,7 +513,9 @@ export class MallaListComponent  implements OnInit {
   removeClass = ( curso: Malla ) => {
 
     curso.preRequisitos.map( cursoPre => {
-      document.getElementById('card-'+cursoPre.idMalla.toString() )?.classList.remove( 'bg-blue-200', 'text-blue-700');
+      document.getElementById('card-'+cursoPre.idMalla.toString() )?.classList.remove( 'border-blue-500', 'font-bold' , 'border-3', 'border-solid');
+      document.getElementById('card-'+cursoPre.idMalla.toString() )?.classList.add( 'border-gray-400', 'border-1', 'border-dashed');
+
       // document.getElementById('pre-requisito'+cursoPre.idMalla.toString())?.classList.remove('absolute');
 
     })
@@ -485,14 +536,24 @@ export class MallaListComponent  implements OnInit {
           return
         }
 
-        this.eliminarCursoPlan()
+        // const cursosEliminar: CursoPlanEliminar[] = this.cursosPlanEquivalenciaActual.map( curso => {
+        const cursosEliminar: MallaDelete[] = this.cursosMalla().map( curso => {
+          return {
+            //VERIFICAR FUNCIONAMIENTO
+            idMalla: curso.idMalla,
+            userId: parseInt( this.authSignal.currentRol().id )
+          }
+        })
+        console.log( cursosEliminar );
+
+        this.eliminarCursoPlan( cursosEliminar )
           .then( isDeleted => {
             if( !isDeleted ) {
               return
             }
 
             this.showBtnActivarEdicion = false;
-            this.obtenerMalla();
+            this.obtenerMalla( this.planEstudioSelect().id );
             this.cursosList().map( curso => {
               const cursoEliminar: CursoEliminar = {
                 id: curso.id,
@@ -507,20 +568,12 @@ export class MallaListComponent  implements OnInit {
       })
   }
 
-  eliminarCursoPlan = () => {
-    // const cursosEliminar: CursoPlanEliminar[] = this.cursosPlanEquivalenciaActual.map( curso => {
-      const cursosEliminar: MallaDelete[] = this.cursosMalla().map( curso => {
-      return {
-        //VERIFICAR FUNCIONAMIENTO
-        idMalla: curso.idMalla,
-        userId: parseInt( this.authSignal.currentRol().id )
-      }
-    })
-    console.log( cursosEliminar );
+  eliminarCursoPlan = ( cursoMallaDelete: MallaDelete[] ) => {
+    
     
     return new Promise<boolean> ( resolve => {
 
-      this.mallaRepository.deleteMalla( cursosEliminar ).subscribe({
+      this.mallaRepository.deleteMalla( cursoMallaDelete ).subscribe({
         next: ( response ) => {
           console.log( response );
           resolve( true );
@@ -535,12 +588,24 @@ export class MallaListComponent  implements OnInit {
     
   }
 
+  // eliminarMallaPorDesfase = ( curso: Malla ) => {
+
+
+  //       const cursoEliminar: MallaDelete[] = [{
+  //         idMalla: curso.idMalla,
+  //         userId: parseInt( this.authSignal.currentRol().id )
+  //       }]
+
+  //       this.eliminarCursos( cursoEliminar );
+
+  // }
+
   eliminarCursos = ( curso: CursoEliminar ) => {
     this.cursosRepository.eliminar( curso ).subscribe({
       next: ( response ) => {
         console.log( response );
         // this.alert.showAlert('Se eliminó correctamente el curso', 'success', 5);
-        this.obtenerMalla();
+        this.obtenerMalla( this.planEstudioSelect().id );
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al eliminar el curso', 'error', 5);
@@ -624,6 +689,40 @@ export class MallaListComponent  implements OnInit {
 
   }
 
+  duplicarMalla = () => {
+
+    this.alert.sweetAlert('question', 'Confirmar', `Se importará los cursos del Plan de Estudios ${ this.planEstudioUltimoConResolucion().nombre }, ¿Está seguro que desea importar la malla curricular?`)
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        this.obtenerMallaUltimoConResolucionToImport( this.planEstudioUltimoConResolucion().id )
+          .then( isSuccess => {
+            if( !isSuccess ) {
+              this.alert.showAlert('Ocurrió un error al importar la malla curricular', 'error', 5);
+              return
+            }
+
+            const malla: MallaInsert[] = this.cursosMallaUltimoConResolucion.map( (curso, index) => {
+              const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == curso.cicloNumero )?.id;
+    
+              return {
+                orden: index + 1,
+                idPlanEstudio: this.planEstudioSelect().id,
+                idCurso: curso.idCurso,
+                idCiclo: cicloId!,
+                userId: parseInt( this.authSignal.currentRol().id )
+              }
+            });
+    
+            console.log( malla );
+            
+            this.insertarCursoToMalla( malla );
+
+          })
+      })
+  }
 
   insertarPreRequisito = () => {
     console.log( this.cursoPreRequisito );
@@ -656,6 +755,53 @@ export class MallaListComponent  implements OnInit {
         this.alert.showAlert('Ocurrio un error al eliminar el prerequisito', 'error', 5);
       }
     })
+  }
+
+  desfasarConfirm = ( ) => {
+    // console.log('Implementación pendiente... :)');
+    
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea desfasar el curso?')
+      .then( isConfirm => {
+        if(!isConfirm){
+          this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+          return
+        }
+        const curso: CursoEliminar = {
+          id: this.cursoMallaOption().idCurso,
+          usuarioId: parseInt( this.authSignal.currentRol().id )
+        }
+        this.desfasar( curso ).then( isDesfasado => {
+          if( !isDesfasado ) {
+            return
+          }
+          
+          this.eliminarCursoPlan( [ { idMalla: this.cursoMallaOption().idMalla, userId: parseInt( this.authSignal.currentRol().id ) } ] )
+            .then( isDeleted => {
+              if( !isDeleted ) {
+                return
+              }
+              this.obtenerMalla( this.planEstudioSelect().id );
+            })
+        })
+      })
+
+  }
+
+  desfasar = ( curso: CursoDesfasar  ) => {
+    return new Promise<boolean>( resolve => {
+      this.cursosRepository.desfasar( curso ).subscribe({
+        next: ( data ) => {
+          console.log(data);
+          this.alert.showAlert('El curso fue desfasado de manera correcta', 'success', 6);
+          resolve( true );
+          
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al desfasar el curso', 'error', 6);
+          resolve( false );
+        }
+      })
+    } )
   }
 
   drop(event: CdkDragDrop<string[]>) {

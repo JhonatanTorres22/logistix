@@ -6,6 +6,7 @@ export class MallaMapper {
         return {
             orden: 0,
             idMalla: param.codigoCursoPlan,
+            idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombre,
             tipoCurso: param.tipoDeCurso,
@@ -30,6 +31,7 @@ export class MallaMapper {
         return {
             orden: 0,
             idMalla: param.codigoMalla,
+            idCurso: 0,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
             tipoCurso: param.tipoDeCurso,
@@ -57,6 +59,7 @@ export class MallaMapper {
 
     static fromDomainToApiInsert( param: MallaInsert ): MallaInsertDTO {
         return {
+            orden: param.orden,
             codigoPlanDeEstudio: param.idPlanEstudio,
             codigoCurso: param.idCurso,
             codigoCiclo: param.idCiclo,
@@ -76,6 +79,7 @@ export class MallaMapper {
         return {
             orden: param.orden,
             idMalla: param.codigoMalla,
+            idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
             tipoCurso: param.tipoDeCurso,

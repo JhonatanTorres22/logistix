@@ -1,5 +1,6 @@
 export interface MallaDTO {
     codigoCursoPlan: number,
+    codigoCurso: number,
     codigoInterno: string,
     nombre: string,
     descripcion: string,
@@ -37,6 +38,7 @@ export interface MallaPreRequisitoDTO {
 export interface MallaEquivalenciaDTO {
     orden: number,
     codigoMalla: number,
+    codigoCurso: number,
     nombreCurso: string,
     codigoInterno: string,
     tipoDeCurso: string,
@@ -58,6 +60,7 @@ export type CursoMallaPreRequisitoDTO = {
 }
 
 export interface MallaInsertDTO {
+    orden: number,
     codigoPlanDeEstudio: number,
     codigoCurso: number,
     codigoCiclo: number,
