@@ -36,6 +36,7 @@ import { MallaRepository } from '../../domain/repositories/malla.repository';
 import { MallaSignal } from '../../domain/signal/malla.signal';
 import { Malla } from '../../domain/models/malla.model';
 import { Router } from '@angular/router';
+import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card.component';
 
 
 @Component({
@@ -86,6 +87,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosImportExcel = this.cursoSignal.cursosImportExcel;
   cicloList = this.cicloSignal.cicloList;
   currentInfoDirector = this.authSignal.currentInfoDirector;
+  // planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursosByCiclo = this.cursoSignal.cursosByCiclo;
   file = this.mensajeriaSignal.file;
 
@@ -157,6 +159,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     private cursoSignal: CursoSignal,
     private authSignal: AuthSignal,
     private cursoPlanSignal: CursoPlanSignal,
+    // private planEstudioSignal: PlanEstudioSignal,
     private cicloSignal: CicloSingal,
     private mensajeriaSignal: MensajeriaSignal,
     private mallaSignal: MallaSignal,

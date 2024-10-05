@@ -145,7 +145,7 @@
                         <div
                             class="row text-center align-items-center"
                             [ngClass]="{'text-red-700 font-bold': curso.estado == 'DESFASADO'}"
-                            [attr.id]="'cardLeft-' + curso.idCursoPlan"
+                            [attr.id]="'cardLeft-' + curso.idMalla"
                             (click)="seleccionarCursoPlanProceso(curso)"
                             [style.background-color]="curso.color"
                             ColorCursoSecundario
@@ -346,6 +346,7 @@
 <ng-template #templateCursoImport let-data>
     <mat-dialog-content>
         <curso-import-template></curso-import-template>
+
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>

@@ -1,6 +1,7 @@
 export interface Malla {
     orden: number,
     idMalla: number,
+    idCurso: number,
     codigoCurso: string,
     nombreCurso: string,
     tipoCurso: string,
@@ -25,6 +26,7 @@ export interface Malla {
 }
 
 export interface MallaInsert {
+    orden: number,
     idPlanEstudio: number,
     idCurso: number,
     idCiclo: number,

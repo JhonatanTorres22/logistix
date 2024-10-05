@@ -7,12 +7,13 @@ import { CursoMallaByCiclo, Malla } from "../models/malla.model";
 
 export class MallaSignal {
     mallaDefault: Malla[] = []
-    cursoMallaByCicloDefault: CursoMallaByCiclo[] = [];
+    cursosMallaByCicloDefault: CursoMallaByCiclo[] = [];
     cursoMallaPreRequisitoByCicloDefault: CursoMallaByCiclo[] = [];
 
     cursoMallaDefault: Malla = {
         orden: 0,
         idMalla: 0,
+        idCurso: 0,
         codigoCurso: '',
         nombreCurso: '',
         tipoCurso: '',
@@ -32,12 +33,24 @@ export class MallaSignal {
         preRequisitos: []
     }
 
+    cursoMallaByCicloDefault: CursoMallaByCiclo = {
+        idCiclo: 0,
+        cicloNumero: 0,
+        ciclo: '',
+        cursosMalla: []
+    }
+
     cursoMallaSelectPreRequisito = signal( this.cursoMallaDefault );
 
     cursosMalla = signal<Malla[]>(this.mallaDefault);
     cursosMallaPreRequisito = signal<Malla[]>(this.mallaDefault);
-    cursosMallaByCiclo = signal<CursoMallaByCiclo[]>(this.cursoMallaByCicloDefault);
+    cursosMallaByCiclo = signal<CursoMallaByCiclo[]>(this.cursosMallaByCicloDefault);
     cursosMallaPreRequisitoByCiclo = signal<CursoMallaByCiclo[]>(this.cursoMallaPreRequisitoByCicloDefault);
 
     loading = signal<boolean>(false);
+
+    cursoMallaOption = signal( this.cursoMallaDefault );
+
+    cursoMallaCicloSelect = signal( this.cursoMallaByCicloDefault );
+
 }

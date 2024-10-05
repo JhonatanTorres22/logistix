@@ -27,7 +27,7 @@
     }
 
     @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button>
+        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id == 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
     }
     <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button> -->
 
@@ -37,6 +37,9 @@
 @if ( cursosMallaByCiclo().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
     <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
 }
+
+
+
 <div class="row w-12 -mx-5">
 
     <div class="flex gap-2">
@@ -47,11 +50,14 @@
                 <div class="col-1 text-center">
                     <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
                     <div class="flex flex-column gap-2 example-list align-items-center"
+                        
                         cdkDropList
                         [cdkDropListData]="ciclo.cursosMalla"
                         (cdkDropListDropped)="drop($event)">
                         @for ( curso of ciclo.cursosMalla; track curso) {
-                            <div 
+                            <div
+                                [cdkContextMenuTriggerFor]="options"
+                                (auxclick)="openOptions($event, curso, ciclo)"
                                 cdkDrag
                                 [cdkDragStartDelay]="cursoMallaSelectPreRequisito().idMalla == 0 ? 100000 : 0"
                                 [cdkDragDisabled]="cursosMallaPreRequisito().includes( curso )"
@@ -106,7 +112,7 @@
                                 [cdkDragDisabled]="cursosMallaPreRequisito().includes( curso )"
                                 (mouseenter)="hoverClass( curso )"
                                 (mouseleave)="removeClass( curso )"
-                                (dblclick)="!isModal() ? selectPreRequisitoPadre( curso ) : ''"
+                                (dblclick)="!isModal() && !readonly ? selectPreRequisitoPadre( curso ) : ''"
                                 (click)="cursoPreRequisito?.idMalla != 0 ? selectPreRequsitoHijo( curso ) : ''"
                                
                               
@@ -198,15 +204,38 @@
     </mat-dialog-actions>
 </ng-template>
 
-
+<pre>
+    {{ planEstudioUltimoConResolucion() | json }}
+</pre>
 <ng-template #templateCursoImport let-data>
     <mat-dialog-content>
 
-        <curso-import-template></curso-import-template>
-
+        @if( planEstudioUltimoConResolucion().idResolucion == 0 ) {
+            <curso-import-template></curso-import-template>
+        } @else {
+            <malla-import></malla-import>
+        }
+        <!-- <plan-estudio-card [planEstudio]="planEstudioUltimoConResolucion()"></plan-estudio-card> -->
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
         <ui-button color="primary" label="Importar" (onClick)="guardarCursosImport()" [disabled]="file().files.length == 0"></ui-button>
     </mat-dialog-actions>
+</ng-template>
+
+
+<ng-template #options>
+    <div class="example-menu border-1 border-gray-300" cdkMenu>
+        <button (click)="openFormCurso( templateCursoAdd, 'Editar' )" class="example-menu-item" cdkMenuItem><i class="ti ti-pencil f-16 pr-2 text-blue-700"></i>Editar</button>
+        <mat-divider></mat-divider>
+        <button (click)="eliminarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-trash f-16 pr-2 text-red-700"></i>Eliminar</button>
+        @if ( readonly  ) { <!-- planesDeEstudio().length > 1 && -->
+            <mat-divider></mat-divider>
+            <button (click)="renovar( templateCursoAdd )" class="example-menu-item" cdkMenuItem><i class="ti ti-refresh f-16 pr-2 text-purple-700"></i>Renovar</button>
+            <mat-divider></mat-divider>
+            <button (click)="revertirConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-arrow-back-up f-16 pr-2 text-orange-700"></i>Revertir</button>
+            <mat-divider></mat-divider>
+            <button (click)="desfasarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-alert-circle f-16 pr-2 text-red-700"></i>Desfasar</button>
+        }
+    </div>
 </ng-template>
