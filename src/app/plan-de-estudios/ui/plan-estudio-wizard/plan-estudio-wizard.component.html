@@ -98,7 +98,8 @@
 
       <ng-template matStepContent>
           <div class="row">
-            <!-- <pre>{{ connections | json }}</pre> -->
+            <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre>
+            <pre>{{ connections | json }}</pre>
              @if ( loading ) {
                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
              }
@@ -150,7 +151,7 @@
                             [style.background-color]="curso.color"
                             ColorCursoSecundario
                             [curso]="curso"
-                            [cursos]="cursosPlanEquivalenciaActual"
+                            [cursos]="cursosMallaEquivalenciaActual"
                         >
                             <div class="col-1 border-3xl border-round f-10">
                                 {{ curso.cicloRomano }}
@@ -172,7 +173,7 @@
                             
                                     @switch ( curso.estado ) {
                                         @case ( 'RENOVADO' ) {
-                                            <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1" [ngClass]="{'activeFocus': cursosPlanEquivalenciaActual.includes( curso.idCursoPlan )}"></i>
+                                            <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1" [ngClass]="{'activeFocus': cursosMallaEquivalenciaActual.includes( curso.idMalla )}"></i>
                                         }
                                         @case ( 'DESFASADO' ) {
                                             <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1"></i>
@@ -232,12 +233,12 @@
                                 'text-red-700 font-bold': curso.estado == 'DESFASADO',
                                 'text-green-900 font-bold bg-green-100': curso.equivalencias.length > 0
                             }"
-                            [attr.id]="'cardRight-' + curso.idCursoPlan"
+                            [attr.id]="'cardRight-' + curso.idMalla"
                             (click)="seleccionarCursoPlanUltimo(curso)"
                             [style.background-color]="curso.color"
                             ColorCursoSecundario
                             [curso]="curso"
-                            [cursos]="cursosPlanEquivalenciaUltimo"
+                            [cursos]="cursosMallaEquivalenciaUltimo"
                         >
                                 <div class="col-1 border-3xl border-round f-10">
                                     <div class="flex gap-2 align-items-center">
