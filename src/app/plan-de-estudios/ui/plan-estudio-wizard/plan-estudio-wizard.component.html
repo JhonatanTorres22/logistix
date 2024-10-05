@@ -94,19 +94,19 @@
           </ng-template>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Registro de Equivalencias</ng-template>
+      <ng-template matStepLabel>Asignación de Equivalencias</ng-template>
 
       <ng-template matStepContent>
           <div class="row">
-            <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre>
-            <pre>{{ connections | json }}</pre>
-             @if ( loading ) {
+            <!-- <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre>
+            <pre>{{ connections | json }}</pre> -->
+             <!-- @if ( loading ) {
                  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-             }
+             } -->
             <!-- <button (click)="addLine()">Add Connection</button> -->
              <div class="flex justify-content-end gap-2">
                 <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
-                <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidar().equivalenciaTerminada">Guardar Equivalencia Secundaria</ui-button>
+                <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidar().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
              </div>
             <div class="col-6">
                 
@@ -225,7 +225,7 @@
                         @if ( !isFirst ) {
                             <mat-divider></mat-divider>
                         }
-                        <label [for]="'check-'+curso.idMalla">
+                    <label [for]="'check-'+curso.idMalla">
                         <div 
                             class="row text-center align-items-center"
                             [ngClass]="
@@ -271,7 +271,7 @@
                                 <div class="col-1 border-3xl border-round f-10">
                                     <div class="flex gap-2">
                                         
-                                        @if ( curso.equivalencias.length == 0 ) {
+                                        @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
                                             <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
                                             <input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">
                                         } @else {
@@ -281,19 +281,19 @@
                                     </div>    
                                 </div>
                             </div>
-                        </label>
-                    }
-                </app-card>
-              </div>
-             <svg id="arrowContainer" class="arrow-container"></svg>
-          </div>
+                </label>
+                        }
+                    </app-card>
+                    <svg id="arrowContainerEquivalencia" class="arrow-container"></svg>
+                </div>
+            </div>
       </ng-template>
 
     </mat-step>
 
     <mat-step [stepControl]="formAsignar" [editable]="isEditable">
       <form [formGroup]="formAsignar" hidden>
-        <ng-template matStepLabel>Finalizar Proceso</ng-template>
+        <ng-template matStepLabel>Vista Preliminar del Plan de Estudio</ng-template>
         <mat-form-field>
           <mat-label>Address</mat-label>
           <input matInput formControlName="asignacion" placeholder="Ex. 1 Main St, New York, NY"

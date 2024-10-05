@@ -56,7 +56,7 @@
                     @if ( planEstudio.archivo != null ) {
                         <ui-button tooltip="Ver Malla" color="cyan" icon="ti ti-eye f-18" (onClick)="verMalla( planEstudio )"></ui-button>
                     }  @else {
-                        <ui-button tooltip="Agregar Cursos" color="indigo" icon="ti ti-plus f-18" (onClick)="duplicarConfirm( ultimoPlanConRCU, planEstudio )"></ui-button>
+                        <ui-button tooltip="Agregar Cursos" color="indigo" icon="ti ti-eye f-18" (onClick)="duplicarConfirm( ultimoPlanConRCU, planEstudio )"></ui-button>
                     }
                     <ui-button tooltip="Ver Perfil de Egresado" color="yellow" icon="ti ti-user f-18" (onClick)="showFormEdit( planEstudio, planEstudioPerfilEgresado, 'Perfil' )"></ui-button>
                 </div>

@@ -5,7 +5,7 @@ import { Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 export class MallaMapper {
     static fromApiToDomainList( param: MallaDTO ): Malla {
         return {
-            orden: 0,
+            orden: param.orden,
             idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,

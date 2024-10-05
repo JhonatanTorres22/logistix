@@ -45,7 +45,8 @@ export class ColorCursoSecundarioDirective implements OnInit {
         setTimeout(() => {
           const checkbox = document.querySelector(`#check-${curso.idMalla}`);
           this.element.nativeElement?.classList.remove('bg-white', 'text-black');
-          checkbox?.classList.add('hidden');
+          // checkbox?.classList.add('hidden');
+          checkbox?.setAttribute('disabled', 'true');
           console.log( index + 1, ' - ', checkbox );
         }, 600);
         

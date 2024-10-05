@@ -21,15 +21,16 @@
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
     } @else {
         
-        <ciclo-page></ciclo-page>
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursos( templateCursoAdd )">Agregar Cursos</ui-button>
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
+        <!-- <ciclo-page></ciclo-page> -->
+        <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursos( templateCursoAdd )">Agregar Cursos</ui-button> -->
+        <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button> -->
     }
 
     @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
         <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id == 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
     }
     <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button> -->
+    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
 
 </div>
 <!-- <pre> {{ cursoPreRequisito?.idMalla | json }} </pre> -->
@@ -204,17 +205,15 @@
     </mat-dialog-actions>
 </ng-template>
 
-<pre>
+<!-- <pre>
     {{ planEstudioUltimoConResolucion() | json }}
-</pre>
+</pre> -->
 <ng-template #templateCursoImport let-data>
     <mat-dialog-content>
 
-        @if( planEstudioUltimoConResolucion().idResolucion == 0 ) {
-            <curso-import-template></curso-import-template>
-        } @else {
-            <malla-import></malla-import>
-        }
+      
+        <curso-import-template></curso-import-template>
+        
         <!-- <plan-estudio-card [planEstudio]="planEstudioUltimoConResolucion()"></plan-estudio-card> -->
     </mat-dialog-content>
     <mat-dialog-actions align="end">

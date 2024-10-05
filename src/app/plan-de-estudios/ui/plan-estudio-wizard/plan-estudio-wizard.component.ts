@@ -20,7 +20,7 @@ import { CursoPlanBase, CursoPlanEliminar, CursoPlanEquivalencia, EquivalenciaVa
 import * as d3 from "d3";
 
 import { EquivalenciaRepository } from '../../domain/repositories/equivalencia.repository';
-import { CursoMallaEquivalenciaPrimarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
+import { CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { CursoDesfasadoListComponent } from "../curso-desfasado-list/curso-desfasado-list.component";
 import { CursoRepository } from '../../domain/repositories/curso.repository';
@@ -600,12 +600,14 @@ export class PlanEstudioWizardComponent implements OnInit {
     console.log( event );
     this.connections = [];
     if( event == 2 && this.connections.length == 0 ) {
-      this.loading = true;
+      // this.loading = true;
+  
       setTimeout(() => {
-        this.inicioFlechaSVG();
         window.addEventListener('resize', this.redibujarFlechaXZoom.bind(this));
+        this.inicioFlechaSVG();
         this.addLine();
         this.asignarColores()
+
       }, 1000);
     }
     
@@ -613,7 +615,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   guardarCursosSecundariosConfirm = () => {
 
-    if( !this.cursoPlanEquivalenciaValidar().equivalenciaTerminada ) {
+    if( !this.cursoPlanEquivalenciaValidar().equivalenciaTerminada && this.connections.length == 0 ) {
       return
     }
 
@@ -628,10 +630,10 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
 
   guardarCursosSecundarios = () => {
-    const cursosSecundarios: EquivalenciaSecundarioInsert[] = this.connections.map( curso => {
+    const cursosSecundarios: CursoMallaEquivalenciaSecundarioInsert[] = this.connections.map( curso => {
       return {
-        cursoPlanId: curso.rightCardId,
-        cursoPlanEquivalenciaId: curso.leftCardId,
+        idMalla: curso.rightCardId,
+        idMallaEquivalencia: curso.leftCardId,
         porcentajeModificacion: 0,
         userId: parseInt( this.authSignal.currentRol().id )
       }
@@ -640,11 +642,12 @@ export class PlanEstudioWizardComponent implements OnInit {
     console.log( cursosSecundarios );
     
     // return
-    this.EquivalenciaRepository.insertarEquivalenciaSecundario( cursosSecundarios ).subscribe({
+    this.EquivalenciaRepository.insertarEquivalenciaSecundarioMalla( cursosSecundarios ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos secundarios fueron guardados correctamente', 'success', 6);
-        this.obtenerCursoPlanEquivalenciaActual();
+        // this.obtenerCursoPlanEquivalenciaActual();
+        this.obtenerMallaEquivalenciaActual();
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al guardar los cursos secundarios', 'error', 6);
@@ -715,7 +718,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   // }
 
   inicioFlechaSVG = () => {
-    const svg = d3.select('#arrowContainer')
+    const svg = d3.select('#arrowContainerEquivalencia')
       .attr('width', '100%')
       .attr('height', '100%');
 
@@ -777,6 +780,8 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosSeleccionadosParaDibujar = () => {
 
     if (this.selectedLeftCard && this.selectedRightCard) {
+      console.log('Dibujando flechas entre cursos...');
+      
       this.dibujarFlechasEntreCursos( this.selectedRightCard.idMalla, this.selectedLeftCard.idMalla );
     }
   }
@@ -819,14 +824,18 @@ export class PlanEstudioWizardComponent implements OnInit {
       // return
     }
 
-    const svg = d3.select('#arrowContainer');
-
+    const svg = d3.select('#arrowContainerEquivalencia');
+    console.log(svg);
+    
     const leftCardElement = document.getElementById(`cardLeft-${left}`);
     const rightCardElement = document.getElementById(`cardRight-${right}`);
+    console.log(leftCardElement, 'left');
+    console.log(rightCardElement, 'right');
 
     // Asegúrate de que el contenedor esté correctamente referenciado
-    const container = document.getElementById('arrowContainer'); // Asegúrate de tener el contenedor correcto
-
+    const container = document.getElementById('arrowContainerEquivalencia'); // Asegúrate de tener el contenedor correcto
+    console.log(container);
+    
     // Verifica si el contenedor es null
     if (!container) {
       console.error('El contenedor de SVG no se encontró.');
@@ -854,9 +863,9 @@ export class PlanEstudioWizardComponent implements OnInit {
         document.getElementById(`arrow-${right}-${left}`)?.remove();
         document.getElementById(`arrow-${right}-${left}`)?.remove();
    
-        // this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
-        // this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
-        // return;
+        this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
+        this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+        return;
       }
 
       // Verificar si la tarjeta izquierda ya está conectada
@@ -886,7 +895,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       this.connections.push({ leftCardId: left, rightCardId: right });
       this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
       this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
-      // console.log( this.connections );
+      console.log( this.connections );
       
     }
     
@@ -900,7 +909,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
 
   redibujarFlechaXZoom = () => {
-    const svg = d3.select('#arrowContainer');
+    const svg = d3.select('#arrowContainerEquivalencia');
     svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
     this.connections.forEach(connection => {
       const leftCardElement = document.getElementById(`cardLeft-${connection.leftCardId}`);
@@ -908,7 +917,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       console.log(leftCardElement, 'left');
       console.log(rightCardElement, 'right');
 
-      const container = document.getElementById('arrowContainer'); // Asegúrate de tener el contenedor correcto
+      const container = document.getElementById('arrowContainerEquivalencia'); // Asegúrate de tener el contenedor correcto
 
       // Verifica si el contenedor es null
       if (!container) {

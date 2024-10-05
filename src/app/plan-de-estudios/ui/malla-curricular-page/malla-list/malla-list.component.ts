@@ -10,7 +10,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Ciclo } from 'src/app/plan-de-estudios/domain/models/ciclo.model';
 
-import { Curso, CursoCrear, CursoDesfasar, CursoEliminar } from 'src/app/plan-de-estudios/domain/models/curso.model';
+import { Curso, CursoCrear, CursoDesfasar, CursoEliminar, CursoRevertirDesfase } from 'src/app/plan-de-estudios/domain/models/curso.model';
 import { PreRequisitoInsert, PreRequisitoDelete, CursoMallaPreRequisitoInsert, CursoMallaPreRequisitoDelete } from 'src/app/plan-de-estudios/domain/models/pre-requisito.model';
 import { CicloRepository } from 'src/app/plan-de-estudios/domain/repositories/ciclo.repository';
 import { CursoPlanRepository } from 'src/app/plan-de-estudios/domain/repositories/curso-plan.repository';
@@ -32,6 +32,7 @@ import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal
 import { select } from 'd3-selection';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
 import { MallaImportComponent } from '../malla-import/malla-import.component';
+import { CursoDesfasadoListComponent } from '../../curso-desfasado-list/curso-desfasado-list.component';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -44,6 +45,7 @@ import { MallaImportComponent } from '../malla-import/malla-import.component';
     UiCardNotItemsComponent,
     UiUploaderFilesComponent,
     CursoImportTemplateComponent,
+    CursoDesfasadoListComponent,
     MallaImportComponent,
     UiButtonComponent,
   ],
@@ -86,7 +88,7 @@ export class MallaListComponent  implements OnInit {
   cursoMallaOption = this.mallaSignal.cursoMallaOption;
   cursoMallaCicloSelect = this.mallaSignal.cursoMallaCicloSelect;
   planesDeEstudio = this.signal.planesDeEstudio;
-
+  cursoDesfasadoSelected = this.cursoSignal.cursoDesfasadoSelected;
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
 
 
@@ -358,6 +360,40 @@ export class MallaListComponent  implements OnInit {
   }
 
   revertirDesfaseConfirm = () => {
+
+    this.alert.sweetAlert('question', 'Confirmación', `Está seguro que desea revertir el desfase del curso ${ this.cursoDesfasadoSelected().nombreCurso }`)
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+
+        const cursoDesfasado: CursoRevertirDesfase = {
+          id: this.cursoDesfasadoSelected().id,
+          usuarioId: parseInt( this.authSignal.currentRol().id )
+        }
+        console.log( cursoDesfasado );
+        // return
+        this.revertirDesfase( cursoDesfasado );
+      })
+
+  }
+
+  revertirDesfase = ( cursoDesfasado: CursoRevertirDesfase ) => {
+
+    this.cursosRepository.revertirDesfase( cursoDesfasado ).subscribe({
+      next: ( data ) => {
+        console.log( data );
+        this.alert.showAlert('El curso fue revertido correctamente', 'success', 6);
+        this.obtenerMalla( this.planEstudioSelect().id );
+        this.obtenerMallaPreRequisitos();
+        this.obtenerMallaUltimoConResolucionToImport( this.planEstudioSelect().id );
+        this.modal.getRefModal().close('Obtener');
+        this.renderizarCursos.set( 'Obtener' );
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al revertir el desfase del curso', 'error', 6);
+      }
+    });
 
   }
   /* */
