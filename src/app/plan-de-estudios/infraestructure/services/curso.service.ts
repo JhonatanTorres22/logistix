@@ -20,6 +20,7 @@ export class CursoService {
     private urlAgregarMasive: string;
     private urlEditar: string;
     private urlEliminar: string;
+    private urlEliminarMasivo: string;
     private urlAddPreRequisito: string;
     private urlDeletePreRequisito: string;
     private urlBuscarCursoPlanEstudio: string;
@@ -41,6 +42,7 @@ export class CursoService {
         this.urlAgregarMasive = 'api/Curso/InsertarMasivo';
         this.urlEditar = 'api/Curso/Actualizar';
         this.urlEliminar = 'api/Curso/Eliminar';
+        this.urlEliminarMasivo = 'api/Curso/EliminarMasivo';
         this.urlAddPreRequisito = 'api/Curso/InsertarPreRequisito';
         this.urlDeletePreRequisito = 'api/Curso/EliminarPreRequisito';
         this.urlBuscarCursoPlanEstudio = 'api/Curso/BuscarEnPlanDeEstudio?codigoCurso=';
@@ -103,6 +105,11 @@ export class CursoService {
     eliminar( curso: CursoEliminar ): Observable<void> {
         const cursoAPI = CursoMapper.formDomainToApiEliminar( curso );
         return this.http.delete<void>( this.urlApi + this.urlEliminar, { body: cursoAPI } );
+    }
+
+    eliminarMasivo( cursos: CursoEliminar[] ): Observable<void> {
+        const cursosAPI = cursos.map( CursoMapper.formDomainToApiEliminar );
+        return this.http.delete<void>( this.urlApi + this.urlEliminarMasivo, { body: cursosAPI } );
     }
 
     addPreRequisito( preRequisito: CursoAddPreRequisito ): Observable<void> {

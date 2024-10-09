@@ -50,6 +50,10 @@ import { CursoService } from "../services/curso.service";
       eliminar(curso: CursoEliminar): Observable<void> {
          return this.service.eliminar( curso );
       }
+
+      eliminarMasivo(cursos: CursoEliminar[]): Observable<void> {
+         return this.service.eliminarMasivo( cursos );
+      }
       
       addPreRequisito(cursoPreRequisito: CursoAddPreRequisito): Observable<void> {
          return this.service.addPreRequisito( cursoPreRequisito )
