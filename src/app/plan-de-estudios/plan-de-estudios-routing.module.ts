@@ -13,6 +13,9 @@ const routes: Routes = [
     path: 'disenar',
     loadComponent: () => import('./ui/plan-estudio-wizard/plan-estudio-wizard.component').then( c => c.PlanEstudioWizardComponent)
 
+  }, {
+    path: 'analisis-equivalencia',
+    loadComponent: () => import('./ui/analisis-equivalencia-page/analisis-equivalencia-page.component').then( c => c.AnalisisEquivalenciaPageComponent)
   }
 ];
 

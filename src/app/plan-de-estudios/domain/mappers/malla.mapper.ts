@@ -30,7 +30,7 @@ export class MallaMapper {
 
     static fromApiToDomainPreRequisito( param: MallaPreRequisitoDTO ): Malla {
         return {
-            orden: 0,
+            orden: param.orden,
             idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
             codigoCurso: param.codigoInterno,

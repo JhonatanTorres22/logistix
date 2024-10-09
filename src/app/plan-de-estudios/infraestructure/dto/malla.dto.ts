@@ -20,6 +20,7 @@ export interface MallaDTO {
 }
 
 export interface MallaPreRequisitoDTO {
+    orden: number,
     codigoMalla: number,
     codigoCurso: number,
     nombreCurso: string,
