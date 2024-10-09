@@ -1,4 +1,7 @@
 
+<ui-button color="red" tooltip="Limpiar cursos" class="flex justify-content-center my-2" classButton="w-max" (onClick)="eliminarCursosConfirm()">
+    Limpiar Cursos
+</ui-button>
 <div class="row" cdkDropListGroup [ngClass]="cursoSelectPreRequisito().id != 0 ? 'w-9' : 'w-12'">
     @if ( cursosByCiclo().length == 0 ) {
     
@@ -6,7 +9,6 @@
 
 
     }
-    <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Limpiar cursos" class="flex justify-content-center my-2" (onClick)="eliminarCursosConfirm()"></ui-button-icon>
 
 
  

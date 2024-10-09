@@ -582,7 +582,7 @@ export class MallaListComponent  implements OnInit {
         })
         console.log( cursosEliminar );
 
-        this.eliminarCursoPlan( cursosEliminar )
+        this.eliminarCursoMalla( cursosEliminar )
           .then( isDeleted => {
             if( !isDeleted ) {
               return
@@ -590,21 +590,21 @@ export class MallaListComponent  implements OnInit {
 
             this.showBtnActivarEdicion = false;
             this.obtenerMalla( this.planEstudioSelect().id );
-            this.cursosList().map( curso => {
+            const cursosDelete = this.cursosList().map( curso => {
               const cursoEliminar: CursoEliminar = {
                 id: curso.id,
                 usuarioId: parseInt( this.authSignal.currentRol().id )
               }
               
               console.log( cursoEliminar );
-              
-              this.eliminarCursos( cursoEliminar )
+              return cursoEliminar
             })
+            this.eliminarCursoMasivo( cursosDelete )
           })
       })
   }
 
-  eliminarCursoPlan = ( cursoMallaDelete: MallaDelete[] ) => {
+  eliminarCursoMalla = ( cursoMallaDelete: MallaDelete[] ) => {
     
     
     return new Promise<boolean> ( resolve => {
@@ -649,7 +649,22 @@ export class MallaListComponent  implements OnInit {
     })
   }
 
-
+  eliminarCursoMasivo = ( curso : CursoEliminar[] ) => {
+    this.cursosRepository.eliminarMasivo(curso).subscribe({
+      next: ( data ) => {
+        console.log(data);
+        this.alert.showAlert('Los cursos fueron eliminados de manera correcta', 'success', 6);
+        setTimeout(() => {
+          this.obtenerMalla(this.planEstudioSelect().id);
+          // this.obtenerMallaPreRequisitos();
+          
+        }, 300);
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al eliminar los cursos', 'error', 6);
+      }
+    })
+  }
 
   
 
@@ -806,12 +821,16 @@ export class MallaListComponent  implements OnInit {
           id: this.cursoMallaOption().idCurso,
           usuarioId: parseInt( this.authSignal.currentRol().id )
         }
+
+        console.log( curso );
+        
+        return
         this.desfasar( curso ).then( isDesfasado => {
           if( !isDesfasado ) {
             return
           }
           
-          this.eliminarCursoPlan( [ { idMalla: this.cursoMallaOption().idMalla, userId: parseInt( this.authSignal.currentRol().id ) } ] )
+          this.eliminarCursoMalla( [ { idMalla: this.cursoMallaOption().idMalla, userId: parseInt( this.authSignal.currentRol().id ) } ] )
             .then( isDeleted => {
               if( !isDeleted ) {
                 return

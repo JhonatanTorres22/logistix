@@ -154,16 +154,26 @@ export class CursoListComponent implements OnInit {
   eliminarCursosConfirm = () => {
     this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea eliminar el curso?').then(isConfirm => {
       if(!isConfirm){return}
-      const eliminarCurso: CursoEliminar = {
-        id : this.cursoOption().id!,
-        usuarioId: parseInt( this.authSignal.currentRol().id )
-      }     
-      this.eliminar( eliminarCurso )
+      const eliminarCurso: CursoEliminar[] = this.cursosList().map( curso => {
+        return { id: curso.id, usuarioId: parseInt( this.authSignal.currentRol().id ) }
+      })
+      this.eliminarCursos( eliminarCurso )
     })
   }
 
-  eliminarCursos = ( curso : CursoEliminar ) => {
-    
+  eliminarCursos = ( curso : CursoEliminar[] ) => {
+    this.repository.eliminarMasivo(curso).subscribe({
+      next: ( data ) => {
+        console.log(data);
+        this.alert.showAlert('Los cursos fueron eliminados de manera correcta', 'success', 6);
+        setTimeout(() => {
+          this.obtener()
+        }, 300);
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al eliminar los cursos', 'error', 6);
+      }
+    })
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -306,7 +316,7 @@ export class CursoListComponent implements OnInit {
         }, 300);
       }, error: ( error ) => {
         console.log( error );
-        this.alert.showAlert('Ocurrió un error al eliminbar el curso', 'error', 6);
+        this.alert.showAlert('Ocurrió un error al eliminar el curso', 'error', 6);
 
       }
     })

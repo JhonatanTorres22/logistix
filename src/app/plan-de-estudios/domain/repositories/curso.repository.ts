@@ -26,6 +26,7 @@ export abstract class CursoRepository {
     abstract revertirRenovacion( curso: CursoRevertirRenovacion ): Observable<void>;
     abstract editar( curso: CursoEditar ): Observable<void>;
     abstract eliminar( curso: CursoEliminar ): Observable<void>;
+    abstract eliminarMasivo( cursos: CursoEliminar[] ): Observable<void>;
     abstract addPreRequisito( cursoPreRequisito: CursoAddPreRequisito ): Observable<void>
     abstract deletePreRequisito( cursoPreRequisito: CursoDeletePreRequisito ): Observable<void>
     abstract buscarCursoEnPlanEstudios( cursoId: number): Observable<CursoEncontradoEnPlan[]>
