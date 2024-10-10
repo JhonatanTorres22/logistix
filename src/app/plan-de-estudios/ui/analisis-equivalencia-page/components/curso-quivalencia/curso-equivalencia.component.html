@@ -1,0 +1,28 @@
+<div
+    class="row text-center align-items-center"
+    [ngStyle]="{'background-color': color}"
+    [ngClass]="{'text-red-700 font-bold': curso.estado == 'DESFASADO'}"
+>
+    <div class="col-1 border-3xl border-round f-10">
+        {{ curso.cicloRomano }}
+    </div>
+    <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
+    <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
+    <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+    <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
+    <div class="col-2 border-3xl border-round f-10">
+        <div class="flex gap-3 justify-content-rigth">
+            <div>{{ curso.horasTeoricas }}</div>
+            <div>{{ curso.horasPracticas }}</div>
+            <div>{{ curso.totalHoras }}</div>
+            <div>{{ curso.totalCreditos }}</div>
+        </div>
+    </div>
+    <div class="col-1 border-3xl border-round f-10 check">
+        <div class="flex gap-2 align-items-center">
+            @if( isConvalidado ) {
+                <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1"></i>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+    <ng-template #headerTitleTemplate>
+
+        <div>{{ title }}</div>
+        <div class="text-white border-1 border-round px-3" [ngClass]="isOrigen ? 'bg-gray-700' : 'bg-blue-500'">{{ isOrigen ? 'ORIGEN' : 'DESTINO' }}</div>
+
+    </ng-template>
+    <div class="row text-center bg-accent-300 align-items-center">
+        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
+        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
+        <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-4">Nombre Asignatura</div>
+        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
+        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
+        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
+            <div class="flex gap-2 justify-content-rigth">
+                <div>HT</div>
+                <div>HP</div>
+                <div>TH</div>
+                <div>CRED.</div>
+            </div>
+        </div>
+        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
+    </div>
+
+    
+    @for (curso of cursosMalla; track curso; let isFirst = $first; let index = $index ) {
+    <!-- @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) { -->
+    
+        @if ( modoResumen() ) {
+
+            @if( isConvalidado(curso.idMalla) ) {
+                
+                <curso-equivalencia [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
+
+            }
+        }
+        @else {
+            @if ( !isFirst ) {
+                <mat-divider></mat-divider>
+            }
+            <curso-equivalencia [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
+        }
+
+    }
+</app-card>

@@ -36,3 +36,9 @@ export interface CursoMallaEquivalenciaDelete {
     idMallaEquivalencia: number,
     userId: number,
 }
+
+export interface CursoMallaEquivalenciaSimulacion {
+    idMallaOrigen: number,
+    idMallaDestino: number,
+    porcentajeModificacion: number,
+}

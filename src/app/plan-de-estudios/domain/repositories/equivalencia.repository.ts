@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, CursoMallaEquivalenciaSimulacion, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
 
 export abstract class EquivalenciaRepository {
 
@@ -11,4 +11,5 @@ export abstract class EquivalenciaRepository {
     abstract insertarEquivalenciaSecundarioMalla( equivalencia: CursoMallaEquivalenciaSecundarioInsert[] ): Observable<void>
     abstract eliminarEquivalenciaMalla( equivalencia: CursoMallaEquivalenciaDelete ): Observable<void>
 
+    abstract simularEquivalenciaMalla( idPlanOrigen: number, idPlanDestino: number ): Observable<CursoMallaEquivalenciaSimulacion[]>
 }

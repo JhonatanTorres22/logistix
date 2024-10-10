@@ -37,3 +37,13 @@ export interface CursoMallaEquivalenciaDeleteDTO {
     codigoMallaEquivalencia: number,
     usuario: number,
 }
+
+export interface CursoMallaEquivalenciaSimulacionDTO {
+    codigoMallaOrigen: number,
+    codigoMallaDestino: number,
+    porcentajeModificacion: number,
+}
+
+export interface CursoMallaEquivalenciaSimulacionDataArrayDTO {
+    data: CursoMallaEquivalenciaSimulacionDTO[]
+}

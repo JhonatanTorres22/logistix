@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, CursoMallaEquivalenciaSimulacion, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
 import { EquivalenciaMapper } from "../../domain/mappers/equivalencia.mapper";
-import { EquivalenciaPrimarioInsertDTO } from "../dto/equivalencia.dto";
-import { Observable } from "rxjs";
+import { CursoMallaEquivalenciaSimulacionDataArrayDTO, EquivalenciaPrimarioInsertDTO } from "../dto/equivalencia.dto";
+import { map, Observable } from "rxjs";
+
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,8 @@ export class EquivalenciaService {
     private urlInsertarSecundarioMalla: string;
     private urlEliminarMalla: string;
 
+    private urlSimularEquivalenciaMalla: string;
+
     constructor(
         private http: HttpClient
     ) {
@@ -33,6 +36,10 @@ export class EquivalenciaService {
         this.urlInsertarPrimarioMalla = 'api/Equivalencia/InsertarPrimarios2';
         this.urlInsertarSecundarioMalla = 'api/Equivalencia/InsertarSecundarios2';
         this.urlEliminarMalla = 'api/Equivalencia/EliminarMalla';
+
+        this.urlSimularEquivalenciaMalla = 'api/Equivalencia/simulacion?CodigoPlanOrigen=';
+
+
     }
 
     insertarPrimarios = ( equivalencia: EquivalenciaPrimarioInsert[] ) => {
@@ -69,6 +76,11 @@ export class EquivalenciaService {
     eliminarEquivalenciaMalla = ( equivalencia: CursoMallaEquivalenciaDelete ): Observable<void> => {
         const equivalenciaAPI = EquivalenciaMapper.fromDomainToApiDeleteMalla(equivalencia);
         return this.http.delete<void>(`${this.urlApi}${this.urlEliminarMalla}`, { body: equivalenciaAPI });
+    }
+
+    simularEquivalenciaMalla = ( idPlanOrigen: number, idPlanDestino: number ): Observable<CursoMallaEquivalenciaSimulacion[]> => {
+        return this.http.get<CursoMallaEquivalenciaSimulacionDataArrayDTO>(`${this.urlApi}${this.urlSimularEquivalenciaMalla}${idPlanOrigen}&CodigoPlanDestino=${idPlanDestino}`)
+            .pipe( map( data => data.data.map( EquivalenciaMapper.fromApiToDomainSimulacion ) ) );
     }
 
 }

@@ -1,1 +1,25 @@
-<p>analisis-equivalencia-page works!</p>
+<p></p>
+<h1 class="text-2xl font-bold">Análisis de equivalencia</h1>
+<div class="row">
+    <div class="flex justify-content-end gap-2">
+        <ui-button color="primary" (onClick)="resumen()">{{ modoResumen() ? 'Vista Normal' : 'Ver Resumen' }}</ui-button>
+        <ui-button color="primary" (onClick)="simular()">Simular Equivalencia</ui-button>
+    </div>
+    <div class="col-6">
+        <select-plan-equivalencia [title]="planEstudioOrigenSelect().text" label="Seleccione el Plan Origen" control="origen" [options]="planEstudioOrigenOptionsSelect()" [origen]="true"></select-plan-equivalencia>
+    </div>
+    <div class="col-6">
+   
+        <select-plan-equivalencia [title]="planEstudioDestinoSelect().text" label="Seleccione el Plan Destino" control="destino" [options]="planEstudioDestinoOptionsSelect()"></select-plan-equivalencia>
+        
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-6">
+        <pre>{{ planEstudioOrigenSelect() | json }}</pre>
+    </div>
+    <div class="col-6">
+        <pre>{{ planEstudioDestinoSelect() | json }}</pre>
+    </div>
+</div> -->
