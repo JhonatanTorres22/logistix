@@ -3,7 +3,7 @@ import { EquivalenciaRepository } from "../../domain/repositories/equivalencia.r
 import { Observable } from "rxjs";
 
 import { EquivalenciaService } from "../services/equivalencia.service";
-import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, CursoMallaEquivalenciaSimulacion, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../../domain/models/equivalencia.model";
 
 
 @Injectable({
@@ -11,7 +11,7 @@ import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, Cur
 })
 
 export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
-
+    
     private readonly service = inject( EquivalenciaService )
 
     insertarEquivalenciaPrimario(equivalencia: EquivalenciaPrimarioInsert[]): Observable<void> {
@@ -35,5 +35,8 @@ export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
     eliminarEquivalenciaMalla(equivalencia: CursoMallaEquivalenciaDelete): Observable<void> {
         return this.service.eliminarEquivalenciaMalla(equivalencia);
     }
-
+    
+    simularEquivalenciaMalla(idPlanOrigen: number, idPlanDestino: number): Observable<CursoMallaEquivalenciaSimulacion[]> {
+        return this.service.simularEquivalenciaMalla(idPlanOrigen, idPlanDestino);
+    }
 }

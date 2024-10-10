@@ -1,5 +1,7 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
 import { PlanEstudio, PlanEstudioEditCU } from "../models/plan-estudio.model";
+import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
+import { CursoMallaEquivalenciaSimulacion } from "../models/equivalencia.model";
 
 
 @Injectable({
@@ -59,5 +61,14 @@ export class PlanEstudioSignal {
     openMallaCursos = signal ( false );
 
     renderizarPor = signal( '' );
+
+    planEstudioOrigenOptionsSelect: WritableSignal<UiSelect[]> = signal( [] );
+    planEstudioDestinoOptionsSelect: WritableSignal<UiSelect[]> = signal( [] );
+    planEstudioOrigenSelect: WritableSignal<UiSelect> = signal( { value: '', text: '', disabled: false } );
+    planEstudioDestinoSelect: WritableSignal<UiSelect> = signal( { value: '', text: '', disabled: false } );
+    
+    convalidacionDefault: CursoMallaEquivalenciaSimulacion[] = [];
+    convalidacion = signal( this.convalidacionDefault );
+    modoResumen = signal( false );
 }
 

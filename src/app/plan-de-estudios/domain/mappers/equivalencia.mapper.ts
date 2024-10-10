@@ -1,5 +1,5 @@
-import { CursoMallaEquivalenciaDeleteDTO, CursoMallaEquivalenciaPrimarioInsertDTO, CursoMallaEquivalenciaSecundarioInsertDTO, EquivalenciaDeleteDTO, EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
-import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
+import { CursoMallaEquivalenciaDeleteDTO, CursoMallaEquivalenciaPrimarioInsertDTO, CursoMallaEquivalenciaSecundarioInsertDTO, CursoMallaEquivalenciaSimulacionDTO, EquivalenciaDeleteDTO, EquivalenciaPrimarioInsertDTO, EquivalenciaSecundarioInsertDTO } from "../../infraestructure/dto/equivalencia.dto";
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, CursoMallaEquivalenciaSimulacion, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from "../models/equivalencia.model";
 
 export class EquivalenciaMapper {
     
@@ -54,6 +54,16 @@ export class EquivalenciaMapper {
             codigoMallaEquivalencia: param.idMallaEquivalencia,
             usuario: param.userId
         }
+    }
+
+    static fromApiToDomainSimulacion( param: CursoMallaEquivalenciaSimulacionDTO ): CursoMallaEquivalenciaSimulacion {
+
+            return {
+                idMallaOrigen: param.codigoMallaOrigen,
+                idMallaDestino: param.codigoMallaDestino,
+                porcentajeModificacion: param.porcentajeModificacion
+
+            }
     }
 
 }

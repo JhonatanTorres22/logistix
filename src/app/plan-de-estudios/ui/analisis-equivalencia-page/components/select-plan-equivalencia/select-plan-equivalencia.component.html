@@ -1,0 +1,14 @@
+<form [formGroup]="formSelect">
+    <ui-select [label]="label" formControlName="plan" [options]="options" (selectionChange)="listarCursosMalla( $event )"></ui-select>
+</form>
+<!-- <pre>{{ formSelect.value.plan | json }} VALOR DEL FORM</pre> -->
+<list-cursos-equivalencia [title]="title" [cursosMalla]="cursosMalla" [isOrigen]="origen"></list-cursos-equivalencia>
+
+<!-- <div class="row">
+    <div class="col-6">
+        <pre>{{ planOrigen | json }}</pre>
+    </div>
+    <div class="col-6">
+        <pre>{{ formSelect.value | json }}</pre>
+    </div>
+</div> -->
