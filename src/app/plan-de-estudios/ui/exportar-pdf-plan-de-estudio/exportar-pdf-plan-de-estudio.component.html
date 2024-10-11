@@ -1,1 +1,24 @@
-<ui-button color="blue" icon="ti ti-save f-16" (onClick)="exportarProyectoMasivo()" >Exportar PDF Plan de Estudio</ui-button>
+<ui-button color="blue" icon="ti ti-save f-16" (click)="exportarProyectoMasivo()">
+  Exportar PDF Plan de Estudio
+</ui-button>
+
+<mat-drawer #previewPDFPlanEstudio position="end" mode="over" class="kanban-drawer">
+  <div class="header-title">
+    <div class="kanban-header-title">
+      <div class="flex align-item-center">
+        <h4>{{ planEstudioSelect()?.nombre }}</h4>
+      </div>
+      <div class="flex align-item-center hei-10">
+        <button mat-icon-button (click)="cerrar()" class="modal-close">
+          <i class="ti ti-x f-20 "></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <ng-scrollbar style="height: calc(100vh - 88px)" visibility="hover">
+    <div class="p-2">
+      <iframe id="pdfViewer" class="pt-3 h-30rem border-none" style="width: 100%;"></iframe>
+    </div>
+  </ng-scrollbar>
+</mat-drawer>
