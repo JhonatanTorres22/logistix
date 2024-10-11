@@ -97,196 +97,204 @@
       <ng-template matStepLabel>Asignación de Equivalencias</ng-template>
 
       <ng-template matStepContent>
-          <div class="row">
-            <!-- <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre>
-            <pre>{{ connections | json }}</pre> -->
-             <!-- @if ( loading ) {
-                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-             } -->
-            <!-- <button (click)="addLine()">Add Connection</button> -->
-             <div class="flex justify-content-end gap-2">
-                <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
-                <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidar().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
-             </div>
-            <div class="col-6">
+            @if ( !loading ) {
+                <div class="row">
                 
-                
-                <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
-                    <ng-template #headerTitleTemplate>
-                
-                        <div>{{ planEstudioUltimoConResolucion().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
-                        <div class="bg-gray-600 text-white border-1 border-round px-3">ULTIMO</div>
-                        <!-- <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Primaria" (onClick)="guardarPrimariosConfirm()"></ui-button>
-                        <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Secundaria" (onClick)="guardarPrimariosConfirm()"></ui-button> -->
-                
-                    </ng-template>
-                    <div class="row text-center bg-accent-300 align-items-center">
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
-                        <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-4">Nombre Asignatura</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
-                            <div class="flex gap-2 justify-content-rigth">
-                                <div>HT</div>
-                                <div>HP</div>
-                                <div>TH</div>
-                                <div>CRED.</div>
-                            </div>
-                        </div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
+                    <pre>{{ connections.length }}</pre>
+                    <!-- <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre> -->
+                    <!-- @if ( loading ) {
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    } -->
+                    <!-- <button (click)="addLine()">Add Connection</button> -->
+                    <div class="flex justify-content-end gap-2">
+                        <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
+                        <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
                     </div>
-    
-                    
-                    @for (curso of cursosMallaEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) {
-                    <!-- @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) { -->
-                        @if ( !isFirst ) {
-                            <mat-divider></mat-divider>
-                        }
-                        <div
-                            class="row text-center align-items-center"
-                            [ngClass]="{'text-red-700 font-bold': curso.estado == 'DESFASADO'}"
-                            [attr.id]="'cardLeft-' + curso.idMalla"
-                            (click)="seleccionarCursoPlanProceso(curso)"
-                            [style.background-color]="curso.color"
-                            ColorCursoSecundario
-                            [curso]="curso"
-                            [cursos]="cursosMallaEquivalenciaActual"
-                        >
-                            <div class="col-1 border-3xl border-round f-10">
-                                {{ curso.cicloRomano }}
-                            </div>
-                            <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
-                            <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
-                            <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
-                            <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
-                            <div class="col-2 border-3xl border-round f-10">
-                                <div class="flex gap-3 justify-content-rigth">
-                                    <div>{{ curso.horasTeoricas }}</div>
-                                    <div>{{ curso.horasPracticas }}</div>
-                                    <div>{{ curso.totalHoras }}</div>
-                                    <div>{{ curso.totalCreditos }}</div>
+                    <div class="col-6">
+                        
+                        
+                        <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+                            <ng-template #headerTitleTemplate>
+                        
+                                <div>{{ planEstudioUltimoConResolucion().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
+                                <div class="bg-gray-600 text-white border-1 border-round px-3">ULTIMO</div>
+                                <!-- <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Primaria" (onClick)="guardarPrimariosConfirm()"></ui-button>
+                                <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Secundaria" (onClick)="guardarPrimariosConfirm()"></ui-button> -->
+                        
+                            </ng-template>
+                            <div class="row text-center bg-accent-300 align-items-center">
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Ciclo</div>
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
+                                <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-4">Nombre Asignatura</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
+                                    <div class="flex gap-2 justify-content-rigth">
+                                        <div>HT</div>
+                                        <div>HP</div>
+                                        <div>TH</div>
+                                        <div>CRED.</div>
+                                    </div>
                                 </div>
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
                             </div>
-                            <div class="col-1 border-3xl border-round f-10 check">
-                                <div class="flex gap-2 align-items-center">
+            
                             
-                                    @switch ( curso.estado ) {
-                                        @case ( 'RENOVADO' ) {
-                                            <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1" [ngClass]="{'activeFocus': cursosMallaEquivalenciaActual.includes( curso.idMalla )}"></i>
-                                        }
-                                        @case ( 'DESFASADO' ) {
-                                            <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1"></i>
-                                        }
-                                        @case ( 'ACTIVO' ) {
-                                            <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1"></i>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </app-card>
-              </div>
-              <div class="col-6">
-                <!-- <pre>
-                    {{ selectedRightCard | json }}
-                </pre> -->
-                <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
-                    <ng-template #headerTitleTemplate>
-                
-                        <div>{{ planEstudioSelect().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
-                        <div class="bg-blue-600 text-white border-1 border-round px-3">PROCESO</div>
-                        <!-- <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button> -->
-                
-                    </ng-template>
-                    <div class="row text-center bg-accent-300 align-items-center">
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold pl-4">Ciclo</div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
-                        <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-4">Nombre Asignatura</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
-                        <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
-                            <div class="flex gap-2 justify-content-rigth">
-                                <div>HT</div>
-                                <div>HP</div>
-                                <div>TH</div>
-                                <div>CRED.</div>
-
-                            </div>
-                        </div>
-                        <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
-                    </div>
-
-    
-                    <!-- <pre>{{ cursosPrimariosMalla | json}}</pre> -->
-                    @for (curso of cursosMallaEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) {
-                    <!-- @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) { -->
-                        @if ( !isFirst ) {
-                            <mat-divider></mat-divider>
-                        }
-                    <label [for]="'check-'+curso.idMalla">
-                        <div 
-                            class="row text-center align-items-center"
-                            [ngClass]="
-                            {
-                                'text-red-700 font-bold': curso.estado == 'DESFASADO',
-                                'text-green-900 font-bold bg-green-100': curso.equivalencias.length > 0
-                            }"
-                            [attr.id]="'cardRight-' + curso.idMalla"
-                            (click)="seleccionarCursoPlanUltimo(curso)"
-                            [style.background-color]="curso.color"
-                            ColorCursoSecundario
-                            [curso]="curso"
-                            [cursos]="cursosMallaEquivalenciaUltimo"
-                        >
-                                <div class="col-1 border-3xl border-round f-10">
-                                    <div class="flex gap-2 align-items-center">
-                                        @switch ( curso.estado ) {
-                                            @case ( 'RENOVADO' ) {
-                                                <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
-                                            }
-                                            @case ( 'DESFASADO' ) {
-                                                <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 -ml-2"></i>
-                                            }
-                                            @case ( 'ACTIVO' ) {
-                                                <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
-                                            }
-                                        }
+                            @for (curso of cursosMallaEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) {
+                            <!-- @for (curso of cursosPlanEquivalenciaUltimo; track curso; let isFirst = $first; let index = $index ) { -->
+                                @if ( !isFirst ) {
+                                    <mat-divider></mat-divider>
+                                }
+                                <div
+                                    class="row text-center align-items-center"
+                                    [ngClass]="
+                                    {
+                                        'text-red-700 font-bold': curso.estado == 'DESFASADO',
+                                    }"
+                                    [attr.id]="'cardLeft-' + curso.idMalla"
+                                    (click)="connections.length > 0 ? '' : seleccionarCursoPlanProceso(curso)"
+                                    [style.background-color]="curso.color"
+                                    ColorCursoSecundario
+                                    [curso]="curso"
+                                    [cursos]="cursosMallaEquivalenciaActual"
+                                >
+                                    <div class="col-1 border-3xl border-round f-10">
                                         {{ curso.cicloRomano }}
                                     </div>
-                                </div>
-                                <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
-                                <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
-                                <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
-                                <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
-                                <div class="col-2 border-3xl border-round f-10">
-                                    <div class="flex gap-3 justify-content-rigth">
-                                        <div>{{ curso.horasTeoricas }}</div>
-                                        <div>{{ curso.horasPracticas }}</div>
-                                        <div>{{ curso.totalHoras }}</div>
-                                        <div>{{ curso.totalCreditos }}</div>
+                                    <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
+                                    <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
+                                    <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+                                    <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
+                                    <div class="col-2 border-3xl border-round f-10">
+                                        <div class="flex gap-3 justify-content-rigth">
+                                            <div>{{ curso.horasTeoricas }}</div>
+                                            <div>{{ curso.horasPracticas }}</div>
+                                            <div>{{ curso.totalHoras }}</div>
+                                            <div>{{ curso.totalCreditos }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 border-3xl border-round f-10 check">
+                                        <div class="flex gap-2 align-items-center">
+                                    
+                                            @switch ( curso.estado ) {
+                                                @case ( 'RENOVADO' ) {
+                                                    <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1" [ngClass]="{'activeFocus': cursosMallaEquivalenciaActual.includes( curso.idMalla )}"></i>
+                                                }
+                                                @case ( 'DESFASADO' ) {
+                                                    <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1"></i>
+                                                }
+                                                @case ( 'ACTIVO' ) {
+                                                    <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1"></i>
+                                                }
+                                            }
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-1 border-3xl border-round f-10">
-                                    <div class="flex gap-2">
-                                        
-                                        @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
-                                            <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
-                                            <input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">
-                                        } @else {
-                                            <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
-                                            <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
-                                        }
-                                    </div>    
+                            }
+                        </app-card>
+                    </div>
+                    <div class="col-6">
+                        <!-- <pre>
+                            {{ selectedRightCard | json }}
+                        </pre> -->
+                        <app-card cardClass="mt-2" headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
+                            <ng-template #headerTitleTemplate>
+                        
+                                <div>{{ planEstudioSelect().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
+                                <div class="bg-blue-600 text-white border-1 border-round px-3">PROCESO</div>
+                                <!-- <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button> -->
+                        
+                            </ng-template>
+                            <div class="row text-center bg-accent-300 align-items-center">
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold pl-4">Ciclo</div>
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold">Cod. Curso</div>
+                                <div class="col-3 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-4">Nombre Asignatura</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold text-left pl-3">Tipo de Estudio</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">Tipo Asignatura</div>
+                                <div class="col-2 border-3xl border-round text-accent-700 f-10 font-bold">
+                                    <div class="flex gap-2 justify-content-rigth">
+                                        <div>HT</div>
+                                        <div>HP</div>
+                                        <div>TH</div>
+                                        <div>CRED.</div>
+    
+                                    </div>
                                 </div>
+                                <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
                             </div>
-                </label>
-                        }
-                    </app-card>
-                    <svg id="arrowContainerEquivalencia" class="arrow-container"></svg>
+    
+            
+                            <!-- <pre>{{ cursosPrimariosMalla | json}}</pre> -->
+                            @for (curso of cursosMallaEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) {
+                            <!-- @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) { -->
+                                @if ( !isFirst ) {
+                                    <mat-divider></mat-divider>
+                                }
+                            <!-- <label [for]="'check-'+curso.idMalla"> -->
+                                <div 
+                                    class="row text-center align-items-center"
+                                    [ngClass]="
+                                    {
+                                        'text-red-700 font-bold': curso.estado == 'DESFASADO',
+                                        'text-green-900 font-semibold bg-green-100': curso.equivalencias.length > 0,
+                                        
+                                    
+                                    }"
+                                    [attr.id]="'cardRight-' + curso.idMalla"
+                                    (click)="connections.length > 0 ? '' : seleccionarCursoPlanUltimo(curso)"
+                                    [style.background-color]="curso.color"
+                                    ColorCursoSecundario
+                                    [curso]="curso"
+                                    [cursos]="cursosMallaEquivalenciaUltimo"
+                                >
+                                        <div class="col-1 border-3xl border-round f-10">
+                                            <div class="flex gap-2 align-items-center">
+                                                @switch ( curso.estado ) {
+                                                    @case ( 'RENOVADO' ) {
+                                                        <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
+                                                    }
+                                                    @case ( 'DESFASADO' ) {
+                                                        <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 -ml-2"></i>
+                                                    }
+                                                    @case ( 'ACTIVO' ) {
+                                                        <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
+                                                    }
+                                                }
+                                                {{ curso.cicloRomano }}
+                                            </div>
+                                        </div>
+                                        <div class="col-1 border-3xl border-round f-10">{{ curso.codigoCurso }}</div>
+                                        <div class="col-3 border-3xl border-round f-10 text-left pl-4">{{ curso.nombreCurso }}</div>
+                                        <div class="col-2 border-3xl border-round f-10 text-left pl-3">{{ curso.tipoEstudio }}</div>
+                                        <div class="col-2 border-3xl border-round f-10">{{ curso.tipoCurso }}</div>
+                                        <div class="col-2 border-3xl border-round f-10">
+                                            <div class="flex gap-3 justify-content-rigth">
+                                                <div>{{ curso.horasTeoricas }}</div>
+                                                <div>{{ curso.horasPracticas }}</div>
+                                                <div>{{ curso.totalHoras }}</div>
+                                                <div>{{ curso.totalCreditos }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-1 border-3xl border-round f-10 py-0">
+                                            <div class="flex gap-2">
+                                                
+                                                @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
+                                                    <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
+                                                    <input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">
+                                                } @else {
+                                                    <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
+                                                    <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
+                                                }
+                                            </div>    
+                                        </div>
+                                    </div>
+                        <!-- </label> -->
+                                }
+                            </app-card>
+                            <svg id="arrowContainerEquivalencia" class="arrow-container"></svg>
+                        </div>
                 </div>
-            </div>
+            }
       </ng-template>
 
     </mat-step>

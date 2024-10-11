@@ -4,153 +4,166 @@
     <ui-button color="blue" icon="ti ti-arrow-back-up f-16" (onClick)="volver()" tooltip="Volver"></ui-button>
     <mat-divider class="my-2"></mat-divider>
 
-<div class="flex justify-content-end gap-2">
-    <ui-button color="blue" icon="ti ti-folder f-16" [routerLink]="['/cursos']" tooltip="Gestionar Cursos"></ui-button>
-    <ui-button color="red" icon="ti ti-trash f-16" (onClick)="onEliminarConfirm()" [disabled]="cursosPlan.length == 0" tooltip="Eliminar Cursos"></ui-button>
-</div>
+
+    
 }
-<div class="flex justify-content-end gap-2 -mr-3 px-0">
 
-    @if (preRequisito) {
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="visibilidadFlechaPreRequisito()"> {{ mostrarFlecha ? 'Ocultar Flechas' : 'Mostrar Flechas' }}</ui-button>
-    }
-    <!-- @if ( readonly ) { -->
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
+    <mat-tab label="Malla Curricular" bodyClass="overflow-hidden">
+        <ng-template matTabContent>
 
-    @if ( showBtnActivarEdicion ) {
+            <h1 class="text-2xl font-bold">Malla Curricular</h1>
 
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
-    } @else {
+        <div class="flex justify-content-end gap-2 px-0 mt-2">
+
+            @if (preRequisito) {
+                <ui-button color="blue" icon="ti ti-save f-16" (onClick)="visibilidadFlechaPreRequisito()"> {{ mostrarFlecha ? 'Ocultar Flechas' : 'Mostrar Flechas' }}</ui-button>
+            }
         
-        <!-- <ciclo-page></ciclo-page> -->
-        <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursos( templateCursoAdd )">Agregar Cursos</ui-button> -->
-        <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button> -->
-    }
-
-    @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
-        <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id == 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
-    }
-    <!-- <ui-button color="blue" icon="ti ti-save f-16" (onClick)="showModalImportar( templateCursoImport )">Importar Cursos</ui-button> -->
-    <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
-
-</div>
-<!-- <pre> {{ cursoPreRequisito?.idMalla | json }} </pre> -->
-<!-- <pre>{{ cursosMallaByCiclo() | json }}</pre> -->
-@if ( cursosMallaByCiclo().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
-    <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
-}
-
-
-
-<div class="row w-12 -mx-5">
-
-    <div class="flex gap-2">
-
-        @if ( !preRequisito ) {
-            @for (ciclo of cursosMallaByCiclo(); track ciclo) {
-
-                <div class="col-1 text-center">
-                    <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
-                    <div class="flex flex-column gap-2 example-list align-items-center"
-                        
-                        cdkDropList
-                        [cdkDropListData]="ciclo.cursosMalla"
-                        (cdkDropListDropped)="drop($event)">
-                        @for ( curso of ciclo.cursosMalla; track curso) {
-                            <div
-                                [cdkContextMenuTriggerFor]="options"
-                                (auxclick)="openOptions($event, curso, ciclo)"
-                                cdkDrag
-                                [cdkDragStartDelay]="cursoMallaSelectPreRequisito().idMalla == 0 ? 100000 : 0"
-                                [cdkDragDisabled]="cursosMallaPreRequisito().includes( curso )"
-                                (mouseenter)="hoverClass( curso )"
-                                (mouseleave)="removeClass( curso )"
-                                
-                            
-                              
-                                [ngClass]="
-                                 {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
-                                     'bg-green-200 border-green-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
-                                     'bg-blue-200': curso.preRequisitos.length > 0,
-                                     'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
-                                     'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
-                                 }"
-                    
-                                class="
-                                 text-black f-8
-                                 border-1 border-round
-                                 w-full
-                                 h-4rem
-                                 align-content-center
-                                 font-semibold px-1
-                                 
-                                 shadow-3"
-                                 >
-                            
-                                <div>{{ curso.nombreCurso }}</div>
-                                <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
-                            </div>
-                        }
-                    </div>
-                    
-                </div>
- 
-         } 
-
-        } @else {
-            @for (ciclo of cursosMallaPreRequisitoByCiclo(); track ciclo) {
-                
-                <!-- <pre>{{ preRequisitosFromCursoSelect | json }}</pre> -->
-                <div class="col-1 text-center">
-                    <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
-                    <div class="flex flex-column gap-2 example-list align-items-center"
-                    cdkDropList
-                        [cdkDropListData]="ciclo.cursosMalla"
-                        (cdkDropListDropped)="drop($event)">
-                        @for ( curso of ciclo.cursosMalla; track curso) {
-                            <div 
-                                cdkDrag
-                                [cdkDragStartDelay]="cursoMallaSelectPreRequisito().idMalla == 0 ? 100000 : 0"
-                                [cdkDragDisabled]="cursosMallaPreRequisito().includes( curso )"
-                                (mouseenter)="hoverClass( curso )"
-                                (mouseleave)="removeClass( curso )"
-                                (dblclick)="!isModal() && !readonly ? selectPreRequisitoPadre( curso ) : ''"
-                                (click)="cursoPreRequisito?.idMalla != 0 ? selectPreRequsitoHijo( curso ) : ''"
-                               
-                              
-                                [ngClass]="
-                                 {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
-                                     'bg-green-200 border-yellow-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
-                                     'bg-blue-200': curso.preRequisitos.length > 0,
-                                     'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
-                                     'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
-                                 }"
-                                [attr.id]="'card-' + curso.idMalla"
-                                class="
-                                 text-black f-8
-                                 border-1 border-round
-                                 w-full
-                                 h-4rem
-                                 align-content-center
-                                 font-semibold px-1
-                                 
-                                 shadow-3"
-                                 >
-                            
-                                <div>{{ curso.nombreCurso }}</div>
-                                <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
-                            </div>
-                        }
-                    </div>
-                    
-                </div>
- 
-            } 
-            
-            <svg id="arrowContainer" class="arrow-container"></svg>
+            @if ( showBtnActivarEdicion ) {
+        
+                <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
+            }
+        
+            @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
+                <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id == 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
+            }
+        
+            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
+        
+        </div>
+        
+        @if ( cursosMallaByCiclo().length == 0 && currentRuta() !== '/plan-de-estudios/disenar') {
+            <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
         }
-    </div>
-</div>
+        
+        
+        
+        <div class="row w-12 " cdkDropListGroup>
+        
+            <div class="flex gap-2">
+        
+                @if ( !preRequisito ) {
+                    @for (ciclo of cursosMallaByCiclo(); track ciclo) {
+        
+                        <div class="col-1 text-center">
+                            <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
+                            <div class="flex flex-column gap-2 example-list align-items-center"
+                                
+                                cdkDropList
+                                [cdkDropListData]="ciclo.cursosMalla"
+                                (cdkDropListDropped)="drop($event)">
+                                @for ( curso of ciclo.cursosMalla; track curso) {
+                                    <div
+                                        [cdkContextMenuTriggerFor]="options"
+                                        (auxclick)="openOptions($event, curso, ciclo)"
+                                        cdkDrag
+                                        [cdkDragStartDelay]="curso.idMalla == 0 ? 100000 : 0"
+                                        
+                                        (mouseenter)="hoverClass( curso )"
+                                        (mouseleave)="removeClass( curso )"
+                                        
+                                    
+                                      
+                                        [ngClass]="
+                                         {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
+                                             'bg-green-200 border-green-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
+                                             'bg-blue-200': curso.preRequisitos.length > 0,
+                                             'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
+                                             'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
+                                         }"
+                            
+                                        class="
+                                         text-black f-8
+                                         border-1 border-round
+                                         w-full
+                                         h-4rem
+                                         align-content-center
+                                         font-semibold px-1
+                                         
+                                         shadow-3"
+                                        >
+                                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                                        <span class="px-2 border-round" [ngClass]="curso.estado == 'ACTIVO' ? 'bg-cyan-200' : 'bg-blue-700'">{{ curso.estado }}</span>
+                                        <div>{{ curso.nombreCurso }}</div>
+                                        <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
+                                    </div>
+                                }
+                            </div>
+                            
+                        </div>
+         
+                 } 
+        
+                } @else {
+                    @for (ciclo of cursosMallaPreRequisitoByCiclo(); track ciclo) {
+        
+                        <div class="col-1 text-center">
+                            <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
+                            <div class="flex flex-column gap-2 example-list align-items-center"
+                            cdkDropList
+                                [cdkDropListData]="ciclo.cursosMalla"
+                                (cdkDropListDropped)="drop($event)">
+                                @for ( curso of ciclo.cursosMalla; track curso) {
+                                    <div 
+                                        cdkDrag
+                                        [cdkDragStartDelay]="cursoMallaSelectPreRequisito().idMalla == 0 ? 100000 : 0"
+                                        [cdkDragDisabled]="cursosMallaPreRequisito().includes( curso )"
+                                        (mouseenter)="hoverClass( curso )"
+                                        (mouseleave)="removeClass( curso )"
+                                        (dblclick)="!isModal() && !readonly ? selectPreRequisitoPadre( curso ) : ''"
+                                        (click)="cursoPreRequisito?.idMalla != 0 ? selectPreRequsitoHijo( curso ) : ''"
+                                       
+                                      
+                                        [ngClass]="
+                                         {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
+                                             'bg-green-200 border-yellow-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
+                                             'bg-blue-200': curso.preRequisitos.length > 0,
+                                             'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
+                                             'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
+                                         }"
+                                        [attr.id]="'card-' + curso.idMalla"
+                                        class="
+                                         text-black f-8
+                                         border-1 border-round
+                                         w-full
+                                         h-4rem
+                                         align-content-center
+                                         font-semibold px-1
+                                         
+                                         shadow-3"
+                                         >
+                                    
+                                        <div>{{ curso.nombreCurso }}</div>
+                                        <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
+                                    </div>
+                                }
+                            </div>
+                            
+                        </div>
+         
+                    } 
+                    
+                    <svg id="arrowContainer" class="arrow-container"></svg>
+                }
+            </div>
+        </div>
 
+        </ng-template>
+        
+        
+        
+        
+    </mat-tab>
+    @if ( !isModal() && !isModalOfItself() && currentRuta() !== '/plan-de-estudios/disenar' ) {
+        <mat-tab label="Análisis de Equivalencia">
+            <ng-template matTabContent>
+                <analisis-equivalencia-page [isMalla]="true"></analisis-equivalencia-page>
+            </ng-template>
+        </mat-tab>
+    }
+
+</mat-tab-group>
 
 <ng-template #templateCursoDesfasadoList let-data>
     <mat-dialog-content>
@@ -205,16 +218,13 @@
     </mat-dialog-actions>
 </ng-template>
 
-<!-- <pre>
-    {{ planEstudioUltimoConResolucion() | json }}
-</pre> -->
+
 <ng-template #templateCursoImport let-data>
     <mat-dialog-content>
 
       
         <curso-import-template></curso-import-template>
-        
-        <!-- <plan-estudio-card [planEstudio]="planEstudioUltimoConResolucion()"></plan-estudio-card> -->
+
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>

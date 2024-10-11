@@ -26,7 +26,7 @@
                                 [cdkContextMenuTriggerFor]="options"
                                 (auxclick)="openOptions($event, curso, ciclo)"
                                 cdkDrag
-                                [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 100000 : 0"
+                                [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 0 : 0"
                                 [cdkDragDisabled]="preRequisitos().includes( curso )"
                                 (mouseenter)="hoverClass( curso )"
                                 (mouseleave)="removeClass( curso )"

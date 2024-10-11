@@ -35,7 +35,7 @@ export class EquivalenciaService {
 
         this.urlInsertarPrimarioMalla = 'api/Equivalencia/InsertarPrimarios2';
         this.urlInsertarSecundarioMalla = 'api/Equivalencia/InsertarSecundarios2';
-        this.urlEliminarMalla = 'api/Equivalencia/EliminarMalla';
+        this.urlEliminarMalla = 'api/Equivalencia/Eliminar2';
 
         this.urlSimularEquivalenciaMalla = 'api/Equivalencia/simulacion?CodigoPlanOrigen=';
 
@@ -73,8 +73,8 @@ export class EquivalenciaService {
         return this.http.post<void>(`${this.urlApi}${this.urlInsertarSecundarioMalla}`, equivalenciaAPI);
     }
 
-    eliminarEquivalenciaMalla = ( equivalencia: CursoMallaEquivalenciaDelete ): Observable<void> => {
-        const equivalenciaAPI = EquivalenciaMapper.fromDomainToApiDeleteMalla(equivalencia);
+    eliminarEquivalenciaMalla = ( equivalencia: CursoMallaEquivalenciaDelete[] ): Observable<void> => {
+        const equivalenciaAPI = equivalencia.map(EquivalenciaMapper.fromDomainToApiDeleteMalla);
         return this.http.delete<void>(`${this.urlApi}${this.urlEliminarMalla}`, { body: equivalenciaAPI });
     }
 

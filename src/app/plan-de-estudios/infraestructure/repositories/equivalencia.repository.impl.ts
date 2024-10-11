@@ -32,7 +32,7 @@ export class EquivalenciaRepositoryImpl implements EquivalenciaRepository {
     insertarEquivalenciaSecundarioMalla(equivalencia: CursoMallaEquivalenciaSecundarioInsert[]): Observable<void> {
         return this.service.insertarSecundariosMalla(equivalencia);
     }
-    eliminarEquivalenciaMalla(equivalencia: CursoMallaEquivalenciaDelete): Observable<void> {
+    eliminarEquivalenciaMalla(equivalencia: CursoMallaEquivalenciaDelete[]): Observable<void> {
         return this.service.eliminarEquivalenciaMalla(equivalencia);
     }
     

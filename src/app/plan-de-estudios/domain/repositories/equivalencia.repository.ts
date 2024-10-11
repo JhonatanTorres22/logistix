@@ -9,7 +9,7 @@ export abstract class EquivalenciaRepository {
 
     abstract insertarEquivalenciaPrimarioMalla( equivalencia: CursoMallaEquivalenciaPrimarioInsert[] ): Observable<void>
     abstract insertarEquivalenciaSecundarioMalla( equivalencia: CursoMallaEquivalenciaSecundarioInsert[] ): Observable<void>
-    abstract eliminarEquivalenciaMalla( equivalencia: CursoMallaEquivalenciaDelete ): Observable<void>
+    abstract eliminarEquivalenciaMalla( equivalencia: CursoMallaEquivalenciaDelete[] ): Observable<void>
 
     abstract simularEquivalenciaMalla( idPlanOrigen: number, idPlanDestino: number ): Observable<CursoMallaEquivalenciaSimulacion[]>
 }

@@ -33,6 +33,7 @@ import { select } from 'd3-selection';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
 import { MallaImportComponent } from '../malla-import/malla-import.component';
 import { CursoDesfasadoListComponent } from '../../curso-desfasado-list/curso-desfasado-list.component';
+import { AnalisisEquivalenciaPageComponent } from '../../analisis-equivalencia-page/analisis-equivalencia-page.component';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -48,6 +49,7 @@ import { CursoDesfasadoListComponent } from '../../curso-desfasado-list/curso-de
     CursoDesfasadoListComponent,
     MallaImportComponent,
     UiButtonComponent,
+    AnalisisEquivalenciaPageComponent,
   ],
   templateUrl: './malla-list.component.html',
   styleUrl: './malla-list.component.scss'
@@ -90,7 +92,7 @@ export class MallaListComponent  implements OnInit {
   planesDeEstudio = this.signal.planesDeEstudio;
   cursoDesfasadoSelected = this.cursoSignal.cursoDesfasadoSelected;
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
-
+  cicloOrden: any[] = [];
 
   idPrograma = this.signal.programaId;
   isModal = this.signal.isModal;
@@ -118,18 +120,27 @@ export class MallaListComponent  implements OnInit {
   ) {
     effect( () => {
       if( this.planEstudioSelect().id !== 0 ) {
-        console.log( this.planEstudioSelect() );
+        // console.log( this.planEstudioSelect() );
         // this.obtenerCursosPorPlanEstudioPrerequisito();
       }
       
     })
   }
-
+  _canceledByEsq = false;
+  
   @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
     console.log(event);
     
     this.resetPreRequisito();
+
+    if (event.key === 'Escape' && !this.preRequisito) {
+      this._canceledByEsq = true;
+      document.dispatchEvent(new Event('mouseup'));
+    }
   }
+
+
+
 
   ngOnInit(): void {
 
@@ -406,7 +417,7 @@ export class MallaListComponent  implements OnInit {
         
         this.cursosMalla.set( cursosPlan );
         const cursoByCiclo = this.cursosMalla().reduce( ( a: CursoMallaByCiclo[], b: Malla ) => {
-          console.log( b);
+          // console.log( b);
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
@@ -470,7 +481,7 @@ export class MallaListComponent  implements OnInit {
         }, 400);
         this.cursosMallaPreRequisito.set( cursosPlan );
         const cursoByCiclo = this.cursosMallaPreRequisito().reduce( ( a: CursoMallaByCiclo[], b: Malla ) => {
-          console.log( b);
+          // console.log( b);
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
@@ -527,7 +538,7 @@ export class MallaListComponent  implements OnInit {
   }
 
   hoverClass = ( curso: Malla) => {
-    console.log( curso );
+    // console.log( curso );
     
     curso.preRequisitos.map( cursoPre => {
       document.getElementById('card-'+cursoPre?.idMalla.toString() )?.classList.add( 'border-blue-500', 'font-bold' , 'border-3', 'border-solid');
@@ -860,6 +871,12 @@ export class MallaListComponent  implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log( this.cursosMallaByCiclo() );
+    if (this._canceledByEsq) {
+      // Do my data manipulations
+      this._canceledByEsq = false;
+      return;
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
