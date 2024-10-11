@@ -77,7 +77,9 @@
 <ng-template #planEstudioPerfilEgresado let-data>
     <app-plan-estudio-perfil-egresado></app-plan-estudio-perfil-egresado>
 </ng-template>
-<malla-curricular-side></malla-curricular-side>
+@if ( !isModal() || isModalOfItself()) {
+    <malla-curricular-side></malla-curricular-side>
+}
 
 <!-- <ng-template #ultimoPlanConRCU let-data>
     <mat-dialog-content>

@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { CursoEquivalenciaComponent } from '../curso-equivalencia/curso-equivalencia.component';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
   imports: [
     CommonModule,
     SharedModule,
-    ListCursosEquivalenciaComponent,
+    CursoEquivalenciaComponent
   ],
   templateUrl: './list-cursos-equivalencia.component.html',
   styleUrl: './list-cursos-equivalencia.component.scss'

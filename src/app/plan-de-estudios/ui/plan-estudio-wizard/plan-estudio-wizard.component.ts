@@ -20,7 +20,7 @@ import { CursoPlanBase, CursoPlanEliminar, CursoPlanEquivalencia, EquivalenciaVa
 import * as d3 from "d3";
 
 import { EquivalenciaRepository } from '../../domain/repositories/equivalencia.repository';
-import { CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
+import { CursoMallaEquivalenciaDelete, CursoMallaEquivalenciaPrimarioInsert, CursoMallaEquivalenciaSecundarioInsert, EquivalenciaDelete, EquivalenciaPrimarioInsert, EquivalenciaSecundarioInsert } from '../../domain/models/equivalencia.model';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { CursoDesfasadoListComponent } from "../curso-desfasado-list/curso-desfasado-list.component";
 import { CursoRepository } from '../../domain/repositories/curso.repository';
@@ -38,6 +38,7 @@ import { Malla } from '../../domain/models/malla.model';
 import { Router } from '@angular/router';
 import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card.component';
 import { ExportarPdfPlanDeEstudioComponent } from '../exportar-pdf-plan-de-estudio/exportar-pdf-plan-de-estudio.component';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -85,7 +86,8 @@ export class PlanEstudioWizardComponent implements OnInit {
   cursosPlan = this.cursoPlanSignal.cursosPlan;
   currentRol = this.authSignal.currentRol;
   renderizarCursos = this.cursoSignal.renderizarCursos;
-  cursoPlanEquivalenciaValidar = this.cursoPlanSignal.cursoPlanEquivalenciaValidar;
+  cursoPlanEquivalenciaValidarAutomatico = this.cursoPlanSignal.cursoPlanEquivalenciaValidarAutomatico;
+  cursoPlanEquivalenciaValidarManual = this.cursoPlanSignal.cursoPlanEquivalenciaValidarManual;
   cursosImportExcel = this.cursoSignal.cursosImportExcel;
   cicloList = this.cicloSignal.cicloList;
   currentInfoDirector = this.authSignal.currentInfoDirector;
@@ -95,9 +97,11 @@ export class PlanEstudioWizardComponent implements OnInit {
 
 
   
+  porcentajeModificacion: number = 0;
   loading: boolean = false;
   // CONEXIÓN DE LAS FLECHAS
 
+  
   selectedLeftCard: Malla
   selectedRightCard: Malla;
   setearCursoPlanEquivalencia: Malla = {
@@ -617,7 +621,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   guardarCursosSecundariosConfirm = () => {
 
-    if( !this.cursoPlanEquivalenciaValidar().equivalenciaTerminada && this.connections.length == 0 ) {
+    if( !this.cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && this.connections.length == 0 ) {
       return
     }
 
@@ -636,7 +640,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       return {
         idMalla: curso.rightCardId,
         idMallaEquivalencia: curso.leftCardId,
-        porcentajeModificacion: 0,
+        porcentajeModificacion: this.porcentajeModificacion == 0 ? 0 : this.porcentajeModificacion,
         userId: parseInt( this.authSignal.currentRol().id )
       }
     })
@@ -650,6 +654,9 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.alert.showAlert('Los cursos secundarios fueron guardados correctamente', 'success', 6);
         // this.obtenerCursoPlanEquivalenciaActual();
         this.obtenerMallaEquivalenciaActual();
+        this.obtenerMallaEquivalenciaUltimo();
+        this.porcentajeModificacion = 0;
+        this.connections = [];
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al guardar los cursos secundarios', 'error', 6);
@@ -658,27 +665,36 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   }
 
-  eliminarEquivalenciaConfirm = ( curso: CursoPlanBase ) => {
+  eliminarEquivalenciaConfirm = ( curso: Malla ) => {
     this.alert.sweetAlert('question', 'Confirmación', `Está seguro que desea eliminar la equivalencia del curso ${ curso.nombreCurso }`)
       .then( isConfirm => {
         if( !isConfirm ) {
           return
         }
-        const eliminarEquivalencia: EquivalenciaDelete = {
-          cursoPlanId: curso.idCursoPlan,
-          cursoPlanEquivalenciaId: curso.equivalencias[0].idCursoPlan,
+        const eliminarEquivalencia: CursoMallaEquivalenciaDelete[] = [{
+          idMalla: curso.idMalla,
+          idMallaEquivalencia: curso.equivalencias[0].idMalla,
           userId: parseInt( this.authSignal.currentRol().id )
-        }
+        }]
+
+        console.log(eliminarEquivalencia);
+        
         this.eliminarEquivalencia( eliminarEquivalencia );
       })
   }
   
-  eliminarEquivalencia = ( curso: EquivalenciaDelete ) => {
-    this.EquivalenciaRepository.eliminarEquivalencia( curso ).subscribe({
+  eliminarEquivalencia = ( curso: CursoMallaEquivalenciaDelete[] ) => {
+    this.EquivalenciaRepository.eliminarEquivalenciaMalla( curso ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('La equivalencia fue eliminada correctamente', 'success', 6);
-        this.obtenerCursoPlanEquivalenciaActual();
+        // this.obtenerCursoPlanEquivalenciaActual();
+        this.loading = true;
+        this.obtenerMallaEquivalenciaActual();
+        this.obtenerMallaEquivalenciaUltimo();
+        this.addLine();
+        this.loading = false;
+
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al eliminar la equivalencia', 'error', 6);
@@ -746,10 +762,46 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
 
   seleccionarCursoPlanUltimo(card: Malla): void {
-    this.selectedRightCard = card;
-    console.log('Selected Right Card:', card);
-    this.cursosSeleccionadosParaDibujar();
+
+    if( this.selectedLeftCard.estado == 'RENOVADO' ) {
+    
+      Swal.fire({
+        title: 'IMPORTANTE!',
+        text: 'Ingresar valor porcentaje de modificación',
+        input: 'number',
+        inputAttributes: {
+          min: '0',
+          max: '100',
+          step: '0.01'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.porcentajeModificacion = parseFloat(result.value);
+          console.log('Porcentaje de modificación:', this.porcentajeModificacion);
+          this.selectedRightCard = card;
+          console.log('Selected Right Card:', card);
+          this.cursosSeleccionadosParaDibujar().then( isDrawed => {
+            if( !isDrawed ) {
+              return
+            }
+            this.guardarCursosSecundarios();
+            console.log('GUARDAR PORCENTAJE');
+          })
+          // this.guardarCursosSecundarios();
+        }
+      });
+    } else {
+      this.selectedRightCard = card;
+      console.log('Selected Right Card:', card);
+      this.cursosSeleccionadosParaDibujar();
+    }
+
   }
+
+
 
   addLine = () => {
     
@@ -781,18 +833,30 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   cursosSeleccionadosParaDibujar = () => {
 
-    if (this.selectedLeftCard && this.selectedRightCard) {
-      console.log('Dibujando flechas entre cursos...');
-      
-      this.dibujarFlechasEntreCursos( this.selectedRightCard.idMalla, this.selectedLeftCard.idMalla );
-    }
+    return new Promise<boolean>( resolve => {
+      if (this.selectedLeftCard && this.selectedRightCard) {
+        console.log('Dibujando flechas entre cursos...');
+        
+        this.dibujarFlechasEntreCursos( this.selectedRightCard.idMalla, this.selectedLeftCard.idMalla ).then( isDrawed => {
+          if( !isDrawed ) {
+            // this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
+            // this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+            resolve( false );
+          }
+
+          resolve( true )
+        })
+      }
+    })
   }
 
   equivalenciaSecundariasTotall: Malla[] = [];
 
   dibujarFlechasEntreCursos = ( right: number, left: number) => {
 
-    const equivalenciasIds = new Set<number>();
+    return new Promise<boolean>( resolve => {
+
+      const equivalenciasIds = new Set<number>();
     this.cursosMallaEquivalenciaActual.forEach(curso => {
       curso.equivalencias.forEach(equivalencia => {
         equivalenciasIds.add( equivalencia.idMalla);
@@ -818,7 +882,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       totalPendientes: equivalenciaSecundariasTotal.length
     }
 
-    this.cursoPlanEquivalenciaValidar.set( dataEquivalenciaValidar );
+    this.cursoPlanEquivalenciaValidarAutomatico.set( dataEquivalenciaValidar );
     // console.log( dataEquivalenciaValidar );
 
     if( equivalenciaSecundariasTotal.length == 0 ) {
@@ -894,19 +958,35 @@ export class PlanEstudioWizardComponent implements OnInit {
         .attr('marker-end', 'url(#arrowhead)');
 
       // Agregar la nueva conexión al array
-      this.connections.push({ leftCardId: left, rightCardId: right });
+      const isConvalidado = this.cursosMallaEquivalenciaActual.findIndex( curso => curso.idMalla == right );
+      console.log( isConvalidado, this.cursosMallaEquivalenciaActual[isConvalidado] );
       this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
       this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
-      console.log( this.connections );
       
+      if( isConvalidado !== -1 && this.cursosMallaEquivalenciaActual[isConvalidado].equivalencias.length > 0 ) {
+        // this.alert.sweetAlert('info', '¿IMPORTANTE!', 'Este curso ya se encuentra convalidado')
+        // document.getElementById(`arrow-${right}-${left}`)?.remove();
+        // this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
+        // this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
+        this.connections.splice(isConvalidado, 1); // Eliminar la conexión del array
+        // if (existingLeftConnectionIndex !== -1) {
+        // }
+        console.log( 'Eliminar.........' );
+        resolve(false)
+        
+      } else {
+        this.connections.push({ leftCardId: left, rightCardId: right });
+        resolve(true)
+
+      }
     }
-    
-    
-    
 
     // console.log( 'Requiren Equivalencia Sec Total: ', equivalenciaSecundariasTotal );
     // console.log( 'Requiren Equivalencia Sec Pendientes: ', equivalenciaSecundariasPendientes );
     // console.log('Conexiones actuales:', this.connections);
+
+    })
+    
 
   }
 

@@ -89,7 +89,7 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
     // if( this.idProgramaSelect != 0 ) {
     //   console.log(this.idProgramaSelect );
     //   console.log(this.semestreSelect());
-      this.obtener();
+      // this.obtener();
     // }
   }
 

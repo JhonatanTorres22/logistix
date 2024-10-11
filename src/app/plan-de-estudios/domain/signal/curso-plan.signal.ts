@@ -58,7 +58,8 @@ export class CursoPlanSignal {
         cursosUltimoPendientes: []
     }
     
-    cursoPlanEquivalenciaValidar = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
+    cursoPlanEquivalenciaValidarAutomatico = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
+    cursoPlanEquivalenciaValidarManual = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
     
     // cursosPlanPreRequisito = signal( this.cursoPlanPreRequisitoDefault );
 }

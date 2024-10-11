@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, effect, Input, OnDestroy } from '@angular/core';
 import { UiSelectComponent } from 'src/app/core/components/ui-select/ui-select.component';
 import { UiSelect } from 'src/app/core/components/ui-select/ui-select.interface';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -24,7 +24,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
   templateUrl: './select-plan-equivalencia.component.html',
   styleUrl: './select-plan-equivalencia.component.scss'
 })
-export class SelectPlanEquivalenciaComponent {
+export class SelectPlanEquivalenciaComponent implements OnDestroy {
 
   @Input() title: string = 'Plan de Estudios';
   @Input() label: string = 'Plan de Origen';
@@ -33,6 +33,10 @@ export class SelectPlanEquivalenciaComponent {
 
   planEstudioOrigenSelect = this.planSignal.planEstudioOrigenSelect;
   planEstudioDestinoSelect = this.planSignal.planEstudioDestinoSelect;
+
+
+  planEstudioOrigenOptionsSelect = this.planSignal.planEstudioOrigenOptionsSelect;
+  planEstudioDestinoOptionsSelect = this.planSignal.planEstudioDestinoOptionsSelect;
 
   planSeleccionado: UiSelect = { value: '', text: '', disabled: false };
   cursosMalla: Malla[] = [];
@@ -60,18 +64,54 @@ export class SelectPlanEquivalenciaComponent {
     private planSignal: PlanEstudioSignal
   ) {
     
-    // this.formSelect = this.origen ?
-    //   this.fb.group({origen: new FormControl('')}) :
-    //     this.fb.group({ destino: new FormControl('') });
+    
     this.formSelect = this.fb.group({ plan: new FormControl('') });
+
+    effect( () => {
+      const origen = this.planEstudioOrigenOptionsSelect();
+      const destino = this.planEstudioDestinoOptionsSelect();
+
+      if( origen.length === 0 || destino.length === 0 ) {
+        return
+      } else {
+        console.log('origen', origen);
+        console.log('destino', destino);
+
+        this.origen ? this.listarCursosMallaDefault( origen[0] ) : this.listarCursosMallaDefault( destino[0] );
+
+        return
+      }
+
+
+    }, { allowSignalWrites: true } )
+
+  }
+  ngOnDestroy(): void {
+    // this.planEstudioOrigenOptionsSelect.set([]);
+    // this.planEstudioDestinoOptionsSelect.set([]);
   }
 
   ngOnInit(): void {
-    console.log('origen', this.origen);
     
   }
 
   listarCursosMalla = ({ value }: MatSelectChange ) => {
+    const valueSelect: UiSelect = value
+    console.log(value);
+    this.repository.getMalla( parseInt( valueSelect.value )).subscribe({
+      next: (malla) => {
+        console.log(malla);
+        this.origen ? this.planEstudioOrigenSelect.set(value) : this.planEstudioDestinoSelect.set(value);
+        this.alert.showAlert(`Listando cursos del plan ${ value.text }`, 'success');
+        this.cursosMalla = malla;
+      }, error: (error) => {
+        console.error(error);
+        this.alert.showAlert(`Ocurrió un error al obtener los cursos del plan ${ value.text }`, 'error');
+      }
+    });
+  }
+
+  listarCursosMallaDefault = ( value : UiSelect) => {
     const valueSelect: UiSelect = value
     console.log(value);
     this.repository.getMalla( parseInt( valueSelect.value )).subscribe({

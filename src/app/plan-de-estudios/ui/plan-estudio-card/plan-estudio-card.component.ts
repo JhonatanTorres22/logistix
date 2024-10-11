@@ -63,7 +63,7 @@ export class PlanEstudioCardComponent {
     private modal: UiModalService 
   ) {
     effect( () => {
-      // console.log( this.planEstudioSelect() );
+      console.log( this.planEstudioSelect() );
       localStorage.setItem('selectPlanEstudio', JSON.stringify(this.planEstudioSelect()));
       
     } )

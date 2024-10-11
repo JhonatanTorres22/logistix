@@ -13,7 +13,7 @@ import { Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
   templateUrl: './curso-equivalencia.component.html',
   styleUrl: './curso-equivalencia.component.scss'
 })
-export class CursoEQuivalenciaComponent {
+export class CursoEquivalenciaComponent {
 
   @Input() curso: Malla;
   @Input() color: string = 'transparent';
