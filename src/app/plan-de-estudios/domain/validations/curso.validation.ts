@@ -3,6 +3,7 @@ import { AbstractControl } from "@angular/forms";
 import { UiSelect } from "src/app/core/components/ui-select/ui-select.interface";
 import { CursoSignal } from "../signal/curso.signal";
 import { ValidacionComprobarDuplicadoService } from "src/app/programas-academicos/domain/services/validacion-comprobar-duplicado.service";
+import { MallaSignal } from "../signal/malla.signal";
 
 @Injectable({
     providedIn: 'root'
@@ -12,9 +13,10 @@ import { ValidacionComprobarDuplicadoService } from "src/app/programas-academico
 
 export class CursoValidation {
       cursoOption = this.cursoSignal.cursoOption;
-
+      cursoMallaOption = this.mallaSignal.cursoMallaOption;
     constructor(
         private cursoSignal : CursoSignal,
+        private mallaSignal : MallaSignal,
         private validarDuplicadoService:ValidacionComprobarDuplicadoService
         
     ){}
@@ -88,7 +90,7 @@ export class CursoValidation {
 
     duplicadoNombreCurso(control: AbstractControl): { [key: string]: boolean } | null {
         const listaCursos = this.cursoSignal.cursosList();
-        const cursoEditar = this.cursoSignal.cursoSelect().id !== 0 ? this.cursoSignal.cursoSelect() : this.cursoOption();
+        const cursoEditar = this.cursoSignal.cursoSelect().id !== 0 ? this.cursoSignal.cursoSelect() : this.cursoMallaOption();
         return this.validarDuplicadoService.duplicadoNombre(control, listaCursos, cursoEditar, 'nombreCurso');
       }
 

@@ -1,6 +1,6 @@
 import { p } from "msw/lib/core/GraphQLHandler-COiPfZ8k";
-import { MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
-import { Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoMallaRenovarDTO, CursoMallaReordenarDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
+import { CursoMallaRenovar, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 
 export class MallaMapper {
     static fromApiToDomainList( param: MallaDTO ): Malla {
@@ -106,4 +106,36 @@ export class MallaMapper {
             preRequisitos: []
         }
     }
+
+    static fromDomainToApiCursoMallaRenovar( param: CursoMallaRenovar ): CursoMallaRenovarDTO {
+        return {
+            codigoCiclo: param.idCiclo,
+            codigoPlanDeEstudio: param.idPlanEstudio,
+            codigoCurso: param.idCurso,
+            usuario: param.userId,
+            orden: param.orden,
+            codigoInterno: param.codigoCurso,
+            nombre: param.nombreCurso,
+            tipoDeCurso: param.tipoCurso,
+            tipoDeEstudio: param.tipoEstudio,
+            ht: param.horasTeoricas,
+            hp: param.horasPracticas,
+            tHoras: param.totalHoras,
+            tCreditos: param.totalCreditos,
+            codigoProgramaAcademico: param.idPrograma,
+            descripcion: param.descripcion,
+            competencia: param.competencia,
+            
+            
+        }
+    }
+    static fromDomainToApiCursoMallaReordenar( param: CursoMallaReordenar ): CursoMallaReordenarDTO {
+        return {
+            codigoMalla: param.idMalla,
+            orden: param.orden,
+            codigoCiclo: param.idCiclo,
+            usuario: param.userId
+        }
+    }
+
 }

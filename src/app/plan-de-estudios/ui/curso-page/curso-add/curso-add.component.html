@@ -1,20 +1,18 @@
 <mat-dialog-content>
     <div class="p-10">
-        <!-- <pre>
-            {{ cursoOption() | json }}
-        </pre> -->
+        <!-- <pre>{{ formCurso.value | json }}</pre> -->
         <form [formGroup]="formCurso">
             <div class="flex gap-2 justify-content-end">
                 <!-- <ui-button-icon color="primary" icon="ti ti-close" tooltip="Cerrar"></ui-button-icon> -->
             </div>
             <div class="flex gap-2">
                 <!-- <ui-input class="w-full" label="Programa" formControlName="programa" ></ui-input> -->
-                 @if (this.cursoDetails().id == 0 && !readonlyCiclo) {
-                     <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" [readonly]="readonlyCiclo"></ui-select>
+                <ui-select label="Ciclo" formControlName="idCiclo" [options]="optionsCiclos" [readonly]="readonlyCiclo"></ui-select>
+                @if (this.cursoDetails().id == 0 && !readonlyCiclo) {
                  }
                  <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
                  [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
-                 @if( cursoOption().id != 0 ) {
+                 @if( cursoMallaOption().idMalla != 0 ) {
                      <ui-input [ngModel]="codigoCursoAnterior" class="w-full" label="Codigo Anterior" formControlName="codigoCursoAnterior" [readonly]="true"></ui-input>
                      
                  }
@@ -54,7 +52,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    @if ( cursoOption().id != 0 ) {
+    @if ( cursoMallaOption().idMalla != 0 ) {
         <ui-button color="secondary" label="Limpiar Formulario" (onClick)="limpiar()" class="m-r-10"></ui-button>
     } @else {
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>

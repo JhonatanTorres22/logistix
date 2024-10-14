@@ -604,17 +604,20 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   changeStepper = ( event: number ) => {
     console.log( event );
-    this.connections = [];
+    // this.connections = [];
     if( event == 2 && this.connections.length == 0 ) {
       // this.loading = true;
-  
-      setTimeout(() => {
-        window.addEventListener('resize', this.redibujarFlechaXZoom.bind(this));
-        this.inicioFlechaSVG();
-        this.addLine();
-        this.asignarColores()
+      console.log( )
+      if( this.connections.length <= 0 ) {
+        
+        setTimeout(() => {
+          window.addEventListener('resize', this.redibujarFlechaXZoom.bind(this));
+          this.addLine();
+          this.asignarColores()
+          this.inicioFlechaSVG();
 
-      }, 1000);
+        }, 1000);
+      }
     }
     
   }
@@ -741,7 +744,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       .attr('height', '100%');
 
     svg.append('defs').append('marker')
-      .attr('id', 'arrowhead')
+      .attr('id', 'arrowheadEquivalencia')
       .attr('viewBox', '-0 -5 10 10')
       .attr('refX', 10)
       .attr('refY', 0)
@@ -955,7 +958,7 @@ export class PlanEstudioWizardComponent implements OnInit {
         .attr('y2', endY)
         .attr('stroke', 'black')
         .attr('stroke-width', 1.7)
-        .attr('marker-end', 'url(#arrowhead)');
+        .attr('marker-end', 'url(#arrowheadEquivalencia)');
 
       // Agregar la nueva conexión al array
       const isConvalidado = this.cursosMallaEquivalenciaActual.findIndex( curso => curso.idMalla == right );
@@ -1023,7 +1026,7 @@ export class PlanEstudioWizardComponent implements OnInit {
           .attr('y2', endY)
           .attr('stroke', 'black')
           .attr('stroke-width', 1.8)
-          .attr('marker-end', 'url(#arrowhead)');
+          .attr('marker-end', 'url(#arrowheadEquivalencia)');
       }
     });
   }

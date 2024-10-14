@@ -93,3 +93,30 @@ export interface MallaPreRequisitoDataArrayDTO {
 export interface MallaEquivalenciaDataArrayDTO {
     data: MallaEquivalenciaDTO[]
 }
+
+
+export interface CursoMallaRenovarDTO {
+    codigoPlanDeEstudio: number,
+    orden: number,
+    codigoCurso: number,
+    codigoProgramaAcademico: number,
+    codigoCiclo: number,
+    codigoInterno: string,
+    nombre: string,
+    descripcion: string,
+    tipoDeCurso: string,
+    tipoDeEstudio: string,
+    competencia: string,
+    ht: number,
+    hp: number,
+    tHoras: number,
+    tCreditos: number,
+    usuario: number
+}
+
+export interface CursoMallaReordenarDTO {
+    codigoMalla: number,
+    orden: number,
+    codigoCiclo: number,
+    usuario: number
+}
