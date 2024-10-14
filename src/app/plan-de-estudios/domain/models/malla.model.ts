@@ -55,3 +55,30 @@ export interface CursoMallaByCiclo {
 }
 
 export type CursoPreRequisitoMalla = Pick<Malla, 'idMalla' | 'nombreCurso'>
+
+
+export interface CursoMallaRenovar {
+    idPlanEstudio: number,
+    orden: number,
+    idCurso: number,
+    idPrograma: number,
+    idCiclo: number,
+    codigoCurso: string,
+    nombreCurso: string,
+    descripcion: string,
+    tipoCurso: string,
+    tipoEstudio: string,
+    competencia: string,
+    horasTeoricas: number,
+    horasPracticas: number,
+    totalHoras: number,
+    totalCreditos: number,
+    userId: number,
+}
+
+export interface CursoMallaReordenar {
+    idMalla: number,
+    orden: number,
+    idCiclo: number,
+    userId: number,
+}

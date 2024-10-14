@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
+import { CursoMallaRenovar, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
 import { MallaDataArrayDTO, MallaEquivalenciaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
 import { environment } from "src/environments/environment";
 import { MallaMapper } from "../../domain/mappers/malla.mapper";
@@ -18,6 +18,8 @@ export class MallaService {
     private urlGetMallaEquivalencias: string;
     private urlInsertMalla: string;
     private urlDeleteMalla: string;
+    private urlRenovarMalla: string;
+    private urlReordenarMalla: string;
         
         constructor(
             private http: HttpClient
@@ -28,6 +30,8 @@ export class MallaService {
             this.urlGetMallaEquivalencias = 'api/Equivalencia/Listar2?CodigoPlanDeEstudio=';
             this.urlInsertMalla = 'api/Malla/Insertar';
             this.urlDeleteMalla = 'api/Malla/Eliminar';
+            this.urlRenovarMalla = 'api/Malla/Renovar';
+            this.urlReordenarMalla = 'api/Malla/ActualizarOrden';
 
         }
         
@@ -54,5 +58,17 @@ export class MallaService {
         deleteMalla( malla: MallaDelete[] ): Observable<void> {
             const mallaApi = malla.map( MallaMapper.fromDomainToApiDelete );
             return this.http.delete<void>(this.urlApi + this.urlDeleteMalla, { body: mallaApi });
+        }
+
+        renovarMalla(malla: CursoMallaRenovar): Observable<void> {
+            const mallaAPI = MallaMapper.fromDomainToApiCursoMallaRenovar( malla );
+            return this.http.post<void>(this.urlApi + this.urlRenovarMalla, mallaAPI);
+        }
+
+        reordenarMalla(malla: CursoMallaReordenar[]): Observable<void> {
+            const mallaAPI = malla.map( MallaMapper.fromDomainToApiCursoMallaReordenar );
+            console.log( mallaAPI );
+            
+            return this.http.put<void>(this.urlApi + this.urlReordenarMalla, mallaAPI);
         }
 }

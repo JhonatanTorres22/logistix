@@ -27,13 +27,14 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { UiUploaderFilesComponent } from 'src/app/core/components/ui-uploader-files/ui-uploader-files.component';
 import { CursoImportTemplateComponent } from '../../curso-page/curso-import-template/curso-import-template.component';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
-import { CursoMallaByCiclo, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
+import { CursoMallaByCiclo, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { select } from 'd3-selection';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
 import { MallaImportComponent } from '../malla-import/malla-import.component';
 import { CursoDesfasadoListComponent } from '../../curso-desfasado-list/curso-desfasado-list.component';
 import { AnalisisEquivalenciaPageComponent } from '../../analisis-equivalencia-page/analisis-equivalencia-page.component';
+import { CursoAddComponent } from '../../curso-page/curso-add/curso-add.component';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -47,6 +48,7 @@ import { AnalisisEquivalenciaPageComponent } from '../../analisis-equivalencia-p
     UiUploaderFilesComponent,
     CursoImportTemplateComponent,
     CursoDesfasadoListComponent,
+    CursoAddComponent,
     MallaImportComponent,
     UiButtonComponent,
     AnalisisEquivalenciaPageComponent,
@@ -120,8 +122,11 @@ export class MallaListComponent  implements OnInit {
   ) {
     effect( () => {
       if( this.planEstudioSelect().id !== 0 ) {
-        // console.log( this.planEstudioSelect() );
-        // this.obtenerCursosPorPlanEstudioPrerequisito();
+        this.obtenerMalla( this.planEstudioSelect()?.id );
+
+        this.obtenerCursos()
+
+        this.obtenerMallaPreRequisitos();
       }
       
     })
@@ -144,11 +149,7 @@ export class MallaListComponent  implements OnInit {
 
   ngOnInit(): void {
 
-    this.obtenerMalla( this.planEstudioSelect().id );
-
-    this.obtenerCursos()
-
-    this.obtenerMallaPreRequisitos();
+    
   
   }
 
@@ -421,10 +422,11 @@ export class MallaListComponent  implements OnInit {
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
-
+              console.log( b, this.cursosList() );
+              const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == b.cicloNumero)!.id;
               const newCiclo: CursoMallaByCiclo = {
                 cicloNumero:  b.cicloNumero,
-                idCiclo: 0,
+                idCiclo: cicloId,
                 ciclo: b.cicloRomano,
                 cursosMalla: [b]
               }
@@ -442,7 +444,7 @@ export class MallaListComponent  implements OnInit {
         this.showBtnActivarEdicion = cursosPlan.length > 0;
       }, error: ( error ) => {
         console.log(error);
-        
+        this.alert.showAlert('Ocurrio un error al obtener los cursos', 'error', 5);
       }
     })
   }
@@ -870,23 +872,191 @@ export class MallaListComponent  implements OnInit {
     } )
   }
 
+  renovar = ( template: TemplateRef<any> ) => {
+    
+    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea renovar el curso?')
+      .then( isConfirm => {
+        if(!isConfirm){
+          console.log('cancelar');
+          return
+        }
+        
+        this.modal.openTemplate({
+          template,
+          titulo: 'Renovar Curso'
+        }).afterClosed().subscribe( resp => {
+          console.log(resp);
+          if( resp == 'cancelar') {
+            this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+            return
+          }
+          
+          this.obtenerMalla( this.planEstudioSelect().id );
+          this.obtenerMallaPreRequisitos();
+        
+        } )
+
+      })
+    
+    
+  }
+
   drop(event: CdkDragDrop<string[]>) {
-    console.log( this.cursosMallaByCiclo() );
+
     if (this._canceledByEsq) {
       // Do my data manipulations
       this._canceledByEsq = false;
       return;
     }
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
+
+    
+
+    console.log( this.cursosMallaByCiclo() );
+    // this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea reordenar los cursos?').then( isConfirm => {
+    //   if( !isConfirm ) {
+    //     return
+    //   }
+      // this.reordenarCursos( event );
+      console.log( 'REORDENAR SI SI SI');
+      
+      if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+
+        const draggedItem = event.previousContainer.data;
+        const targetItem = event.container.data[event.currentIndex];
+        const moveItem:Malla = JSON.parse( JSON.stringify( draggedItem[event.previousIndex] ));
+        // const curso = this.cursosMalla().find( curso => curso.idMalla == draggedItem[event.previousIndex] );
+        // const cursoTarget = this.cursosMalla().find( curso => curso.idMalla == targetItem );
+        console.log('previousContainer:', draggedItem);
+        console.log('containerData:', event.container.data);
+        console.log('Move item:', moveItem);
+        console.log('Target item:', targetItem);
+        console.log('Container:', event.container.data);
+        const cursoConvertPrevio = JSON.parse( JSON.stringify( moveItem ));
+        const cursoConvertCurrent = JSON.parse( JSON.stringify( targetItem ));
+        // const cursoConvert: Malla = JSON.parse( curso );
+        
+        const cursosReordenPrevio = {...this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertPrevio.cicloNumero )!};
+        const cursosReordenCurrent = this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertCurrent.cicloNumero )!;
+        
+        // console.log( cursosReordenPrevio.cursosMalla );
+        // console.log( cursosReordenCurrent.cursosMalla );
+
+        // console.log( this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertPrevio.cicloNumero ) );
+        // console.log( this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertCurrent.cicloNumero ) );
+ 
+
+        // console.log( cursosReordenPrevio );
+        // console.log( cursosReordenCurrent );
+        
+        // const cursosPrevio: CursoMallaReordenar[] = cursosReordenPrevio.cursosMalla.filter( curso => curso.idMalla !== moveItem.idMalla ).map( (curso, index) => {
+        //   return {
+        //     idMalla: curso.idMalla,
+        //     orden: index + 1,
+        //     idCiclo: cursosReordenPrevio.idCiclo,
+        //     userId: parseInt( this.authSignal.currentRol().id )
+        //   }
+        // })
+
+        // const cursosCurrent: CursoMallaReordenar[] = cursosReordenCurrent.cursosMalla.map( (curso, index) => {
+        //   return {
+        //     idMalla: curso.idMalla,
+        //     orden: index + 1,
+        //     idCiclo: cursosReordenCurrent.idCiclo,
+        //     userId: parseInt( this.authSignal.currentRol().id )
+        //   }
+        // })
+
+        // console.log( cursosPrevio );
+        // console.log( cursosCurrent );
+        // console.log([...cursosCurrent, ...cursosPrevio])
+        
+        
+               
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+        const buscar = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero )[0].cursosMalla.find( cur => cur.idMalla == moveItem.idMalla );
+        
+
+        console.log( buscar );
+        this.cursosMallaByCiclo.set( this.cursosMallaByCiclo().map( cursoByCiclo => {
+          if( cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero || cursoByCiclo.cicloNumero == cursosReordenPrevio.cicloNumero ) {
+            return {
+              ...cursoByCiclo,
+              cursosMalla: cursoByCiclo.cursosMalla.map( (curso, index) => {
+                if( curso.idMalla == moveItem.idMalla ) {
+                  return {
+                    ...curso,
+                    cicloNumero: cursosReordenCurrent.cicloNumero,
+                    cicloRomano: cursosReordenCurrent.ciclo,
+                    orden: index + 1
+                  }
+                }
+                return {
+                  ...curso,
+                  // orden: curso.orden > event.currentIndex ? curso.orden - 1 : curso.orden
+                  orden: index + 1
+                }
+              })
+            }
+          }
+          return cursoByCiclo
+        }))
+        console.log( this.cursosMallaByCiclo() );
+        const pre1 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero !== cursosReordenCurrent.cicloNumero )[0];
+        const pre2 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero !== cursosReordenPrevio.cicloNumero )[0];
+        
+        // console.log( pre1, pre2 );
+
+        // const preReal = pre1.cicloNumero > pre2.cicloNumero ? pre1 : pre2;
+        // const curReal = pre1.cicloNumero > pre2.cicloNumero ? pre2 : pre1;
+        const cursoReordenado: Malla[] = [ ...pre1.cursosMalla, ...pre2.cursosMalla ]
+        
+        const cursoReornadoOf: CursoMallaReordenar[] = cursoReordenado.map( (curso) => {
+          const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == curso.cicloNumero )!.id;
+          return {
+            idMalla: curso.idMalla,
+            orden: curso.orden,
+            idCiclo: cicloId,
+            userId: parseInt( this.authSignal.currentRol().id )
+          }
+        })
+
+        console.log( cursoReornadoOf );
+        this.reOrdenarCursos( cursoReornadoOf );
+
+        
+        
+       
+
+        
+      }
+
+    // } )
+
+    
+
+    
+    
+  }
+
+  reOrdenarCursos = ( cursos: CursoMallaReordenar[] ) => {
+    this.mallaRepository.reordenarMalla( cursos ).subscribe({
+      next: ( data ) => {
+        console.log( data );
+        this.alert.showAlert('Los cursos fueron reordenados correctamente', 'success', 6);
+        this.obtenerMalla( this.planEstudioSelect().id );
+        this.obtenerMallaPreRequisitos();
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al reordenar los cursos', 'error', 6);
+      }
+    })
   }
 
 

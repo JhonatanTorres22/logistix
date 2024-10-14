@@ -37,7 +37,7 @@
             <ui-card-not-items icon='ti ti-folder-off f-40' text="No hay cursos creados" class="mt-2 h-30rem" classContent="h-full align-content-center"></ui-card-not-items>
         }
         
-        
+        <!-- <pre>{{ planEstudioSelect() | json }}</pre> -->
         
         <div class="row w-12 " cdkDropListGroup>
         
@@ -45,7 +45,7 @@
         
                 @if ( !preRequisito ) {
                     @for (ciclo of cursosMallaByCiclo(); track ciclo) {
-        
+                        
                         <div class="col-1 text-center">
                             <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
                             <div class="flex flex-column gap-2 example-list align-items-center"
@@ -53,7 +53,8 @@
                                 cdkDropList
                                 [cdkDropListData]="ciclo.cursosMalla"
                                 (cdkDropListDropped)="drop($event)">
-                                @for ( curso of ciclo.cursosMalla; track curso) {
+                                @for ( curso of ciclo.cursosMalla; track curso; let index = $index) {
+                                    <!-- <pre>Old: {{ curso.orden | json }} - New: {{ index + 1 }} </pre> -->
                                     <div
                                         [cdkContextMenuTriggerFor]="options"
                                         (auxclick)="openOptions($event, curso, ciclo)"
@@ -176,13 +177,13 @@
 </ng-template>
 
 
-<ng-template #templateCursoAdd let-data>
+<!-- <ng-template #templateCursoAdd let-data>
     <mat-dialog-content>
 
         <div class="row">
             <div class="col-8 overflow-auto h-28rem">
                 @for( curso of cursosList(); track curso; ) {
-                    <mat-checkbox class="example-margin border-1 border-round border-gray-400 w-25rem" ()>
+                    <mat-checkbox class="example-margin border-1 border-round border-gray-400 w-25rem">
                         <div class=" px-4 py-2">
                             {{ curso.nombreCurso }}
                         </div>
@@ -216,7 +217,7 @@
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
         <ui-button color="primary" label="Agregar" (onClick)="agregar()"></ui-button>
     </mat-dialog-actions>
-</ng-template>
+</ng-template> -->
 
 
 <ng-template #templateCursoImport let-data>
@@ -247,4 +248,8 @@
             <button (click)="desfasarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-alert-circle f-16 pr-2 text-red-700"></i>Desfasar</button>
         }
     </div>
+</ng-template>
+
+<ng-template #templateCursoAdd let-data>
+    <curso-add [readonlyCiclo]="cursoMallaOption().idMalla == 0 ? false : true"></curso-add>
 </ng-template>
