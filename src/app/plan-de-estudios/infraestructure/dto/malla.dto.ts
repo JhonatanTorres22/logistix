@@ -98,7 +98,7 @@ export interface MallaEquivalenciaDataArrayDTO {
 export interface CursoMallaRenovarDTO {
     codigoPlanDeEstudio: number,
     orden: number,
-    codigoCurso: number,
+    codigoMalla: number,
     codigoProgramaAcademico: number,
     codigoCiclo: number,
     codigoInterno: string,
@@ -118,5 +118,50 @@ export interface CursoMallaReordenarDTO {
     codigoMalla: number,
     orden: number,
     codigoCiclo: number,
+    usuario: number
+}
+
+export interface CursoMallaRenovadoDTO {
+    codigoMallaRenovada: number,
+    codigoCursoRenovado: number,
+    codigoInternoCursoRenovado: string,
+    nombreCursoRenovado: string,
+    definicionCicloRenovado: string,
+    codigoMallaActiva: number,
+    codigoCursoActivo: number,
+    codigoInternoCursoActivo: string,
+    nombreCursoActivo: string,
+    definicionCicloActivo: string
+}
+
+export interface CursoMallaDesfasadoDTO {
+    codigoMalla: number,
+    codigoCurso: number,
+    codigoInternoCurso: string,
+    nombreCurso: string,
+    definicionCiclo: string
+}
+
+export interface CursoMallaRenovadoDataArrayDTO {
+    data: CursoMallaRenovadoDTO[]
+}
+
+export interface CursoMallaDesfasadoDataArrayDTO {
+    data: CursoMallaDesfasadoDTO[]
+}
+
+export interface CursoMallaRevertirRenovacionDTO {
+    codigoMallaRenovada: number,
+    usuario: number
+}
+
+export interface CursoMallaDesfasarDTO {
+    codigoMalla: number,
+    usuario: number
+}
+
+
+export interface CursoMallaRevertirDesfaseDTO {
+    codigoMalla: number,
     usuario: number
 }

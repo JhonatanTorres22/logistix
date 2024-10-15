@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { CursoMallaByCiclo, Malla } from "../models/malla.model";
+import { CursoMallaByCiclo, CursoMallaDesfasado, CursoMallaRenovado, Malla } from "../models/malla.model";
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +40,27 @@ export class MallaSignal {
         cursosMalla: []
     }
 
+    cursoMallaRenovadoDefault: CursoMallaRenovado = {
+        idMallaRenovada: 0,
+        idCursoRenovado: 0,
+        codigoCursoRenovado: "",
+        nombreCursoRenovado: "",
+        cicloRomanoRenovado: "",
+        idMalla: 0,
+        idCurso: 0,
+        codigoCurso: "",
+        nombreCurso: "",
+        cicloRomano: ""
+    }
+
+    cursoMallaDesfasadoDefault: CursoMallaDesfasado = {
+        idMalla: 0,
+        idCurso: 0,
+        codigoCurso: "",
+        nombreCurso: "",
+        cicloRomano: ""
+    }
+
     cursoMallaSelectPreRequisito = signal( this.cursoMallaDefault );
 
     cursosMalla = signal<Malla[]>(this.mallaDefault);
@@ -52,5 +73,10 @@ export class MallaSignal {
     cursoMallaOption = signal( this.cursoMallaDefault );
 
     cursoMallaCicloSelect = signal( this.cursoMallaByCicloDefault );
+
+    cursoMallaRenovadoSelected = signal( this.cursoMallaRenovadoDefault )
+
+    cursoMallaDesfasadoSelected = signal( this.cursoMallaDesfasadoDefault );
+
 
 }

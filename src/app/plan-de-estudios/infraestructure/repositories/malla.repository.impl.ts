@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { MallaRepository } from "../../domain/repositories/malla.repository";
 import { Observable } from "rxjs";
-import { CursoMallaRenovar, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
 import { MallaService } from "../services/malla.service";
 
 @Injectable({
@@ -9,6 +9,8 @@ import { MallaService } from "../services/malla.service";
 })
 
 export class MallaRepositoryImpl implements MallaRepository {
+    
+
     private readonly service = inject( MallaService );
     
     getMalla(idPlan: number): Observable<Malla[]> {
@@ -23,6 +25,10 @@ export class MallaRepositoryImpl implements MallaRepository {
         return this.service.getMallaEquivalencias(idPlan);
     }
     
+    getCursoMallaRenovados(idPlan: number): Observable<CursoMallaRenovado[]> {
+        return this.service.getMallaRenovados( idPlan );
+    }
+    
     insertMalla(malla: MallaInsert[]): Observable<void> {
         return this.service.insertMalla(malla);
     }
@@ -34,9 +40,26 @@ export class MallaRepositoryImpl implements MallaRepository {
     renovarMalla(malla: CursoMallaRenovar): Observable<void> {
         return this.service.renovarMalla(malla);
     }
-
+    
     reordenarMalla(malla: CursoMallaReordenar[]): Observable<void> {
         return this.service.reordenarMalla( malla );
     }
     
+    revertirRenovacion(malla: CursoMallaRevertirRenovacion): Observable<void> {
+        return this.service.revertirRenovacion( malla )
+    }
+
+    cursoMallaDesfasar(malla: CursoMallaDesfasar): Observable<void> {
+        return this.service.desfasarMalla( malla );
+    }
+
+    getMallaDesfasados(idPlan: number): Observable<CursoMallaDesfasado[]> {
+        return this.service.getMallaDesfasados( idPlan );
+    }
+
+    revertirDesfase(malla: CursoMallaRevertirDesfase): Observable<void> {
+        return this.service.revertirDesfase( malla );
+    }
+    
+
 }

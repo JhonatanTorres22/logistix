@@ -1,9 +1,9 @@
 <!-- <pre>
     {{ cursosDesfasados | json }}
 </pre> -->
-<mat-radio-group [ngModel]="cursoDesfasadoSelected()" (ngModelChange)="cursoDesfasadoSelected.set( $event )">
-    @for (curso of cursosDesfasados; track curso; let i = $index) {
-      <div class="price-check m-b-15 w-full sm:w-25rem">
+<mat-radio-group [ngModel]="cursoMallaDesfasadoSelected()" (ngModelChange)="cursoMallaDesfasadoSelected.set( $event )">
+    @for (curso of cursosMallaDesfasados; track curso; let i = $index) {
+      <div class="price-check m-b-15 w-full">
         <mat-radio-button color="primary" class="w-100" [value]="curso">
           <div class="row align-item-center">
             <div class="col-12">
@@ -21,5 +21,14 @@
       </div>
     }
   </mat-radio-group>
-
-  <ui-card-not-items *ngIf="!cursosDesfasados.length" text="No hay cursos desfadaos"></ui-card-not-items>
+  @if ( cursoMallaDesfasadoSelected().idMalla !== 0 && cursosMallaDesfasados.length ) {
+    <ui-alert type="info">
+      De confirmarse la reversión, el curso de <b>{{ cursoMallaDesfasadoSelected().nombreCurso }}</b> volverá a estar activo.
+    </ui-alert>
+  }
+  @if ( cursoMallaDesfasadoSelected().idMalla == 0 && cursosMallaDesfasados.length > 0 )  {
+    <ui-alert type="info">
+      De confirmarse la reversión, el curso que seleccione volverá a estar activo.
+    </ui-alert>
+  }
+  <ui-card-not-items *ngIf="!cursosMallaDesfasados.length" text="No hay cursos desfadaos"></ui-card-not-items>

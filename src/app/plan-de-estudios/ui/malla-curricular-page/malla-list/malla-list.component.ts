@@ -27,7 +27,7 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { UiUploaderFilesComponent } from 'src/app/core/components/ui-uploader-files/ui-uploader-files.component';
 import { CursoImportTemplateComponent } from '../../curso-page/curso-import-template/curso-import-template.component';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
-import { CursoMallaByCiclo, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
+import { CursoMallaByCiclo, CursoMallaDesfasar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { select } from 'd3-selection';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
@@ -35,6 +35,9 @@ import { MallaImportComponent } from '../malla-import/malla-import.component';
 import { CursoDesfasadoListComponent } from '../../curso-desfasado-list/curso-desfasado-list.component';
 import { AnalisisEquivalenciaPageComponent } from '../../analisis-equivalencia-page/analisis-equivalencia-page.component';
 import { CursoAddComponent } from '../../curso-page/curso-add/curso-add.component';
+import { CursoRenovadoListComponent } from '../../curso-renovado-list/curso-renovado-list.component';
+import { template } from 'lodash';
+import { CursoMallaRevertirDesfaseDTO } from 'src/app/plan-de-estudios/infraestructure/dto/malla.dto';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -51,6 +54,7 @@ import { CursoAddComponent } from '../../curso-page/curso-add/curso-add.componen
     CursoAddComponent,
     MallaImportComponent,
     UiButtonComponent,
+    CursoRenovadoListComponent,
     AnalisisEquivalenciaPageComponent,
   ],
   templateUrl: './malla-list.component.html',
@@ -92,7 +96,9 @@ export class MallaListComponent  implements OnInit {
   cursoMallaOption = this.mallaSignal.cursoMallaOption;
   cursoMallaCicloSelect = this.mallaSignal.cursoMallaCicloSelect;
   planesDeEstudio = this.signal.planesDeEstudio;
-  cursoDesfasadoSelected = this.cursoSignal.cursoDesfasadoSelected;
+  cursoMallaDesfasadoSelected = this.mallaSignal.cursoMallaDesfasadoSelected;
+  cursoMallaRenovadoSelected = this.mallaSignal.cursoMallaRenovadoSelected;
+
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
   cicloOrden: any[] = [];
 
@@ -155,12 +161,27 @@ export class MallaListComponent  implements OnInit {
 
   /* */
 
-  listarDesfasados = ( template: TemplateRef<any>) => {
+  openModalCursosDesfasados = ( template: TemplateRef<any>) => {
     this.modal.openTemplate({
       template,
       titulo: 'Cursos Desfasados',
     }).afterClosed().subscribe( data => {
-      // this.cursoDesfasadoSelected.set( this.cursoSignal.cursoDesfasadoDefault );
+      // this.cursoMallaDesfasadoSelected.set( this.cursoSignal.cursoDesfasadoDefault );
+      if( data === 'cancelar' ) {
+        console.log( data );
+        return
+      }
+      console.log( data );
+      
+    } )
+  }
+
+  openModalCursosRenovados = ( template: TemplateRef<any> ) => {
+    this.modal.openTemplate({
+      template,
+      titulo: 'Cursos Renovados'
+    }).afterClosed().subscribe( data => {
+      // this.cursoMallaDesfasadoSelected.set( this.cursoSignal.cursoDesfasadoDefault );
       if( data === 'cancelar' ) {
         console.log( data );
         return
@@ -175,7 +196,7 @@ export class MallaListComponent  implements OnInit {
       template,
       titulo: 'Cursos',
     }).afterClosed().subscribe( data => {
-      // this.cursoDesfasadoSelected.set( this.cursoSignal.cursoDesfasadoDefault );
+      // this.cursoMallaDesfasadoSelected.set( this.cursoSignal.cursoDesfasadoDefault );
       if( data === 'cancelar' ) {
         console.log( data );
         return
@@ -373,15 +394,15 @@ export class MallaListComponent  implements OnInit {
 
   revertirDesfaseConfirm = () => {
 
-    this.alert.sweetAlert('question', 'Confirmación', `Está seguro que desea revertir el desfase del curso ${ this.cursoDesfasadoSelected().nombreCurso }`)
+    this.alert.sweetAlert('question', 'Confirmación', `Está seguro que desea revertir el desfase del curso ${ this.cursoMallaDesfasadoSelected().nombreCurso }`)
       .then( isConfirm => {
         if( !isConfirm ) {
           return
         }
 
-        const cursoDesfasado: CursoRevertirDesfase = {
-          id: this.cursoDesfasadoSelected().id,
-          usuarioId: parseInt( this.authSignal.currentRol().id )
+        const cursoDesfasado: CursoMallaRevertirDesfase = {
+          idMalla: this.cursoMallaDesfasadoSelected().idMalla,
+          userId: parseInt( this.authSignal.currentRol().id )
         }
         console.log( cursoDesfasado );
         // return
@@ -390,23 +411,54 @@ export class MallaListComponent  implements OnInit {
 
   }
 
-  revertirDesfase = ( cursoDesfasado: CursoRevertirDesfase ) => {
+  revertirDesfase = ( cursoDesfasado: CursoMallaRevertirDesfase ) => {
 
-    this.cursosRepository.revertirDesfase( cursoDesfasado ).subscribe({
+    this.mallaRepository.revertirDesfase( cursoDesfasado ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('El curso fue revertido correctamente', 'success', 6);
         this.obtenerMalla( this.planEstudioSelect().id );
         this.obtenerMallaPreRequisitos();
-        this.obtenerMallaUltimoConResolucionToImport( this.planEstudioSelect().id );
+
         this.modal.getRefModal().close('Obtener');
-        this.renderizarCursos.set( 'Obtener' );
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al revertir el desfase del curso', 'error', 6);
       }
     });
 
+  }
+
+  revertirRenovacionConfirm = () => {
+    this.alert.sweetAlert('question', '¿Confirmación?', `De confirmarse la reversión, el curso de ${ this.cursoMallaRenovadoSelected().nombreCurso } será eliminado. En su lugar, el curso de ${ this.cursoMallaRenovadoSelected().nombreCursoRenovado } volverá a estar activo. ¿Está seguro que desea Revertir la Renovación?`)
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          return
+        }
+        const curso: CursoMallaRevertirRenovacion = {
+          idMallaRenovada: this.cursoMallaRenovadoSelected().idMallaRenovada,
+          userId: parseInt( this.authSignal.currentRol().id )
+        }
+        this.revertirRenovacion( curso );
+
+      })
+  }
+
+
+  revertirRenovacion = ( curso: CursoMallaRevertirRenovacion ) => {
+    this.mallaRepository.revertirRenovacion( curso ).subscribe({
+      next: ( response ) => {
+        console.log( response );
+        this.alert.showAlert('El curso fué revertido correctamente', 'success', 5);
+        this.obtenerMalla( this.planEstudioSelect().id );
+        this.obtenerMallaPreRequisitos();
+        this.modal.getRefModal().close('Obtener');
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al revertir el curso', 'error', 5)
+        
+      }
+    })
   }
   /* */
 
@@ -830,37 +882,27 @@ export class MallaListComponent  implements OnInit {
           this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
           return
         }
-        const curso: CursoEliminar = {
-          id: this.cursoMallaOption().idCurso,
-          usuarioId: parseInt( this.authSignal.currentRol().id )
+        const curso: CursoMallaDesfasar = {
+          idMalla: this.cursoMallaOption().idMalla,
+          userId: parseInt( this.authSignal.currentRol().id )
         }
 
         console.log( curso );
         
-        return
-        this.desfasar( curso ).then( isDesfasado => {
-          if( !isDesfasado ) {
-            return
-          }
-          
-          this.eliminarCursoMalla( [ { idMalla: this.cursoMallaOption().idMalla, userId: parseInt( this.authSignal.currentRol().id ) } ] )
-            .then( isDeleted => {
-              if( !isDeleted ) {
-                return
-              }
-              this.obtenerMalla( this.planEstudioSelect().id );
-            })
-        })
+
+        this.desfasar( curso )
       })
 
   }
 
-  desfasar = ( curso: CursoDesfasar  ) => {
+  desfasar = ( curso: CursoMallaDesfasar  ) => {
     return new Promise<boolean>( resolve => {
-      this.cursosRepository.desfasar( curso ).subscribe({
+      this.mallaRepository.cursoMallaDesfasar( curso ).subscribe({
         next: ( data ) => {
           console.log(data);
           this.alert.showAlert('El curso fue desfasado de manera correcta', 'success', 6);
+          this.obtenerMalla( this.planEstudioSelect().id );
+          this.obtenerMallaPreRequisitos();
           resolve( true );
           
         }, error: ( error ) => {

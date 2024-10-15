@@ -217,7 +217,7 @@
                                         <div>HP</div>
                                         <div>TH</div>
                                         <div>CRED.</div>
-    
+                                        <input type="checkbox" class="z-5" (change)="selectPrimarioMasivo($event)">
                                     </div>
                                 </div>
                                 <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
@@ -230,7 +230,7 @@
                                 @if ( !isFirst ) {
                                     <mat-divider></mat-divider>
                                 }
-                            <!-- <label [for]="'check-'+curso.idMalla"> -->
+                            <label [for]="'check-'+curso.idMalla">
                                 <div 
                                     class="row text-center align-items-center"
                                     [ngClass]="
@@ -288,7 +288,7 @@
                                             </div>    
                                         </div>
                                     </div>
-                        <!-- </label> -->
+                        </label>
                                 }
                             </app-card>
                             <svg id="arrowContainerEquivalencia" class="arrow-container"></svg>
