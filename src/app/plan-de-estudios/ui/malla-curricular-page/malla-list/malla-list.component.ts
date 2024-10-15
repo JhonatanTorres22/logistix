@@ -460,13 +460,63 @@ export class MallaListComponent  implements OnInit {
       }
     })
   }
+
+  openFormCurso( template: TemplateRef<any>) {
+
+    const cursoMalla = this.cursoMallaOption();
+
+    const curso: Curso = {
+      codigoCurso: cursoMalla.codigoCurso,
+      competencia: cursoMalla.competencia,
+      definicionCiclo: cursoMalla.cicloRomano,
+      descripcion: cursoMalla.descripcion,
+      id: cursoMalla.idCurso,
+      idPrograma: this.currentInfoDirector()[0].idProgramaAcademico,
+      idCiclo: this.cursoMallaCicloSelect().idCiclo,
+      nombreCurso: cursoMalla.nombreCurso,
+      tipoEstudio: cursoMalla.tipoEstudio,
+      tipoCurso: cursoMalla.tipoCurso,
+      horasTeoricas: cursoMalla.horasTeoricas,
+      horasPracticas: cursoMalla.horasPracticas,
+      totalHoras: cursoMalla.totalHoras,
+      totalCreditos: cursoMalla.totalCreditos
+    };
+
+
+    this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+    console.log( curso );
+    let titleModal = 'Editar Curso';
+      this.cursoSignal.cursoSelect.set( curso )
+      this.openModalFormCurso( template, titleModal )
+    return
+
+
+  }
+
+  openModalFormCurso = ( template: TemplateRef<any>, titleModal: string ) => {
+    this.modal.openTemplate( {
+      template,
+      titulo: titleModal
+    } ).afterClosed().subscribe( resp => {
+      console.log(resp);
+      if( resp == 'cancelar') {
+        this.cursoSignal.setCursoSelectDefault();
+        return
+      }
+      this.cursoSignal.setCursoSelectDefault();
+      this.obtenerMalla( this.planEstudioSelect().id );
+      this.obtenerMallaPreRequisitos();
+
+
+    });
+  }
   /* */
 
   obtenerMalla( idPlan: number) {
     
     this.mallaRepository.getMalla( idPlan ).subscribe({
       next: ( cursosPlan ) => {
-        console.log( cursosPlan );
+        // console.log( cursosPlan );
         
         this.cursosMalla.set( cursosPlan );
         const cursoByCiclo = this.cursosMalla().reduce( ( a: CursoMallaByCiclo[], b: Malla ) => {
@@ -474,7 +524,7 @@ export class MallaListComponent  implements OnInit {
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
-              console.log( b, this.cursosList() );
+              // console.log( b, this.cursosList() );
               const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == b.cicloNumero)!.id;
               const newCiclo: CursoMallaByCiclo = {
                 cicloNumero:  b.cicloNumero,
@@ -491,7 +541,7 @@ export class MallaListComponent  implements OnInit {
 
           return a
         }, [] )
-        console.log( cursoByCiclo );
+        // console.log( cursoByCiclo );
         this.cursosMallaByCiclo.set( cursoByCiclo.sort( ( a, b) =>  a.cicloNumero - b.cicloNumero ) )
         this.showBtnActivarEdicion = cursosPlan.length > 0;
       }, error: ( error ) => {
@@ -507,7 +557,7 @@ export class MallaListComponent  implements OnInit {
 
       this.mallaRepository.getMalla( idPlan ).subscribe({
         next: ( cursosPlan ) => {
-          console.log( cursosPlan );
+          // console.log( cursosPlan );
           
           this.cursosMallaUltimoConResolucion =  cursosPlan;
           resolve( true );
@@ -524,7 +574,7 @@ export class MallaListComponent  implements OnInit {
   obtenerMallaPreRequisitos = () => {
     this.mallaRepository.getMallaPreRequisitos( this.planEstudioSelect().id ).subscribe({
       next: ( cursosPlan ) => {
-        console.log( cursosPlan );
+        // console.log( cursosPlan );
         
         setTimeout(() => {
           setTimeout(() => {
@@ -951,70 +1001,32 @@ export class MallaListComponent  implements OnInit {
       return;
     }
 
+    // const itemArrastrado = event.previousContainer.data;
+    // const itemMovido: Malla = JSON.parse( JSON.stringify( itemArrastrado[event.previousIndex] ));
+    console.log(event.container.data);
+    console.log('index: ', event.currentIndex);
     
-
-    console.log( this.cursosMallaByCiclo() );
-    // this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea reordenar los cursos?').then( isConfirm => {
-    //   if( !isConfirm ) {
-    //     return
-    //   }
-      // this.reordenarCursos( event );
-      console.log( 'REORDENAR SI SI SI');
+    const index = event.currentIndex == 0 ?  event.currentIndex : event.currentIndex - 1
+    
+    const cursoConvertCurrent: Malla = JSON.parse( JSON.stringify( event.container.data[index] ));
+    const cursoConvertPrevio: Malla = JSON.parse( JSON.stringify( event.previousContainer.data[event.previousIndex] ));
+    
+    // console.log('CursoAfectado: ', cursoConvertCurrent);
+    // console.log('Curso encuestion: ', cursoConvertPrevio);
+    if( cursoConvertCurrent.cicloNumero == cursoConvertPrevio.cicloNumero && cursoConvertCurrent.orden == cursoConvertPrevio.orden) {
+      console.log('No cambio nada!!');
+      return
       
+    }
+    const ciclo1: number = JSON.parse( JSON.stringify( event.previousContainer.data ))[0].cicloNumero;
+    const ciclo2: number = JSON.parse( JSON.stringify( event.container.data ))[0].cicloNumero;
+
+    
       if (event.previousContainer === event.container) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       } else {
 
-        const draggedItem = event.previousContainer.data;
-        const targetItem = event.container.data[event.currentIndex];
-        const moveItem:Malla = JSON.parse( JSON.stringify( draggedItem[event.previousIndex] ));
-        // const curso = this.cursosMalla().find( curso => curso.idMalla == draggedItem[event.previousIndex] );
-        // const cursoTarget = this.cursosMalla().find( curso => curso.idMalla == targetItem );
-        console.log('previousContainer:', draggedItem);
-        console.log('containerData:', event.container.data);
-        console.log('Move item:', moveItem);
-        console.log('Target item:', targetItem);
-        console.log('Container:', event.container.data);
-        const cursoConvertPrevio = JSON.parse( JSON.stringify( moveItem ));
-        const cursoConvertCurrent = JSON.parse( JSON.stringify( targetItem ));
-        // const cursoConvert: Malla = JSON.parse( curso );
-        
-        const cursosReordenPrevio = {...this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertPrevio.cicloNumero )!};
-        const cursosReordenCurrent = this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertCurrent.cicloNumero )!;
-        
-        // console.log( cursosReordenPrevio.cursosMalla );
-        // console.log( cursosReordenCurrent.cursosMalla );
-
-        // console.log( this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertPrevio.cicloNumero ) );
-        // console.log( this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertCurrent.cicloNumero ) );
- 
-
-        // console.log( cursosReordenPrevio );
-        // console.log( cursosReordenCurrent );
-        
-        // const cursosPrevio: CursoMallaReordenar[] = cursosReordenPrevio.cursosMalla.filter( curso => curso.idMalla !== moveItem.idMalla ).map( (curso, index) => {
-        //   return {
-        //     idMalla: curso.idMalla,
-        //     orden: index + 1,
-        //     idCiclo: cursosReordenPrevio.idCiclo,
-        //     userId: parseInt( this.authSignal.currentRol().id )
-        //   }
-        // })
-
-        // const cursosCurrent: CursoMallaReordenar[] = cursosReordenCurrent.cursosMalla.map( (curso, index) => {
-        //   return {
-        //     idMalla: curso.idMalla,
-        //     orden: index + 1,
-        //     idCiclo: cursosReordenCurrent.idCiclo,
-        //     userId: parseInt( this.authSignal.currentRol().id )
-        //   }
-        // })
-
-        // console.log( cursosPrevio );
-        // console.log( cursosCurrent );
-        // console.log([...cursosCurrent, ...cursosPrevio])
-        
-        
+              
                
         transferArrayItem(
           event.previousContainer.data,
@@ -1022,70 +1034,92 @@ export class MallaListComponent  implements OnInit {
           event.previousIndex,
           event.currentIndex,
         );
-        const buscar = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero )[0].cursosMalla.find( cur => cur.idMalla == moveItem.idMalla );
-        
-
-        console.log( buscar );
-        this.cursosMallaByCiclo.set( this.cursosMallaByCiclo().map( cursoByCiclo => {
-          if( cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero || cursoByCiclo.cicloNumero == cursosReordenPrevio.cicloNumero ) {
-            return {
-              ...cursoByCiclo,
-              cursosMalla: cursoByCiclo.cursosMalla.map( (curso, index) => {
-                if( curso.idMalla == moveItem.idMalla ) {
-                  return {
-                    ...curso,
-                    cicloNumero: cursosReordenCurrent.cicloNumero,
-                    cicloRomano: cursosReordenCurrent.ciclo,
-                    orden: index + 1
-                  }
-                }
-                return {
-                  ...curso,
-                  // orden: curso.orden > event.currentIndex ? curso.orden - 1 : curso.orden
-                  orden: index + 1
-                }
-              })
-            }
-          }
-          return cursoByCiclo
-        }))
-        console.log( this.cursosMallaByCiclo() );
-        const pre1 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero !== cursosReordenCurrent.cicloNumero )[0];
-        const pre2 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero !== cursosReordenPrevio.cicloNumero )[0];
-        
-        // console.log( pre1, pre2 );
-
-        // const preReal = pre1.cicloNumero > pre2.cicloNumero ? pre1 : pre2;
-        // const curReal = pre1.cicloNumero > pre2.cicloNumero ? pre2 : pre1;
-        const cursoReordenado: Malla[] = [ ...pre1.cursosMalla, ...pre2.cursosMalla ]
-        
-        const cursoReornadoOf: CursoMallaReordenar[] = cursoReordenado.map( (curso) => {
-          const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == curso.cicloNumero )!.id;
-          return {
-            idMalla: curso.idMalla,
-            orden: curso.orden,
-            idCiclo: cicloId,
-            userId: parseInt( this.authSignal.currentRol().id )
-          }
-        })
-
-        console.log( cursoReornadoOf );
-        this.reOrdenarCursos( cursoReornadoOf );
+        // const buscar = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero )[0].cursosMalla.find( cur => cur.idMalla == moveItem.idMalla );
 
         
-        
-       
-
         
       }
+
+      this.reordenarDrop( cursoConvertCurrent, cursoConvertPrevio, ciclo1, ciclo2 )
 
     // } )
 
     
-
     
     
   }
+
+  reordenarDrop = ( cursoConvertCurrent: Malla, cursoConvertPrevio: Malla, ciclo1: number, ciclo2: number ) => {
+
+    // const itemArrastrado = event.previousContainer.data;
+    // const targetItem = event.container.data[event.currentIndex];
+    // const moveItem: Malla = JSON.parse( JSON.stringify( itemArrastrado[event.previousIndex] ));
+    // const ciclo1: number = JSON.parse( JSON.stringify( event.previousContainer.data ))[0].cicloNumero;
+    // const ciclo2: number = JSON.parse( JSON.stringify( event.container.data ))[0].cicloNumero;
+    // const curso = this.cursosMalla().find( curso => curso.idMalla == itemArrastrado[event.previousIndex] );
+    // const cursoTarget = this.cursosMalla().find( curso => curso.idMalla == targetItem );
+
+    // console.log('previousContainer:', itemArrastrado);
+    // console.log('containerData:', event.container.data);
+    // console.log('Move item:', moveItem);
+    // console.log('Target item:', targetItem);
+    // console.log('Container:', event.container.data);
+
+    // const cursoConvertPrevio = JSON.parse( JSON.stringify( moveItem ));
+    // const cursoConvertCurrent = JSON.parse( JSON.stringify( event.container.data[event.currentIndex] ));
+
+    // const cursoConvert: Malla = JSON.parse( curso );
+    
+    const cursosReordenPrevio = {...this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertPrevio.cicloNumero )!};
+    const cursosReordenCurrent = this.cursosMallaByCiclo().find( ciclo => ciclo.cicloNumero == cursoConvertCurrent.cicloNumero )!;
+
+
+    //STEP 2
+    this.cursosMallaByCiclo.set( this.cursosMallaByCiclo().map( cursoByCiclo => {
+      if( cursoByCiclo.cicloNumero == cursosReordenCurrent.cicloNumero || cursoByCiclo.cicloNumero == cursosReordenPrevio.cicloNumero ) {
+        return {
+          ...cursoByCiclo,
+          cursosMalla: cursoByCiclo.cursosMalla.map( (curso, index) => {
+            if( curso.idMalla == cursoConvertPrevio.idMalla ) {
+              return {
+                ...curso,
+                cicloNumero: cursosReordenCurrent.cicloNumero,
+                cicloRomano: cursosReordenCurrent.ciclo,
+                cicloLetra: cursosReordenCurrent.cursosMalla[0].cicloLetra,
+                orden: index + 1
+              }
+            }
+            return {
+              ...curso,
+              // orden: curso.orden > event.currentIndex ? curso.orden - 1 : curso.orden
+              orden: index + 1
+            }
+          })
+        }
+      }
+      return cursoByCiclo
+    }))
+    console.log( 'CICLO1: ', ciclo1, 'CICLO2: ', ciclo2);
+
+    const pre1 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero == ciclo1 )[0];
+    const pre2 = this.cursosMallaByCiclo().filter( cursoByCiclo => cursoByCiclo.cicloNumero == ciclo2 )[0];
+
+    const cursoReordenado: Malla[] = ciclo1 == ciclo2 ? [ ...pre1.cursosMalla ] : [ ...pre1.cursosMalla, ...pre2.cursosMalla ]
+    
+    const cursoReornadoOf: CursoMallaReordenar[] = cursoReordenado.map( (curso) => {
+      const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == curso.cicloNumero )!.id;
+      return {
+        idMalla: curso.idMalla,
+        orden: curso.orden,
+        idCiclo: cicloId,
+        userId: parseInt( this.authSignal.currentRol().id )
+      }
+    })
+
+    // console.log( cursoReornadoOf );
+    this.reOrdenarCursos( cursoReornadoOf );
+  }
+
 
   reOrdenarCursos = ( cursos: CursoMallaReordenar[] ) => {
     this.mallaRepository.reordenarMalla( cursos ).subscribe({

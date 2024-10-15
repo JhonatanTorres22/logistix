@@ -10,7 +10,11 @@
     </div>
     <div class="col-6">
    
-        <select-plan-equivalencia [title]="planEstudioDestinoSelect().text" label="Seleccione el Plan Destino" control="destino" [options]="planEstudioDestinoOptionsSelect()"></select-plan-equivalencia>
+        @if ( planEstudioDestinoOptionsSelect().length > 0 ) {
+            <select-plan-equivalencia [title]="planEstudioDestinoSelect().text" label="Seleccione el Plan Destino" control="destino" [options]="planEstudioDestinoOptionsSelect()"></select-plan-equivalencia>
+        } @else {
+            <ui-alert type="info">No hay Plan de Estudio disponible para comparar</ui-alert>
+        }
         
     </div>
 </div>
