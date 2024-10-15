@@ -1,6 +1,7 @@
 import { p } from "msw/lib/core/GraphQLHandler-COiPfZ8k";
-import { CursoMallaRenovarDTO, CursoMallaReordenarDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
-import { CursoMallaRenovar, CursoMallaReordenar, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoMallaDesfasadoDTO, CursoMallaDesfasarDTO, CursoMallaRenovadoDTO, CursoMallaRenovarDTO, CursoMallaReordenarDTO, CursoMallaRevertirDesfaseDTO, CursoMallaRevertirRenovacionDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoRevertirRenovacionDTO } from "../../infraestructure/dto/curso.dto";
 
 export class MallaMapper {
     static fromApiToDomainList( param: MallaDTO ): Malla {
@@ -109,22 +110,22 @@ export class MallaMapper {
 
     static fromDomainToApiCursoMallaRenovar( param: CursoMallaRenovar ): CursoMallaRenovarDTO {
         return {
-            codigoCiclo: param.idCiclo,
+            codigoMalla: param.cursoId,
             codigoPlanDeEstudio: param.idPlanEstudio,
-            codigoCurso: param.idCurso,
-            usuario: param.userId,
             orden: param.orden,
+            codigoProgramaAcademico: param.idPrograma,
+            codigoCiclo: param.idCiclo,
             codigoInterno: param.codigoCurso,
             nombre: param.nombreCurso,
+            descripcion: param.descripcion,
             tipoDeCurso: param.tipoCurso,
             tipoDeEstudio: param.tipoEstudio,
+            competencia: param.competencia,
             ht: param.horasTeoricas,
             hp: param.horasPracticas,
             tHoras: param.totalHoras,
             tCreditos: param.totalCreditos,
-            codigoProgramaAcademico: param.idPrograma,
-            descripcion: param.descripcion,
-            competencia: param.competencia,
+            usuario: param.userId,
             
             
         }
@@ -134,6 +135,53 @@ export class MallaMapper {
             codigoMalla: param.idMalla,
             orden: param.orden,
             codigoCiclo: param.idCiclo,
+            usuario: param.userId
+        }
+    }
+
+    static fromApiToDomainRenovados( param: CursoMallaRenovadoDTO ): CursoMallaRenovado {
+        return {
+            idMallaRenovada: param.codigoMallaRenovada,
+            idCursoRenovado: param.codigoCursoRenovado,
+            codigoCursoRenovado: param.codigoInternoCursoRenovado,
+            nombreCursoRenovado: param.nombreCursoRenovado,
+            cicloRomanoRenovado: param.definicionCicloRenovado,
+            idMalla: param.codigoMallaActiva,
+            idCurso: param.codigoCursoActivo,
+            codigoCurso: param.codigoInternoCursoActivo,
+            nombreCurso: param.nombreCursoActivo,
+            cicloRomano: param.definicionCicloActivo
+        }
+    }
+
+    static fromDomainToApiRevertirRenovacion( param: CursoMallaRevertirRenovacion ): CursoMallaRevertirRenovacionDTO {
+        return {
+            codigoMallaRenovada: param.idMallaRenovada,
+            usuario: param.userId
+        }
+    }
+
+    static fromDomainToApiDesfasar( param: CursoMallaDesfasar ): CursoMallaDesfasarDTO {
+        return {
+            codigoMalla: param.idMalla,
+            usuario: param.userId
+        }
+    }
+
+    static froApiToDomainDesfasados( param: CursoMallaDesfasadoDTO ): CursoMallaDesfasado {
+        return {
+            idMalla: param.codigoMalla,
+            idCurso: param.codigoCurso,
+            codigoCurso: param.codigoInternoCurso,
+            nombreCurso: param.nombreCurso,
+            cicloRomano: param.definicionCiclo
+
+        }
+    }
+
+    static fromDomainToApiRevertirDesfase( param: CursoMallaRevertirDesfase ): CursoMallaRevertirDesfaseDTO {
+        return {
+            codigoMalla: param.idMalla,
             usuario: param.userId
         }
     }

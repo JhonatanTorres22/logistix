@@ -1,7 +1,7 @@
 <!-- <app-card [showHeader]="false"> -->
     <form [formGroup]="filesForm">
         <div class="overflow-auto max-h-20rem">
-            <file-upload formControlName="files" [multiple]="false" (ngModelChange)="setFile()"></file-upload>
+            <file-upload formControlName="files" [accept]="typeFile" [multiple]="false" (ngModelChange)="setFile()"></file-upload>
         </div>
     </form>
 

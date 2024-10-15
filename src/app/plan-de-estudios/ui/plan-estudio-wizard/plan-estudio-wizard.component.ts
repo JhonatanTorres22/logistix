@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, effect, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -175,6 +175,9 @@ export class PlanEstudioWizardComponent implements OnInit {
     private modal: UiModalService,
     private alert: AlertService,
     private router: Router,
+
+    private renderer: Renderer2, private el: ElementRef
+
   ) {
     this.formDisenar = this._formBuilder.group({
       firstCtrl: ['1', Validators.required],
@@ -541,6 +544,8 @@ export class PlanEstudioWizardComponent implements OnInit {
   updateMalla = ( value: any, curso: Malla ) => {
     console.log( 'Check: ', value.target.checked, 'Curso: ', curso );
     if( !value.target.checked ) {
+      console.log('if');
+      
       this.cursosPrimariosMalla = this.cursosPrimariosMalla.filter( c => c.idMalla != curso.idMalla );
       return
     }
@@ -549,6 +554,8 @@ export class PlanEstudioWizardComponent implements OnInit {
       porcentajeModificacion: 0,
       userId: parseInt( this.authSignal.currentRol().id )
     });
+
+    console.log( this.cursosPrimariosMalla )
   }
 
   listarDesfasados = ( template: TemplateRef<any>) => {
@@ -668,6 +675,33 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   }
 
+  selectPrimarioMasivo = ( value: any ) => {
+    console.log( value.target.checked );
+    const checked: boolean = value.target.checked;
+    const primarios = this.cursosMallaEquivalenciaActual.filter( cursos => cursos.equivalencias.length == 0);
+
+    primarios.map( curso => {
+
+      const inputCheckBox = this.el.nativeElement.querySelector('#check-'+curso.idMalla);
+      console.log( inputCheckBox.checked );
+      
+      if( checked ) {
+        this.renderer.setAttribute( inputCheckBox, 'checked', checked.toString() );
+        this.cursosPrimariosMalla.push({
+          idMalla: curso.idMalla,
+          porcentajeModificacion: 0,
+          userId: parseInt( this.authSignal.currentRol().id )
+        });
+        return
+      }
+
+      this.renderer.removeAttribute( inputCheckBox, 'checked')
+
+
+    })
+    
+  }
+
   eliminarEquivalenciaConfirm = ( curso: Malla ) => {
     this.alert.sweetAlert('question', 'Confirmación', `Está seguro que desea eliminar la equivalencia del curso ${ curso.nombreCurso }`)
       .then( isConfirm => {
@@ -766,7 +800,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   seleccionarCursoPlanUltimo(card: Malla): void {
 
-    if( this.selectedLeftCard.estado == 'RENOVADO' ) {
+    if( this.selectedLeftCard?.estado == 'RENOVADO' ) {
     
       Swal.fire({
         title: 'IMPORTANTE!',

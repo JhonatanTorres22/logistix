@@ -97,6 +97,8 @@ export class CursoAddComponent {
   optionsCompetencia = this.validation.optionsCompetencia;
   currentInfoDirector = this.authSignal.currentInfoDirector;
 
+  planEstudioSelect = this.planEstudioSignal.planEstudioSelect
+
   minTotalHoras = this.validation.minTotalHoras;
   minCredtios = this.validation.minCreditos;
   cicloList = this.cicloSignal.cicloList;
@@ -231,6 +233,8 @@ export class CursoAddComponent {
       
       const cursoRenovar: CursoMallaRenovar = {
         ...this.formCurso.value,
+        idPlanEstudio: this.planEstudioSelect().id,
+        orden: this.cursoMallaOption().orden,
         idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
         idCiclo: parseInt( this.formCurso.value.idCiclo.value ),
         competencia: this.formCurso.value.competencia.value,
@@ -238,8 +242,8 @@ export class CursoAddComponent {
         tipoEstudio: this.formCurso.value.tipoEstudio.value,
         horasTeoricas: parseInt( this.formCurso.value.horasTeoricas ),
         horasPracticas: parseInt( this.formCurso.value.horasPracticas ),
-        cursoId: this.cursoMallaOption().idCurso,
-        usuarioId: parseInt( this.auth.currentRol().id ),
+        cursoId: this.cursoMallaOption().idMalla,
+        userId: parseInt( this.auth.currentRol().id ),
       }
 
       this.alert.sweetAlert('question', 'Confirmar', `¿Está seguro que desea Renovar el curso?`)

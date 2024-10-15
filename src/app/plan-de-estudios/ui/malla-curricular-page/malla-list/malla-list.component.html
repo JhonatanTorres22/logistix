@@ -24,12 +24,14 @@
         
                 <ui-button color="blue" icon="ti ti-save f-16" (onClick)="activarEdicion()">Activar Edición</ui-button>
             }
+            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id !== 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
         
             @if ( !showBtnActivarEdicion && cursosMallaByCiclo().length == 0 ) {
                 <ui-button color="blue" icon="ti ti-save f-16" (onClick)="planEstudioUltimoConResolucion().id == 0 ? showModalImportar( templateCursoImport ) : duplicarMalla()">Importar Cursos</ui-button>
             }
         
-            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="listarDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
+            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursosDesfasados( templateCursoDesfasadoList )">Ver Cursos Desfasados</ui-button>
+            <ui-button color="blue" icon="ti ti-save f-16" (onClick)="openModalCursosRenovados( templateCursoRenovadosList )">Ver Cursos Renovados</ui-button>
         
         </div>
         
@@ -172,52 +174,19 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-        <ui-button color="primary" label="Revertir Desfase" [disabled]="cursoDesfasadoSelected().id == 0" (onClick)="revertirDesfaseConfirm()"></ui-button>
+        <ui-button color="primary" label="Revertir Desfase" [disabled]="cursoMallaDesfasadoSelected().idMalla == 0" (onClick)="revertirDesfaseConfirm()"></ui-button>
     </mat-dialog-actions>
 </ng-template>
 
-
-<!-- <ng-template #templateCursoAdd let-data>
+<ng-template #templateCursoRenovadosList let-data>
     <mat-dialog-content>
-
-        <div class="row">
-            <div class="col-8 overflow-auto h-28rem">
-                @for( curso of cursosList(); track curso; ) {
-                    <mat-checkbox class="example-margin border-1 border-round border-gray-400 w-25rem">
-                        <div class=" px-4 py-2">
-                            {{ curso.nombreCurso }}
-                        </div>
-                    </mat-checkbox>
-                }
-            </div>
-    
-            <div class="col-4 overflow-auto h-28rem">
-                <mat-radio-group [(ngModel)]="cicloSelect">
-                    @for (ciclo of cicloList(); track ciclo; let i = $index) {
-                        <div class="price-check m-b-5 w-13rem">
-                        <mat-radio-button color="primary" class="w-100 p-0" [value]="ciclo">
-                            <div class="row align-item-center">
-                            <div class="col-12">
-                                <div class="flex align-item-center popular m-b-0"
-                                >Ciclo {{ ciclo.definicion }}
-                                </div>
-                                <span class="text-muted m-b-0">{{ ciclo.cicloLetra }}</span>
-                            </div>
-                
-                            </div>
-                        </mat-radio-button>
-                        </div>
-                    }
-                </mat-radio-group>
-            </div>
-        </div>
-
+        <curso-renovado-list></curso-renovado-list>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-        <ui-button color="primary" label="Agregar" (onClick)="agregar()"></ui-button>
+        <ui-button color="primary" label="Revertir Renovación" [disabled]="cursoMallaRenovadoSelected().idMallaRenovada == 0" (onClick)="revertirRenovacionConfirm()"></ui-button>
     </mat-dialog-actions>
-</ng-template> -->
+</ng-template>
 
 
 <ng-template #templateCursoImport let-data>

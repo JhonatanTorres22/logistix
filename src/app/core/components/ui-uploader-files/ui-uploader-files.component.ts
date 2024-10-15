@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { FileUploadModule, FileUploadValidators } from '@iplab/ngx-file-upload';
+import { FileUploadModule, FileUploadTypes, FileUploadValidators } from '@iplab/ngx-file-upload';
 import { UploaderModule } from 'angular-uploader';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
@@ -18,9 +18,11 @@ const apiKey = 'free';
 })
 export class UiUploaderFilesComponent {
 
-  private filesControl = new UntypedFormControl(null, FileUploadValidators.filesLimit(2));
+  @Input() typeFile: string[] = ['application/pdf']
+  private filesControl = new UntypedFormControl(null, [FileUploadValidators.filesLimit(2),FileUploadValidators.accept( this.typeFile )]);
 
   file = this.mensajeriaSignal.file;
+
 
   constructor(
     private mensajeriaSignal: MensajeriaSignal

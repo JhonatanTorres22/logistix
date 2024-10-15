@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ViewChild } from '@angular/core';
+import { Component, effect, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,7 +28,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
   templateUrl: './curso-import-template.component.html',
   styleUrl: './curso-import-template.component.scss'
 })
-export class CursoImportTemplateComponent {
+export class CursoImportTemplateComponent implements OnDestroy {
 
   rows: CursoExcel[] = [];
   // public props
@@ -58,6 +58,9 @@ export class CursoImportTemplateComponent {
     })
 
   } 
+  ngOnDestroy(): void {
+    this.file.set( this.mensajeriaSignal.fileDefault );
+  }
   
   // table search filter
   applyFilter(event: Event) {
@@ -94,7 +97,7 @@ export class CursoImportTemplateComponent {
 
       this.dataSource.data = this.cursosImportExcel();
 
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort;
     })();
   }
@@ -105,6 +108,12 @@ export class CursoImportTemplateComponent {
   }
 
   validar = () => {
+    console.log( this.dataSource.data );
+    this.dataSource.data.map( curso => {
+
+      // curso.ciclo
+
+    } )
     
   }
 

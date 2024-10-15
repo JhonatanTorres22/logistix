@@ -1,9 +1,9 @@
 
-  
+  <!-- <pre>{{ file() | json }}</pre> -->
   @if( !loading() ) {
 
     @if (  file().files.length == 0 ) {
-      <ui-uploader-files></ui-uploader-files>
+      <ui-uploader-files typeFile=".xlsx"></ui-uploader-files>
       <div class="flex justify-content-center mt-2">
         <ui-button color="blue" (onClick)="descargarPlantilla()">Descargar Plantilla</ui-button>
       </div>
@@ -12,7 +12,10 @@
       <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
           <ng-template #headerTitleTemplate>
               <div>Lista de Curso</div>
-              <ui-button color="primary" icon="ti ti-file-search" matTooltip="Validar cursos" (onClick)="validar()"></ui-button>
+              <div class="flex justify-content-end gap-2">
+                <ui-button color="primary" icon="ti ti-refresh" matTooltip="Cambiar Archivo" (onClick)="file.set(mensajeriaSignal.fileDefault)"></ui-button>
+                <ui-button color="primary" icon="ti ti-file-search" matTooltip="Validar cursos" (onClick)="validar()"></ui-button>
+              </div>
           </ng-template>
           <div class="p-b-5">
               <div class="table-containe table-reponsive">
@@ -84,7 +87,7 @@
                       <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef class="text-center">  </th>
                         <td mat-cell *matCellDef="let usuario">
-                          <div class="text-center text-nowrap">
+                          <!-- <div class="text-center text-nowrap">
                             <ul class="list-inline p-l-0">
                               <li class="list-inline-item m-r-10" matTooltip="Asignar Rol">
                                 <a href="javascript:" class="avatar avatar-xs text-muted">
@@ -100,11 +103,11 @@
                               
       
                             </ul>
-                          </div>
+                          </div> -->
                         </td>
                       </ng-container>
       
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       
                       <!-- Row shown when there is no matching data. -->
@@ -112,7 +115,7 @@
                         <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
                       </tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[100]" [pageSize]="100" aria-label="Select page of users"></mat-paginator>
                   </div>
                 </div>
           </div>
