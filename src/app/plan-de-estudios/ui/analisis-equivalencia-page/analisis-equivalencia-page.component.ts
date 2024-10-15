@@ -9,6 +9,7 @@ import { EquivalenciaRepository } from '../../domain/repositories/equivalencia.r
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { parse } from 'date-fns';
 import { fa } from '@faker-js/faker';
+import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.component';
 
 @Component({
   selector: 'analisis-equivalencia-page',
@@ -17,7 +18,8 @@ import { fa } from '@faker-js/faker';
     CommonModule,
     SharedModule,
     SelectPlanEquivalenciaComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiAlertComponent,
   ],
   templateUrl: './analisis-equivalencia-page.component.html',
   styleUrl: './analisis-equivalencia-page.component.scss'
@@ -44,6 +46,7 @@ export class AnalisisEquivalenciaPageComponent implements OnInit {
     effect( () => {
       const origen = this.planEstudioOrigenSelect();
       console.log('origen', origen);
+      console.log( this.isMalla );
       
       // this.planEstudioDestinoOptionsSelect.set( this.planEstudioOrigenOptionsSelect().filter( plan => plan.value !== origen.value ) )
       this.isMalla ? this.setOptionIsMalla() : this.setOptionsSelect()
@@ -55,9 +58,11 @@ export class AnalisisEquivalenciaPageComponent implements OnInit {
   }
 
   setOptionsSelect = () => {
+    const planes =  this.planesDeEstudio().filter( plan => plan.resolucion !== null);
+    console.log( planes );
     
-    const options: UiSelect[] = this.planesDeEstudio().map( plan => {
-      return { value: plan.id.toString(), text: plan.nombre, disabled: false }
+    const options: UiSelect[] = planes.map( plan => {
+      return { value: plan.id.toString(), text: plan.nombre + ' (' + plan.estadoCaducidad + ')', disabled: false }
     } );
     this.planEstudioOrigenSelect().value == '' ? this.planEstudioOrigenOptionsSelect.set( options ) : '';
     

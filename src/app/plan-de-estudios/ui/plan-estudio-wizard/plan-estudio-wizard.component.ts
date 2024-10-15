@@ -94,7 +94,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   // planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursosByCiclo = this.cursoSignal.cursosByCiclo;
   file = this.mensajeriaSignal.file;
-
+  cursosMallaByCiclo = this.mallaSignal.cursosMallaByCiclo;
 
   
   porcentajeModificacion: number = 0;
@@ -180,7 +180,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   ) {
     this.formDisenar = this._formBuilder.group({
-      firstCtrl: ['1', Validators.required],
+      inputStep1: ['', [Validators.required, Validators.min(1)]],
     });
     this.formAsignar = this._formBuilder.group({
       asignacion: ['', Validators.required],
@@ -191,15 +191,16 @@ export class PlanEstudioWizardComponent implements OnInit {
     effect( () => {
       console.log( 'Effect: ', this.planEstudioUltimoConResolucion() );
       // this.obtenerCursoPlanEquivalenciaUltimo();
+      if( this.planEstudioSelect().id == 0) { return }
       this.obtenerMallaEquivalenciaUltimo();
+      this.obtenerMallaEquivalenciaActual();
     })
   }
   ngOnInit(): void {
 
     // this.obtenerCursoPlanEquivalenciaActual();
     // this.obtenerCursoPlanActual();
-    this.obtenerMallaEquivalenciaUltimo();
-    this.obtenerMallaEquivalenciaActual();
+    
   }
 
 
@@ -257,7 +258,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     // estado.setState =  new Design();
     this.estado.approve(true);
     console.log(this.estado.getEstado);
-    this.formDisenar.patchValue({firstCtrl: this.estado.getEstado});
+    this.formDisenar.patchValue({inputStep1: this.estado.getEstado});
     this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
     
   }
@@ -298,6 +299,8 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.cursosMallaEquivalenciaActual = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
         console.log( 'Plan Actual: ', cursosPlanEquivalencia );
         this.showBtnActivarEdicion = this.cursosMallaEquivalenciaActual.length == 0 ? false : true;
+        this.formDisenar.patchValue({inputStep1: this.cursosMallaByCiclo().length});
+
       }, error: ( error ) => {
         console.log( error );
         
@@ -759,7 +762,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
         this.router.navigate(['/mensajeria']);
         // this.estado.approve(false);
-        // this.formDisenar.patchValue({firstCtrl: this.estado.getEstado});
+        // this.formDisenar.patchValue({inputStep1: this.estado.getEstado});
         // this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
       })
   }
