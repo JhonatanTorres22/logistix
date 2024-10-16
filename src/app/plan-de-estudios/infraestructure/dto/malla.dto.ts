@@ -22,6 +22,7 @@ export interface MallaDTO {
 export interface MallaPreRequisitoDTO {
     orden: number,
     codigoMalla: number,
+    codigoCiclo: number,
     codigoCurso: number,
     nombreCurso: string,
     codigoInterno: string,
@@ -41,6 +42,7 @@ export interface MallaPreRequisitoDTO {
 export interface MallaEquivalenciaDTO {
     orden: number,
     codigoMalla: number,
+    codigoCiclo: number,
     codigoCurso: number,
     nombreCurso: string,
     codigoInterno: string,
@@ -162,6 +164,29 @@ export interface CursoMallaDesfasarDTO {
 
 
 export interface CursoMallaRevertirDesfaseDTO {
+    codigoMalla: number,
+    usuario: number
+}
+
+export interface CursoMallaInsertarDTO {
+    codigoPlanDeEstudio: number,
+    orden: number,
+    codigoProgramaAcademico: number,
+    codigoCiclo: number,
+    codigoInterno: string,
+    nombre: string,
+    descripcion: string,
+    tipoDeCurso: string,
+    tipoDeEstudio: string,
+    competencia: string,
+    ht: number,
+    hp: number,
+    tHoras: number,
+    tCreditos: number,
+    usuario: number
+}
+
+export interface CursoMallaEliminarDTO {
     codigoMalla: number,
     usuario: number
 }

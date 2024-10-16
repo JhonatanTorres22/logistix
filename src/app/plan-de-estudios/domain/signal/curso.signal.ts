@@ -14,7 +14,7 @@ export class CursoSignal {
 
         codigoCurso: '',
         nombreCurso: '',
-        idCiclo: 0,
+        // idCiclo: 0,
         competencia: '',
         descripcion: '',
         idPrograma: 0,

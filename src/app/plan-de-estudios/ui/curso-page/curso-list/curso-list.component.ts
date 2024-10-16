@@ -117,29 +117,29 @@ export class CursoListComponent implements OnInit {
       next: ( cursos ) => {
         console.log( cursos );
         this.cursosList.set( cursos )
-        const cursoByCiclo = cursos.reduce( ( a: CursoByCiclo[], b: Curso ) => {
+        // const cursoByCiclo = cursos.reduce( ( a: CursoByCiclo[], b: Curso ) => {
 
-          const existeCiclo = a.findIndex( a => a.ciclo == b.definicionCiclo);
-            if( existeCiclo == -1 ) {
+        //   const existeCiclo = a.findIndex( a => a.ciclo == b.definicionCiclo);
+        //     if( existeCiclo == -1 ) {
 
-              const newCiclo: CursoByCiclo = {
-                cicloNumero: 0,
-                idCiclo: b.idCiclo,
-                ciclo: b.definicionCiclo,
-                cursosPlan: [],
-                cursos: [b]
-              }
-              a.push( newCiclo )
-              return a
-            }
+        //       const newCiclo: CursoByCiclo = {
+        //         cicloNumero: 0,
+        //         idCiclo: b.idCiclo,
+        //         ciclo: b.definicionCiclo,
+        //         cursosPlan: [],
+        //         cursos: [b]
+        //       }
+        //       a.push( newCiclo )
+        //       return a
+        //     }
 
-            a[existeCiclo].cursos.push( b );
+        //     a[existeCiclo].cursos.push( b );
 
 
-          return a
-        }, [] )
-        console.log( cursoByCiclo );
-        this.cursosByCiclo.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
+        //   return a
+        // }, [] )
+        // console.log( cursoByCiclo );
+        // this.cursosByCiclo.set( cursoByCiclo.sort( ( a, b) =>  a.idCiclo  - b.idCiclo ) )
         // if( this.cursoSelectPreRequisito().id != 0 ) {
         //   this.cursoSelectPreRequisito.update( curso => curso.id ==  )
         // } 

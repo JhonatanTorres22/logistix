@@ -21,7 +21,7 @@ export interface CursoDTO {
 
 
 
-export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito' | 'denominacionResumidaCiclo'> & {
+export type CursoCrearDTO = Omit<CursoDTO, 'codigoCurso' | 'prerequisito' | 'denominacionResumidaCiclo' | 'codigoCiclo'> & {
     // idCompetencia: string,
     // idTipoCurso: string,
     // idTipoEstudio: string,

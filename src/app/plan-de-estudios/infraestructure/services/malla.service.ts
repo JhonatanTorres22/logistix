@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
 import { CursoMallaDesfasadoDataArrayDTO, CursoMallaRenovadoDataArrayDTO, MallaDataArrayDTO, MallaEquivalenciaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
 import { environment } from "src/environments/environment";
 import { MallaMapper } from "../../domain/mappers/malla.mapper";
@@ -25,6 +25,8 @@ export class MallaService {
     private urlDesfasarMalla: string;
     private urlGetDesfasados: string;
     private urlRevertirDesfase: string;
+    private urlCursoMallaInsertar: string;
+    private urlCursoMallaEliminar: string;
         
         constructor(
             private http: HttpClient
@@ -41,7 +43,9 @@ export class MallaService {
             this.urlRevertirRenovacionMalla = 'api/Malla/RevertirRenovado';
             this.urlDesfasarMalla = 'api/Malla/Desfasar';
             this.urlGetDesfasados = 'api/Malla/ListarDesfasados?codigoPlanEstudio=';
-            this.urlRevertirDesfase = 'api/Malla/RevertirDesfasado'
+            this.urlRevertirDesfase = 'api/Malla/RevertirDesfasado';
+            this.urlCursoMallaInsertar = 'api/Malla/InsertarCurso';
+            this.urlCursoMallaEliminar = 'api/Malla/EliminarCurso';
 
         }
         
@@ -111,5 +115,16 @@ export class MallaService {
         revertirDesfase( malla: CursoMallaRevertirDesfase ): Observable<void> {
             const mallaAPI = MallaMapper.fromDomainToApiRevertirDesfase( malla );
             return this.http.post<void>( this.urlApi + this.urlRevertirDesfase, mallaAPI )
+        }
+
+        cursoMallaInsertar = ( malla: CursoMallaInsertar ): Observable<void> => {
+            const mallaAPI = MallaMapper.fromDomainToApiCursoMallaInsertar( malla );
+            return this.http.post<void>( this.urlApi + this.urlCursoMallaInsertar, mallaAPI );
+        }
+
+        cursoMallaEliminar = ( malla: CursoMallaEliminar ): Observable<void> => {
+            const mallaAPI = MallaMapper.fromDomainToApiCursoMallaEliminar( malla );
+
+            return this.http.delete<void>( this.urlApi + this.urlCursoMallaEliminar, { body: mallaAPI })
         }
 }

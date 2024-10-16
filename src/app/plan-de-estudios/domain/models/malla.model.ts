@@ -14,6 +14,7 @@ export interface Malla {
     cicloRomano: string,
     cicloNumero: number,
     cicloLetra: string,
+    idCiclo: number,
     //CursoPlan
     competencia: string,
     descripcion: string,
@@ -119,6 +120,29 @@ export interface CursoMallaDesfasar {
 }
 
 export interface CursoMallaRevertirDesfase {
+    idMalla: number,
+    userId: number
+}
+
+export interface CursoMallaInsertar {
+    idPlanEstudio: number,
+    orden: number,
+    idCiclo: number,
+    descripcion: string,
+    idPrograma: number,
+    codigoCurso: string,
+    competencia: string,
+    tipoCurso: string,
+    tipoEstudio: string,
+    nombreCurso: string,
+    horasTeoricas: number,
+    horasPracticas: number,
+    totalHoras: number, 
+    totalCreditos: number,
+    usuarioId: number
+}
+
+export interface CursoMallaEliminar {
     idMalla: number,
     userId: number
 }

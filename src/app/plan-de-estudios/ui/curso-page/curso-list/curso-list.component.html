@@ -1,35 +1,37 @@
 
-<ui-button color="red" tooltip="Limpiar cursos" class="flex justify-content-center my-2" classButton="w-max" (onClick)="eliminarCursosConfirm()">
-    Limpiar Cursos
-</ui-button>
 <div class="row" cdkDropListGroup [ngClass]="cursoSelectPreRequisito().id != 0 ? 'w-9' : 'w-12'">
-    @if ( cursosByCiclo().length == 0 ) {
-    
-        <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( templateCursoAdd, 'Crear' )"></ui-button-icon>
 
 
-    }
-
-
- 
-     <div class="flex gap-2">
-         @for (ciclo of cursosByCiclo(); track ciclo) {
-             @if ( ciclo.idCiclo < cursoSelectPreRequisito().idCiclo || cursoSelectPreRequisito().idCiclo == 0 ) {
-                <div class="col-1 text-center">
-                    <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
-                    <div class="flex flex-column gap-2 example-list align-items-center"
-                        cdkDropList
-                        [cdkDropListData]="ciclo.cursos"
-                        (cdkDropListDropped)="drop($event)">
-                        @for ( curso of ciclo.cursos; track curso) {
+    <div class="flex justify-content-end gap-2">
+        <ui-button color="red" tooltip="Limpiar cursos" class="flex justify-content-center my-2" classButton="w-max" (onClick)="eliminarCursosConfirm()">
+            Limpiar Cursos
+        </ui-button>
+        <!-- @if ( cursosByCiclo().length == 0 ) {
+        
+            <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( templateCursoAdd, 'Crear' )"></ui-button-icon>
+        
+        
+        } -->
+    </div>
+    <div class="col-12 flex flex-wrap">
+        @for ( curso of cursosList(); track curso) {
+            <div class="col-1 flex flex-row gap-2">
+                <div 
+                                [id]="'pre-'+curso.id"
+                                class="text-black f-8 border-1 border-round w-full h-4rem align-content-center font-semibold px-1 border-dashed shadow-3 border-gray-400 text-center"
+                            >
+                                <div>{{ curso.nombreCurso }}</div>
+                                <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
+                            </div>
+            </div>
+        }
+    </div>
+     <!-- <div class="flex gap-2">
+        
+                <div class="col-12 text-center">
+                    <div class="flex flex-row gap-2 example-list align-items-center">
+                        @for ( curso of cursosList(); track curso) {
                             <div 
-                                [cdkContextMenuTriggerFor]="options"
-                                (auxclick)="openOptions($event, curso, ciclo)"
-                                cdkDrag
-                                [cdkDragStartDelay]="cursoSelectPreRequisito().id == 0 ? 0 : 0"
-                                [cdkDragDisabled]="preRequisitos().includes( curso )"
-                                (mouseenter)="hoverClass( curso )"
-                                (mouseleave)="removeClass( curso )"
                                 [id]="'pre-'+curso.id"
                                 class="text-black f-8 border-1 border-round w-full h-4rem align-content-center font-semibold px-1 border-dashed shadow-3 border-gray-400"
                             >
@@ -39,16 +41,11 @@
                         }
                     </div>
 
-                    @if (!readonly) {
-                        <ui-button-icon color="primary" icon="ti ti-plus" tooltip="Agregar curso" class="flex justify-content-center my-2" (onClick)="openFormCurso( templateCursoAdd, 'Crear', ciclo )"></ui-button-icon>
-                    }
+
                 </div>
-             }
 
-
-         }
-     </div>
-     <ng-template #options>
+     </div> -->
+     <!-- <ng-template #options>
         <div class="example-menu border-1 border-gray-300" cdkMenu>
             <button (click)="openFormCurso( templateCursoAdd, 'Editar' )" class="example-menu-item" cdkMenuItem><i class="ti ti-pencil f-16 pr-2 text-blue-700"></i>Editar</button>
             <mat-divider></mat-divider>
@@ -62,7 +59,7 @@
                 <button (click)="desfasarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-alert-circle f-16 pr-2 text-red-700"></i>Desfasar</button>
             }
         </div>
-      </ng-template>
+      </ng-template> -->
 
     
     <curso-pre-requisito></curso-pre-requisito>
