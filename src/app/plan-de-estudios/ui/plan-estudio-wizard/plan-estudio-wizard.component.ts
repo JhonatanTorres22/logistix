@@ -108,6 +108,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     orden: 0,
     idMalla: 0,
     idCurso: 0,
+    idCiclo: 0,
     nombreCurso: '',
     codigoCurso: '',
     tipoCurso: '',

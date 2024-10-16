@@ -30,9 +30,11 @@ export interface CursoByCiclo {
 }
 
 // export type CursoPreRequisito = Pick<Curso, 'id' | 'codigoCurso' | 'nombreCurso'>
-export type CursoCrear = Omit<Curso, 'id' | 'preRequisitos' | 'definicionCiclo'> & {
+export type CursoCrear = Omit<Curso, 'id' | 'preRequisitos' | 'definicionCiclo' | 'idCiclo'> & {
     usuarioId: number
 }
+
+
 
 export type CursoRenovar = CursoCrear & {
     cursoId: number

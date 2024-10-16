@@ -13,6 +13,7 @@ export class MallaSignal {
     cursoMallaDefault: Malla = {
         orden: 0,
         idMalla: 0,
+        idCiclo: 0,
         idCurso: 0,
         codigoCurso: '',
         nombreCurso: '',

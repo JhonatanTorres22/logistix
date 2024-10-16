@@ -30,9 +30,10 @@ import { DeshabilitarInputsFormularioService } from 'src/app/core/services/desha
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { UiButtonIconComponent } from "../../../../core/components/ui-button-icon/ui-button-icon.component";
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
-import { CursoMallaRenovar, Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
+import { CursoMallaInsertar, CursoMallaRenovar, Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { CicloSingal } from 'src/app/plan-de-estudios/domain/signal/ciclo.signal';
 import { MallaRepository } from 'src/app/plan-de-estudios/domain/repositories/malla.repository';
+import { RutasSignal } from 'src/app/core/signals/rutas.signal';
 
 
 
@@ -97,7 +98,9 @@ export class CursoAddComponent {
   optionsCompetencia = this.validation.optionsCompetencia;
   currentInfoDirector = this.authSignal.currentInfoDirector;
 
-  planEstudioSelect = this.planEstudioSignal.planEstudioSelect
+  planEstudioSelect = this.planEstudioSignal.planEstudioSelect;
+  cursosMallaByCiclo = this.mallaSignal.cursosMallaByCiclo;
+  currentRuta = this.rutaSignal.currentRuta;
 
   minTotalHoras = this.validation.minTotalHoras;
   minCredtios = this.validation.minCreditos;
@@ -121,6 +124,7 @@ export class CursoAddComponent {
     private planEstudioSignal: PlanEstudioSignal,
     private mallaSignal: MallaSignal,
     private cicloSignal: CicloSingal,
+    private rutaSignal: RutasSignal,
     private authSignal: AuthSignal,
     private cicloRepository: CicloRepository,
     private alert: AlertService
@@ -261,13 +265,40 @@ export class CursoAddComponent {
     } 
 
     const tipo = this.cursoDetails().id != 0 ?'editar' : 'crear';
+    console.log( this.currentRuta() );
     this.alert.sweetAlert('question', 'Confirmar', `¿Está seguro que desea ${ tipo } el curso?`)
       .then( isConfirm => {
         if( !isConfirm ) { return }
         
         switch( tipo ) {
           case 'crear': {
-            const dataCurso: CursoCrear = {
+            if( this.currentRuta() !== '/plan-de-estudios/disenar' ) {
+              const dataCurso: CursoCrear = {
+                // idCiclo: parseInt( this.formCurso.value.idCiclo.value ),
+                descripcion: this.formCurso.value.descripcion,
+                idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
+                codigoCurso: this.formCurso.value.codigoCurso,
+                competencia: this.formCurso.value.competencia.value,
+                tipoCurso: this.formCurso.value.tipoCurso.value,
+                tipoEstudio: this.formCurso.value.tipoEstudio.value,
+                nombreCurso: this.formCurso.value.nombreCurso,
+                horasTeoricas: parseInt( this.formCurso.value.horasTeoricas ),
+                horasPracticas: parseInt( this.formCurso.value.horasPracticas ),
+                totalHoras: parseInt( this.formCurso.value.horasTeoricas )  + parseInt( this.formCurso.value.horasPracticas ), 
+                totalCreditos: parseInt( this.formCurso.value.totalCreditos),
+                usuarioId: parseInt( this.auth.currentRol().id )
+              }
+              console.log( dataCurso );
+              // return
+              this.crear( dataCurso );
+              return
+            }
+
+            console.log( this.cursosMallaByCiclo() );
+            
+            const cursoMallaNuevo: CursoMallaInsertar = {
+              idPlanEstudio: this.planEstudioSelect().id,
+              orden: this.cursosMallaByCiclo().find( cursoMalla => cursoMalla.idCiclo == this.formCurso.value.idCiclo.value)!.cursosMalla.length + 1,
               idCiclo: parseInt( this.formCurso.value.idCiclo.value ),
               descripcion: this.formCurso.value.descripcion,
               idPrograma: this.idPrograma(), //TODO CAMBIAR AL PROGRAMA DEL DIRECTOR
@@ -282,9 +313,9 @@ export class CursoAddComponent {
               totalCreditos: parseInt( this.formCurso.value.totalCreditos),
               usuarioId: parseInt( this.auth.currentRol().id )
             }
-            console.log( dataCurso );
-            // return
-            this.crear( dataCurso );
+
+            console.log( cursoMallaNuevo );
+            this.crearCursoMalla( cursoMallaNuevo );
           }; break;
           
           case 'editar': {
@@ -389,6 +420,20 @@ export class CursoAddComponent {
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al agregar el curso', 'error', 6)
+      }
+    })
+  }
+
+  crearCursoMalla = ( curso: CursoMallaInsertar ) => {
+    this.mallaRepository.cursoMallaInsertar( curso ).subscribe({
+      next: ( response ) => {
+        console.log( response );
+        this.alert.showAlert('Curso Agregado Correctamente', 'success', 5);
+        this.modal.getRefModal().close('Add');
+
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al agregar el curso', 'error', 5)
       }
     })
   }

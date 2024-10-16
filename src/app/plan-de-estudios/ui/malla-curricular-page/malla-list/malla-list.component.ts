@@ -27,7 +27,7 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { UiUploaderFilesComponent } from 'src/app/core/components/ui-uploader-files/ui-uploader-files.component';
 import { CursoImportTemplateComponent } from '../../curso-page/curso-import-template/curso-import-template.component';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
-import { CursoMallaByCiclo, CursoMallaDesfasar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
+import { CursoMallaByCiclo, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 import { select } from 'd3-selection';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
@@ -248,12 +248,12 @@ export class MallaListComponent  implements OnInit {
         }
 
         const cursos: CursoCrear[] = this.cursosImportExcel().map( curso => {
-          const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == curso.ciclo )?.id;
+          // const cicloId = this.cicloList().find( (ciclo: Ciclo) => parseInt( ciclo.cicloNumero ) == curso.ciclo )?.id;
           const programaId = this.currentInfoDirector()[0].idProgramaAcademico;
     
           return {
             idPrograma: programaId,
-            idCiclo: cicloId!,
+            // idCiclo: cicloId!,
             codigoCurso: curso.codigo_curso,
             nombreCurso: curso.nombre_curso,
             tipoEstudio: curso.tipo_estudio,
@@ -485,7 +485,7 @@ export class MallaListComponent  implements OnInit {
 
     this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
     console.log( curso );
-    let titleModal = 'Editar Curso';
+    let titleModal = curso.id == 0 ? 'Crear Desde Malla' : 'Editar Curso';
       this.cursoSignal.cursoSelect.set( curso )
       this.openModalFormCurso( template, titleModal )
     return
@@ -637,8 +637,36 @@ export class MallaListComponent  implements OnInit {
     this.router.navigate(['/plan-de-estudios']);
   }
 
-  onEliminarConfirm = () => {
-    
+  eliminarConfirm = () => {
+    this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ELIMINAR el curso ${ this.cursoMallaOption().nombreCurso }?`)
+      .then( isConfirm => {
+        if( !isConfirm ) {
+          this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+          return
+        }
+        const cusoMallaEliminar: CursoMallaEliminar = {
+          idMalla: this.cursoMallaOption().idMalla,
+          userId: parseInt( this.authSignal.currentRol().id ),
+        }
+
+        this.eliminarCursoMallaDeGolpe( cusoMallaEliminar );
+
+      })
+  }
+
+  eliminarCursoMallaDeGolpe = ( curso: CursoMallaEliminar ) => {
+    this.mallaRepository.cursoMallaEliminar( curso ).subscribe({
+      next: ( response ) => {
+        console.log( response );
+        this.alert.showAlert('Curso eliminado correctamente', 'success', 5);
+        this.obtenerMalla( this.planEstudioSelect().id );
+        this.obtenerMallaPreRequisitos();
+        this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+      }, error: ( error ) => {
+        console.log( error );
+        this.alert.showAlert('Ocurrió un error al eliminar el curso', 'error', 5);
+      }
+    })
   }
 
   hoverClass = ( curso: Malla) => {
@@ -1010,7 +1038,7 @@ export class MallaListComponent  implements OnInit {
     
     const cursoConvertCurrent: Malla = JSON.parse( JSON.stringify( event.container.data[index] ));
     const cursoConvertPrevio: Malla = JSON.parse( JSON.stringify( event.previousContainer.data[event.previousIndex] ));
-    
+
     // console.log('CursoAfectado: ', cursoConvertCurrent);
     // console.log('Curso encuestion: ', cursoConvertPrevio);
     if( cursoConvertCurrent.cicloNumero == cursoConvertPrevio.cicloNumero && cursoConvertCurrent.orden == cursoConvertPrevio.orden) {

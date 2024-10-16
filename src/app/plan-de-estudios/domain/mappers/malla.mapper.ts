@@ -1,6 +1,6 @@
 import { p } from "msw/lib/core/GraphQLHandler-COiPfZ8k";
-import { CursoMallaDesfasadoDTO, CursoMallaDesfasarDTO, CursoMallaRenovadoDTO, CursoMallaRenovarDTO, CursoMallaReordenarDTO, CursoMallaRevertirDesfaseDTO, CursoMallaRevertirRenovacionDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoMallaDesfasadoDTO, CursoMallaDesfasarDTO, CursoMallaEliminarDTO, CursoMallaInsertarDTO, CursoMallaRenovadoDTO, CursoMallaRenovarDTO, CursoMallaReordenarDTO, CursoMallaRevertirDesfaseDTO, CursoMallaRevertirRenovacionDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 import { CursoRevertirRenovacionDTO } from "../../infraestructure/dto/curso.dto";
 
 export class MallaMapper {
@@ -9,6 +9,7 @@ export class MallaMapper {
             orden: param.orden,
             idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
+            idCiclo: 0,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombre,
             tipoCurso: param.tipoDeCurso,
@@ -34,6 +35,7 @@ export class MallaMapper {
             orden: param.orden,
             idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
+            idCiclo: param.codigoCiclo,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
             tipoCurso: param.tipoDeCurso,
@@ -82,6 +84,7 @@ export class MallaMapper {
             orden: param.orden,
             idMalla: param.codigoMalla,
             idCurso: param.codigoCurso,
+            idCiclo: param.codigoCiclo,
             codigoCurso: param.codigoInterno,
             nombreCurso: param.nombreCurso,
             tipoCurso: param.tipoDeCurso,
@@ -180,6 +183,33 @@ export class MallaMapper {
     }
 
     static fromDomainToApiRevertirDesfase( param: CursoMallaRevertirDesfase ): CursoMallaRevertirDesfaseDTO {
+        return {
+            codigoMalla: param.idMalla,
+            usuario: param.userId
+        }
+    }
+
+    static fromDomainToApiCursoMallaInsertar( param: CursoMallaInsertar ): CursoMallaInsertarDTO {
+        return {
+          codigoCiclo: param.idCiclo,
+          codigoInterno: param.codigoCurso,
+          codigoPlanDeEstudio: param.idPlanEstudio,
+          codigoProgramaAcademico: param.idPrograma,
+          competencia: param.competencia,
+          descripcion: param.descripcion,
+          hp: param.horasPracticas,
+          ht: param.horasTeoricas,
+          nombre: param.nombreCurso,
+          orden: param.orden,
+          tCreditos: param.totalCreditos,
+          tHoras: param.totalHoras,
+          tipoDeCurso: param.tipoCurso,
+          tipoDeEstudio: param.tipoEstudio,
+          usuario: param.usuarioId  
+        }
+    }
+
+    static fromDomainToApiCursoMallaEliminar( param: CursoMallaEliminar ): CursoMallaEliminarDTO {
         return {
             codigoMalla: param.idMalla,
             usuario: param.userId

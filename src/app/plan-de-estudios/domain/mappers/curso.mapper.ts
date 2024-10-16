@@ -42,7 +42,7 @@ export class CursoMapper {
         return {
 
             codigoProgramaAcademico: param.idPrograma,
-            codigoCiclo: param.idCiclo,
+            // codigoCiclo: param.idCiclo,
             codigoInterno: param.codigoCurso,
             nombre: param.nombreCurso,
             descripcion: param.descripcion,
@@ -61,7 +61,7 @@ export class CursoMapper {
         return {
             codigoCurso: param.cursoId,
             codigoProgramaAcademico: param.idPrograma,
-            codigoCiclo: param.idCiclo,
+            // codigoCiclo: param.idCiclo,
             codigoInterno: param.codigoCurso,
             nombre: param.nombreCurso,
             descripcion: param.descripcion,
@@ -166,7 +166,7 @@ export class CursoMapper {
 
         return {
             codigoProgramaAcademico: idPrograma,
-            codigoCiclo: param.ciclo,
+            // codigoCiclo: param.ciclo,
             codigoInterno: param.codigo_curso,
             nombre: param.nombre_curso,
             descripcion: param.nombre_curso,
