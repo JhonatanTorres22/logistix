@@ -6,6 +6,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { MallaCurricularListComponent } from '../malla-curricular-list/malla-curricular-list.component';
 import { MallaListComponent } from "../malla-list/malla-list.component";
+import { MallaCurricularPageComponent } from "../malla-curricular-page.component";
 
 @Component({
   selector: 'malla-curricular-side',
@@ -15,7 +16,8 @@ import { MallaListComponent } from "../malla-list/malla-list.component";
     SharedModule,
     MallaCurricularListComponent,
     UiButtonComponent,
-    MallaListComponent
+    MallaListComponent,
+    MallaCurricularPageComponent
 ],
   templateUrl: './malla-curricular-side.component.html',
   styleUrl: './malla-curricular-side.component.scss'

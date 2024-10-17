@@ -191,6 +191,9 @@ export class PlanEstudioWizardComponent implements OnInit {
     });
     effect( () => {
       console.log( 'Effect: ', this.planEstudioUltimoConResolucion() );
+      const cursoMalla = this.cursosMallaByCiclo();
+      console.log( cursoMalla );
+      
       // this.obtenerCursoPlanEquivalenciaUltimo();
       if( this.planEstudioSelect().id == 0) { return }
       this.obtenerMallaEquivalenciaUltimo();
@@ -524,6 +527,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
+        this.cursosPrimariosMalla = []
         this.obtenerMallaEquivalenciaActual();
       }, error: ( error ) => {
         console.log( error );

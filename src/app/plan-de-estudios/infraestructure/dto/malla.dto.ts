@@ -61,7 +61,8 @@ export interface MallaEquivalenciaDTO {
 
 export type CursoMallaPreRequisitoDTO = {
     codigoMallaPreRequisito: number,
-    nombreMallaPreRequisito: string
+    nombreMallaPreRequisito: string,
+    codigoInternoCursoPreRequisito: string
 }
 
 export interface MallaInsertDTO {

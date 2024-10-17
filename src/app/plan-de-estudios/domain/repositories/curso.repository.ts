@@ -14,6 +14,7 @@ import {
     CursoRevertirDesfase,
     CursoRevertirRenovacion
 } from "../models/curso.model";
+import { PlanEstudio } from "../models/plan-estudio.model";
 
 export abstract class CursoRepository {
  
@@ -29,7 +30,7 @@ export abstract class CursoRepository {
     abstract eliminarMasivo( cursos: CursoEliminar[] ): Observable<void>;
     abstract addPreRequisito( cursoPreRequisito: CursoAddPreRequisito ): Observable<void>
     abstract deletePreRequisito( cursoPreRequisito: CursoDeletePreRequisito ): Observable<void>
-    abstract buscarCursoEnPlanEstudios( cursoId: number): Observable<CursoEncontradoEnPlan[]>
+    abstract buscarCursoEnPlanEstudios( cursoId: number): Observable<PlanEstudio[]>
     abstract obtenerCursosDesfasados( idPrograma: number ): Observable<CursoDesfasado[]>
 
 }

@@ -24,18 +24,18 @@ export class CursoValidation {
     // maxLengthPrograma:string
     // maxLengthCiclo: string
     maxLengthCodigoCurso: number = 8;
-    minLengthCodigoCurso: number = 8;
-    expRegCodigoCurso: RegExp = /^P\d{2}(?![A-Za-z]$)([A-Za-z0-9]*A[A-Za-z0-9]*A?[A-Za-z0-9]*)?\d{1,2}$/;
+    minLengthCodigoCurso: number = 5;
+    expRegCodigoCurso: RegExp = /^P?\d{2}(?![A-Za-z]$)([A-Za-z0-9]*A[A-Za-z0-9]*A?[A-Za-z0-9]*)?\d{1,2}$/; //AGREGUÉ EL ? AL COSTADO DE LA P PARA VOLVERLO OPCIONAL
     expRegCodigoCursoBlockToInput: RegExp =  /[^P\dA-Za-z0-9]|(?<=^P\d{2})[^A-Za-z0-9]?(?=\d{4})/g;
     minTotalHoras: number = 2;
     minCreditos: number = 2;
-    maxLengthNombreCurso: number = 50;
+    maxLengthNombreCurso: number = 100;
     minLengthNombreCurso: number = 6;
-    expRegNombreCurso: RegExp =/^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;
+    expRegNombreCurso: RegExp =/^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F,\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;
     expRegNombreCursoBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
     duplicado = this.duplicadoNombreCurso.bind(this);
 
-    maxLengthDescripcion: number = 80;
+    maxLengthDescripcion: number = 100;
     minLengthDescripcion: number = 6;
     expRegDescripcion: RegExp = /^[a-zA-Z]([a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\- ,.;:()"]*)[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F(."\d\d)]$/;;
     expRegDescripcionBlockToInput: RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g;
