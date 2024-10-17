@@ -26,10 +26,10 @@ import { MallaCurricularSideComponent } from '../malla-curricular-page/malla-cur
     SharedModule,
     UiButtonComponent,
     UiButtonIconComponent,
-    PlanEstudioAddComponent,
     SemestreAcademicoPageComponent,
     SemestreOptionsComponent,
     PlanEstudioCardComponent,
+    PlanEstudioAddComponent,
     MallaCurricularSideComponent,
     UiCardNotItemsComponent
   ],

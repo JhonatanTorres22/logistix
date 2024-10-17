@@ -217,8 +217,8 @@
             <mat-divider></mat-divider>
             <button (click)="renovar( templateCursoAdd )" class="example-menu-item" cdkMenuItem><i class="ti ti-refresh f-16 pr-2 text-purple-700"></i>Renovar</button>
             <mat-divider></mat-divider>
-            <button (click)="revertirConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-arrow-back-up f-16 pr-2 text-orange-700"></i>Revertir</button>
-            <mat-divider></mat-divider>
+            <!-- <button (click)="revertirConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-arrow-back-up f-16 pr-2 text-orange-700"></i>Revertir</button>
+            <mat-divider></mat-divider> -->
             <button (click)="desfasarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-alert-circle f-16 pr-2 text-red-700"></i>Desfasar</button>
         }
     </div>
@@ -226,4 +226,12 @@
 
 <ng-template #templateCursoAdd let-data>
     <curso-add [readonlyCiclo]="cursoMallaOption().idMalla == 0 ? false : true"></curso-add>
+</ng-template>
+
+<ng-template #templatePlan let-data>
+    @for (plan of planEstudioEncontrado; track $index) {
+        <div class="bg-yellow-500 text-white-700 font-bold text-center">NO ES POSIBLE {{ accionCurso }} EL CURSO</div>
+        <plan-estudio-card [planEstudio]="plan" tipo="asignar"></plan-estudio-card>
+        <!-- <pre>{{ plan | json}}</pre> -->
+    }
 </ng-template>

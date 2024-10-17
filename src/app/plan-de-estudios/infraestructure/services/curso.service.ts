@@ -5,6 +5,7 @@ import { environment } from "src/environments/environment";
 import { CursoDataArrayDTO, CursoDesfasadoDataArrayDTO, CursoEncontradoEnPlanDataArrayDTO } from "../dto/curso.dto";
 import { CursoMapper } from "../../domain/mappers/curso.mapper";
 import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoCrear, CursoDeletePreRequisito, CursoDesfasado, CursoDesfasar, CursoEditar, CursoEliminar, CursoEncontradoEnPlan, CursoRenovar, CursoRevertirRenovacion } from "../../domain/models/curso.model";
+import { PlanEstudio } from "../../domain/models/plan-estudio.model";
 
 
 @Injectable({
@@ -124,12 +125,12 @@ export class CursoService {
         return this.http.delete<void>( this.urlApi + this.urlDeletePreRequisito, { body: preRequisitoAPI} );
     }
 
-    buscarCursoPlanEstudios = ( idCurso: number): Observable<CursoEncontradoEnPlan[]> => {
+    buscarCursoPlanEstudios = ( idCurso: number): Observable<PlanEstudio[]> => {
         // const cursoAPI = CursoMapper.fromDomainToApiBuscarCursoPlanEstudio( curso );
         // console.log( cursoAPI );
         
         return this.http.get<CursoEncontradoEnPlanDataArrayDTO>( this.urlApi + this.urlBuscarCursoPlanEstudio + idCurso )
-            .pipe( map ( responseAPI => responseAPI.data.map( CursoMapper.fromApiToDomainCursoEncontradoEnPlan ) ))
+            .pipe( map ( responseAPI => responseAPI.data.map( CursoMapper.fromApiToDomainCursoEncontradoEnPlanEstudio ) ))
     }
 
     obtenerCursosDesfasados( idPrograma: number ): Observable<CursoDesfasado[]> {

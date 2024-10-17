@@ -1,6 +1,7 @@
 import { RolUserId } from "src/app/core/mappers/rolUserId";
 import { CursoAddPreRequisitoDTO, CursoBuscarPlanDTO, CursoCrearDTO, CursoDeletePreRequisitoDTO, CursoDesfasadoDTO, CursoDesfasarDTO, CursoDTO, CursoEditarDTO, CursoEliminarDTO, CursoEncontradoEnPlanDTO, CursoRenovarDTO } from "../../infraestructure/dto/curso.dto";
 import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoByCiclo, CursoCrear, CursoDeletePreRequisito, CursoDesfasado, CursoDesfasar, CursoEditar, CursoEliminar, CursoEncontradoEnPlan, CursoExcel, CursoRenovar } from "../models/curso.model";
+import { PlanEstudio } from "../models/plan-estudio.model";
 
 export class CursoMapper {
     static fromApiToDomain( param: CursoDTO ): Curso {
@@ -131,6 +132,23 @@ export class CursoMapper {
             estadoMatricula: param.estadoMatricula,
             id: param.codigoPlanDeEstudio,
             nombre: param.nombre
+        }
+    }
+
+    static fromApiToDomainCursoEncontradoEnPlanEstudio( param: CursoEncontradoEnPlanDTO ): PlanEstudio {
+        return {
+            archivo: param.archivo,
+            estadoMatricula: param.estadoMatricula,
+            id: param.codigoPlanDeEstudio,
+            nombre: param.nombre,
+            resolucion: param.resolucion,
+            inicioVigencia: param.inicioVigencia,
+            finVigencia: param.finVigencia,
+            descripcionGrado: '',
+            descripcionTitulo: '',
+            detallePerfil: '',
+            estadoCaducidad: '',
+            idProgramaAcademico: 0
         }
     }
 

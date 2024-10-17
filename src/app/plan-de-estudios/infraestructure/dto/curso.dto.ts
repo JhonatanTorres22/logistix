@@ -1,3 +1,4 @@
+import { PlanEstudio } from "../../domain/models/plan-estudio.model"
 import { PlanEstudioDTO } from "./plan-estudio.dto"
 
 export interface CursoDTO {
@@ -60,7 +61,7 @@ export type CursoAddPreRequisitoDTO = Pick<CursoDTO, 'codigoCurso'> & {
 
 export type CursoBuscarPlanDTO = Pick<CursoDTO, 'codigoCurso'>;
 
-export type CursoEncontradoEnPlanDTO = Pick<PlanEstudioDTO, 'codigoPlanDeEstudio' | 'nombre' | 'archivo' | 'estadoMatricula'>
+export type CursoEncontradoEnPlanDTO = Pick<PlanEstudioDTO, 'codigoPlanDeEstudio' | 'nombre' | 'archivo' | 'estadoMatricula' | 'resolucion' | 'inicioVigencia' | 'finVigencia'>
 
 export interface CursoEncontradoEnPlanDataArrayDTO {
     data: CursoEncontradoEnPlanDTO[]

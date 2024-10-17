@@ -3,6 +3,7 @@ import { CursoRepository } from "../../domain/repositories/curso.repository";
 import { Observable } from "rxjs";
 import { Curso, CursoAddPreRequisito, CursoBuscarPlan, CursoCrear, CursoDeletePreRequisito, CursoDesfasado, CursoDesfasar, CursoEditar, CursoEliminar, CursoEncontradoEnPlan, CursoRenovar, CursoRevertirDesfase, CursoRevertirRenovacion } from "../../domain/models/curso.model";
 import { CursoService } from "../services/curso.service";
+import { PlanEstudio } from "../../domain/models/plan-estudio.model";
 
 
  @Injectable({
@@ -63,7 +64,7 @@ import { CursoService } from "../services/curso.service";
          return this.service.deletePreRequisito( cursoPreRequisito )
       }
 
-      buscarCursoEnPlanEstudios(idCurso: number): Observable<CursoEncontradoEnPlan[]> {
+      buscarCursoEnPlanEstudios(idCurso: number): Observable<PlanEstudio[]> {
          return this.service.buscarCursoPlanEstudios( idCurso )
       }
 

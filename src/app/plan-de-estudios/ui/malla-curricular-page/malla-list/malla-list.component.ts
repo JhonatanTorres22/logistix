@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, effect, HostListener, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, effect, HostListener, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
@@ -38,13 +38,13 @@ import { CursoAddComponent } from '../../curso-page/curso-add/curso-add.componen
 import { CursoRenovadoListComponent } from '../../curso-renovado-list/curso-renovado-list.component';
 import { template } from 'lodash';
 import { CursoMallaRevertirDesfaseDTO } from 'src/app/plan-de-estudios/infraestructure/dto/malla.dto';
+import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
 @Component({
   selector: 'malla-list',
   standalone: true,
   imports: [ 
     CommonModule,
     SharedModule,
-    PlanEstudioCardComponent,
     CicloPageComponent,
     CursoPageComponent,
     UiCardNotItemsComponent,
@@ -52,6 +52,7 @@ import { CursoMallaRevertirDesfaseDTO } from 'src/app/plan-de-estudios/infraestr
     CursoImportTemplateComponent,
     CursoDesfasadoListComponent,
     CursoAddComponent,
+    PlanEstudioCardComponent,
     MallaImportComponent,
     UiButtonComponent,
     CursoRenovadoListComponent,
@@ -66,6 +67,9 @@ export class MallaListComponent  implements OnInit {
 
   @Input() readonly: boolean = false;
   @Input() preRequisito: boolean = false;
+  @ViewChild('templatePlan') templatePlan: TemplateRef<any>
+
+  
   cicloSelect: Ciclo;
 
   loading = this.mallaSignal.loading;
@@ -101,6 +105,8 @@ export class MallaListComponent  implements OnInit {
 
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
   cicloOrden: any[] = [];
+  planEstudioEncontrado: PlanEstudio[] = [];
+  accionCurso: 'ELIMINAR' | 'EDITAR' | 'RENOVAR';
 
   idPrograma = this.signal.programaId;
   isModal = this.signal.isModal;
@@ -372,6 +378,7 @@ export class MallaListComponent  implements OnInit {
         this.file.set( this.mensajeriaSignal.fileDefault );
         // this.renderizarCursos.set( 'Obtener' );
         this.obtenerMalla( this.planEstudioSelect().id);
+        this.obtenerMallaPreRequisitos();
         this.loading.set( false );
 
       }, error: ( error ) => {
@@ -487,9 +494,65 @@ export class MallaListComponent  implements OnInit {
     console.log( curso );
     let titleModal = curso.id == 0 ? 'Crear Desde Malla' : 'Editar Curso';
       this.cursoSignal.cursoSelect.set( curso )
-      this.openModalFormCurso( template, titleModal )
+      this.cursoAsignadoEnPlanEstudioConRCU( curso.id ).then( isAssignedIntoPlanEstudio => {
+        if( !isAssignedIntoPlanEstudio ) {
+          this.openModalFormCurso( template, titleModal );
+          return;
+        }
+
+        this.isModal.set( true );
+        console.log('Mostrar el card del plan de estudios...');
+        this.accionCurso = 'EDITAR';
+        this.modal.openTemplate({
+          template: this.templatePlan,
+          titulo: 'CURSO ASIGNADO'
+        });
+        return
+        
+      })
     return
 
+
+  }
+
+  cursoAsignadoEnPlanEstudioConRCU = ( idCurso: number) => {
+
+    return new Promise<boolean>( resolve  => {
+      
+      this.cursosRepository.buscarCursoEnPlanEstudios( idCurso ).subscribe({
+        next: ( response ) => {
+          console.log( response );
+          // this.alert.showAlert('Buscando....', 'info', 2)
+          if ( response.length == 0  ) {
+            // this.planEstudioEncontrado = {
+              //   archivo: response[0].archivo,
+              //   descripcionGrado: '',
+              //   descripcionTitulo: '',
+              //   detallePerfil: '',
+              //   estadoCaducidad: '',
+              //   estadoMatricula: response[0].estadoMatricula,
+              //   id: response[0].id,
+              //   idProgramaAcademico: 0,
+              //   finVigencia: '',
+              //   inicioVigencia: '',
+              //   nombre: response[0].nombre,
+              //   resolucion: ''
+              // }
+              resolve( false );
+              return
+            }
+            this.planEstudioEncontrado = response;
+            resolve( true );
+          
+
+        }, error: ( error ) => {
+          console.log( error );
+          this.alert.showAlert('Ocurrió un error al buscar el curso', 'error', 6);
+          resolve( true );
+        }
+      });
+
+    });
 
   }
 
@@ -638,20 +701,38 @@ export class MallaListComponent  implements OnInit {
   }
 
   eliminarConfirm = () => {
-    this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ELIMINAR el curso ${ this.cursoMallaOption().nombreCurso }?`)
-      .then( isConfirm => {
-        if( !isConfirm ) {
-          this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
-          return
-        }
-        const cusoMallaEliminar: CursoMallaEliminar = {
-          idMalla: this.cursoMallaOption().idMalla,
-          userId: parseInt( this.authSignal.currentRol().id ),
-        }
 
-        this.eliminarCursoMallaDeGolpe( cusoMallaEliminar );
+    this.cursoAsignadoEnPlanEstudioConRCU( this.cursoMallaOption().idCurso ).then( isAssignedIntoPlanEstudio => {
+      if( !isAssignedIntoPlanEstudio ) {
+        
+        this.alert.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ELIMINAR el curso ${ this.cursoMallaOption().nombreCurso }?`)
+          .then( isConfirm => {
+            if( !isConfirm ) {
+              this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+              return
+            }
+            const cusoMallaEliminar: CursoMallaEliminar = {
+              idMalla: this.cursoMallaOption().idMalla,
+              userId: parseInt( this.authSignal.currentRol().id ),
+            }
 
-      })
+            this.eliminarCursoMallaDeGolpe( cusoMallaEliminar );
+
+          })
+
+        return;
+      }
+
+      this.isModal.set( true );
+      console.log('Mostrar el card del plan de estudios...');
+      this.accionCurso = 'ELIMINAR';
+      this.modal.openTemplate({
+        template: this.templatePlan,
+        titulo: 'CURSO ASIGNADO'
+      });
+      return
+      
+    })
   }
 
   eliminarCursoMallaDeGolpe = ( curso: CursoMallaEliminar ) => {
@@ -953,23 +1034,31 @@ export class MallaListComponent  implements OnInit {
 
   desfasarConfirm = ( ) => {
     // console.log('Implementación pendiente... :)');
-    
-    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea desfasar el curso?')
-      .then( isConfirm => {
-        if(!isConfirm){
-          this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
-          return
-        }
-        const curso: CursoMallaDesfasar = {
-          idMalla: this.cursoMallaOption().idMalla,
-          userId: parseInt( this.authSignal.currentRol().id )
-        }
 
-        console.log( curso );
-        
+    this.cursoAsignadoEnPlanEstudioConRCU( this.cursoMallaOption().idCurso ).then( isAssignedIntoPlanEstudio => {
+      if( isAssignedIntoPlanEstudio ) {
+        this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea desfasar el curso?')
+          .then( isConfirm => {
+            if(!isConfirm){
+              this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+              return
+            }
+            const curso: CursoMallaDesfasar = {
+              idMalla: this.cursoMallaOption().idMalla,
+              userId: parseInt( this.authSignal.currentRol().id )
+            }
 
-        this.desfasar( curso )
-      })
+            console.log( curso );
+            
+
+            this.desfasar( curso )
+          })
+        return;
+      }
+
+      this.alert.sweetAlert('info', 'ATENCIÓN', `No es posible DESFASAR => ${ this.cursoMallaOption().nombreCurso }, por que se trata de un curso creado recientemente.`)
+      
+    })
 
   }
 
@@ -994,31 +1083,45 @@ export class MallaListComponent  implements OnInit {
 
   renovar = ( template: TemplateRef<any> ) => {
     
-    this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea renovar el curso?')
-      .then( isConfirm => {
-        if(!isConfirm){
-          console.log('cancelar');
-          return
-        }
-        
-        this.modal.openTemplate({
-          template,
-          titulo: 'Renovar Curso'
-        }).afterClosed().subscribe( resp => {
-          console.log(resp);
-          if( resp == 'cancelar') {
-            this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
-            return
-          }
-          
-          this.obtenerMalla( this.planEstudioSelect().id );
-          this.obtenerMallaPreRequisitos();
-        
-        } )
+    this.cursoAsignadoEnPlanEstudioConRCU( this.cursoMallaOption().idCurso ).then( isAssignedIntoPlanEstudio => {
+        if( isAssignedIntoPlanEstudio ) {
+          this.alert.sweetAlert('question', 'Confirmar', '¿Está seguro que desea renovar el curso?')
+            .then( isConfirm => {
+              if(!isConfirm){
+                console.log('cancelar');
+                return
+              }
+              
+              this.modal.openTemplate({
+                template,
+                titulo: 'Renovar Curso'
+              }).afterClosed().subscribe( resp => {
+                console.log(resp);
+                if( resp == 'cancelar') {
+                  this.cursoMallaOption.set( this.mallaSignal.cursoMallaDefault );
+                  return
+                }
+                
+                this.obtenerMalla( this.planEstudioSelect().id );
+                this.obtenerMallaPreRequisitos();
+              
+              } )
 
+            })
+          return;
+        }
+         this.alert.sweetAlert('info', 'ATENCIÓN', `No es posible RENOVAR => ${ this.cursoMallaOption().nombreCurso }, por que se trata de un curso creado recientemente.`)
+        // this.isModal.set( true );
+        // console.log('Mostrar el card del plan de estudios...');
+        // this.accionCurso = 'RENOVAR';
+        // this.modal.openTemplate({
+        //   template: this.templatePlan,
+        //   titulo: 'CURSO ASIGNADO'
+        // });
+        return
+        
       })
-    
-    
+
   }
 
   drop(event: CdkDragDrop<string[]>) {

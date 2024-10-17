@@ -55,7 +55,8 @@ export class MallaMapper {
             preRequisitos: param.prerequisito.map( pre => {
                 return {
                     idMalla: pre.codigoMallaPreRequisito,
-                    nombreCurso: pre.nombreMallaPreRequisito
+                    nombreCurso: pre.nombreMallaPreRequisito,
+                    codigoCurso: pre.codigoInternoCursoPreRequisito
                 }
             })
         }

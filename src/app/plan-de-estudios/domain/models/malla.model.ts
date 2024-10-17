@@ -55,7 +55,7 @@ export interface CursoMallaByCiclo {
 
 }
 
-export type CursoPreRequisitoMalla = Pick<Malla, 'idMalla' | 'nombreCurso'>
+export type CursoPreRequisitoMalla = Pick<Malla, 'idMalla' | 'nombreCurso' | 'codigoCurso'>
 
 
 export interface CursoMallaRenovar {

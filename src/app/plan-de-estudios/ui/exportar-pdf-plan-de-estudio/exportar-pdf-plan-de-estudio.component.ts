@@ -148,7 +148,7 @@ export class ExportarPdfPlanDeEstudioComponent implements OnInit {
                     const cellValue = j === 0 ? curso.orden : // ORDEN
                         j === 1 ? curso.codigoCurso : // CÓDIGO
                             j === 2 ? curso.nombreCurso : // CURSO
-                                j === 3 ? (curso.preRequisitos.length > 0 ? curso.preRequisitos.map(req => req.nombreCurso.substring(0, 8) + '...').join(', ') : '') :
+                                j === 3 ? (curso.preRequisitos.length > 0 ? curso.preRequisitos.map(req => req.codigoCurso) : '') :
                                     j === 4 ? curso.horasTeoricas : // H TEO
                                         j === 5 ? curso.horasPracticas : // H PRA
                                             j === 6 ? curso.totalCreditos : // CRÉD
