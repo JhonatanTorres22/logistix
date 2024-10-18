@@ -26,6 +26,17 @@
 @import './app/@theme/styles/theme.scss';
 @include mat.all-component-typographies(theme-typography("'Inter var', sans-serif")); // theme typography
 
+//boton paradeante
+@keyframes parpadeo {
+  0% { box-shadow: 0 0 15px 10px #ffe444; }
+  50% { box-shadow: 0 0 0px 00px #ffe444; }
+  100% { box-shadow: 0 0 15px 10px #ffe444; }
+}
+
+.boton-parpadeante {
+  animation: parpadeo 1s infinite;
+}
+
 // default theme
 @include mat.all-component-themes(get-light-theme($blue-theme));
 

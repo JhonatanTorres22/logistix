@@ -26,6 +26,7 @@ export class MallaMapper {
             descripcion: param.descripcion,
             equivalencias: [],
             color: '',
+            modalidadDeCreacion: param.modalidadDeCreacion,
             preRequisitos: []
         }
     }
@@ -52,6 +53,7 @@ export class MallaMapper {
             descripcion: '',
             equivalencias: [],
             color: '',
+            modalidadDeCreacion: param.modalidadDeCreacion,
             preRequisitos: param.prerequisito.map( pre => {
                 return {
                     idMalla: pre.codigoMallaPreRequisito,
@@ -100,6 +102,7 @@ export class MallaMapper {
             cicloLetra: param.denominacionExtendida,
             competencia: '',
             descripcion: '',
+            modalidadDeCreacion: param.modalidadDeCreacion,
             equivalencias: param.equivalencia.map( equiv => {
                 return {
                     idMalla: equiv.codigoMallaEquivalencia,

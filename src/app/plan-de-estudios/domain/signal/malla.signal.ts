@@ -31,6 +31,7 @@ export class MallaSignal {
         descripcion: '',
         equivalencias: [],
         color: '',
+        modalidadDeCreacion: '',
         preRequisitos: []
     }
 

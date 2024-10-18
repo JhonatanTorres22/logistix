@@ -6,7 +6,9 @@
 
     <mat-step [stepControl]="formDisenar" [editable]="isEditable" #stepper>
       <form [formGroup]="formDisenar" hidden>
-        <ng-template matStepLabel>Renovación de la Malla Curricular</ng-template>
+        <ng-template matStepLabel>
+            <span [ngClass]="{'texto-step': stepper.selectedIndex === 0}">Renovación de la Malla Curricular</span>
+          </ng-template>
         <mat-form-field>
           <mat-label>Name</mat-label>
           <input matInput type="number" formControlName="inputStep1" placeholder="Last name, First name" required>
@@ -81,7 +83,9 @@
     </mat-step> -->
     <mat-step>
         <form [formGroup]="formAsignarPreRequisitos" hidden>
-            <ng-template matStepLabel>Asignación de Pre-requisitos</ng-template>
+            <ng-template matStepLabel>
+                <span [ngClass]="{'texto-step': stepper.selectedIndex === 1}">Asignación de Pre-requisitos</span>
+              </ng-template>
             <mat-form-field>
               <mat-label>Pre-requisito</mat-label>
               <input matInput formControlName="preRequisitos" placeholder="Ex. 1 Main St, New York, NY"
@@ -94,7 +98,9 @@
           </ng-template>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Asignación de Equivalencias</ng-template>
+        <ng-template matStepLabel>
+            <span [ngClass]="{'texto-step': stepper.selectedIndex === 2}">Asignación de Equivalencias</span>
+          </ng-template>
 
       <ng-template matStepContent>
             @if ( !loading ) {
@@ -117,7 +123,7 @@
                             <ng-template #headerTitleTemplate>
                         
                                 <div>{{ planEstudioUltimoConResolucion().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
-                                <div class="bg-gray-600 text-white border-1 border-round px-3">ULTIMO</div>
+                                <div class="bg-gray-600 text-white border-1 border-round px-3">PREDECESOR</div>
                                 <!-- <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Primaria" (onClick)="guardarPrimariosConfirm()"></ui-button>
                                 <ui-button color="primary" icon="ti ti-plus" matTooltip="Guardar Equivalencia Secundaria" (onClick)="guardarPrimariosConfirm()"></ui-button> -->
                         
@@ -201,7 +207,7 @@
                             <ng-template #headerTitleTemplate>
                         
                                 <div>{{ planEstudioSelect().nombre ?? 'NO HAY PLAN DE ESTUDIOS' }}</div>
-                                <div class="bg-blue-600 text-white border-1 border-round px-3">PROCESO</div>
+                                <div class="bg-blue-600 text-white border-1 border-round px-3 boton-parpadeante">EN CONSTRUCCIÓN</div>
                                 <!-- <ui-button color="primary" icon="ti ti-plus" (onClick)="openModalCategoria( Categorias )"></ui-button> -->
                         
                             </ng-template>
@@ -249,15 +255,20 @@
                                 >
                                         <div class="col-1 border-3xl border-round f-10">
                                             <div class="flex gap-2 align-items-center">
-                                                @switch ( curso.estado ) {
-                                                    @case ( 'RENOVADO' ) {
+                                                @switch (curso.estado)
+                                                {
+                                                    @case ('RENOVADO') {
                                                         <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
                                                     }
-                                                    @case ( 'DESFASADO' ) {
+                                                    @case ('DESFASADO') {
                                                         <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 -ml-2"></i>
                                                     }
-                                                    @case ( 'ACTIVO' ) {
-                                                        <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
+                                                    @case ('ACTIVO') {
+                                                        @if (curso.equivalencias.length == 0) {
+                                                            <i class="ti ti-edit f-16 text-white bg-yellow-700 border-circle border-1 p-1 -ml-2"></i>
+                                                        } @else if (curso.equivalencias.length > 0) {
+                                                            <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
+                                                        }
                                                     }
                                                 }
                                                 {{ curso.cicloRomano }}
@@ -298,10 +309,11 @@
       </ng-template>
 
     </mat-step>
-
     <mat-step [stepControl]="formAsignar" [editable]="isEditable">
       <form [formGroup]="formAsignar" hidden>
-        <ng-template matStepLabel>Vista Preliminar del Plan de Estudio</ng-template>
+        <ng-template matStepLabel>
+            <span [ngClass]="{'texto-step': stepper.selectedIndex === 3}">Vista Preliminar del Plan de Estudio</span>
+          </ng-template>
         <mat-form-field>
           <mat-label>Address</mat-label>
           <input matInput formControlName="asignacion" placeholder="Ex. 1 Main St, New York, NY"

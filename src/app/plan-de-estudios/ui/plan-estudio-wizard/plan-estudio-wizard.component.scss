@@ -11,5 +11,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 99999999999; /* Asegura que las flechas estén detrás de los cards */
+    z-index: 9; /* Asegura que las flechas estén detrás de los cards */
+  }
+  .texto-step {
+    font-size: 1.2rem; /* Ajusta el tamaño como desees */
+    font-weight: bold;
   }

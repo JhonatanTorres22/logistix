@@ -15,6 +15,7 @@ export interface MallaDTO {
     estado: string,
     denominacionResumida: string,
     denominacionExtendida: string,
+    modalidadDeCreacion: string,
     definicion: string,
 
 }
@@ -36,6 +37,7 @@ export interface MallaPreRequisitoDTO {
     denominacionResumida: string
     denominacionExtendida: string,
     definicion: string,
+    modalidadDeCreacion: string,
     prerequisito: CursoMallaPreRequisitoDTO[]
 }
 
@@ -56,6 +58,7 @@ export interface MallaEquivalenciaDTO {
     denominacionResumida: string
     denominacionExtendida: string,
     definicion: string,
+    modalidadDeCreacion: string,
     equivalencia: EquivalenciaMallaDTO[]
 }
 

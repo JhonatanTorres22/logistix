@@ -23,6 +23,7 @@ export interface Malla {
     color: string,
     //CursoPlanPreRequisito
     preRequisitos: CursoPreRequisitoMalla[],
+    modalidadDeCreacion: string
 
 }
 
