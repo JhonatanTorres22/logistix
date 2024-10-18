@@ -49,7 +49,7 @@ export class CursoValidation {
 
     maxLengthHorasPracticas: number = 2
     minLengthHorasPracticas: number = 1;
-    expRegHorasPracticas: RegExp = /[0-9]{1,2}/;
+    expRegHorasPracticas: RegExp = /^[0-9]*[02468]$/;
     expRegHorasPracticasBlockToInput: RegExp = /[^0-9]/g;
 
     maxLengthTotalHoras: number = 2

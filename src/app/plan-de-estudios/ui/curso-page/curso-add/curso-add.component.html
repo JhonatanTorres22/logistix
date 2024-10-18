@@ -1,4 +1,19 @@
 <mat-dialog-content>
+    @if (cursoMallaOption().idMalla !== 0) {
+        <div class=" price-check row align-item-center -mt-1">
+            <div class="col-9">
+            <div class="flex justify-content-between">
+              <span class="m-b-0 border-round bg-blue-200 text-xs font-light shadow-3 px-2">{{ cursoMallaOption().nombreCurso }}</span>
+            </div>
+          </div>
+    
+          <div class="col-2">
+            <div class="flex justify-content-between">
+              <span class=" m-b-0 border-round bg-blue-200 text-xs font-light shadow-3 px-2">{{ cursoMallaOption().codigoCurso }}</span>
+            </div>
+          </div>
+        </div>
+    }
     <div class="p-10">
         <!-- <pre>{{ formCurso.value | json }}</pre> -->
         <form [formGroup]="formCurso">
@@ -12,10 +27,10 @@
                  }
                  <ui-input [ngModel]="prefijoCodigoCurso" class="w-full" label="Codigo del Curso" formControlName="codigoCurso" 
                  [maxlength]="maxLengthCodigoCurso" [minlength]="minLengthCodigoCurso" [expReg]="expRegCodigoCursoBlockToInput" [patternErrorMessage]="'Formato de código P011101'"></ui-input>
-                 @if( cursoMallaOption().idMalla != 0 ) {
+                 <!-- @if( cursoMallaOption().idMalla != 0 ) {
                      <ui-input [ngModel]="codigoCursoAnterior" class="w-full" label="Codigo Anterior" formControlName="codigoCursoAnterior" [readonly]="true"></ui-input>
                      
-                 }
+                 } -->
                 <!-- <div class="border-round border-1 border-gray-400 px-3">{{ codigoCursoAnterior }}</div> -->
             </div>
             <div class="flex gap-2">
@@ -36,11 +51,11 @@
             <ui-select label="Competencia" formControlName="competencia" [options]="optionsCompetencia" ></ui-select>
             <div class="flex flex-column md:flex-row gap-2">
                 <ui-input class="w-full" label="Horas Teoricas" formControlName="horasTeoricas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasTeoricas" [minlength]="minLengthHorasTeoricas" [expReg]="expRegHorasTeoricasBlockToInput" ></ui-input>
-                <ui-input class="w-full" label="Horas Practicas" formControlName="horasPracticas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Horas Practicas" formControlName="horasPracticas" (onInputEvent)="calcular()" [maxlength]="maxLengthHorasPracticas" [minlength]="minLengthHorasPracticas" [expReg]="expRegHorasPracticasBlockToInput"[patternErrorMessage]="'Solo se permite números pares'" ></ui-input>
             </div>
             <div class="flex gap-2">
                 <ui-input class="w-full" label="Total de Horas" formControlName="totalHoras" [readonly]="true" [min]="minTotalHoras" [maxlength]="maxLengthTotalHoras" [minlength]="minLengthTotalHoras" [expReg]="expRegTotalHorasBlockToInput" ></ui-input>
-                <ui-input class="w-full" label="Total de Creditos" formControlName="totalCreditos" [min]="minCredtios" [maxlength]="maxLengthTotalCreditos" [minlength]="minLengthTotalCreditos" [expReg]="expRegTotalCreditosBlockToInput" ></ui-input>
+                <ui-input class="w-full" label="Total de Creditos" formControlName="totalCreditos" [readonly]="true" [min]="minCredtios" [maxlength]="maxLengthTotalCreditos" [minlength]="minLengthTotalCreditos" [expReg]="expRegTotalCreditosBlockToInput" [disabled]="true"></ui-input>
             </div>
             <!-- <div class="flex flex-column md:flex-row gap-2 justify-content-around">
                 <span class="bg-primary-100 text-primary-700 f-w-600 border-round p-2 text-center">Total Horas: {{ (formCurso.value.horasPracticas * 1) + (formCurso.value.horasTeoricas * 1) }}</span>
@@ -53,7 +68,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     @if ( cursoMallaOption().idMalla != 0 ) {
-        <ui-button color="secondary" label="Limpiar Formulario" (onClick)="limpiar()" class="m-r-10"></ui-button>
+        <ui-button color="secondary" label="Completar Formulario" (onClick)="completarFormularioRenovar()" class="m-r-10"></ui-button>
     } @else {
         <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
     }

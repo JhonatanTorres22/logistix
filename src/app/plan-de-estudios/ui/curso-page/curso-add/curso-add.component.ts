@@ -208,17 +208,20 @@ export class CursoAddComponent {
     })
   }
 
-  limpiar = () => {
+  completarFormularioRenovar = () => {
+    const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == this.cursoMallaOption().tipoCurso );
+    const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == this.cursoMallaOption().tipoEstudio );
+    const competencia = this.optionsCompetencia.find( tipo => tipo.value == this.cursoMallaOption().competencia );
     this.formCurso.patchValue({
-      nombreCurso: '',
-      descripcion: '',
-      tipoEstudio: '',
-      tipoCurso: '',
-      competencia: '',
-      horasTeoricas: '',
-      horasPracticas: '',
-      totalHoras: '',
-      totalCreditos: ''
+      nombreCurso: this.cursoMallaOption().nombreCurso,
+      descripcion: this.cursoMallaOption().descripcion,
+      tipoEstudio: tipoEstudio,
+      tipoCurso: tipoCurso,
+      competencia: competencia,
+      horasTeoricas: this.cursoMallaOption().horasTeoricas.toString(),
+      horasPracticas: this.cursoMallaOption().horasPracticas.toString(),
+      totalHoras: this.cursoMallaOption().totalHoras.toString(),
+      totalCreditos: this.cursoMallaOption().totalCreditos.toString()
     });
   }
 
@@ -347,13 +350,15 @@ export class CursoAddComponent {
 
   calcular() {
     console.log( this.formCurso.value.horasTeoricas );
-    const total = parseInt( this.formCurso.value.horasTeoricas ) + parseInt( this.formCurso.value.horasPracticas );
-    const totalCreditos = parseInt( this.formCurso.value.horasTeoricas ) + (parseInt( this.formCurso.value.horasPracticas ) / 2) ?? 0;
+    const horasTeoricas = parseInt(this.formCurso.value.horasTeoricas) || 0;
+    const horasPracticas = parseInt(this.formCurso.value.horasPracticas) || 0;
+
+    const total = isNaN(horasTeoricas + horasPracticas) ? 0 : horasTeoricas + horasPracticas;
+    const totalCreditos = isNaN(horasTeoricas + horasPracticas / 2) ? 0 : horasTeoricas + horasPracticas / 2;
     this.formCurso.patchValue({
       totalHoras: total,
       totalCreditos: totalCreditos
     });
-    
   }
 
   pathValueFormEdit = ( curso: Curso ) => {
@@ -384,9 +389,9 @@ export class CursoAddComponent {
 
   pathValueFormRenovarCurso = ( curso: Malla ) => {
 
-    const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == curso.tipoCurso );
-    const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == curso.tipoEstudio );
-    const competencia = this.optionsCompetencia.find( tipo => tipo.value == curso.competencia );
+    // const tipoCurso = this.optionsTipoCurso.find( tipo => tipo.value == curso.tipoCurso );
+    // const tipoEstudio = this.optionsTipoEstudio.find( tipo => tipo.value == curso.tipoEstudio );
+    // const competencia = this.optionsCompetencia.find( tipo => tipo.value == curso.competencia );
     // const ciclo = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == curso.cicloNumero )!;
     const ciclo = this.optionsCiclos.find( ciclo => ciclo.text == curso.cicloLetra )!;
     console.log( ciclo );
@@ -395,17 +400,17 @@ export class CursoAddComponent {
       programa: this.currentInfoDirector()[0].idProgramaAcademico,
       ciclo: ciclo,
       codigoCurso: curso.codigoCurso,
-      nombreCurso: curso.nombreCurso,
-      descripcion: curso.descripcion,
-      tipoEstudio: tipoEstudio,
-      tipoCurso: tipoCurso,
-      competencia: competencia,
-      horasTeoricas: curso.horasTeoricas.toString(),
-      horasPracticas: curso.horasPracticas.toString(),
-      totalHoras: curso.totalHoras.toString(),
-      totalCreditos: curso.totalCreditos.toString()
-
+      nombreCurso: '',
+      descripcion: '',
+      tipoEstudio: '',
+      tipoCurso: '',
+      competencia: '',
+      horasTeoricas: '',
+      horasPracticas: '',
+      totalHoras: '',
+      totalCreditos: ''
     });
+    
 
     this.totalHorasModel = (parseInt(this.formCurso.value.horasPracticas ) + parseInt(this.formCurso.value.horasTeoricas))
 

@@ -39,6 +39,7 @@ import { Router } from '@angular/router';
 import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card.component';
 import { ExportarPdfPlanDeEstudioComponent } from '../exportar-pdf-plan-de-estudio/exportar-pdf-plan-de-estudio.component';
 import Swal from 'sweetalert2';
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
@@ -54,7 +55,7 @@ import Swal from 'sweetalert2';
     CursoDesfasadoListComponent,
     CursoImportTemplateComponent,
     MallaListComponent,
-    ExportarPdfPlanDeEstudioComponent
+    ExportarPdfPlanDeEstudioComponent,
 ],
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
@@ -76,7 +77,6 @@ export class PlanEstudioWizardComponent implements OnInit {
     "#D7B2A4", "#F0E7B0", "#F0C1D1", "#F3D1D1", "#D2F0E7",
     "#F4E7C5", "#E1B8B8", "#F2C8A2", "#B3CDE0", "#F9F1D9"
 ];
-
   // cursosPlanByCiclos = this.cursosPlanS.cursosPlanByCiclos;
   planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursosList = this.cursoSignal.cursosList;
@@ -126,6 +126,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
     competencia: '',
     descripcion: '',
+    modalidadDeCreacion: '',
     preRequisitos: []
   }
   connections: { leftCardId: number, rightCardId: number }[] = []; // Array de conexiones
@@ -200,8 +201,8 @@ export class PlanEstudioWizardComponent implements OnInit {
       this.obtenerMallaEquivalenciaActual();
     })
   }
+  items: MenuItem[] | undefined;
   ngOnInit(): void {
-
     // this.obtenerCursoPlanEquivalenciaActual();
     // this.obtenerCursoPlanActual();
     
@@ -215,7 +216,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     this.cursosPlanEquivalenciaActual.forEach((curso, index) => {
       const color = this.colores[index % this.colores.length];
       colorMap.set(curso.codigoCurso, color);
-      curso.color = color;
+      curso.color = color;     
     });
 
     // Asignar colores a cursosPlanEquivalenciaUltimo basados en cursosPlanEquivalenciaActual
@@ -850,6 +851,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   addLine = () => {
     
+    d3.select('#arrowContainerEquivalencia').selectAll('line').remove();
     // this.cursosPlanEquivalenciaActual.forEach( (curso, index, { length }) => {
     //   const cursoExiste = this.cursosPlanEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
     //   if( cursoExiste ) {

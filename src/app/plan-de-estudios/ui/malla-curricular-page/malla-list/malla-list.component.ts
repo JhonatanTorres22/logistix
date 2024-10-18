@@ -579,7 +579,7 @@ export class MallaListComponent  implements OnInit {
     
     this.mallaRepository.getMalla( idPlan ).subscribe({
       next: ( cursosPlan ) => {
-        // console.log( cursosPlan );
+        console.log( cursosPlan);
         
         this.cursosMalla.set( cursosPlan );
         const cursoByCiclo = this.cursosMalla().reduce( ( a: CursoMallaByCiclo[], b: Malla ) => {
@@ -1273,18 +1273,18 @@ export class MallaListComponent  implements OnInit {
       .attr('height', '100%');
 
       svg.append('defs').append('marker')
-      .attr('id', 'arrowhead')
-      .attr('viewBox', '-2 -5 12 10') // Ajusta el viewBox si cambias el d
-      .attr('refX', 8) // Cambia refX para centrar mejor la flecha
-      .attr('refY', 0)
-      .attr('orient', 'auto')
-      .attr('markerWidth', 6) // Aumenta el ancho de la punta
-      .attr('markerHeight', 6) // Aumenta la altura de la punta
-      .attr('xoverflow', 'visible')
-      .append('svg:path')
-      .attr('d', 'M 0,-4 L 10 ,0 L 0,4') // Ajusta la forma de la flecha
-      .attr('fill', 'black')
-      .style('stroke', 'none');
+    .attr('id', 'arrowhead')
+    .attr('viewBox', '-2 -5 12 10') // Ajusta el viewBox si cambias el d
+    .attr('refX', 8) // Cambia refX para centrar mejor la flecha
+    .attr('refY', 0)
+    .attr('orient', 'auto')
+    .attr('markerWidth', 5)  //el ancho de la cabeza de la flecha
+    .attr('markerHeight', 5) // la altura de la cabeza de la flecha
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', 'M 0,-4 L 10 ,0 L 0,4') // Ajusta la forma de la flecha
+    .attr('fill', 'black')
+    .style('stroke', 'none');
   }
 
   conexionAutomaticaCurso () {
@@ -1341,13 +1341,14 @@ export class MallaListComponent  implements OnInit {
         const endY = toRect.top + toRect.height / 2 - svgRect.top;
 
         svg.append('line')
-          .attr('x1', startX)
-          .attr('y1', startY)
-          .attr('x2', endX)
-          .attr('y2', endY)
-          .attr('stroke', 'black')
-          .attr('stroke-width', 2)
-          .attr('marker-end', 'url(#arrowhead)');
+        .attr('x1', startX)
+        .attr('y1', startY)
+        .attr('x2', endX)
+        .attr('y2', endY)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 2)
+        .attr('stroke-dasharray', '5,6') // Líneas punteadas (guiones de 5px con espacios de 5px)
+        .attr('marker-end', 'url(#arrowhead)');
       }
     });
   }
