@@ -62,6 +62,8 @@ export class NavBarComponent implements OnInit {
     
     this.obtenerSemestres();
     this.obtenerInfoDirector();
+    this.obtenerCiclos();
+
     this.obtenerFacultades().then( hayFacultad => {
       if( !hayFacultad ) {
         return
@@ -75,7 +77,6 @@ export class NavBarComponent implements OnInit {
       
     })
 
-    this.obtenerCiclos();
   }
 
   obtenerFacultades = () => {

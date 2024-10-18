@@ -39,6 +39,7 @@ import { CursoRenovadoListComponent } from '../../curso-renovado-list/curso-reno
 import { template } from 'lodash';
 import { CursoMallaRevertirDesfaseDTO } from 'src/app/plan-de-estudios/infraestructure/dto/malla.dto';
 import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio.model';
+import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
 @Component({
   selector: 'malla-list',
   standalone: true,
@@ -57,6 +58,7 @@ import { PlanEstudio } from 'src/app/plan-de-estudios/domain/models/plan-estudio
     UiButtonComponent,
     CursoRenovadoListComponent,
     AnalisisEquivalenciaPageComponent,
+    UiLoadingProgressBarComponent,
   ],
   templateUrl: './malla-list.component.html',
   styleUrl: './malla-list.component.scss'
@@ -72,7 +74,8 @@ export class MallaListComponent  implements OnInit {
   
   cicloSelect: Ciclo;
 
-  loading = this.mallaSignal.loading;
+  loadingImport = this.mallaSignal.loadingImport;
+  loading = true;
 
   cursoPreRequisito: CursoMallaPreRequisitoInsert;
   preRequisitosFromCursoSelect: number[] = [];
@@ -133,11 +136,10 @@ export class MallaListComponent  implements OnInit {
     private router: Router
   ) {
     effect( () => {
-      if( this.planEstudioSelect().id !== 0 ) {
+      if( this.cicloList().length !== 0 ) {
         this.obtenerMalla( this.planEstudioSelect()?.id );
-
-        this.obtenerCursos()
-
+        console.log('Ciclo');
+        this.obtenerCursos();
         this.obtenerMallaPreRequisitos();
       }
       
@@ -212,17 +214,24 @@ export class MallaListComponent  implements OnInit {
     } )
   }
   
-  obtenerCursos() {
-    this.cursosRepository.obtenerPorPrograma( this.idPrograma() ).subscribe({
-      next: ( cursos ) => {
-        console.log( cursos );
-        this.cursosList.set( cursos )
+  obtenerCursos = () => {
+    return new Promise<boolean> ( resolve  => {
 
-      }, error: ( error ) => {
-        console.log(error);
-        this.alert.showAlert('Ocurrio un error al obtener los cursos', 'error', 5);
-      }
-    })
+      this.cursosRepository.obtenerPorPrograma( this.idPrograma() ).subscribe({
+        next: ( cursos ) => {
+          console.log( cursos );
+          this.cursosList.set( cursos )
+          resolve( true );
+
+        }, error: ( error ) => {
+          console.log(error);
+          this.alert.showAlert('Ocurrio un error al obtener los cursos', 'error', 5);
+          resolve( false );
+
+        }
+      })
+
+    }) 
   }
 
   agregar = () => {
@@ -245,7 +254,7 @@ export class MallaListComponent  implements OnInit {
   guardarCursosImport = () => {
     // console.log( this.cursosImportExcel());
     
-    this.loading.set( true );
+    this.loadingImport.set( true );
     // return
     this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea guardar los cursos importados')
       .then( isConfirm => {
@@ -279,7 +288,7 @@ export class MallaListComponent  implements OnInit {
         this.insertarCursosMasivos( cursos ).then( isInsert => {
           if( !isInsert ) {
             // this.alert.showAlert('Ocurrió un error al guardar los cursos', 'error', 6);
-            this.loading.set( false );
+            this.loadingImport.set( false );
             return
           }
           setTimeout(() => {
@@ -303,9 +312,16 @@ export class MallaListComponent  implements OnInit {
           this.alert.showAlert('Los cursos fueron guardados correctamente', 'success', 6);
           // this.modal.getRefModal().close('Obtener');
           this.file.set( this.mensajeriaSignal.fileDefault );
-          this.obtenerCursos();
+          this.obtenerCursos().then( response => {
+            if( !response ) {
+              resolve( false );
+              return
+            }
+
+            resolve( true );
+
+          });
           
-          resolve( true );
           // this.obtenerCursoPlanActual();
         }, error: ( error ) => {
           resolve( false );
@@ -357,10 +373,20 @@ export class MallaListComponent  implements OnInit {
     
     if( !isValid ) {
       console.log( cursoMalla );
-      this.loading.set( false );
+      this.loadingImport.set( false );
 
       this.alert.sweetAlert('warning', 'Advertencia', 'Ocurrió un error al guardar los cursos, por favor verifique los datos');
       //Eliminar importación de cursos
+      const cursosDelete = this.cursosList().map( curso => {
+        const cursoEliminar: CursoEliminar = {
+          id: curso.id,
+          usuarioId: parseInt( this.authSignal.currentRol().id )
+        }
+        
+        console.log( 'eliminando cursos...', cursoEliminar );
+        return cursoEliminar
+      })
+      this.eliminarCursoMasivo( cursosDelete )
       return
     }
 
@@ -379,7 +405,7 @@ export class MallaListComponent  implements OnInit {
         // this.renderizarCursos.set( 'Obtener' );
         this.obtenerMalla( this.planEstudioSelect().id);
         this.obtenerMallaPreRequisitos();
-        this.loading.set( false );
+        this.loadingImport.set( false );
 
       }, error: ( error ) => {
         console.log( error );
@@ -468,9 +494,9 @@ export class MallaListComponent  implements OnInit {
     })
   }
 
-  openFormCurso( template: TemplateRef<any>) {
+  openFormCurso( template: TemplateRef<any>, action: string = 'Crear') {
 
-    const cursoMalla = this.cursoMallaOption();
+    const cursoMalla = action == 'Editar' ? this.cursoMallaOption() : this.mallaSignal.cursoMallaDefault;
 
     const curso: Curso = {
       codigoCurso: cursoMalla.codigoCurso,
@@ -587,7 +613,7 @@ export class MallaListComponent  implements OnInit {
           
           const existeCiclo = a.findIndex( a => a.ciclo == b.cicloRomano);
             if( existeCiclo == -1 ) {
-              // console.log( b, this.cursosList() );
+              console.log( 'ciclo no renderiza', b, this.cursosList() );
               const cicloId = this.cicloList().find( ciclo => parseInt( ciclo.cicloNumero ) == b.cicloNumero)!.id;
               const newCiclo: CursoMallaByCiclo = {
                 cicloNumero:  b.cicloNumero,
@@ -607,6 +633,7 @@ export class MallaListComponent  implements OnInit {
         // console.log( cursoByCiclo );
         this.cursosMallaByCiclo.set( cursoByCiclo.sort( ( a, b) =>  a.cicloNumero - b.cicloNumero ) )
         this.showBtnActivarEdicion = cursosPlan.length > 0;
+        this.loading = false;
       }, error: ( error ) => {
         console.log(error);
         this.alert.showAlert('Ocurrio un error al obtener los cursos', 'error', 5);
@@ -677,17 +704,17 @@ export class MallaListComponent  implements OnInit {
   }
 
 
-  obtenerCiclos() {
-    this.cicloRepository.obtener().subscribe({
-      next: ( ciclos ) => {
-        console.log( ciclos );
-        this.cicloList.set( ciclos )
-      }, error: ( error ) => {
-        console.log( error );
+  // obtenerCiclos() {
+  //   this.cicloRepository.obtener().subscribe({
+  //     next: ( ciclos ) => {
+  //       console.log( ciclos );
+  //       this.cicloList.set( ciclos )
+  //     }, error: ( error ) => {
+  //       console.log( error );
         
-      }
-    })
-  }
+  //     }
+  //   })
+  // }
 
   getNombreCiclo( idCiclo: number ): Ciclo {
     const ciclo = this.cicloList().find( ciclo => ciclo.id == idCiclo );
@@ -790,7 +817,7 @@ export class MallaListComponent  implements OnInit {
   }
 
   activarEdicion = () => {
-    this.alert.sweetAlert( 'question', 'Confirmar', 'Los cursos que fueron asignados al Plan de Estudios serán ELIMINADOS, ¿Está seguro que desea Activar la edición de los cursos?')
+    this.alert.sweetAlert( 'question', 'Confirmar', 'Los cursos que fueron asignados al Plan de Estudios serán ELIMINADOS, ¿Está seguro que desea limpiar la malla curricular?')
       .then( isConfirm => {
         if( !isConfirm ) {
           return
@@ -811,7 +838,20 @@ export class MallaListComponent  implements OnInit {
             if( !isDeleted ) {
               return
             }
-
+            console.log('Eliminando cursos de malla...');
+            
+            if( this.planEstudioUltimoConResolucion().id !== 0 ) {
+              console.log('Return...');
+              this.alert.showAlert('Los cursos fueron eliminados de manera correcta', 'success', 6);
+              setTimeout(() => {
+                this.obtenerMalla(this.planEstudioSelect().id);
+                // this.obtenerMallaPreRequisitos();
+                
+              }, 300);
+              return
+            }
+            console.log('Eliminando cursos de cursos...');
+            
             this.showBtnActivarEdicion = false;
             this.obtenerMalla( this.planEstudioSelect().id );
             const cursosDelete = this.cursosList().map( curso => {

@@ -3,24 +3,61 @@
 }
 
 .activeFocus {
-    animation: activeFocus 1.5s ease 1.5s infinite normal forwards;
+    animation: activeFocus 1s linear 0s infinite alternate-reverse forwards;
 }
 
 
 
 @keyframes activeFocus {
 	0% {
-		opacity: 0.8;
-		transform: scale(0.2);
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	50% {
+		opacity: 0.3;
+		transform: scale(1.1);
+	}
+
+	70% {
+		opacity: 0;
+		transform: scale(1.3);
 	}
 
 	80% {
-		opacity: 0;
-		transform: scale(1.2);
+		opacity: 0.3;
+		transform: scale(1.1);
+	}
+
+	90% {
+		opacity: 0.1;
+		transform: scale(0.8);
 	}
 
 	100% {
 		opacity: 0;
-		transform: scale(2.2);
+		transform: scale(1.2);
 	}
+
+}
+
+@keyframes activeFocuss {
+	0% {
+		transform: scale(0.2);
+	}
+	50% {
+		transform: scale(0.2);
+	}
+	100% {
+		opacity: 0.7;
+		transform: scale(1.2);
+	}
+
+	// 25% {
+	// 	transform: scale(1.2);
+	// }
+	// 75% {
+	// 	opacity: 0;
+	// 	transform: scale(1.1);
+	// }
 }

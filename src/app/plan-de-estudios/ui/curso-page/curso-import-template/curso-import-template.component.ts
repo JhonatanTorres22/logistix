@@ -41,7 +41,7 @@ export class CursoImportTemplateComponent implements OnDestroy {
 
   file = this.mensajeriaSignal.file;
   cursosImportExcel = this.signal.cursosImportExcel;
-  loading = this.mallaSignal.loading;
+  loadingImport = this.mallaSignal.loadingImport;
   planEstudioUltimoConResolucion = this.planEstudioSignal.planEstudioUltimoConResolucion;
   constructor(
     private mensajeriaSignal: MensajeriaSignal,

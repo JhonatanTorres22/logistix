@@ -70,7 +70,7 @@ export class MallaSignal {
     cursosMallaByCiclo = signal<CursoMallaByCiclo[]>(this.cursosMallaByCicloDefault);
     cursosMallaPreRequisitoByCiclo = signal<CursoMallaByCiclo[]>(this.cursoMallaPreRequisitoByCicloDefault);
 
-    loading = signal<boolean>(false);
+    loadingImport = signal<boolean>(false);
 
     cursoMallaOption = signal( this.cursoMallaDefault );
 

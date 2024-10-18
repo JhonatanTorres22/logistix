@@ -47,6 +47,7 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
   idSemestres = this.authSignal.idSemestres;
   currentInfoDirector = this.authSignal.currentInfoDirector;
   idPrograma = this.signal.programaId;
+  planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   idProgramaSelect: number = 0;
 
   constructor(
@@ -124,6 +125,7 @@ export class PlanEstudioListComponent implements OnInit, OnDestroy {
       next: ( planes ) => {
         console.log( planes );
         this.planesDeEstudio.set( planes )
+        this.planEstudioUltimoConResolucion.set( this.planesDeEstudio().filter( plan => plan.resolucion !== null )[ this.planesDeEstudio().length - 2] ?? this.signal.planEstudioDefault ) 
 
         // this.
       }, error: ( error ) => {
