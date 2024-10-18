@@ -103,6 +103,7 @@
           </ng-template>
 
       <ng-template matStepContent>
+       
             @if ( !loading ) {
                 <div class="row">
                 
@@ -114,7 +115,9 @@
                     <!-- <button (click)="addLine()">Add Connection</button> -->
                     <div class="flex justify-content-end gap-2">
                         <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
-                        <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
+                        @if(planesDeEstudio().length > 1){
+                            <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
+                        }
                     </div>
                     <div class="col-6">
                         
@@ -223,7 +226,9 @@
                                         <div>HP</div>
                                         <div>TH</div>
                                         <div>CRED.</div>
-                                        <input type="checkbox" class="z-5" (change)="selectPrimarioMasivo($event)">
+                                        @if(planesDeEstudio().length == 1){
+                                            <input type="checkbox" class="z-5" (change)="selectPrimarioMasivo($event)">
+                                        }
                                     </div>
                                 </div>
                                 <div class="col-1 border-3xl border-round text-accent-700 f-10 font-bold"></div>
@@ -290,8 +295,9 @@
                                             <div class="flex gap-2">
                                                 
                                                 @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
-                                                    <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
-                                                    <input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">
+                                                   @if (!mostrarCheckboxPrimario(curso) && curso.modalidadDeCreacion == 'SIMPLE') 
+                                                   {<input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">} <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
+                                                    
                                                 } @else {
                                                     <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
                                                     <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
