@@ -43,44 +43,57 @@ export class ColorCursoSecundarioDirective implements OnInit {
 
   aplicarColor = () => {
 
-    let colorMap: { [key: string]: string } = {};
-    if (this.cursos?.length === 0) {
+    if( this.cursos?.length === 0 ) {
       return;
-  }
+    }
 
-  // Índice para recorrer la lista de colores
-  let colorIndex = 0;
+    this.cursos?.map( ( curso, index ) => {
+      if( curso.codigoCurso === this.curso.codigoCurso ) {
+        // document.getElementById('check-'+curso.idCursoPlan)?.setAttribute('disabled', 'true');
+        
+        console.log( this.element.nativeElement );
+        
+        // Seleccionar el último div y el checkbox dentro de él
+        const lastDiv = this.element.nativeElement.querySelector('.check');
+        // Navegar al siguiente div
+        console.log( lastDiv );
+        // lastDiv.setAttribute('disabled', 'true');
+        // const checkbox = this.element.nativeElement.querySelector('input[type="checkbox"]');
+        setTimeout(() => {
+          const checkbox = document.querySelector(`#check-${curso.idMalla}`);
+          this.element.nativeElement?.classList.remove('bg-white', 'text-black');
+          // checkbox?.classList.add('hidden');
+          curso.equivalencias.length == 0 ? this.element.nativeElement?.classList.add('bg-yellow-100', 'text-black') : this.element.nativeElement?.classList.add('bg-green-100', 'text-black');
 
-  // Iterar sobre los cursos
-  this.cursos?.map((curso, index) => {
+          checkbox?.setAttribute('disabled', 'true');
+          console.log( index + 1, ' - ', checkbox );
+        }, 900);
+        
+        // checkbox.setAttribute('disabled', 'true');
+        // setTimeout(() => {
+        
+          
+        //   const checkbox = lastDiv?.querySelector('input[type="checkbox"]');
 
-      // Si el código del curso ya tiene un color asignado, lo usa, si no, asigna uno nuevo
-      if (!colorMap[curso.codigoCurso]) {
-          colorMap[curso.codigoCurso] = this.colores[colorIndex];
-          colorIndex = (colorIndex + 1) % this.colores.length;  // Incrementar el índice circularmente
-      }
+        //   // Deshabilitar el checkbox si existe
+        //   if (checkbox) {
+        //     checkbox.setAttribute('checked', 'true');
+        //   }
+        // }, 400);
 
-      if (curso.codigoCurso === this.curso.codigoCurso) {
-          setTimeout(() => {
-              const checkbox = document.querySelector(`#check-${curso.idMalla}`);
-              this.element.nativeElement?.classList.remove('bg-white', 'text-black');
-              
-              // Aplicar el color del código asignado desde el mapa
-              const colorAsignado = colorMap[curso.codigoCurso];
-              this.element.nativeElement?.style.setProperty('background-color', colorAsignado);
-              this.element.nativeElement?.classList.add('text-black');
-
-              checkbox?.setAttribute('disabled', 'true');
-              console.log(index + 1, ' - ', checkbox);
-          }, 900);
-
+      
+        
       } else {
-          if (curso.equivalencias?.length == 0) {
-              this.element.nativeElement?.classList.add('bg-white', 'text-black');
-              this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
-          }
+        if( curso.equivalencias?.length == 0 ) {
+          
+          this.element.nativeElement?.classList.add('bg-white', 'text-black');
+          this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
+        
+        }
+
+
       }
-  });
+    })
   }
 
 }

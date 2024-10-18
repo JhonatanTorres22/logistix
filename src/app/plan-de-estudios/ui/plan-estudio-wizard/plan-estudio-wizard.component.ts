@@ -78,6 +78,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     "#F4E7C5", "#E1B8B8", "#F2C8A2", "#B3CDE0", "#F9F1D9"
 ];
   // cursosPlanByCiclos = this.cursosPlanS.cursosPlanByCiclos;
+  planesDeEstudio = this.signal.planesDeEstudio;
   planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursosList = this.cursoSignal.cursosList;
   planEstudioSelect = this.signal.planEstudioSelect;
@@ -567,6 +568,10 @@ export class PlanEstudioWizardComponent implements OnInit {
     console.log( this.cursosPrimariosMalla )
   }
 
+  mostrarCheckboxPrimario(curso: Malla): boolean {
+    return this.connections.some(connection => connection.rightCardId === curso.idMalla);
+}
+
   listarDesfasados = ( template: TemplateRef<any>) => {
     this.modal.openTemplate({
       template,
@@ -632,7 +637,7 @@ export class PlanEstudioWizardComponent implements OnInit {
           this.asignarColores()
           this.inicioFlechaSVG();
 
-        }, 1000);
+        }, 800);
       }
     }
     
