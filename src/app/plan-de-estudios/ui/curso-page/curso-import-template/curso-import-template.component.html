@@ -1,6 +1,6 @@
 
   <!-- <pre>{{ file() | json }}</pre> -->
-  @if( !loading() ) {
+  @if( !loadingImport() ) {
 
     @if (  file().files.length == 0 ) {
       <ui-uploader-files typeFile=".xlsx"></ui-uploader-files>
