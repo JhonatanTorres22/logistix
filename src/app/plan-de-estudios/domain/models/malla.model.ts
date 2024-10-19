@@ -44,6 +44,7 @@ export interface MallaDelete {
 export interface EquivalenciaMalla {
     idMalla: number,
     nombreCurso: string,
+    codigoCurso: string,
     porcentajeModificacion: number,
 }
 
@@ -144,6 +145,17 @@ export interface CursoMallaInsertar {
 }
 
 export interface CursoMallaEliminar {
+    idMalla: number,
+    userId: number
+}
+
+
+export interface CursoMallaInformacionEquiPre {
+    preRequisitos: CursoPreRequisitoMalla[],
+    equivalencias: EquivalenciaMalla[]
+}
+
+export interface CursoMallaEliminarEquiPre {
     idMalla: number,
     userId: number
 }

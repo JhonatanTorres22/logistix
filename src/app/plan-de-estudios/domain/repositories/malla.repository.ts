@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaEliminarEquiPre, CursoMallaInformacionEquiPre, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 
 export abstract class MallaRepository {
     abstract getMalla( idPlan: number ): Observable<Malla[]>;
@@ -20,4 +20,7 @@ export abstract class MallaRepository {
     abstract revertirDesfase( malla: CursoMallaRevertirDesfase ): Observable<void>
     abstract cursoMallaInsertar( malla: CursoMallaInsertar ): Observable<void>
     abstract cursoMallaEliminar( malla: CursoMallaEliminar ): Observable<void>
+    abstract buscarInformacionCursoMalla( idMalla: number ): Observable<CursoMallaInformacionEquiPre[]>
+
+    abstract cursoMallaEliminarEquiPre( malla: CursoMallaEliminarEquiPre ): Observable<void>
 }
