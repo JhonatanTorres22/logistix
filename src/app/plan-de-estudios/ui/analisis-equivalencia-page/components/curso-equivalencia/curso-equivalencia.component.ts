@@ -18,5 +18,7 @@ export class CursoEquivalenciaComponent {
   @Input() curso: Malla;
   @Input() color: string = 'transparent';
   @Input() isConvalidado: boolean = false;
+  @Input() porcentaje: number = 0;
+  @Input() isOrigen: boolean = false;
 
 }

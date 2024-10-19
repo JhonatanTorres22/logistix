@@ -20,8 +20,16 @@
     </div>
     <div class="col-1 border-3xl border-round f-10 check">
         <div class="flex gap-2 align-items-center">
-            @if( isConvalidado ) {
+            @if( isConvalidado && isOrigen ) {
                 <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 "></i>
+            } 
+            
+            @if( !isConvalidado && isOrigen ) {
+                <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1 "></i>
+
+            }
+            @if ( !isOrigen ) {
+                <span class="-ml-0 p-1 border-round text-white font-bold" [ngClass]="porcentaje > 50 ? 'bg-red-700' : 'bg-green-700'">{{ porcentaje }}%</span>
             }
         </div>
     </div>

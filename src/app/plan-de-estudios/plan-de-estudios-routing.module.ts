@@ -4,6 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'gestionar-planes',
+    pathMatch: 'prefix'
+  },
+  {
+    path: 'gestionar-planes',
     loadComponent: () => import('./ui/plan-de-estudios-page.component').then( c => c.PlanDeEstudiosPageComponent),
   },{
     path: 'malla-curricular',
@@ -14,7 +19,7 @@ const routes: Routes = [
     loadComponent: () => import('./ui/plan-estudio-wizard/plan-estudio-wizard.component').then( c => c.PlanEstudioWizardComponent)
 
   }, {
-    path: 'analisis-de-equivalencia',
+    path: 'analisis-de-equivalencias',
     loadComponent: () => import('./ui/analisis-equivalencia-page/analisis-equivalencia-page.component').then( c => c.AnalisisEquivalenciaPageComponent)
   }
 ];

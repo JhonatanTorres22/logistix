@@ -103,7 +103,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
         console.log(malla);
         this.origen ? this.planEstudioOrigenSelect.set(value) : this.planEstudioDestinoSelect.set(value);
         this.alert.showAlert(`Listando cursos del plan ${ value.text }`, 'success');
-        this.cursosMalla = malla;
+        this.cursosMalla = malla.sort( ( a, b) => a.cicloNumero - b.cicloNumero);;
       }, error: (error) => {
         console.error(error);
         this.alert.showAlert(`Ocurrió un error al obtener los cursos del plan ${ value.text }`, 'error');
@@ -119,7 +119,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
         console.log(malla);
         this.origen ? this.planEstudioOrigenSelect.set(value) : this.planEstudioDestinoSelect.set(value);
         this.alert.showAlert(`Listando cursos del plan ${ value.text }`, 'success');
-        this.cursosMalla = malla;
+        this.cursosMalla = malla.sort( ( a, b) => a.cicloNumero - b.cicloNumero);
       }, error: (error) => {
         console.error(error);
         this.alert.showAlert(`Ocurrió un error al obtener los cursos del plan ${ value.text }`, 'error');

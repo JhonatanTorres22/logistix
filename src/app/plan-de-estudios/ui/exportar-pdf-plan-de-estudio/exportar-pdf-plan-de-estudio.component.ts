@@ -7,6 +7,8 @@ import { PlanEstudioSignal } from '../../domain/signal/plan-estudio.signal';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
+import { AlertService } from 'src/app/demo/services/alert.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-exportar-pdf-plan-de-estudio',
     standalone: true,
@@ -25,11 +27,38 @@ export class ExportarPdfPlanDeEstudioComponent implements OnInit {
         private auth: AuthSignal,
         private signalPlanEstudio: PlanEstudioSignal,
         private mallaSignal: MallaSignal,
+        private alert: AlertService,
+        private router: Router
     ) { 
 
     }
     ngOnInit(): void {
     }
+
+    finalizarProceso = () => {
+        this.alert.sweetAlert('question', 'Confirmación', 'Está seguro que desea finalizar el proceso de diseño del plan de estudios')
+          .then( isConfirm => {
+            if( !isConfirm ) {
+              return
+            }
+    
+            this.finalizarProcesoDiseño();
+          })
+    }
+
+    finalizarProcesoDiseño = () => {
+        this.alert.sweetAlert('info', 'Proceso Finalizado', 'El proceso de diseño del plan de estudios ha finalizado')
+          .then( isConfirm => {
+            if( !isConfirm ) {
+              return
+            }
+    
+            this.router.navigate(['/mensajeria']);
+            // this.estado.approve(false);
+            // this.formDisenar.patchValue({inputStep1: this.estado.getEstado});
+            // this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
+          })
+      }
   
     exportarProyectoMasivo = () => {
         if (this.previewPDFPlanEstudio) {          
