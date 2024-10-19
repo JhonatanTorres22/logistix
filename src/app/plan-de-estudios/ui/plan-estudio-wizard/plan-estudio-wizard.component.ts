@@ -216,6 +216,8 @@ export class PlanEstudioWizardComponent implements OnInit {
     // Asignar colores a cursosPlanEquivalenciaActual
     this.cursosPlanEquivalenciaActual.forEach((curso, index) => {
       const color = this.colores[index % this.colores.length];
+      console.log( color );
+      
       colorMap.set(curso.codigoCurso, color);
       curso.color = color;     
     });
@@ -1005,7 +1007,7 @@ export class PlanEstudioWizardComponent implements OnInit {
         .attr('y1', startY)
         .attr('x2', endX)
         .attr('y2', endY)
-        .attr('stroke', 'black')
+        .attr('stroke', 'gray')
         .attr('stroke-width', 1.7)
         .attr('marker-end', 'url(#arrowheadEquivalencia)');
 
@@ -1073,7 +1075,7 @@ export class PlanEstudioWizardComponent implements OnInit {
           .attr('y1', startY)
           .attr('x2', endX)
           .attr('y2', endY)
-          .attr('stroke', 'black')
+          .attr('stroke', 'gray')
           .attr('stroke-width', 1.8)
           .attr('marker-end', 'url(#arrowheadEquivalencia)');
       }

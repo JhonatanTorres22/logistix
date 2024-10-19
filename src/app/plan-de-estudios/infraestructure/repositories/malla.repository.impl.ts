@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { MallaRepository } from "../../domain/repositories/malla.repository";
 import { Observable } from "rxjs";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaEliminarEquiPre, CursoMallaInformacionEquiPre, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
 import { MallaService } from "../services/malla.service";
 
 @Injectable({
@@ -9,6 +9,8 @@ import { MallaService } from "../services/malla.service";
 })
 
 export class MallaRepositoryImpl implements MallaRepository {
+    
+    
     
     private readonly service = inject( MallaService );
     
@@ -67,4 +69,13 @@ export class MallaRepositoryImpl implements MallaRepository {
     cursoMallaEliminar(malla: CursoMallaEliminar): Observable<void> {
         return this.service.cursoMallaEliminar( malla );
     }
+
+    buscarInformacionCursoMalla(idMalla: number): Observable<CursoMallaInformacionEquiPre[]> {
+        return this.service.buscarInformacionCursoMalla( idMalla );
+    }
+
+    cursoMallaEliminarEquiPre(malla: CursoMallaEliminarEquiPre): Observable<void> {
+        return this.service.eliminarEquiPre( malla );
+    }
+
 }

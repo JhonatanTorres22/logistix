@@ -1,0 +1,32 @@
+
+<div class="row">
+    <div class="col-6">
+        <app-card>
+            <ng-template #headerTitleTemplate>
+                <div class="">Equivalencias:</div>
+            </ng-template>
+            <!-- <pre>{{ detalleCursoMalla.equivalencias | json }}</pre> -->
+            @for (equi of detalleCursoMalla.equivalencias; track $index) {
+                <div>
+                    <span class="bg-gray-300 border-round px-3">{{ equi.codigoCurso }}</span>
+                </div>
+                <div class="">{{ equi.nombreCurso }}</div>
+            }
+        </app-card>
+    </div>
+    <div class="col-6">
+        <app-card>
+            <ng-template #headerTitleTemplate>
+                <div class="">Pre Requisitos:</div>
+            </ng-template>
+            @for (pre of detalleCursoMalla.preRequisitos; track $index) {
+                <div>
+                    <span class="bg-gray-300 border-round px-3">{{ pre.codigoCurso }}</span>
+                </div>
+                <div class="">{{ pre.nombreCurso }}</div>
+            }
+            <!-- <pre>{{ detalleCursoMalla.preRequisitos | json }}</pre> -->
+
+        </app-card>
+    </div>
+</div>

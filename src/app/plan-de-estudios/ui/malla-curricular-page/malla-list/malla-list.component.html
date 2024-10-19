@@ -85,7 +85,10 @@
                                                 [ngClass]="
                                                     {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
                                                     'bg-green-200 border-green-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
-                                                    'bg-blue-100': curso.modalidadDeCreacion == 'POR RENOVACION',
+                                                    'font-bold': curso.modalidadDeCreacion == 'POR RENOVACION',
+                                                    'bg-cyan-100 border-blue-900': curso.tipoEstudio == 'GENERAL',
+                                                    'bg-purple-100 border-blue-900': curso.tipoEstudio == 'ESPECÍFICO',
+                                                    'bg-blue-100 border-blue-900': curso.tipoEstudio == 'DE ESPECIALIDAD',
                                                     'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
                                                     'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
                                                 }"
@@ -101,9 +104,15 @@
                                         shadow-3"
                                         >
                                                     <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                                                    <span class="px-2 border-round" [ngClass]="curso.estado == 'ACTIVO' ? 'bg-cyan-200' : 'bg-blue-700'">{{ curso.estado }}</span>
+                                                    <div class="flex gap-2 pr-1" [ngClass]="curso.modalidadDeCreacion == 'POR RENOVACION' ? 'justify-content-end' : 'justify-content-center'">
+                                                        <span class="px-2 border-round" [ngClass]="curso.estado == 'ACTIVO' ? 'bg-cyan-200' : 'bg-blue-700'">{{ curso.estado }}</span>
+                                                        @if ( curso.modalidadDeCreacion == 'POR RENOVACION' ) {
+                                                            <i class="ti ti-refresh text-yellow-600 f-14"></i>
+                                                        }
+                                                    </div>
                                                     <div>{{ curso.nombreCurso }}</div>
                                                     <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
+                                                   
                                                 </div>
                                             }
                                         </div>
@@ -248,4 +257,17 @@
         <plan-estudio-card [planEstudio]="plan" tipo="asignar"></plan-estudio-card>
         <!-- <pre>{{ plan | json}}</pre> -->
     }
+</ng-template>
+
+
+<ng-template #templateCursoEquiPre let-data class="w-full">
+    <mat-dialog-content>
+
+        <curso-equi-pre [curso]="cursoMallaOption()" [detalleCursoMalla]="detalleCursoMalla"></curso-equi-pre>
+        <ui-alert type="info">El curso tiene</ui-alert>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+        <ui-button color="primary" label="Limpiar" (onClick)="eliminarEquiPreConfirm( cursoMallaOption() )"></ui-button>
+    </mat-dialog-actions>
 </ng-template>

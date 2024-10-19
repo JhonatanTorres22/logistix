@@ -84,6 +84,7 @@ export interface MallaDeleteDTO {
 export interface EquivalenciaMallaDTO {
     codigoMallaEquivalencia: number,
     nombreMallaEquivalencia: string,
+    codigoInternoEquivalencia: string,
     porcentajeModificacion: number
 }
 
@@ -191,6 +192,34 @@ export interface CursoMallaInsertarDTO {
 }
 
 export interface CursoMallaEliminarDTO {
+    codigoMalla: number,
+    usuario: number
+}
+
+
+export interface CursoMallaInformacionEquiPreDTO {
+    preRequisitos: CursoMallaDetallePreRequisitoDTO[],
+    equivalencias: CursoMallaDetalleEquivalenciaDTO[]
+}
+
+export interface CursoMallaInformacionEquiPreDataArrayDTO {
+    data: CursoMallaInformacionEquiPreDTO[]
+}
+
+
+export type CursoMallaDetallePreRequisitoDTO = {
+    codigoMalla: number,
+    nombre: string,
+    codigoInterno: string
+}
+
+export interface CursoMallaDetalleEquivalenciaDTO {
+    codigoMalla: number,
+    nombre: string,
+    codigoInterno: string,
+}
+
+export interface CursoMallaEliminarEquiPreDTO {
     codigoMalla: number,
     usuario: number
 }

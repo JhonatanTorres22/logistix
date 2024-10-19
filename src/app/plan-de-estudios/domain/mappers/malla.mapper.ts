@@ -1,6 +1,6 @@
 import { p } from "msw/lib/core/GraphQLHandler-COiPfZ8k";
-import { CursoMallaDesfasadoDTO, CursoMallaDesfasarDTO, CursoMallaEliminarDTO, CursoMallaInsertarDTO, CursoMallaRenovadoDTO, CursoMallaRenovarDTO, CursoMallaReordenarDTO, CursoMallaRevertirDesfaseDTO, CursoMallaRevertirRenovacionDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
+import { CursoMallaDesfasadoDTO, CursoMallaDesfasarDTO, CursoMallaEliminarDTO, CursoMallaEliminarEquiPreDTO, CursoMallaInformacionEquiPreDTO, CursoMallaInsertarDTO, CursoMallaRenovadoDTO, CursoMallaRenovarDTO, CursoMallaReordenarDTO, CursoMallaRevertirDesfaseDTO, CursoMallaRevertirRenovacionDTO, MallaDeleteDTO, MallaDTO, MallaEquivalenciaDTO, MallaInsertDTO, MallaPreRequisitoDTO } from "../../infraestructure/dto/malla.dto";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaEliminarEquiPre, CursoMallaInformacionEquiPre, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../models/malla.model";
 import { CursoRevertirRenovacionDTO } from "../../infraestructure/dto/curso.dto";
 
 export class MallaMapper {
@@ -107,7 +107,8 @@ export class MallaMapper {
                 return {
                     idMalla: equiv.codigoMallaEquivalencia,
                     nombreCurso: equiv.nombreMallaEquivalencia,
-                    porcentajeModificacion: equiv.porcentajeModificacion
+                    porcentajeModificacion: equiv.porcentajeModificacion,
+                    codigoCurso: ''
                 }
             }),
             color: '',
@@ -220,4 +221,17 @@ export class MallaMapper {
         }
     }
 
+    static fromApiToDomainCursoMallaInformacionEquiPre( param: CursoMallaInformacionEquiPreDTO ): CursoMallaInformacionEquiPre {
+        return {
+            preRequisitos: param.preRequisitos.map( pre => ({ codigoCurso: pre.codigoInterno, idMalla: pre.codigoMalla, nombreCurso: pre.nombre })),
+            equivalencias: param.equivalencias.map( equi => ({ codigoCurso: equi.codigoInterno, idMalla: equi.codigoMalla, nombreCurso: equi.nombre, porcentajeModificacion: 0 })),
+        }
+    }
+
+    static fromDomainToApiCursoMallaEliminarEquiPre( param: CursoMallaEliminarEquiPre ): CursoMallaEliminarEquiPreDTO {
+        return {
+            codigoMalla: param.idMalla,
+            usuario: param.userId
+        }
+    }
 }

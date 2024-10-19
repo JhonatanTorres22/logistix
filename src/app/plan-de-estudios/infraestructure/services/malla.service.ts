@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
-import { CursoMallaDesfasadoDataArrayDTO, CursoMallaRenovadoDataArrayDTO, MallaDataArrayDTO, MallaEquivalenciaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
+import { CursoMallaDesfasado, CursoMallaDesfasar, CursoMallaEliminar, CursoMallaEliminarEquiPre, CursoMallaInformacionEquiPre, CursoMallaInsertar, CursoMallaRenovado, CursoMallaRenovar, CursoMallaReordenar, CursoMallaRevertirDesfase, CursoMallaRevertirRenovacion, Malla, MallaDelete, MallaInsert } from "../../domain/models/malla.model";
+import { CursoMallaDesfasadoDataArrayDTO, CursoMallaInformacionEquiPreDataArrayDTO, CursoMallaRenovadoDataArrayDTO, MallaDataArrayDTO, MallaEquivalenciaDataArrayDTO, MallaPreRequisitoDataArrayDTO } from "../dto/malla.dto";
 import { environment } from "src/environments/environment";
 import { MallaMapper } from "../../domain/mappers/malla.mapper";
 
@@ -27,6 +27,8 @@ export class MallaService {
     private urlRevertirDesfase: string;
     private urlCursoMallaInsertar: string;
     private urlCursoMallaEliminar: string;
+    private urlBuscarInformacionCursoMalla: string;
+    private urlEliminarEquiPre: string;
         
         constructor(
             private http: HttpClient
@@ -46,6 +48,8 @@ export class MallaService {
             this.urlRevertirDesfase = 'api/Malla/RevertirDesfasado';
             this.urlCursoMallaInsertar = 'api/Malla/InsertarCurso';
             this.urlCursoMallaEliminar = 'api/Malla/EliminarCurso';
+            this.urlBuscarInformacionCursoMalla = 'api/Malla/BuscarInformacion?codigoMalla=';
+            this.urlEliminarEquiPre = 'api/Malla/EliminarPreRequisitoyEquivalencia'
 
         }
         
@@ -126,5 +130,15 @@ export class MallaService {
             const mallaAPI = MallaMapper.fromDomainToApiCursoMallaEliminar( malla );
 
             return this.http.delete<void>( this.urlApi + this.urlCursoMallaEliminar, { body: mallaAPI })
+        }
+
+        buscarInformacionCursoMalla = ( idMalla: number ): Observable<CursoMallaInformacionEquiPre[]> => {
+            return this.http.get<CursoMallaInformacionEquiPreDataArrayDTO>( this.urlApi + this.urlBuscarInformacionCursoMalla + idMalla )
+                .pipe( map( response => response.data.map ( MallaMapper.fromApiToDomainCursoMallaInformacionEquiPre) ) )
+        }
+
+        eliminarEquiPre = ( malla: CursoMallaEliminarEquiPre ): Observable<void> => {
+            const mallaAPI = MallaMapper.fromDomainToApiCursoMallaEliminarEquiPre( malla )
+            return this.http.delete<void>( this.urlApi + this.urlEliminarEquiPre, { body: mallaAPI } );
         }
 }
