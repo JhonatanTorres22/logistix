@@ -100,6 +100,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   
   porcentajeModificacion: number = 0;
   loading: boolean = false;
+  equivalenciaCompleta: boolean = false
   // CONEXIÓN DE LAS FLECHAS
 
   
@@ -135,6 +136,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   private _formBuilder = inject(FormBuilder);
   formDisenar: FormGroup;
   formAsignar: FormGroup;
+  formAsignarEquivalencia: FormGroup
   formAsignarPreRequisitos: FormGroup;
 
   showBtnActivarEdicion: boolean = false;
@@ -187,6 +189,9 @@ export class PlanEstudioWizardComponent implements OnInit {
     });
     this.formAsignar = this._formBuilder.group({
       asignacion: ['', Validators.required],
+    });
+    this.formAsignarEquivalencia = this._formBuilder.group({
+      asignacionEquivalencia: ['', [Validators.required, Validators.min(0), Validators.max(0)]],
     });
     this.formAsignarPreRequisitos = this._formBuilder.group({
       preRequisitos: ['', Validators.required],
@@ -266,6 +271,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     console.log(this.estado.getEstado);
     this.formDisenar.patchValue({inputStep1: this.estado.getEstado});
     this.formAsignar.patchValue({secondCtrl: this.estado.getEstado});
+    this.formAsignarEquivalencia.patchValue({aignacionEquivalencia: this.estado.getEstado})
     
   }
 
@@ -305,7 +311,10 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.cursosMallaEquivalenciaActual = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
         console.log( 'Plan Actual: ', cursosPlanEquivalencia );
         this.showBtnActivarEdicion = this.cursosMallaEquivalenciaActual.length == 0 ? false : true;
+        this.equivalenciaCompleta = this.cursosMallaEquivalenciaActual.some(curso => !curso.equivalencias || curso.equivalencias.length === 0);
+        const countPrerrequisitosVacios = this.cursosMallaEquivalenciaActual.filter(curso => !curso.equivalencias || curso.equivalencias.length === 0).length;
         this.formDisenar.patchValue({inputStep1: this.cursosMallaByCiclo().length});
+        this.formAsignarEquivalencia.patchValue({asignacionEquivalencia: countPrerrequisitosVacios});
 
       }, error: ( error ) => {
         console.log( error );
@@ -868,7 +877,6 @@ export class PlanEstudioWizardComponent implements OnInit {
     //   }
     // })
 
-
     this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
         const cursoExiste = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
         if( cursoExiste ) {
@@ -881,6 +889,25 @@ export class PlanEstudioWizardComponent implements OnInit {
         }
     })
 
+    setTimeout(() => {
+      if(this.connections.length == 0){
+        this.cursosMallaEquivalenciaActual.forEach((curso) => {
+          // Iterar sobre las equivalencias de cada curso
+          curso.equivalencias.forEach((equivalencia) => {
+            // Buscar si la equivalencia está en cursosMallaEquivalenciaUltimo
+            const cursoEquivalente = this.cursosMallaEquivalenciaUltimo.find(
+              (cursoUltimo) => cursoUltimo.idMalla === equivalencia.idMalla
+            );
+    
+            if (cursoEquivalente) {
+              // Dibujar las flechas entre el curso y su equivalencia
+              this.dibujarFlechasEntreCursos(curso.idMalla, cursoEquivalente.idMalla);
+            }
+          });
+        });
+      }
+      console.log(this.connections.length,'conexiones');
+    }, 300);
   }
 
   cursosSeleccionadosParaDibujar = () => {
@@ -943,12 +970,12 @@ export class PlanEstudioWizardComponent implements OnInit {
     }
 
     const svg = d3.select('#arrowContainerEquivalencia');
-    console.log(svg);
+    // console.log(svg);
     
     const leftCardElement = document.getElementById(`cardLeft-${left}`);
     const rightCardElement = document.getElementById(`cardRight-${right}`);
-    console.log(leftCardElement, 'left');
-    console.log(rightCardElement, 'right');
+    // console.log(leftCardElement, 'left');
+    // console.log(rightCardElement, 'right');
 
     // Asegúrate de que el contenedor esté correctamente referenciado
     const container = document.getElementById('arrowContainerEquivalencia'); // Asegúrate de tener el contenedor correcto
@@ -1023,7 +1050,7 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.connections.splice(isConvalidado, 1); // Eliminar la conexión del array
         // if (existingLeftConnectionIndex !== -1) {
         // }
-        console.log( 'Eliminar.........' );
+        // console.log( 'Eliminar.........' );
         resolve(false)
         
       } else {
@@ -1043,6 +1070,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
 
   redibujarFlechaXZoom = () => {
+    this.addLine()
     const svg = d3.select('#arrowContainerEquivalencia');
     svg.selectAll('line').remove(); // Eliminar todas las flechas existentes
     this.connections.forEach(connection => {

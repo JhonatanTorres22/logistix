@@ -81,7 +81,7 @@
           }
       </ng-template>
     </mat-step> -->
-    <mat-step>
+    <mat-step  >
         <form [formGroup]="formAsignarPreRequisitos" hidden>
             <ng-template matStepLabel>
                 <span [ngClass]="{'texto-step': stepper.selectedIndex === 1}">Asignación de Pre-requisitos</span>
@@ -97,28 +97,62 @@
             <malla-list [preRequisito]="true"></malla-list>
           </ng-template>
     </mat-step>
+
     <mat-step>
-        <ng-template matStepLabel>
-            <span [ngClass]="{'texto-step': stepper.selectedIndex === 2}">Asignación de Equivalencias</span>
-          </ng-template>
+
+        <form [formGroup]="formAsignarEquivalencia" hidden>
+            <ng-template matStepLabel>
+                <span [ngClass]="{'texto-step': stepper.selectedIndex === 2}">Asignación de Equivalencias</span>
+              </ng-template>
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput type="number" formControlName="asignacionEquivalencia" placeholder="Last name, First name" required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+
+
 
       <ng-template matStepContent>
        
             @if ( !loading ) {
                 <div class="row">
-                
-                    <pre>{{ connections.length }}</pre>
                     <!-- <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre> -->
                     <!-- @if ( loading ) {
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                     } -->
                     <!-- <button (click)="addLine()">Add Connection</button> -->
-                    <div class="flex justify-content-end gap-2">
-                        <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
-                        @if(planesDeEstudio().length > 1){
-                            <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
-                        }
-                    </div>
+                    <div class="flex justify-content-between gap-2 mt-2">
+                            <div class="price-check row align-item-center -mt-1">
+                                <div class="col-12">
+                                    <div class="flex justify-content-start">
+                                        @if (connections.length > 0) {
+                                        <span class="m-b-0 border-round bg-blue-200 text-xs font-light shadow-3 px-2">
+                                            PRIMERO DEBE INSERTAR LAS EQUIVALENCIAS SECUNDARIAS QUE SE CONECTAN POR DEFECTO
+                                        </span>
+                                        }
+                                        @else if(equivalenciaCompleta && connections.length == 0){
+                                            <span class="m-b-0 border-round bg-blue-200 text-xs font-light shadow-3 px-2">
+                                                PARA AVANZAR AL SIGUIENTE PASO DEBE TERMINAR DE INSERTAR TODAS SUS EQUIVALENCIAS
+                                            </span>
+                                        }@else {
+                                            <span class="m-b-0 border-round bg-green-200 text-xs font-light shadow-3 px-2">
+                                                PUEDE AVANZAR AL SIGUIENTE MÓDULO
+                                            </span> 
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        <div class="flex justify-content-end gap-2">
+                            <ui-button color="blue" (onClick)="guardarPrimariosConfirm()" [disabled]="cursosPrimariosMalla.length == 0">Guardar Equivalencia Primaria</ui-button>
+                            @if(planesDeEstudio().length > 1){
+                                <ui-button color="blue" (onClick)="guardarCursosSecundariosConfirm()" [disabled]="!cursoPlanEquivalenciaValidarAutomatico().equivalenciaTerminada && connections.length == 0">Guardar Equivalencia Secundaria</ui-button>
+                            }
+                        </div>
+                    </div> 
                     <div class="col-6">
                         
                         
@@ -295,12 +329,14 @@
                                             <div class="flex gap-2">
                                                 
                                                 @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
-                                                   @if (!mostrarCheckboxPrimario(curso) && curso.modalidadDeCreacion == 'SIMPLE') 
+                                                   @if (!mostrarCheckboxPrimario(curso) && curso.modalidadDeCreacion == 'SIMPLE' && connections.length == 0) 
                                                    {<input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">} <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
                                                     
                                                 } @else {
+                                                    @if((curso.equivalencias[0].idMalla == null && curso.modalidadDeCreacion == 'SIMPLE') || curso.modalidadDeCreacion == 'POR RENOVACION'  ){
+                                                        <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
+                                                    }
                                                     <!-- <mat-icon class="text-red-500" matTooltip="Equivalencia Registrada">delete</mat-icon> -->
-                                                    <ui-button icon="ti ti-trash text-red-500 f-16" classButton="p-0 -ml-2" (onClick)="eliminarEquivalenciaConfirm( curso )"></ui-button>
                                                 }
                                             </div>    
                                         </div>
