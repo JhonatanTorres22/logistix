@@ -1499,7 +1499,7 @@ export class MallaListComponent  implements OnInit {
         .attr('y1', startY)
         .attr('x2', endX)
         .attr('y2', endY)
-        .attr('stroke', 'magenta')
+        .attr('stroke', 'gray')
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', '5,6') // Líneas punteadas (guiones de 5px con espacios de 5px)
         .attr('marker-end', 'url(#arrowhead)');
