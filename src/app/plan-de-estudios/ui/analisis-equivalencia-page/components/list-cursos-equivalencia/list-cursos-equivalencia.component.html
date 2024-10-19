@@ -30,7 +30,7 @@
 
             @if( isConvalidado(curso.idMalla) ) {
                 
-                <curso-equivalencia [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
+                <curso-equivalencia [isOrigen]="isOrigen" [porcentaje]="porcentaje(curso.idMalla)" [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
 
             }
         }
@@ -38,7 +38,7 @@
             @if ( !isFirst ) {
                 <mat-divider></mat-divider>
             }
-            <curso-equivalencia [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
+            <curso-equivalencia [isOrigen]="isOrigen" [porcentaje]="porcentaje(curso.idMalla)" [curso]="curso" [color]="getColor(curso.idMalla)" [isConvalidado]="isConvalidado(curso.idMalla)"></curso-equivalencia>
         }
 
     }

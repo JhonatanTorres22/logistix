@@ -47,15 +47,19 @@ export class ListCursosEquivalenciaComponent {
 
   isConvalidado(idMalla: number): boolean {
     return this.convalidacion().some(convalidacion => 
-      convalidacion.idMallaOrigen === idMalla || convalidacion.idMallaDestino === idMalla
+      (convalidacion.idMallaOrigen === idMalla && convalidacion.porcentajeModificacion <= 50 ) || (convalidacion.idMallaDestino === idMalla && convalidacion.porcentajeModificacion <= 50)
     );
   }
 
   getColor(idMalla: number): string {
     const index = this.convalidacion().findIndex(convalidacion => 
-      convalidacion.idMallaOrigen === idMalla || convalidacion.idMallaDestino === idMalla
+      (convalidacion.idMallaOrigen === idMalla && convalidacion.porcentajeModificacion <= 50) || (convalidacion.idMallaDestino === idMalla && convalidacion.porcentajeModificacion <= 50)
     );
     return index !== -1 ? this.colores[index % this.colores.length] : 'transparent';
+  }
+
+  porcentaje( idMalla: number ): number {
+    return this.convalidacion().find( convalidacion => convalidacion.idMallaOrigen == idMalla || convalidacion.idMallaDestino === idMalla )?.porcentajeModificacion ?? 0
   }
 
 }

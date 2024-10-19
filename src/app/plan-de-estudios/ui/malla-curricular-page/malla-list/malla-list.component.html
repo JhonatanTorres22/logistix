@@ -107,7 +107,7 @@
                                                     <div class="flex gap-2 pr-1" [ngClass]="curso.modalidadDeCreacion == 'POR RENOVACION' ? 'justify-content-end' : 'justify-content-center'">
                                                         <span class="px-2 border-round" [ngClass]="curso.estado == 'ACTIVO' ? 'bg-cyan-200' : 'bg-blue-700'">{{ curso.estado }}</span>
                                                         @if ( curso.modalidadDeCreacion == 'POR RENOVACION' ) {
-                                                            <i class="ti ti-refresh text-yellow-600 f-14"></i>
+                                                            <i class="ti ti-registered text-yellow-600 f-14"></i>
                                                         }
                                                     </div>
                                                     <div>{{ curso.nombreCurso }}</div>
