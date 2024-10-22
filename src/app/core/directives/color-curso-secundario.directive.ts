@@ -70,7 +70,7 @@ export class ColorCursoSecundarioDirective implements OnInit {
               
               // Aplicar el color del código asignado desde el mapa
               const colorAsignado = colorMap[curso.codigoCurso];
-              this.element.nativeElement?.style.setProperty('background-color', colorAsignado);
+              // this.element.nativeElement?.style.setProperty('background-color', colorAsignado);
               this.element.nativeElement?.classList.add('text-black');
 
               checkbox?.setAttribute('disabled', 'true');
@@ -81,10 +81,10 @@ export class ColorCursoSecundarioDirective implements OnInit {
         // this.element.nativeElement?.style.setProperty('background-color', '#000000');
 
           if (curso.equivalencias?.length == 0) {
-              this.element.nativeElement?.classList.add('bg-white', 'text-black');
-              this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
+              // this.element.nativeElement?.classList.add('bg-white', 'text-black');
+              // this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
           } else {
-            this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
+            // this.element.nativeElement?.style.setProperty('background-color', '#ffffff');
 
           }
       }

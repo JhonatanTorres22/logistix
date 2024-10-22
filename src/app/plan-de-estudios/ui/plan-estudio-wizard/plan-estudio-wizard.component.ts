@@ -89,9 +89,13 @@ export class PlanEstudioWizardComponent implements OnInit {
   renderizarCursos = this.cursoSignal.renderizarCursos;
   cursoPlanEquivalenciaValidarAutomatico = this.cursoPlanSignal.cursoPlanEquivalenciaValidarAutomatico;
   cursoPlanEquivalenciaValidarManual = this.cursoPlanSignal.cursoPlanEquivalenciaValidarManual;
+
+  cursoMallaEquivalenciaValidator = this.mallaSignal.cursoMallaEquivalenciaValidator
+
   cursosImportExcel = this.cursoSignal.cursosImportExcel;
   cicloList = this.cicloSignal.cicloList;
   currentInfoDirector = this.authSignal.currentInfoDirector;
+
   // planEstudioUltimoConResolucion = this.signal.planEstudioUltimoConResolucion;
   cursosByCiclo = this.cursoSignal.cursosByCiclo;
   file = this.mensajeriaSignal.file;
@@ -100,7 +104,9 @@ export class PlanEstudioWizardComponent implements OnInit {
   
   porcentajeModificacion: number = 0;
   loading: boolean = false;
-  equivalenciaCompleta: boolean = false
+  equivalenciaCompleta: boolean = false;
+  equivalenciaSecundariaCompleta: boolean = false;
+  equivalenciaSecundariasPendientes: number = 0;
   // CONEXIÓN DE LAS FLECHAS
 
   
@@ -132,6 +138,7 @@ export class PlanEstudioWizardComponent implements OnInit {
     preRequisitos: []
   }
   connections: { leftCardId: number, rightCardId: number }[] = []; // Array de conexiones
+  connectionsColor: { leftCardId: number, rightCardId: number }[] = [];
   
   private _formBuilder = inject(FormBuilder);
   formDisenar: FormGroup;
@@ -214,6 +221,22 @@ export class PlanEstudioWizardComponent implements OnInit {
     
   }
 
+  // getColor(idMalla: number): string {
+  //   // console.log(this.connectionsColor);
+    
+  //   const index = this.connectionsColor.findIndex(convalidacion => 
+  //     (convalidacion.leftCardId === idMalla) || (convalidacion.rightCardId === idMalla )
+  //   );
+  //   return index !== -1 ? this.colores[index % this.colores.length] : 'transparent';
+  // }
+
+  // getIcon( idMalla: number): string {
+  //   const index = this.connectionsColor.findIndex( equivalencia => 
+  //    ( equivalencia.leftCardId == idMalla ) || (equivalencia.rightCardId == idMalla )
+  //   )
+
+  //   return index !== -1 ? 'ti ti-check bg-green-700' : 'ti ti-clock bg-gray-700';
+  // }
 
   asignarColores(): void {
     const colorMap = new Map<string, string>();
@@ -299,7 +322,9 @@ export class PlanEstudioWizardComponent implements OnInit {
       next: ( cursosPlanEquivalencia ) => {
         this.cursosMallaEquivalenciaUltimo = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
         console.log( 'Plan Ultimo: ', cursosPlanEquivalencia );
-
+        // const curso = this.cursosMallaEquivalenciaUltimo.filter( curso => curso.modalidadDeCreacion == 'SIMPLE' && curso.equivalencias.length == 0);
+        // this.equivalenciaSecundariaCompleta = curso.length > 0
+        // this.equivalenciaSecundariasPendientes = curso.length
       }, error: ( error ) => {
         console.log( error );
         
@@ -317,7 +342,24 @@ export class PlanEstudioWizardComponent implements OnInit {
         const countPrerrequisitosVacios = this.cursosMallaEquivalenciaActual.filter(curso => !curso.equivalencias || curso.equivalencias.length === 0).length;
         this.formDisenar.patchValue({inputStep1: this.cursosMallaByCiclo().length});
         this.formAsignarEquivalencia.patchValue({asignacionEquivalencia: countPrerrequisitosVacios});
+        this.equivalenciaSecundariasPendientes = this.cursosMallaEquivalenciaActual.filter( curso => curso.modalidadDeCreacion == 'POR RENOVACION' && curso.equivalencias.length == 0).length
+        console.log( this.equivalenciaSecundariasPendientes );
+        
+        this.cursoMallaEquivalenciaValidator.set({
+          isFirstPlan: this.planesDeEstudio().length == 1 ? true : false,
+          totalCurso: this.cursosMallaEquivalenciaActual.length,
+          primarios: {
+            pendientes: this.cursosMallaEquivalenciaActual.filter( curso => curso.equivalencias.length == 0 ).length,
+            isValid: this.cursosMallaEquivalenciaActual.some( curso => curso.equivalencias.length > 0 ),
+            totalPrimarios: this.cursosMallaEquivalenciaActual.filter( curso => curso.equivalencias.length == 0 ).length
+          },
+          secundarios: {
+            isValid: false,
+            pendientes: 0,
+            totalSecundarios: 0
+          }
 
+        })
       }, error: ( error ) => {
         console.log( error );
         
@@ -581,7 +623,7 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   mostrarCheckboxPrimario(curso: Malla): boolean {
     return this.connections.some(connection => connection.rightCardId === curso.idMalla);
-}
+  }
 
   listarDesfasados = ( template: TemplateRef<any>) => {
     this.modal.openTemplate({
@@ -702,15 +744,18 @@ export class PlanEstudioWizardComponent implements OnInit {
 
   selectPrimarioMasivo = ( value: any ) => {
     console.log( value.target.checked );
+    console.log( this.cursosPrimariosMalla )
     const checked: boolean = value.target.checked;
     const primarios = this.cursosMallaEquivalenciaActual.filter( cursos => cursos.equivalencias.length == 0);
-
+    console.log( primarios );
+    
     primarios.map( curso => {
 
       const inputCheckBox = this.el.nativeElement.querySelector('#check-'+curso.idMalla);
       console.log( inputCheckBox.checked );
       
       if( checked ) {
+      this.renderer.removeAttribute( inputCheckBox, 'checked')
         this.renderer.setAttribute( inputCheckBox, 'checked', checked.toString() );
         this.cursosPrimariosMalla.push({
           idMalla: curso.idMalla,
@@ -720,7 +765,10 @@ export class PlanEstudioWizardComponent implements OnInit {
         return
       }
 
+      this.cursosPrimariosMalla = [];
+
       this.renderer.removeAttribute( inputCheckBox, 'checked')
+      // this.renderer.setAttribute( inputCheckBox, 'unchecked', 'true' );
 
 
     })
@@ -826,7 +874,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   seleccionarCursoPlanUltimo(card: Malla): void {
 
     if( this.selectedLeftCard?.estado == 'RENOVADO' ) {
-    
+      
       Swal.fire({
         title: 'IMPORTANTE!',
         text: 'Ingresar valor porcentaje de modificación',
@@ -878,7 +926,8 @@ export class PlanEstudioWizardComponent implements OnInit {
     //     this.loading = false;
     //   }
     // })
-
+    // this.equivalenciaSecundariasPendientes = this.cursosMallaEquivalenciaActual.filter( curso => curso.modalidadDeCreacion == 'POR RENOVACION' && curso.equivalencias.length == 0).length
+      // this.equivalenciaSecundariasPendientes = curso.length
     this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
         const cursoExiste = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
         if( cursoExiste ) {
@@ -1024,6 +1073,7 @@ export class PlanEstudioWizardComponent implements OnInit {
         const existingArrowId = `arrow-${existingLeftConnection.leftCardId}-${existingLeftConnection.rightCardId}`;
         svg.select(`#${existingArrowId}`).remove(); // Eliminar la flecha existente
         this.connections.splice(existingLeftConnectionIndex, 1); // Eliminar la conexión del array
+        // this.connectionsColor.splice(existingLeftConnectionIndex, 1)
       }
 
       // Dibujar la nueva conexión
@@ -1044,6 +1094,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
       this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
       
+      this.connectionsColor.push({ leftCardId: left, rightCardId: right });
       if( isConvalidado !== -1 && this.cursosMallaEquivalenciaActual[isConvalidado].equivalencias.length > 0 ) {
         // this.alert.sweetAlert('info', '¿IMPORTANTE!', 'Este curso ya se encuentra convalidado')
         // document.getElementById(`arrow-${right}-${left}`)?.remove();

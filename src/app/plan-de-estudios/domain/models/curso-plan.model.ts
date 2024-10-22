@@ -74,6 +74,25 @@ export interface EquivalenciaValidar {
 
 }
 
+export interface CursoMallaEquivalenciaValidator {
+    totalCurso: number,
+    isFirstPlan: boolean,
+    primarios: CursoMallaEquivalenaValidatorPrimario,
+    secundarios: CursoMallaEquivalenaValidatorSecundario
+}
+
+export interface CursoMallaEquivalenaValidatorPrimario {
+    pendientes: number,
+    totalPrimarios: number,
+    isValid: boolean,
+}
+
+export interface CursoMallaEquivalenaValidatorSecundario {
+    pendientes: number,
+    totalSecundarios: number,
+    isValid: boolean,
+}
+
 export type CursoPreRequisito = Pick<CursoPlanPreRequisito, 'idCursoPlan' | 'nombreCurso'>
 
 

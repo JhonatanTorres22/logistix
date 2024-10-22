@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { CursoPlanBase, CursoPlanByCiclo, CursoPlanEquivalencia, CursoPlanListar, CursoPlanPreRequisito, EquivalenciaValidar } from "../models/curso-plan.model";
+import { CursoMallaEquivalenciaValidator, CursoPlanBase, CursoPlanByCiclo, CursoPlanEquivalencia, CursoPlanListar, CursoPlanPreRequisito, EquivalenciaValidar } from "../models/curso-plan.model";
 
 @Injectable({
     providedIn: 'root'
@@ -57,9 +57,12 @@ export class CursoPlanSignal {
         cursosActualPendientes: [],
         cursosUltimoPendientes: []
     }
+
+    
     
     cursoPlanEquivalenciaValidarAutomatico = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
     cursoPlanEquivalenciaValidarManual = signal<EquivalenciaValidar>( this.cursoPlanEquivalenciaValidarDefault);
+
     
     // cursosPlanPreRequisito = signal( this.cursoPlanPreRequisitoDefault );
 }

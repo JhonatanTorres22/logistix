@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, effect, HostListener, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, effect, HostListener, Input, OnInit, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
@@ -111,6 +111,8 @@ export class MallaListComponent  implements OnInit {
   planesDeEstudio = this.signal.planesDeEstudio;
   cursoMallaDesfasadoSelected = this.mallaSignal.cursoMallaDesfasadoSelected;
   cursoMallaRenovadoSelected = this.mallaSignal.cursoMallaRenovadoSelected;
+  cursoDetails: WritableSignal<Curso> = this.cursoSignal.cursoSelect;
+
 
   // preRequisitosCursoPlan = this.cursoPlanSignal.preRequisitosCursoPlan;
   cicloOrden: any[] = [];
@@ -538,6 +540,9 @@ export class MallaListComponent  implements OnInit {
         this.modal.openTemplate({
           template: this.templatePlan,
           titulo: 'CURSO ASIGNADO'
+        }).afterClosed().subscribe( response => {
+          console.log('Response: ', response);
+          this.cursoDetails.set( this.cursoSignal.cursoDafault)
         });
         return
         
@@ -745,7 +750,7 @@ export class MallaListComponent  implements OnInit {
   }
 
   eliminarConfirm = () => {
-
+    if( this.cursoMallaOption().modalidadDeCreacion == 'POR RENOVACION' ) return
     const cusoMallaEliminar: CursoMallaEliminar = {
       idMalla: this.cursoMallaOption().idMalla,
       userId: parseInt( this.authSignal.currentRol().id ),
