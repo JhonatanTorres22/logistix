@@ -123,7 +123,7 @@
                     
                             } @else {
                                 @for (ciclo of cursosMallaPreRequisitoByCiclo(); track ciclo) {
-                    
+                     
                                     <div class="col-1 text-center">
                                         <div class="bg-bluegray-900 text-white border-round py-1 mb-2 -mx-1">{{ ciclo.ciclo }}</div>
                                         <div class="flex flex-column gap-2 example-list align-items-center"
@@ -139,11 +139,11 @@
                                                     (mouseleave)="removeClass( curso )"
                                                     (dblclick)="!isModal() && !readonly ? selectPreRequisitoPadre( curso ) : ''"
                                                     (click)="cursoPreRequisito?.idMalla != 0 ? selectPreRequsitoHijo( curso ) : ''"
-                                                
-                                                
+                                                    matTooltipPosition='above'
+                                                    [matTooltip]="cursoPreRequisito && cursoPreRequisito?.idMalla !== 0 && curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla) ? 'Seleccionar como Pre Requisito' : preRequisitosFromCursoSelect.includes(curso.idMalla) ? 'Eliminar Pre Requisito' : ''"
                                                     [ngClass]="
-                                                    {   'bg-yellow-500 cursor-pointer': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
-                                                        'bg-green-200 border-yellow-500':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
+                                                    {   'bg-yellow-500 cursor-pointer hover:shadow-8 hover:opacity-70': curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && !preRequisitosFromCursoSelect.includes(curso.idMalla),
+                                                        'bg-green-200 border-yellow-500 cursor-pointer':  curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0,
                                                         'bg-blue-200': curso.preRequisitos.length > 0,
                                                         'border-3 border-yellow-500': cursoPreRequisito && cursoPreRequisito?.idMalla == curso.idMalla,
                                                         'border-1 border-dashed border-gray-400': cursoPreRequisito?.idMalla != curso.idMalla,
@@ -156,10 +156,16 @@
                                                     h-4rem
                                                     align-content-center
                                                     font-semibold px-1
+                                                    shadow-3
                                                     
-                                                    shadow-3"
+                                                    "
                                                     >
-                                                
+                                                    @if ( curso.cicloNumero < cursoPreRequisito?.curso.cicloNumero && preRequisitosFromCursoSelect.includes(curso.idMalla) && preRequisitosFromCursoSelect.length > 0 ) {
+                                                        <div class="flex font-bold f-10 bg-red-500 border-round text-white justify-content-center align-item-center px-2 gap-2 py-1">
+                                                            <i class="ti ti-trash f-16"></i>
+                                                            Eliminar
+                                                        </div>
+                                                    }
                                                     <div>{{ curso.nombreCurso }}</div>
                                                     <div class="font-normal text-gray-800">{{ curso.codigoCurso }}</div>
                                                 </div>
@@ -235,7 +241,7 @@
     <div class="example-menu border-1 border-gray-300" cdkMenu (blur)="console.log($event)">
         <button (click)="openFormCurso( templateCursoAdd, 'Editar' )" class="example-menu-item" cdkMenuItem><i class="ti ti-pencil f-16 pr-2 text-blue-700"></i>Editar</button>
         <mat-divider></mat-divider>
-        <button (click)="eliminarConfirm()" class="example-menu-item" cdkMenuItem><i class="ti ti-trash f-16 pr-2 text-red-700"></i>Eliminar</button>
+        <button (click)="eliminarConfirm()" class="example-menu-item" cdkMenuItem [disabled]="cursoMallaOption().modalidadDeCreacion == 'POR RENOVACION'"><i class="ti ti-trash f-16 pr-2" [ngClass]="cursoMallaOption().modalidadDeCreacion == 'POR RENOVACION' ? 'text-gray-400' : 'text-red-700'"></i>Eliminar</button>
         @if ( readonly && planesDeEstudio().length > 1  ) { <!-- planesDeEstudio().length > 1 && -->
             <mat-divider></mat-divider>
             <button (click)="renovar( templateCursoAdd )" class="example-menu-item" cdkMenuItem><i class="ti ti-refresh f-16 pr-2 text-purple-700"></i>Renovar</button>

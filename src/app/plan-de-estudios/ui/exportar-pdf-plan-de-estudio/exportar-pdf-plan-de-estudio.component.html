@@ -16,10 +16,12 @@
     </div>
   </div>
   <mat-divider></mat-divider>
-  <ng-scrollbar style="height: calc(100vh - 88px)" visibility="hover">
+  <ng-scrollbar style="height: calc(100vh - 200px)" visibility="hover">
     <div class="p-2">
       <iframe id="pdfViewer" class="pt-3 h-30rem border-none" style="width: 100%;"></iframe>
     </div>
   </ng-scrollbar>
-  <ui-button class="z-0" color="blue" icon="ti ti-save f-16"(onClick)="finalizarProceso()">Finalizar y Responder Mensaje</ui-button>
+  <div class="flex justify-content-end pr-3">
+    <ui-button class="z-0" color="blue" icon="ti ti-save f-16"(onClick)="finalizarProceso()">Finalizar y Responder Mensaje</ui-button>
+  </div>
 </mat-drawer>

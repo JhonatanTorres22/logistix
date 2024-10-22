@@ -116,9 +116,35 @@
 
 
       <ng-template matStepContent>
-       
+            <!-- <pre>{{ cursosPrimariosMalla | json }}</pre> -->
             @if ( !loading ) {
                 <div class="row">
+                    <div class="col-3">
+                        <pre>Total de Cursos: {{ cursosMallaEquivalenciaActual.length }}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>Primarias: {{ equivalenciaSecundariaCompleta | json}}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>Secuntarias Pendientes M: {{ equivalenciaSecundariasPendientes | json}}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>isValid: {{ cursoMallaEquivalenciaValidator().primarios.isValid }}</pre>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <h5>Primarios</h5>
+                    <div class="col-3">
+                        <pre>Total de Cursos: {{ cursoMallaEquivalenciaValidator().totalCurso }}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>IsFirst: {{ cursoMallaEquivalenciaValidator().isFirstPlan }}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>Primarias Pendientes: {{ cursoMallaEquivalenciaValidator().primarios.pendientes }}</pre>
+                    </div>
+                    <div class="col-3">
+                        <pre>Primarias Total: {{ cursoMallaEquivalenciaValidator().primarios.totalPrimarios }}</pre>
+                    </div>
                     <!-- <pre>{{ cursoPlanEquivalenciaValidar() | json }}</pre> -->
                     <!-- @if ( loading ) {
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -196,8 +222,9 @@
                                     }"
                                     [attr.id]="'cardLeft-' + curso.idMalla"
                                     (click)="connections.length > 0 ? '' : seleccionarCursoPlanProceso(curso)"
-                                    [style.background-color]="curso.color"
+                                    ColorCursoEquivalente
                                     ColorCursoSecundario
+                                    [connectionsColor]="connectionsColor"
                                     [curso]="curso"
                                     [cursos]="cursosMallaEquivalenciaActual"
                                 >
@@ -218,8 +245,26 @@
                                     </div>
                                     <div class="col-1 border-3xl border-round f-10 check">
                                         <div class="flex gap-2 align-items-center">
-                                    
-                                            @switch ( curso.estado ) {
+                                            @switch (curso.estado)
+                                            {
+                                                @case ('DESFASADO') {
+                                                    <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1"></i>
+                                                }
+                                                @default {
+                                                    @if ( curso.modalidadDeCreacion == 'POR RENOVACION' ){
+                                                        <i class="ti ti-clock f-16 text-white bg-blue-700 border-circle border-1 p-1"></i>
+                                                    } @else {
+                                                        <ui-button
+                                                            [matTooltip]="curso.equivalencias.length == 0 ? 'Equivalencia Pendiente' : 'Equivalencia Regitrada'"
+                                                            [color]="curso.equivalencias.length == 0 ? 'gray' : 'green'"
+                                                            [classButton]="curso.equivalencias.length == 0 ? 'boton-parpadeante p-0 -ml-3' : 'p-0 -ml-3'">
+                                                            <i [id]="'icon-'+curso.idMalla" class=""></i>
+                                                        </ui-button>
+                                                    }
+                                                }
+                                            }
+
+                                            <!-- @switch ( curso.estado ) {
                                                 @case ( 'RENOVADO' ) {
                                                     <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1" [ngClass]="{'activeFocus': cursosMallaEquivalenciaActual.includes( curso.idMalla )}"></i>
                                                 }
@@ -229,7 +274,7 @@
                                                 @case ( 'ACTIVO' ) {
                                                     <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1"></i>
                                                 }
-                                            }
+                                            } -->
                                         </div>
                                     </div>
                                 </div>
@@ -269,7 +314,7 @@
                             </div>
     
             
-                            <!-- <pre>{{ cursosPrimariosMalla | json}}</pre> -->
+                            
                             @for (curso of cursosMallaEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) {
                             <!-- @for (curso of cursosPlanEquivalenciaActual; track curso; let isFirst = $first; let index = $index ) { -->
                                 @if ( !isFirst ) {
@@ -281,20 +326,42 @@
                                     [ngClass]="
                                     {
                                         'text-red-700 font-bold': curso.estado == 'DESFASADO',
-                                        'text-green-900 font-semibold bg-green-100': curso.equivalencias.length > 0,
+                                        
                                         
                                     
                                     }"
                                     [attr.id]="'cardRight-' + curso.idMalla"
                                     (click)="connections.length > 0 ? '' : seleccionarCursoPlanUltimo(curso)"
-                                    [style.background-color]="curso.color"
+                     
                                     ColorCursoSecundario
+                                    ColorCursoEquivalente
+                                    [connectionsColor]="connectionsColor"
                                     [curso]="curso"
                                     [cursos]="cursosMallaEquivalenciaUltimo"
                                 >
                                         <div class="col-1 border-3xl border-round f-10">
                                             <div class="flex gap-2 align-items-center">
                                                 @switch (curso.estado)
+                                                {
+                                                    @case ('DESFASADO') {
+                                                        <i class="ti ti-x f-16 text-white bg-red-700 border-circle border-1 p-1"></i>
+                                                    }
+                                                    @default {
+                                                        @if ( curso.modalidadDeCreacion == 'POR RENOVACION' ){
+                                                            <i class="ti ti-clock f-16 text-white bg-blue-700 border-circle border-1 p-1"></i>
+                                                        } @else {
+                                                            <ui-button
+                                                                [matTooltip]="curso.equivalencias.length == 0 ? 'Equivalencia Pendiente' : 'Equivalencia Regitrada'"
+                                                                [color]="curso.equivalencias.length == 0 ? 'gray' : 'green'"
+                                                                [classButton]="curso.equivalencias.length == 0 ? 'boton-parpadeante p-0 -ml-3' : 'p-0 -ml-3'">
+                                                                <i [id]="'icon-'+curso.idMalla" class=""></i>
+                                                            </ui-button>
+                                                        }
+                                                    }
+                                                }
+
+                                       
+                                                <!-- @switch (curso.estado)
                                                 {
                                                     @case ('RENOVADO') {
                                                         <i class="ti ti-step-out f-16 text-white bg-gray-700 border-circle border-1 p-1 -ml-2"></i>
@@ -309,7 +376,7 @@
                                                             <i class="ti ti-check f-16 text-white bg-green-700 border-circle border-1 p-1 -ml-2"></i>
                                                         }
                                                     }
-                                                }
+                                                } -->
                                                 {{ curso.cicloRomano }}
                                             </div>
                                         </div>
@@ -329,7 +396,7 @@
                                             <div class="flex gap-2">
                                                 
                                                 @if ( curso.equivalencias.length == 0 || cursosMallaEquivalenciaUltimo.includes( curso.idMalla ) ) {
-                                                   @if (!mostrarCheckboxPrimario(curso) && curso.modalidadDeCreacion == 'SIMPLE' && connections.length == 0) 
+                                                   @if (!mostrarCheckboxPrimario(curso) && curso.modalidadDeCreacion == 'SIMPLE' && connections.length == 0  && equivalenciaSecundariasPendientes == 0) 
                                                    {<input type="checkbox" [id]="'check-'+curso.idMalla" (change)="updateMalla($event, curso)">} <!-- <mat-checkbox (change)="update($event.checked, curso)" class="example-margin" [id]="'check-'+curso.idCursoPlan"></mat-checkbox> -->
                                                     
                                                 } @else {

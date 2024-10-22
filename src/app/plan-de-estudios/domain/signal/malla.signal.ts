@@ -1,5 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { CursoMallaByCiclo, CursoMallaDesfasado, CursoMallaRenovado, Malla } from "../models/malla.model";
+import { CursoMallaEquivalenciaValidator } from "../models/curso-plan.model";
 
 @Injectable({
     providedIn: 'root'
@@ -80,5 +81,21 @@ export class MallaSignal {
 
     cursoMallaDesfasadoSelected = signal( this.cursoMallaDesfasadoDefault );
 
+
+    cursoMallaEquivalenciaValidatorDefault: CursoMallaEquivalenciaValidator = {
+        totalCurso: 0,
+        isFirstPlan: false,
+        primarios: {
+            pendientes: 0,
+            totalPrimarios: 0,
+            isValid: false
+        },
+        secundarios: {
+            pendientes: 0,
+            totalSecundarios: 0,
+            isValid: false
+        }
+    }
+    cursoMallaEquivalenciaValidator = signal<CursoMallaEquivalenciaValidator>( this.cursoMallaEquivalenciaValidatorDefault )
 
 }

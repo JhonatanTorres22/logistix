@@ -60,6 +60,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { ColorClassDirective } from 'src/app/core/directives/color-class.directive';
 import { HoverClassDirective } from 'src/app/core/directives/hover-class.directive';
 import { ColorCursoSecundarioDirective } from 'src/app/core/directives/color-curso-secundario.directive';
+import { ColorCursoEquivalenteDirective } from 'src/app/core/directives/color-curso-equivalente.directive';
 
 const MaterialModules = [
   MatToolbarModule,
@@ -111,6 +112,7 @@ const Directives = [
   ColorClassDirective,
   HoverClassDirective,
   ColorCursoSecundarioDirective,
+  ColorCursoEquivalenteDirective,
 
 
 ]
