@@ -88,12 +88,21 @@ export class MallaSignal {
         primarios: {
             pendientes: 0,
             totalPrimarios: 0,
-            isValid: false
+            isValid: false,
+            cursosPrimarios: []
         },
-        secundarios: {
+        secundariosAutomaticos: {
             pendientes: 0,
             totalSecundarios: 0,
-            isValid: false
+            isValid: false,
+            cursosSecundarios: []
+        },
+        secundariosManual: {
+            pendientes: 0,
+            totalSecundarios: 0,
+            isValid: false,
+            cursosSecundarios: []
+
         }
     }
     cursoMallaEquivalenciaValidator = signal<CursoMallaEquivalenciaValidator>( this.cursoMallaEquivalenciaValidatorDefault )

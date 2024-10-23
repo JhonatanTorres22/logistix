@@ -40,6 +40,8 @@ import { PlanEstudioCardComponent } from '../plan-estudio-card/plan-estudio-card
 import { ExportarPdfPlanDeEstudioComponent } from '../exportar-pdf-plan-de-estudio/exportar-pdf-plan-de-estudio.component';
 import Swal from 'sweetalert2';
 import { MenuItem } from 'primeng/api';
+import { TimeLineEquivalenciaButtonsComponent } from './components/time-line-equivalencia-buttons/time-line-equivalencia-buttons.component';
+import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
 
 
 @Component({
@@ -56,6 +58,8 @@ import { MenuItem } from 'primeng/api';
     CursoImportTemplateComponent,
     MallaListComponent,
     ExportarPdfPlanDeEstudioComponent,
+    TimeLineEquivalenciaButtonsComponent,
+    UiLoadingProgressBarComponent,
 ],
   templateUrl: './plan-estudio-wizard.component.html',
   styleUrl: './plan-estudio-wizard.component.scss'
@@ -107,6 +111,9 @@ export class PlanEstudioWizardComponent implements OnInit {
   equivalenciaCompleta: boolean = false;
   equivalenciaSecundariaCompleta: boolean = false;
   equivalenciaSecundariasPendientes: number = 0;
+
+  cursosPredecesorPendientes: number[] = [];
+
   // CONEXIÓN DE LAS FLECHAS
 
   
@@ -198,7 +205,7 @@ export class PlanEstudioWizardComponent implements OnInit {
       asignacion: ['', Validators.required],
     });
     this.formAsignarEquivalencia = this._formBuilder.group({
-      asignacionEquivalencia: ['', [Validators.required, Validators.min(0), Validators.max(0)]],
+      asignacionEquivalencia: ['', [Validators.required, Validators.min(1)]],
     });
     this.formAsignarPreRequisitos = this._formBuilder.group({
       preRequisitos: ['', Validators.required],
@@ -333,38 +340,170 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
 
   obtenerMallaEquivalenciaActual = () => {
-    this.mallaRepository.getMallaEquivalencias( this.planEstudioSelect().id ).subscribe({
-      next: ( cursosPlanEquivalencia ) => {
-        this.cursosMallaEquivalenciaActual = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
-        console.log( 'Plan Actual: ', cursosPlanEquivalencia );
-        this.showBtnActivarEdicion = this.cursosMallaEquivalenciaActual.length == 0 ? false : true;
-        this.equivalenciaCompleta = this.cursosMallaEquivalenciaActual.some(curso => !curso.equivalencias || curso.equivalencias.length === 0);
-        const countPrerrequisitosVacios = this.cursosMallaEquivalenciaActual.filter(curso => !curso.equivalencias || curso.equivalencias.length === 0).length;
-        this.formDisenar.patchValue({inputStep1: this.cursosMallaByCiclo().length});
-        this.formAsignarEquivalencia.patchValue({asignacionEquivalencia: countPrerrequisitosVacios});
-        this.equivalenciaSecundariasPendientes = this.cursosMallaEquivalenciaActual.filter( curso => curso.modalidadDeCreacion == 'POR RENOVACION' && curso.equivalencias.length == 0).length
-        console.log( this.equivalenciaSecundariasPendientes );
-        
-        this.cursoMallaEquivalenciaValidator.set({
-          isFirstPlan: this.planesDeEstudio().length == 1 ? true : false,
-          totalCurso: this.cursosMallaEquivalenciaActual.length,
-          primarios: {
-            pendientes: this.cursosMallaEquivalenciaActual.filter( curso => curso.equivalencias.length == 0 ).length,
-            isValid: this.cursosMallaEquivalenciaActual.some( curso => curso.equivalencias.length > 0 ),
-            totalPrimarios: this.cursosMallaEquivalenciaActual.filter( curso => curso.equivalencias.length == 0 ).length
-          },
-          secundarios: {
-            isValid: false,
-            pendientes: 0,
-            totalSecundarios: 0
-          }
 
-        })
-      }, error: ( error ) => {
-        console.log( error );
-        
-      }
+    return new Promise<boolean>( resolve => {
+
+      this.mallaRepository.getMallaEquivalencias( this.planEstudioSelect().id ).subscribe({
+        next: ( cursosPlanEquivalencia ) => {
+          this.cursosMallaEquivalenciaActual = cursosPlanEquivalencia.sort( ( a, b ) => a.cicloNumero - b.cicloNumero );
+          console.log( 'Plan Actual: ', cursosPlanEquivalencia );
+          this.showBtnActivarEdicion = this.cursosMallaEquivalenciaActual.length == 0 ? false : true;
+          this.equivalenciaCompleta = this.cursosMallaEquivalenciaActual.some(curso => !curso.equivalencias || curso.equivalencias.length === 0);
+          const countPrerrequisitosVacios = this.cursosMallaEquivalenciaActual.filter(curso => !curso.equivalencias || curso.equivalencias.length === 0).length;
+          this.formDisenar.patchValue({inputStep1: this.cursosMallaByCiclo().length});
+          this.formAsignarEquivalencia.patchValue({asignacionEquivalencia: countPrerrequisitosVacios});
+          this.equivalenciaSecundariasPendientes = this.cursosMallaEquivalenciaActual.filter( curso => curso.modalidadDeCreacion == 'POR RENOVACION' && curso.equivalencias.length == 0).length
+          console.log( this.equivalenciaSecundariasPendientes );
+          
+          
+          this.setConnectiosColorValuesForColorearCursos();
+          this.setValidatorEquivalencias().then( finish => {
+            resolve( true )
+          });
+          
+        }, error: ( error ) => {
+          console.log( error );
+          resolve( false )
+        }
+      })
+
     })
+
+  }
+  setConnectiosColorValuesForColorearCursos = () => {
+    this.cursosPredecesorPendientes = [];
+    this.cursosMallaEquivalenciaActual.forEach((curso) => {
+
+      curso.equivalencias.forEach((equivalencia) => {
+
+        const cursoEquivalente = this.cursosMallaEquivalenciaUltimo.find(
+          (cursoUltimo) => cursoUltimo.idMalla === equivalencia.idMalla
+        );
+
+        if (cursoEquivalente) {
+          // Dibujar las flechas entre el curso y su equivalencia
+          // this.dibujarFlechasEntreCursos(curso.idMalla, cursoEquivalente.idMalla);
+          this.connectionsColor.push( {leftCardId: curso.idMalla, rightCardId: cursoEquivalente.idMalla} );
+          this.cursosPredecesorPendientes.push( cursoEquivalente.idMalla )
+        }
+      });
+    });
+    
+
+
+
+  }
+
+  setValidatorEquivalencias = () => {
+    return new Promise<boolean>( resolve => {
+
+      let predecesor: Malla[] = [];
+      let construccion: Malla[] = [];
+  
+      this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
+        const cursos = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.idCurso == curso.idCurso )
+        cursos ? predecesor.push( cursos ) : '';
+        cursos ? construccion.push( curso ) : '';
+      })
+      const cursosRenovados = this.cursosMallaEquivalenciaActual.filter( cursosEqui => cursosEqui.modalidadDeCreacion == 'POR RENOVACION');
+  
+  
+      const cursosPrimarios = this.cursosMallaEquivalenciaActual.filter( curso => !construccion.includes(curso) && curso.modalidadDeCreacion !== 'POR RENOVACION' )
+  
+      console.log(predecesor, construccion);
+      console.log( cursosRenovados.filter( curso => curso.equivalencias.length == 0 ) )
+  
+  
+      this.cursoMallaEquivalenciaValidator.set({
+        isFirstPlan: this.planesDeEstudio().length == 1 ? true : false,
+        totalCurso: this.cursosMallaEquivalenciaActual.length,
+        primarios: {
+          pendientes: cursosPrimarios.filter( curso => curso.equivalencias.length == 0 ).length,
+          isValid: this.cursosMallaEquivalenciaActual.some( curso => curso.equivalencias.length > 0 ) && cursosPrimarios.filter( curso => curso.equivalencias.length == 0 ).length == 0,
+          totalPrimarios: cursosPrimarios.length,
+          cursosPrimarios: cursosPrimarios
+        },
+        secundariosAutomaticos: {
+          totalSecundarios: construccion.length,
+          pendientes: construccion.filter( cursoConst => cursoConst.equivalencias.length == 0 ).length,
+          cursosSecundarios: construccion,
+          isValid: construccion.some( cursoConst => cursoConst.equivalencias.length > 0 )
+        },
+        secundariosManual: {
+          pendientes: cursosRenovados.filter( curso => curso.equivalencias.length == 0 ).length,
+          totalSecundarios: cursosRenovados.length,
+          cursosSecundarios: cursosRenovados,
+          isValid: cursosRenovados.some( cursoR => cursoR.equivalencias.length !== 0) && cursosRenovados.filter( curso => curso.equivalencias.length == 0 ).length == 0,
+  
+        },
+  
+      })
+      console.log( cursosRenovados.some( cursoR => cursoR.equivalencias.length !== 0) );
+    
+      console.log( this.connectionsColor );
+      this.formAsignarEquivalencia.patchValue({
+        asignacionEquivalencia: 0
+      })
+      if( this.cursoMallaEquivalenciaValidator().isFirstPlan && this.cursoMallaEquivalenciaValidator().primarios.isValid ) {
+        this.formAsignarEquivalencia.patchValue({
+          asignacionEquivalencia: 1
+        })
+        return
+      }
+
+      if( !this.cursoMallaEquivalenciaValidator().isFirstPlan && this.cursoMallaEquivalenciaValidator().secundariosManual.isValid ) {
+        this.formAsignarEquivalencia.patchValue({
+          asignacionEquivalencia: 1
+        });
+        return
+      }
+
+      resolve( true )
+    })
+
+  }
+
+  buscarEquivalenciasAutomaticas = () => {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 1500);
+    // setTimeout(() => {
+      if( this.connections.length < 1 ) {
+        this.addLine();
+        this.inicioFlechaSVG();
+        // this.asignarColores();
+
+      }
+      let predecesor: Malla[] = [];
+      let construccion: Malla[] = [];
+      // this.cursoMallaEquivalenciaValidator.update( validator => {
+  
+      //   this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
+      //     const cursos = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.idCurso == curso.idCurso )
+      //     cursos ? predecesor.push( cursos ) : '';
+      //     cursos ? construccion.push( curso ) : '';
+      //   })
+        
+      //   return {
+      //     ...validator,
+      //     secundariosAutomaticos: {
+      //       totalSecundarios: construccion.length,
+      //       pendientes: construccion.filter( cursoConst => cursoConst.equivalencias.length == 0 ).length,
+      //       cursosSecundarios: construccion,
+      //       isValid: construccion.some( cursoConst => cursoConst.equivalencias.length > 0 )
+      //     },
+      //     secundariosManual: {
+      //       totalSecundarios: construccion.length,
+            
+
+      //     }
+      //   }
+      // })
+
+      console.log( construccion );
+
+    // }, 1000);
   }
 
   obtenerCursoPlanEquivalenciaActual = () => {
@@ -379,6 +518,7 @@ export class PlanEstudioWizardComponent implements OnInit {
         this.showBtnActivarEdicion = this.cursosPlanEquivalenciaActual.length == 0 ? false : true;
         console.log( 'Plan Actual: ', cursosPlanEquivalencia );
         console.log('Plan estudio: ', this.planEstudioSelect().id);
+        
         
       }, error: ( error ) => {
         console.log( error );
@@ -578,7 +718,19 @@ export class PlanEstudioWizardComponent implements OnInit {
     //   }
     // });
 
-    this.EquivalenciaRepository.insertarEquivalenciaPrimarioMalla( this.cursosPrimariosMalla ).subscribe({
+    const cursosPrimarios: CursoMallaEquivalenciaPrimarioInsert[] = 
+      this.cursoMallaEquivalenciaValidator().primarios.cursosPrimarios.map( curso => {
+        return {
+          idMalla: curso.idMalla,
+          porcentajeModificacion: 0,
+          userId: parseInt( this.currentRol().id )
+        }
+      })
+    
+      // console.log( cursosPrimarios);
+      // return
+    this.EquivalenciaRepository.insertarEquivalenciaPrimarioMalla( cursosPrimarios ).subscribe({
+      // this.EquivalenciaRepository.insertarEquivalenciaPrimarioMalla( this.cursosPrimariosMalla ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('Los cursos primarios fueron guardados correctamente', 'success', 6);
@@ -680,21 +832,39 @@ export class PlanEstudioWizardComponent implements OnInit {
     console.log( event );
     // this.connections = [];
     if( event == 2 && this.connections.length == 0 ) {
-      // this.loading = true;
+
       console.log( )
       if( this.connections.length <= 0 ) {
         
+        let predecesor: Malla[] = [];
+        let construccion: Malla[] = [];
         setTimeout(() => {
           window.addEventListener('resize', this.redibujarFlechaXZoom.bind(this));
-          this.addLine();
-          this.asignarColores()
-          this.inicioFlechaSVG();
+          if( this.cursoMallaEquivalenciaValidator().primarios.isValid && !this.cursoMallaEquivalenciaValidator().isFirstPlan ) {
+            this.buscarEquivalenciasAutomaticas();
+          }
+          // this.addLine();
+          // this.inicioFlechaSVG();
+          // this.asignarColores()
+          // this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
+          //   const cursos = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.idCurso == curso.idCurso )
+          //   cursos ? predecesor.push( cursos ) : '';
+          //   cursos ? construccion.push( curso ) : '';
+          // })
 
+
+          // const cursosPrimarios = this.cursosMallaEquivalenciaActual.filter( curso => !construccion.includes(curso) && curso.modalidadDeCreacion !== 'POR RENOVACION' )
+
+          // console.log(predecesor, construccion);
+          // console.log( cursosPrimarios )
+       
         }, 800);
       }
     }
     
   }
+
+  
 
   guardarCursosSecundariosConfirm = () => {
 
@@ -730,10 +900,17 @@ export class PlanEstudioWizardComponent implements OnInit {
         console.log( data );
         this.alert.showAlert('Los cursos secundarios fueron guardados correctamente', 'success', 6);
         // this.obtenerCursoPlanEquivalenciaActual();
-        this.obtenerMallaEquivalenciaActual();
-        this.obtenerMallaEquivalenciaUltimo();
-        this.porcentajeModificacion = 0;
         this.connections = [];
+        this.connectionsColor = [];
+        this.obtenerMallaEquivalenciaUltimo();
+        this.obtenerMallaEquivalenciaActual().then( isComplete => {
+          if( !isComplete ) {
+            return
+          }
+          this.buscarEquivalenciasAutomaticas();
+        });
+        
+        this.porcentajeModificacion = 0;
       }, error: ( error ) => {
         console.log( error );
         this.alert.showAlert('Ocurrió un error al guardar los cursos secundarios', 'error', 6);
@@ -794,16 +971,23 @@ export class PlanEstudioWizardComponent implements OnInit {
   }
   
   eliminarEquivalencia = ( curso: CursoMallaEquivalenciaDelete[] ) => {
+    this.loading = true;
     this.EquivalenciaRepository.eliminarEquivalenciaMalla( curso ).subscribe({
       next: ( data ) => {
         console.log( data );
         this.alert.showAlert('La equivalencia fue eliminada correctamente', 'success', 6);
         // this.obtenerCursoPlanEquivalenciaActual();
-        this.loading = true;
-        this.obtenerMallaEquivalenciaActual();
+        this.connectionsColor = [];
         this.obtenerMallaEquivalenciaUltimo();
-        this.addLine();
-        this.loading = false;
+        this.obtenerMallaEquivalenciaActual().then( isComplete => {
+          if( !isComplete ) {
+            return
+          }
+          this.buscarEquivalenciasAutomaticas();
+          this.loading = false;
+
+        });
+        // this.addLine();
 
       }, error: ( error ) => {
         console.log( error );
@@ -929,13 +1113,13 @@ export class PlanEstudioWizardComponent implements OnInit {
     // this.equivalenciaSecundariasPendientes = this.cursosMallaEquivalenciaActual.filter( curso => curso.modalidadDeCreacion == 'POR RENOVACION' && curso.equivalencias.length == 0).length
       // this.equivalenciaSecundariasPendientes = curso.length
     this.cursosMallaEquivalenciaActual.forEach( (curso, index, { length }) => {
-        const cursoExiste = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.codigoCurso == curso.codigoCurso )
+        const cursoExiste = this.cursosMallaEquivalenciaUltimo.find( cursoUltimo => cursoUltimo.idCurso == curso.idCurso )
         if( cursoExiste ) {
           document.getElementById(`arrow-${curso.idMalla}-${cursoExiste.idMalla}`)?.remove();
           this.dibujarFlechasEntreCursos( curso.idMalla, cursoExiste.idMalla );
         }
         if( index == length - 1 ) {
-          this.loading = false;
+          // this.loading = false;
           console.log('terminó');
         }
     })
@@ -983,7 +1167,7 @@ export class PlanEstudioWizardComponent implements OnInit {
   equivalenciaSecundariasTotall: Malla[] = [];
 
   dibujarFlechasEntreCursos = ( right: number, left: number) => {
-
+    //this.connectionsColor.push({ leftCardId: left, rightCardId: right }); //DESCOMENTAR
     return new Promise<boolean>( resolve => {
 
       const equivalenciasIds = new Set<number>();
@@ -1037,6 +1221,8 @@ export class PlanEstudioWizardComponent implements OnInit {
       console.error('El contenedor de SVG no se encontró.');
       return; // Salir si el contenedor es null
     }
+      
+
     const containerRect = container.getBoundingClientRect();
     if (leftCardElement && rightCardElement) {
       const leftRect = leftCardElement.getBoundingClientRect();
@@ -1094,7 +1280,6 @@ export class PlanEstudioWizardComponent implements OnInit {
       this.selectedLeftCard = { ...this.setearCursoPlanEquivalencia };
       this.selectedRightCard = { ...this.setearCursoPlanEquivalencia };
       
-      this.connectionsColor.push({ leftCardId: left, rightCardId: right });
       if( isConvalidado !== -1 && this.cursosMallaEquivalenciaActual[isConvalidado].equivalencias.length > 0 ) {
         // this.alert.sweetAlert('info', '¿IMPORTANTE!', 'Este curso ya se encuentra convalidado')
         // document.getElementById(`arrow-${right}-${left}`)?.remove();
