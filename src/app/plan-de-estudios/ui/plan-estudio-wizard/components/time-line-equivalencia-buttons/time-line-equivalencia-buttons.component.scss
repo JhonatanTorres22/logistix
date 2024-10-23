@@ -1,0 +1,12 @@
+:host {
+    ::ng-deep .p-timeline.p-timeline-horizontal .p-timeline-event-connector {
+        width: 2px;
+    }
+    ::ng-deep .p-timeline .p-timeline-event-connector {
+        background-color: #e5e7eb;
+    }
+    
+    ::ng-deep .p-timeline-event-connector {
+        flex-grow: 1;
+    }
+}

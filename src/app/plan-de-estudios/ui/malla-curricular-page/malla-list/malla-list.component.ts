@@ -991,6 +991,7 @@ export class MallaListComponent  implements OnInit {
         this.modal.getRefModal().close('Eliminar');
         this.obtenerMalla(this.planEstudioSelect().id);
           this.obtenerMallaPreRequisitos();
+      
           
       }, error: ( error ) => {
         console.log( error )

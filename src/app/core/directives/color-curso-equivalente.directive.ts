@@ -1,4 +1,5 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { CursoMallaEquivalenciaValidator } from 'src/app/plan-de-estudios/domain/models/curso-plan.model';
 import { Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
 
 @Directive({
@@ -11,6 +12,8 @@ export class ColorCursoEquivalenteDirective implements OnInit {
 
   @Input() curso: Malla
   @Input() connectionsColor: { leftCardId: number, rightCardId: number }[] = [];
+  @Input() cursoMallaEquivalenciaValidator: CursoMallaEquivalenciaValidator;
+  @Input() enConstruccion: boolean = false;
 
   colores = [
     "#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF",
@@ -37,7 +40,7 @@ export class ColorCursoEquivalenteDirective implements OnInit {
     setTimeout(() => {
       this.assingColor()
       console.log( this.connectionsColor );
-    }, 2000);
+    }, 300);
     
   }
 
@@ -62,12 +65,33 @@ export class ColorCursoEquivalenteDirective implements OnInit {
   }
 
   getIcon( idMalla: number): string {
-    const index = this.connectionsColor.findIndex( equivalencia => 
-     ( equivalencia.leftCardId == idMalla ) || (equivalencia.rightCardId == idMalla )
-    )
-    // const icono = this.curso.equivalencias.length == 0 ? 'ti ti-clock' : 'ti ti-check'
-    // return index !== -1 ? icono + ' f-20 text-white border-circle' : icono + ' f-20 text-white border-circle';
-    return index !== -1 ? 'ti ti-check f-20 text-white border-circle' : 'ti ti-clock f-20 text-white border-circle';
+    console.log( this.curso.equivalencias.length );
+    console.log( this.cursoMallaEquivalenciaValidator );
+    
+    if( this.cursoMallaEquivalenciaValidator?.isFirstPlan ) {
+      return this.curso.equivalencias.length > 0 && this.cursoMallaEquivalenciaValidator.primarios.pendientes == 0 ? 'ti ti-check f-20 text-white border-circle' : 'ti ti-clock f-20 text-white border-circle';
+    }
+
+    if( !this.enConstruccion ) {
+      const index = this.connectionsColor.findIndex(convalidacion => 
+        (convalidacion.rightCardId === idMalla)
+      );
+      return index !== -1 ? 'ti ti-check f-20 text-white border-circle' : this.curso.estado == 'DESFASADO' ? 'ti ti-x f-20 text-white border-circle' : 'ti ti-clock f-20 text-white border-circle';
+    }
+
+    if( this.curso.equivalencias.length > 0 && this.enConstruccion ) {
+
+      return  'ti ti-check f-20 text-white border-circle';
+    }
+
+    else {
+      const index = this.connectionsColor.findIndex( equivalencia => 
+        ( equivalencia.leftCardId == idMalla ) || (equivalencia.rightCardId == idMalla && this.curso.equivalencias.length > 0 )
+       )
+       // const icono = this.curso.equivalencias.length == 0 ? 'ti ti-clock' : 'ti ti-check'
+       // return index !== -1 ? icono + ' f-20 text-white border-circle' : icono + ' f-20 text-white border-circle';
+       return index !== -1 ? 'ti ti-check f-20 text-white border-circle' : 'ti ti-clock f-20 text-white border-circle';
+    }
   }
 
 

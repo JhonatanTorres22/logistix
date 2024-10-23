@@ -13,6 +13,7 @@ import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal
 import { read, utils } from 'xlsx';
 import { PlanEstudioCardComponent } from '../../plan-estudio-card/plan-estudio-card.component';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
 
 @Component({
   selector: 'curso-import-template',
@@ -23,7 +24,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
     UiButtonComponent,
     UiUploaderFilesComponent,
     PlanEstudioCardComponent,
-
+    UiLoadingProgressBarComponent,
   ],
   templateUrl: './curso-import-template.component.html',
   styleUrl: './curso-import-template.component.scss'

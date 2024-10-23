@@ -25,7 +25,8 @@ export class ColorCursoSecundarioDirective implements OnInit {
   ];
 
   @Input() curso: Malla;
-  @Input() cursos: Malla[]
+  @Input() cursos: Malla[];
+  @Input() connectionsColor: { leftCardId: number, rightCardId: number }[] = [];
 
   constructor( private element: ElementRef ) {
     
@@ -40,6 +41,8 @@ export class ColorCursoSecundarioDirective implements OnInit {
     this.aplicarColor();
     
   }
+
+  
 
   aplicarColor = () => {
 
@@ -90,5 +93,10 @@ export class ColorCursoSecundarioDirective implements OnInit {
       }
   });
   }
+
+
+
+
+
 
 }
