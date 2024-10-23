@@ -1,0 +1,26 @@
+<ui-button color="primary" (click)="exportarPdf()">Exportar PDF</ui-button>
+
+<mat-drawer #previewPDFSimulacion position="end" mode="over" class="kanban-drawer">
+    <div class="header-title">
+        <div class="kanban-header-title">
+          <div class="flex align-item-center">
+            <h4>{{ 'SIMULACIÓN DE ANÁLISIS DE EQUIVALENCIAS' }}</h4>
+          </div>
+          <div class="flex align-item-center hei-10">
+            <button mat-icon-button  class="modal-close"(click)="cerrar()">
+              <i class="ti ti-x f-20 "></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+      <ng-scrollbar style="height: calc(100vh)" visibility="hover">
+        <div class="p-2">
+          <iframe id="pdfViewer" class="pt-3 border-none" style="width: 100%; height: 30rem;"></iframe>
+        </div>
+      </ng-scrollbar>
+      <!-- <div class="flex justify-content-end pr-3">
+        <ui-button class="z-0" color="blue" icon="ti ti-save f-16"(onClick)="finalizarProceso()">Finalizar y Responder Mensaje</ui-button>
+      </div> -->
+</mat-drawer>

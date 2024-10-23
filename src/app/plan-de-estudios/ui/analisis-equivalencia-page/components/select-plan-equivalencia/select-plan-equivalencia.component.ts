@@ -11,6 +11,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { Malla } from 'src/app/plan-de-estudios/domain/models/malla.model';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
+import { ExportarPdfAnalisisEquivalenciaComponent } from '../exportar-pdf-analisis-equivalencia/exportar-pdf-analisis-equivalencia.component';
+import { MallaSignal } from 'src/app/plan-de-estudios/domain/signal/malla.signal';
 
 @Component({
   selector: 'select-plan-equivalencia',
@@ -20,6 +22,7 @@ import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-e
     SharedModule,
     UiSelectComponent,
     ListCursosEquivalenciaComponent,
+    ExportarPdfAnalisisEquivalenciaComponent
    ],
   templateUrl: './select-plan-equivalencia.component.html',
   styleUrl: './select-plan-equivalencia.component.scss'
@@ -41,7 +44,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
   planSeleccionado: UiSelect = { value: '', text: '', disabled: false };
   cursosMalla: Malla[] = [];
   cursosMallaDestino: Malla[] = [];
-
+  cursosMallaPreRequisito = this.mallaSignal.cursosMallaPreRequisito
 
   planOrigen: UiSelect[] = [
     { value: '1', text: 'Plan 1', disabled: false },
@@ -59,6 +62,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private mallaSignal: MallaSignal,
     private repository: MallaRepository,
     private alert: AlertService,
     private planSignal: PlanEstudioSignal
@@ -104,6 +108,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
         this.origen ? this.planEstudioOrigenSelect.set(value) : this.planEstudioDestinoSelect.set(value);
         this.alert.showAlert(`Listando cursos del plan ${ value.text }`, 'success');
         this.cursosMalla = malla.sort( ( a, b) => a.cicloNumero - b.cicloNumero);;
+        this.cursosMallaPreRequisito.set(this.cursosMalla)
       }, error: (error) => {
         console.error(error);
         this.alert.showAlert(`Ocurrió un error al obtener los cursos del plan ${ value.text }`, 'error');
@@ -120,6 +125,7 @@ export class SelectPlanEquivalenciaComponent implements OnDestroy {
         this.origen ? this.planEstudioOrigenSelect.set(value) : this.planEstudioDestinoSelect.set(value);
         this.alert.showAlert(`Listando cursos del plan ${ value.text }`, 'success');
         this.cursosMalla = malla.sort( ( a, b) => a.cicloNumero - b.cicloNumero);
+        this.cursosMallaPreRequisito.set(this.cursosMalla)
       }, error: (error) => {
         console.error(error);
         this.alert.showAlert(`Ocurrió un error al obtener los cursos del plan ${ value.text }`, 'error');

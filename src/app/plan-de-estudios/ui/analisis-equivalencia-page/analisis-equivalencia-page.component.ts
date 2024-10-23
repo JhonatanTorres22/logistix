@@ -10,6 +10,8 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 import { parse } from 'date-fns';
 import { fa } from '@faker-js/faker';
 import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.component';
+import { ExportarPdfAnalisisEquivalenciaComponent } from './components/exportar-pdf-analisis-equivalencia/exportar-pdf-analisis-equivalencia.component';
+import { MallaSignal } from '../../domain/signal/malla.signal';
 
 @Component({
   selector: 'analisis-equivalencia-page',
@@ -20,6 +22,7 @@ import { UiAlertComponent } from 'src/app/core/components/ui-alert/ui-alert.comp
     SelectPlanEquivalenciaComponent,
     UiButtonComponent,
     UiAlertComponent,
+    ExportarPdfAnalisisEquivalenciaComponent
   ],
   templateUrl: './analisis-equivalencia-page.component.html',
   styleUrl: './analisis-equivalencia-page.component.scss'
@@ -34,11 +37,13 @@ export class AnalisisEquivalenciaPageComponent implements OnInit {
   planEstudioOrigenSelect = this.planSignal.planEstudioOrigenSelect;
   planEstudioDestinoSelect = this.planSignal.planEstudioDestinoSelect;
   planEstudioSelect = this.planSignal.planEstudioSelect;
-
+  cursosMallaPreRequisito = this.mallaSignal.cursosMallaPreRequisito
   convalidacion = this.planSignal.convalidacion;
   modoResumen = this.planSignal.modoResumen;
+  mostrarBotonExportarPDF: boolean = false
 
   constructor(
+    private mallaSignal: MallaSignal,
     private planSignal: PlanEstudioSignal,
     private equivalenciaRepository: EquivalenciaRepository,
     private alert: AlertService
@@ -114,6 +119,7 @@ export class AnalisisEquivalenciaPageComponent implements OnInit {
         //     porcentajeModificacion: 31,
         //   }
         // ])
+        this.mostrarBotonExportarPDF = true;
       }, error: (error) => {
         console.log(error);
         this.alert.showAlert('Ocurrió un error al simular la equivalencia', 'error');
