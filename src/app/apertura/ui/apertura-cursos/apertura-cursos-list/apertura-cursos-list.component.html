@@ -1,0 +1,74 @@
+@if((listaCursosAperturados().length > 0)){
+<ui-button color="primary" (onClick)="listarCursosPlanEstudio(agregarCursosPlanEstudio)"> Agregar Curso </ui-button>
+}
+@if(!loading){
+
+@if (listaCursosAperturados().length === 0) {
+<div
+    class="flex gap-2 border-round border-1 border-dashed bg-gray-100 w-full h-15rem justify-content-center align-items-center border-gray-400 hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500">
+    <h5 class="text-center absolute mt-8 pt-4 f-14 font-italic">No hay cursos aperturados, haga click en el botón para
+        seleccionar los cursos que desea aperturar en el semestre</h5>
+    <span class="boton-parpadeante bg-blue-500 h-3rem w-10rem border-round absolute"></span>
+    <ui-button color="blue" icon="ti ti-save f-16"
+        (onClick)="listarCursosPlanEstudio(agregarCursosPlanEstudio)">Aperturar Cursos</ui-button>
+</div>
+}@else {
+
+<div class="col-1 text-center">
+
+    <div class="flex justify-content-start gap-4 px-4">
+        @for (cursoGrupo of listaCursosAperturados(); track $index) {
+        <div class="m-2">
+            <div class="bg-bluegray-900 text-white border-round py-1 mb-2 w-full text-center">
+                Ciclo {{ cursoGrupo.cursos[0].definicionCiclo }}
+            </div>
+            <div class="flex flex-column align-items-center gap-2">
+                @for (curso of cursoGrupo.cursos; track curso) {
+                <div [cdkContextMenuTriggerFor]="options" class="col-12" (auxclick)="openOptions($event, curso)">
+                    <div class="flex flex-column gap-2 example-list align-items-center">
+                        <div class="text-black f-8 border-1 border-round w-full h-5rem align-content-center font-semibold px-1 border-dashed shadow-2 border-gray-400 text-center"
+                            [style.backgroundColor]="getColorPorPlan(curso.idPlanDeEstudio)">
+                            <div>{{ curso.nombreCurso }}</div>
+                            <div class="font-normal text-gray-800">{{ curso.codigoInternoCurso }}</div>
+                            @if( curso.nSecciones == 0 ){
+                            <mat-icon (click)="listarSeccion(listarSecciones, curso)"
+                                class="bg-green-200 border-round text-green-700">add</mat-icon>
+                            }@else {
+                            <button (click)="listarSeccion(listarSecciones, curso)" mat-stroked-button
+                                class="bg-green-200 border-round"> {{curso.nSecciones}} </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+}
+} @else {
+
+<ui-loading-progress-bar></ui-loading-progress-bar>
+
+}
+
+
+<ng-template #agregarCursosPlanEstudio>
+    <apertura-cursos-add></apertura-cursos-add>
+</ng-template>
+
+<ng-template #listarSecciones let-data>
+    <mat-dialog-content class="max-h-30rem">
+        <app-secciones-list></app-secciones-list>
+    </mat-dialog-content>
+</ng-template>
+
+<ng-template #options>
+    <div class="example-menu border-1 border-gray-300" cdkMenu (blur)="console.log($event)">
+        <button (click)="eliminarConfirm()" class="example-menu-item" cdkMenuItem><i
+                class="ti ti-trash f-16 pr-2 text-red-700"></i>Eliminar</button>
+        <mat-divider></mat-divider>
+    </div>
+</ng-template>

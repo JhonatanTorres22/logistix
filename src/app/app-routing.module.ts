@@ -54,6 +54,11 @@ const routes: Routes = [
       }, {
         path: 'panel-de-control',
         loadChildren: () => import('./panel-de-control/panel-de-control.module').then( (m) => m.PanelDeControlModule )
+      },
+      {
+        path: 'apertura',
+        loadChildren: () => import('./apertura/apertura.module').then( (m) => m.AperturaModule ),
+        
       }
     ]
   },

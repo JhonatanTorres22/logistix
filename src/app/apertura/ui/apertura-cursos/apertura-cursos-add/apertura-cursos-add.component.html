@@ -1,0 +1,75 @@
+<!-- <pre>{{ cursosSeleccionados | json}}</pre> -->
+ <!-- {{  listaCursosAperturados() | json}} -->
+    <!-- {{ mallaPorCiclo() | json }} -->
+<mat-card class="flex justify-content-start m-3" >
+    <div class="m-3">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Seleccionar Ciclo</mat-label>
+            <mat-select (selectionChange)="cicloChange($event)">
+                @for (ciclo of listarCiclo(); track ciclo) {
+                <mat-option [value]="ciclo.id">
+                    CICLO {{ ciclo.cicloNumero }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <mat-card-content class="flex flex-wrap gap-2" style="max-height: 400px; overflow-y: auto;">
+        @if (cicloSeleccionado == undefined) {
+            <div class="text-red-700 bg-red-100 border-round font-bold m-2">
+                <span class="m-2">DEBE SELECCIONAR UN CICLO PARA ESCOGER LOS CURSOS QUE DESEA APERTURAR</span>
+            </div>
+        }
+        @else {
+            @for (plan of mallaPorCiclo(); track $index) {
+                <mat-card>
+                    <mat-card-content class="max-w-14rem">
+                        <div class="text-xs font-medium bg-blue-200 text-blue-700 text-center border-round mb-1">
+                            {{ plan.resolucionPlanDeEstudio }}
+                        </div>
+                        <div class="text-xs font-medium bg-green-200 text-green-700 text-center border-round mb-1">{{
+                            plan.fechaInicio | date: 'dd/MM/yyyy' }} - {{ plan.fechaInicio | date: 'dd/MM/yyyy' }}</div>
+                        <div class="col-12">
+                            
+                            <div class="surface-300 border-round m-2 font-bold">
+                                <mat-checkbox [checked]="isCicloSelected(plan.idPlanDeEstudio)"
+                                    [disabled]="deshabilitarMarcarCiclo() && !isCicloSelected(plan.idPlanDeEstudio)"
+                                    (change)="cicloMarcado(plan, $event.checked)" class="ml-2">
+                                </mat-checkbox>
+                                <span class="text-xs">CICLO {{ cicloSeleccionado?.definicion }}</span>
+                            </div>
+        
+                            @for ( curso of plan.cursos; track curso) {
+                            <div class="col-11 flex flex-row -mb-2">
+                                <div
+                                    class="text-black f-8 border-1 border-round w-full h-3rem align-content-center font-semibold px-1 border-dashed shadow-2 border-gray-400 text-center">
+                                    <div class="flex">
+                                        <mat-checkbox [checked]="marcarCurso(curso.idMalla)"
+                                        [disabled]="isCursoSeleccionado(curso)"
+                                            (change)="cursoSeleccionado(curso, $event.checked)"
+                                            class="flex align-items-start mr-2">
+                                        </mat-checkbox>
+                                        <div>
+                                            <div>{{ curso.nombreCurso }}</div>
+                                            <div class="font-normal text-gray-800">{{ curso.codigoInterno }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            @if (plan.cursos.length === 0) {
+                            <div>No hay cursos disponibles.</div>
+                            }
+                         
+                        </div>
+        
+                    </mat-card-content>
+                </mat-card>
+                }
+        }
+    </mat-card-content>
+    <mat-dialog-actions align="end">
+        <ui-button color="primary" label="Guardar" [disabled]="cursosSeleccionados.length == 0" mat-dialog-close="guardar" class="m-r-10" (onClick)="onSubmit()"></ui-button>
+        <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    </mat-dialog-actions>
+</mat-card>

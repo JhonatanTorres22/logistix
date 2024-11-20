@@ -1,0 +1,18 @@
+.mat-select-value {
+    display: none;
+  }
+  
+  /* Para asegurarse de que los chips se sigan mostrando */
+  .mat-select-panel {
+    display: none !important;
+  }
+
+  .activo {
+    background-color: green !important; /* Verde cuando está activo */
+    color: white;
+  }
+  
+  .inactivo {
+    background-color: red !important; /* Rojo cuando está inactivo */
+    color: white;
+  }

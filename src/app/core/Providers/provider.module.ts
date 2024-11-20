@@ -38,6 +38,13 @@ import { PreRequisitoRepository } from "src/app/plan-de-estudios/domain/reposito
 import { PreRequisitoRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/pre-requisito.repository.impl";
 import { MallaRepository } from "src/app/plan-de-estudios/domain/repositories/malla.repository";
 import { MallaRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/repositories/malla.repository.impl";
+import { MallaPorCicloRepository } from "src/app/apertura/domain/repositories/malla-por-ciclo.repository";
+import { MallaPorCicloImpl } from "src/app/apertura/infraestructure/repositories/malla-por-ciclo.repository.impl";
+import { AperturaCursoRepository } from "src/app/apertura/domain/repositories/apertura-curso.repository";
+import { AperturaCursoRepositoryImpl } from "src/app/apertura/infraestructure/repositories/apertura-curso.repository.impl";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { AperturaSeccionRepository } from "src/app/apertura/domain/repositories/apertura-secciones.repository";
+import { AperturaSeccionRespositoryImpl } from "src/app/apertura/infraestructure/repositories/apertura-seccion.repository.impl";
 
 
 
@@ -67,8 +74,10 @@ import { MallaRepositoryImpl } from "src/app/plan-de-estudios/infraestructure/re
             { provide: CursoPlanRepository, useClass: CursoPlanRepositoryImpl },
             { provide: EquivalenciaRepository, useClass: EquivalenciaRepositoryImpl },
             { provide: PreRequisitoRepository, useClass: PreRequisitoRepositoryImpl },
-            { provide: MallaRepository, useClass: MallaRepositoryImpl }
-
+            { provide: MallaRepository, useClass: MallaRepositoryImpl },
+            {provide: MallaPorCicloRepository, useClass: MallaPorCicloImpl},
+            {provide: AperturaCursoRepository, useClass: AperturaCursoRepositoryImpl},
+            {provide: AperturaSeccionRepository, useClass: AperturaSeccionRespositoryImpl}
         ]
     ]
 })
