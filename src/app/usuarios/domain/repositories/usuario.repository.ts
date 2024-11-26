@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { Usuario } from "../models/usuario.model";
+import { Usuario, UsuarioCrearMasivo } from "../models/usuario.model";
 
 
 
@@ -9,4 +9,5 @@ export abstract class UsuarioRepository {
     abstract editarUsuario( usuario: Usuario): Observable<void>;
     abstract eliminarUsuario( idUsuario: number): Observable<void>;
     abstract buscarNumeroDocumento( numeroDocumento: number ):Observable<Usuario>;
+    abstract agregarUsuarioMasivo( agregarUsuario: UsuarioCrearMasivo[] ): Observable<void>
 }

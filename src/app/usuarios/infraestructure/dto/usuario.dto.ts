@@ -25,3 +25,8 @@ export interface UsuarioDataDTO {
 }
 
 export type UsuarioCrearDTO  = Omit<UsuarioDTO, 'codigo'>
+
+export type UsuarioCrearMaivoDTO = Omit<UsuarioDTO, 'codigo' | 'nCelular'> & {
+    codigoRol: number,
+    nCelular:string
+}

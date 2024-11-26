@@ -45,6 +45,12 @@ import { AperturaCursoRepositoryImpl } from "src/app/apertura/infraestructure/re
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { AperturaSeccionRepository } from "src/app/apertura/domain/repositories/apertura-secciones.repository";
 import { AperturaSeccionRespositoryImpl } from "src/app/apertura/infraestructure/repositories/apertura-seccion.repository.impl";
+import { AperturaAmbienteRepository } from "src/app/apertura/domain/repositories/apertura-ambiente.repository";
+import { AperturaAmbienteRespositoryImpl } from "src/app/apertura/infraestructure/repositories/apertura-ambiente.repository.impl";
+import { AperturaDocenteRepositoryImpl } from "src/app/apertura/infraestructure/repositories/docente.repository.impl";
+import { RolRepository } from "src/app/roles/domain/repositories/rol.repository";
+import { RolRepositoryImpl } from "src/app/roles/infraestucture/repositories/rol.repository.imp";
+import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura-docente.repository";
 
 
 
@@ -77,7 +83,10 @@ import { AperturaSeccionRespositoryImpl } from "src/app/apertura/infraestructure
             { provide: MallaRepository, useClass: MallaRepositoryImpl },
             {provide: MallaPorCicloRepository, useClass: MallaPorCicloImpl},
             {provide: AperturaCursoRepository, useClass: AperturaCursoRepositoryImpl},
-            {provide: AperturaSeccionRepository, useClass: AperturaSeccionRespositoryImpl}
+            {provide: AperturaSeccionRepository, useClass: AperturaSeccionRespositoryImpl},
+            {provide: AperturaAmbienteRepository, useClass: AperturaAmbienteRespositoryImpl},
+            {provide: DocenteRepository, useClass: AperturaDocenteRepositoryImpl},
+            {provide: RolRepository, useClass: RolRepositoryImpl}
         ]
     ]
 })

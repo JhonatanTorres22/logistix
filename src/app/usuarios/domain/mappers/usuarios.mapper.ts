@@ -1,6 +1,6 @@
 import { AuthDomainService } from "src/app/auth/domain/services/auth-domain.service";
-import { UsuarioCrearDTO, UsuarioDTO } from "../../infraestructure/dto/usuario.dto";
-import { Usuario, UsuarioCrear } from "../models/usuario.model";
+import { UsuarioCrearDTO, UsuarioCrearMaivoDTO, UsuarioDTO } from "../../infraestructure/dto/usuario.dto";
+import { Usuario, UsuarioCrear, UsuarioCrearMasivo } from "../models/usuario.model";
 import { UsuarioRol } from "../models/usuario-rol.model";
 import { WritableSignal } from "@angular/core";
 import { Rol } from "src/app/roles/domain/models/rol.model";
@@ -63,6 +63,25 @@ export class UsuarioMapper {
             foto: param.imagenPerfil,
             usuario: param.usuarioId
      
+        }
+    }
+
+    static fromDomainToApiCrearMasivo ( param : UsuarioCrearMasivo ) : UsuarioCrearMaivoDTO {
+        return {
+            nombres : param.nombres,
+            apPaterno : param.apellidoPaterno,
+            apMaterno: param.apellidoMaterno,
+            sexo: param.sexo,
+            correoInstitucional: param.correoInstitucional,
+            correoPersonal: param.correoPersonal,
+            fechaDeNac: param.fechaNacimiento,
+            codigoRol: param.idRol,
+            documento: param.tipoDocumento,
+            nDocumento: param.numeroDocumento,
+            foto: param.imagenPerfil,
+            nCelular: param.celular,
+            usuario: param.usuarioId
+
         }
     }
 

@@ -94,7 +94,6 @@ export class PlanEstudioCardComponent {
   }
 
   showFormEdit = ( plan: PlanEstudio, template: TemplateRef<any>, tipo: string ) => {
-
     this.planEstudioEdit.set( plan );
     console.log(this.planEstudioEdit());
     

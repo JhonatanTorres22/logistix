@@ -1,5 +1,6 @@
 
   <!-- <pre>{{ file() | json }}</pre> -->
+   {{ cursosImportExcel() | json }}
   @if( !loadingImport() ) {
 
     @if (  file().files.length == 0 ) {

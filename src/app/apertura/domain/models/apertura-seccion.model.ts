@@ -5,11 +5,11 @@ export class ListarSecciones{
        public discapacidad: boolean,
        public nVacantes: number,
        public detalleObservacion: string,
-       public ambiente: ListarAmbienteSeccion[]
+       public ambiente: ListarTipoAmbienteSeccion[]
     ){}
     
 }
-export interface ListarAmbienteSeccion{
+export interface ListarTipoAmbienteSeccion{
     idTipoAmbiente: number,
     nombreTipoAmbiente: string,
     nombreFormato: string,

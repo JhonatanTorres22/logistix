@@ -1,0 +1,72 @@
+<!-- <mat-card>
+    {{ seleccionarDocente() | json }}
+    <mat-card-content>
+        <div class="flex gap-2 border-round border-1 border-dashed bg-gray-100 w-50 h-15rem justify-content-center align-items-center border-gray-400 hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500">
+    </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+        <ui-button color="primary" icon="ti ti-pencil f-16" tooltip="Editar Docente" class="mr-10"></ui-button>
+        <ui-button color="red" icon="ti ti-trash f-16" tooltip="Eliminar Docente" class="mr-10"></ui-button>
+    </mat-card-actions>
+</mat-card> -->
+<app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full mb-4">
+    <ng-template #headerTitleTemplate>
+        <div class="block pb-2">
+          <div>Información del docente</div>
+        </div>
+          <div class="flex justify-content-end gap-2">
+            <ui-button color="primary" icon="ti ti-edit" matTooltip="Editar Docente"></ui-button>
+            <ui-button color="red" icon="ti ti-trash" matTooltip="Eliminar Docente"></ui-button>
+          </div>
+      </ng-template>
+
+      <div class="flex col-12 gap-4">
+        <div class="col-6 gap-2 border-round border-1 border-dashed bg-gray-100 border-gray-400">
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Tipo de Documento: </span></div>
+                <span> {{ seleccionarDocente().tipoDeDocumento }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Número de Documento </span></div>
+                <span> {{ seleccionarDocente().numeroDocumento }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-auto bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Correo Institucional </span></div>
+                <span> {{ seleccionarDocente().correoInstitucional }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-auto bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Correo Personal </span></div>
+                <span> {{ seleccionarDocente().correoPersona }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Celular </span></div>
+                <span> {{ seleccionarDocente().numeroCelular }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-blue-200 text-blue-700 font-bold border-round"> <span class="m-2"> Fecha de Nacimiento </span></div>
+                <span> {{ seleccionarDocente().fechaNacimiento | date:'MM/dd/yyyy' }} </span>
+            </div>
+        </div>
+        <!-- <div class="col-1"></div> -->
+        <div class="col-5 gap-2 border-round border-1 border-dashed bg-gray-100 border-gray-400">
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-red-200 text-red-700 font-bold border-round"> <span class="m-2"> Codigo Docente: </span></div>
+                <span> {{ seleccionarDocente().codigoInterno }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-auto bg-red-200 text-red-700 font-bold border-round"> <span class="m-2"> Primer Grado </span></div>
+                <span> {{ seleccionarDocente().grado1 }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-auto bg-red-200 text-red-700 font-bold border-round"> <span class="m-2"> Segundo Grado </span></div>
+                <span> {{ seleccionarDocente().grado2 }} </span>
+            </div>
+            <div class="flex gap-2 mb-2 justify-content-between">
+                <div class="h-2rem bg-red-200 text-red-700 font-bold border-round"> <span class="m-2"> Discapacidad </span></div>
+                <span> {{ seleccionarDocente().discapacidad ? 'SI' : 'NO' }} </span>
+            </div>
+        </div>
+
+      </div>
+</app-card>

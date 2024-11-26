@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CardComponent } from 'src/app/@theme/components/card/card.component';
-import { EliminarSeccion, ListarAmbienteSeccion, ListarSecciones } from 'src/app/apertura/domain/models/apertura-seccion.model';
+import { EliminarSeccion, ListarTipoAmbienteSeccion, ListarSecciones } from 'src/app/apertura/domain/models/apertura-seccion.model';
 import { AperturaSeccionRepository } from 'src/app/apertura/domain/repositories/apertura-secciones.repository';
 import { AperturaSeccionesSignal } from 'src/app/apertura/domain/signal/apertura-secciones.signal';
 import { CursoAperturadoSignal } from 'src/app/apertura/domain/signal/curso-aperturado.signal';

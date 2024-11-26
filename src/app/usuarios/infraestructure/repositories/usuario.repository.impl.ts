@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { UsuarioRepository } from "../../domain/repositories/usuario.repository";
 import { UsuarioService } from "../services/usuario.service";
 import { Observable } from "rxjs";
-import { Usuario } from "../../domain/models/usuario.model";
+import { Usuario, UsuarioCrearMasivo } from "../../domain/models/usuario.model";
 
 
 @Injectable({
@@ -31,5 +31,8 @@ export class UsuarioRepositoryImpl implements UsuarioRepository {
 
     buscarNumeroDocumento = (numeroDocumento: number): Observable<Usuario> => {
         return this.usuarioService.buscarNumeroDocumento( numeroDocumento );
+    }
+     agregarUsuarioMasivo(agregarUsuario: UsuarioCrearMasivo[]): Observable<void> {
+        return this.usuarioService.agregarUsaurioMasivo(agregarUsuario)
     }
 }

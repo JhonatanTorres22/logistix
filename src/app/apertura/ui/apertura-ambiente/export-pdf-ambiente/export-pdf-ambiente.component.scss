@@ -1,0 +1,33 @@
+::ng-deep.mat-drawer.kanban-drawer {
+    z-index: 1025;
+    width: calc(100% - 280px);
+    position: fixed;
+  
+    @media (max-width: 576px) {
+      width: 320px;
+    }
+  
+    .header-title {
+      padding: 25px 0px 25px 25px;
+  
+      ::ng-deep.able-pro-rtl & {
+        padding: 25px 25px 25px 0px;
+      }
+  
+      .kanban-header-title {
+        display: flex;
+        margin-left: -4px;
+        align-items: center;
+        justify-content: space-between;
+      }
+  
+      h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 1.25rem;
+        font-weight: 600;
+        width: calc(100% );
+        margin: 0px;
+      }
+    }
+  }

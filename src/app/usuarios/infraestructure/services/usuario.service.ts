@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Usuario, UsuarioCrear } from "../../domain/models/usuario.model";
+import { Usuario, UsuarioCrear, UsuarioCrearMasivo } from "../../domain/models/usuario.model";
 import { UsuarioDTO, UsuarioDataDTO, UsuarioDatasDTO } from "../dto/usuario.dto";
 
 import { UsuarioMapper } from "../../domain/mappers/usuarios.mapper";
@@ -22,6 +22,8 @@ export class UsuarioService {
     private urlEliminarUsuario: string;
     private urlBuscarPorNumeroDocumento: string;
 
+    private urlAgregarUsuarioMasivo : string 
+
     constructor( private http: HttpClient) {
         this.urlApi = environment.EndPoint;
         this.urlObtenerUsuarios = 'api/Usuario/ListarTodo';
@@ -29,6 +31,7 @@ export class UsuarioService {
         this.urlEditarUsuario = 'api/Usuario/Actualizar';
         this.urlEliminarUsuario = 'api/Usuario/Eliminar';
         this.urlBuscarPorNumeroDocumento = 'api/Usuario/Listar/';
+        this.urlAgregarUsuarioMasivo = 'api/Usuario/InsertarUsuarioRol';
 
     }
 
@@ -58,6 +61,11 @@ export class UsuarioService {
     buscarNumeroDocumento = ( numeroDocumento: number ): Observable<Usuario> => {
         return this.http.get<UsuarioDataDTO>(this.urlApi + this.urlBuscarPorNumeroDocumento + numeroDocumento )
             .pipe( map( ( apiUsuario ) => ( UsuarioMapper.formApiToDomain(apiUsuario.data))))
+    }
+
+    agregarUsaurioMasivo = ( agregarUsuario: UsuarioCrearMasivo[] ): Observable<void> => {
+        const agregarUsuarioAPI = agregarUsuario.map(UsuarioMapper.fromDomainToApiCrearMasivo)
+        return this.http.post<void>(this.urlApi + this.urlAgregarUsuarioMasivo, agregarUsuarioAPI)
     }
 
 

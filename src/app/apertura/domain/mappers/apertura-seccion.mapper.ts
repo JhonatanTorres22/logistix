@@ -1,5 +1,5 @@
 import { AgregarSeccionDTO, AgregarTipoAmbienteASeccionDTO, EditarSeccionDTO, EliminarSeccionDTO, EliminarTipoAmbienteDTO, ListarAmbienteSeccionDTO, ListarFormatoDTO, ListarSeccionesDTO, ListarTipoAmbienteDTO } from "../../infraestructure/dto/apertura-seccion.dto";
-import { AgregarSeccion, AgregarTipoAmbienteASeccion, EditarSeccion, EliminarSeccion, EliminarTipoAmbiente, ListarAmbienteSeccion, ListarFormato, ListarSecciones, ListarTipoAmbiente } from "../models/apertura-seccion.model";
+import { AgregarSeccion, AgregarTipoAmbienteASeccion, EditarSeccion, EliminarSeccion, EliminarTipoAmbiente, ListarTipoAmbienteSeccion, ListarFormato, ListarSecciones, ListarTipoAmbiente } from "../models/apertura-seccion.model";
 
 export class AperturaSeccionMapper {
     static fromApiToDomain( param: ListarSeccionesDTO ): ListarSecciones {
@@ -14,7 +14,7 @@ export class AperturaSeccionMapper {
         }
     }
 
-    static fromApiToDomainAmbienteSeccion ( param:  ListarAmbienteSeccionDTO) : ListarAmbienteSeccion {
+    static fromApiToDomainAmbienteSeccion ( param:  ListarAmbienteSeccionDTO) : ListarTipoAmbienteSeccion {
         return{
             idTipoAmbiente: param.codigoAmbienteTipo,
             cantidadGrupos: param.nGrupos,

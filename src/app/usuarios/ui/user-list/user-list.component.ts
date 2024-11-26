@@ -3,10 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Usuario } from 'src/app/usuarios/domain/models/usuario.model';
+import { UsuarioCrearMasivo, Usuario, UsuarioCrear } from 'src/app/usuarios/domain/models/usuario.model';
 import { UsuarioRepository } from 'src/app/usuarios/domain/repositories/usuario.repository';
 
-import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { UserAddComponent } from '../user-add/user-add.component';
 import { CustomerDetailsComponent } from 'src/app/demo/pages/application/customer-list/customer-details/customer-details.component';
@@ -20,6 +19,17 @@ import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { User } from 'src/app/@theme/types/user';
 import { UserRolComponent } from '../user-rol/user-rol.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { UserImportTemplateComponent } from '../user-import-template/user-import-template.component';
+import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.component';
+import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
+import { SharedModule } from 'src/app/demo/shared/shared.module';
+import Swal from 'sweetalert2';
+import { AlertService } from 'src/app/demo/services/alert.service';
+import { UsuarioSignal } from '../../domain/signals/usuario.signal';
+import { Rol } from 'src/app/roles/domain/models/rol.model';
+import { MatSelectChange } from '@angular/material/select';
+import { RolRepository } from 'src/app/roles/domain/repositories/rol.repository';
+import { UsuarioRolSignal } from '../../domain/signals/usuario-rol.signal';
 
 export interface PeriodicElement {
   id: number;
@@ -36,11 +46,15 @@ export interface PeriodicElement {
 @Component({
   selector: 'user-list',
   standalone: true,
-  imports: [CommonModule, SharedModule, UserRolComponent],
+  imports: [CommonModule, SharedModule, UserRolComponent,UserImportTemplateComponent, UiButtonComponent],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent {
+  loadingImportUser = this.usuarioSignal.loadingImportUser
+  roles = this.signalRol.roles;
+  userImportExcel = this.usuarioSignal.userImportExcel
+  file = this.mensajeriaSignal.file;
   @ViewChild('userRol') userRol: TemplateRef<any>;
   currentRol = this.authSignal.currentRol;
   usuarios: Usuario[] = [];
@@ -66,6 +80,11 @@ export class UserListComponent {
   }
 
   constructor(
+    private signalRol: UsuarioRolSignal,
+    private rolRepository: RolRepository,
+    private usuarioSignal: UsuarioSignal,
+    private alertaService:AlertService,
+    private mensajeriaSignal: MensajeriaSignal,
     private authSignal: AuthSignal,
     private usuarioRepository: UsuarioRepository,
     public dialog: MatDialog,
@@ -75,6 +94,7 @@ export class UserListComponent {
   ) {}
 
   ngOnInit(): void {
+    this.obtenerRoles()
      const state = history.state;
      if (state && state.message) {
        this.mensajeAsignarRolDirectoroDecano = state.message;
@@ -168,4 +188,111 @@ export class UserListComponent {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+
+  modalImportarDocente = (template: TemplateRef<any>) => {
+    this.modal.openTemplate({
+      template,
+      titulo: 'Importar Docentes'
+    }).afterClosed().subscribe(response => {
+      if (response == 'cancelar') {
+        console.log(response);
+        return
+      }
+    });
+  }
+  
+  importarDocente = () => {
+    this.loadingImportUser.set(true);
+    Swal.fire({
+      title: "¡Cuidado!",
+      titleText: "Recuerde que no se podrán ingresar personas duplicadas",
+      text: "¿Está seguro que desea continuar?",
+      imageUrl: "./assets/gif/avatar-iguales.gif", // URL del GIF de los avatares
+      imageWidth: 250,
+      imageHeight: 150,
+      imageAlt: "Error: Personas duplicadas no permitidas",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: '#d33',
+      confirmButtonText: "Continuar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        this.loadingImportUser.set(false);
+        console.log("Usuario decidió cancelar");
+        return
+      }
+      this.alertaService.sweetAlert('question', 'Confirmación', `¿Está seguro que desea guardar los usuarios importados con el rol de ${this.seleccionarRol.rol}?`)
+      .then(isConfirm => {
+        if(!isConfirm){
+          this.loadingImportUser.set(false);
+          return
+        }
+        const docentes: UsuarioCrearMasivo[] = this.userImportExcel().map(docente => {
+          return{
+            nombres: docente.nombres,
+            apellidoPaterno: docente.apellido_paterno,
+            apellidoMaterno: docente.apellido_materno,
+            tipoDocumento: docente.documento,
+            numeroDocumento: docente.n_documento.toString(),
+            sexo: docente.sexo,
+            fechaNacimiento: docente.fecha_nacimiento,
+            correoPersonal: docente.correo_personal,
+            correoInstitucional: docente.correo_institucional,
+            celular: docente.celular.toString(),
+            imagenPerfil: '',
+            usuarioId:parseInt( this.authSignal.currentRol().id ),
+            idRol: this.seleccionarRol.id
+          }
+        })
+        console.log(docentes,'lista de docentes que se va a crear');
+
+        this.agregarUsuarioConRol(docentes)
+      })
+    });
+  }
+
+  agregarUsuarioConRol = (agregarUsuario: UsuarioCrearMasivo[]) => {
+    this.usuarioRepository.agregarUsuarioMasivo(agregarUsuario).subscribe({
+      next: (usuario) => {
+        console.log('usuario');
+        this.alertaService.showAlert('Usuario registrado exitosamente', 'success');
+        this.obtenerUsuarios()
+        this.modal.getRefModal()?.close('Obtener');
+        this.seleccionarRol = this.usuarioSignal.seleccionarRolDefault
+        this.loadingImportUser.set(false);
+      } , error: ( error ) => {
+        console.log(error,'este es el error');
+        this.alertaService.showAlert('Hubo un error al registrar los usuarios', 'error')
+        this.loadingImportUser.set(false);
+      }
+    })
+  }
+
+  obtenerRoles = () => {
+    this.rolRepository.obtenerRoles().subscribe({
+      next: (roles) => {
+
+        this.roles.set( roles );
+
+        
+      }, error: ( error ) => {
+        console.log(error);
+        
+      }
+    })
+  }
+
+  seleccionarRol: Rol;
+
+  // Método que maneja el evento selectionChange
+  onRoleChange(event: MatSelectChange): void {
+    // Obtenemos el rol completo (con id y nombre)
+    const rolSeleccionado = this.roles().find(rol => rol.id === event.value)!;
+    this.seleccionarRol = rolSeleccionado;
+  }
+  
+
 }

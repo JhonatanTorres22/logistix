@@ -10,7 +10,15 @@ const routes: Routes = [
   {
     path: 'cursos',
     loadComponent: ()  => import('./ui/apertura.component').then( c => c.AperturaComponent )
-  }
+  },
+  {
+    path: 'ambiente',
+    loadComponent: ()  => import('./ui/apertura.component').then( c => c.AperturaComponent )
+  },
+  {
+    path: 'docente',
+    loadComponent: ()  => import('./ui/apertura.component').then( c => c.AperturaComponent )
+  },
 ];
 
 @NgModule({

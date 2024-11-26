@@ -1,0 +1,30 @@
+<mat-card-content>
+    <form [formGroup]="formDocente">
+        <ui-input class="w-full" label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" [expReg]="expRegLockToInputNombre"></ui-input>
+        <div class="flex gap-2">
+            <ui-input class="w-full" label="Apellido Paterno" formControlName="apellidoPaterno" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos" [expReg]="expRegLockToInputApellidos"></ui-input>
+            <ui-input class="w-full" label="Apellido Materno" formControlName="apellidoMaterno" [maxlength]="maxLengthApellidos" [minlength]="minLengthApellidos" [expReg]="expRegLockToInputApellidos"></ui-input>
+        </div>
+        <div class="flex gap-2">
+            <ui-input class="w-full" label="Fecha de Nacimiento" formControlName="fechaNacimiento"></ui-input>
+            <mat-slide-toggle formControlName="discapacidad">
+                <span class="border-round font-bold p-2 " [ngClass]="{'bg-red-200 text-red-700': !formDocente.get('discapacidad')?.value
+                ,'bg-green-200 text-green-700': formDocente.get('discapacidad')?.value
+            }">DISCAPACIDAD</span>
+            </mat-slide-toggle>
+        </div>
+
+        <div class="flex gap-2">
+            <ui-input class="w-full" label="Grado 1" formControlName="grado1" [maxlength]="maxLengthGrados" [minlength]="minLengthGrados" [expReg]="expRegLockToInputGrados"></ui-input>
+            <ui-input class="w-full" label="Grado 2" formControlName="grado2" [maxlength]="maxLengthGrados" [minlength]="minLengthGrados" [expReg]="expRegLockToInputGrados"></ui-input>
+        </div>
+
+        <ui-input-fecha label="Fecha Nacimiento"  formControlName="fechaNacimiento"
+        [expReg]="expRegLockToInputFechaNacimiento" [maxlength]="maxLengthFechaNacimiento" [datepickerFilter]="filtrarFechaNacimiento"
+        aria-placeholder="DD/MM/YYYY"></ui-input-fecha>
+    </form>
+</mat-card-content>
+<mat-card-actions align="end">
+    <ui-button color="primary" label="Guardar" class="mr-10"></ui-button>
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="close" class="mr-10"></ui-button>
+</mat-card-actions>

@@ -1,0 +1,33 @@
+/* Asegúrate de que el mat-select ocupe todo el ancho del contenedor (mat-form-field) */
+.mat-select {
+    width: 100% !important;  /* Forzar que mat-select ocupe el 100% del ancho */
+  }
+  
+  /* Panel de opciones personalizado */
+  .custom-select-panel {
+    width: 100% !important;  /* Forzar que el panel ocupe el 100% del ancho */
+  }
+  
+  /* Estilo para las opciones dentro del select */
+  .mat-option {
+    width: 100% !important;  /* Asegurar que las opciones llenen el 100% del ancho del select */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 300px; /* Ajusta el ancho mínimo según sea necesario */
+    padding: 8px 16px;  /* Ajusta el padding de las opciones */
+    white-space: normal;  /* Evitar que el texto se corte */
+  }
+  
+  /* Asegura que los elementos dentro de la opción se alineen correctamente */
+  .mat-option .flex {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  /* Evita márgenes extra en los elementos de las opciones */
+  .mat-option p {
+    margin: 0;
+    flex: 1;
+  }
