@@ -53,7 +53,6 @@ import { RolRepositoryImpl } from "src/app/roles/infraestucture/repositories/rol
 import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura-docente.repository";
 
 
-
 @NgModule({
     exports: [ ],
     imports: [],
@@ -86,7 +85,8 @@ import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura
             {provide: AperturaSeccionRepository, useClass: AperturaSeccionRespositoryImpl},
             {provide: AperturaAmbienteRepository, useClass: AperturaAmbienteRespositoryImpl},
             {provide: DocenteRepository, useClass: AperturaDocenteRepositoryImpl},
-            {provide: RolRepository, useClass: RolRepositoryImpl}
+            {provide: RolRepository, useClass: RolRepositoryImpl},
+           
         ]
     ]
 })

@@ -101,7 +101,7 @@
 
 
 <ng-template #importDocente>
-  <mat-card-content>
+  <mat-dialog-content>
     @if (file().files.length > 0) {
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Selecciona el Rol</mat-label>
@@ -114,7 +114,7 @@
       <!-- {{ seleccionarRol | json }} -->
     }
     <app-user-import-template></app-user-import-template>
-  </mat-card-content>
+  </mat-dialog-content>
   <mat-card-actions align="end">
     <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
       <ui-button color="primary" label="Importar" class="m-r-10" (onClick)="importarDocente()" [disabled]="file().files.length == 0 || !seleccionarRol" ></ui-button>

@@ -6,14 +6,14 @@
       @if(!loading){
       <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
         <ng-template #headerTitleTemplate>
-          <div class="flex gap-3 justify-content-between">
+
             <div>LISTAR SECCIONES DE {{ cursoAperturado().nombreCurso }} </div>
-            <div>
+            <div class="flex justify-content-end gap-2">
               <ui-button (onClick)="openShowFormSeccion('Open')"
                 [ngClass]="{'boton-parpadeante': listaSecciones().length == 0}" color="primary" icon="ti ti-plus"
                 matTooltip="Agregar Sección"></ui-button>
             </div>
-          </div>
+
         </ng-template>
     
         <div class="p-b-5">

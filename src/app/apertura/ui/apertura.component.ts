@@ -3,10 +3,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { UiSelectComponent } from 'src/app/core/components/ui-select/ui-select.component';
-import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
-import { LocalSignal } from 'src/app/programas-academicos/domain/signals/local.signal';
 import { LeyendaPlanEstudioComponent } from './apertura-cursos/leyenda-plan-estudio/leyenda-plan-estudio.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
 import { UiButtonIconComponent } from 'src/app/core/components/ui-button-icon/ui-button-icon.component';
@@ -18,16 +16,14 @@ import { AperturaAmbienteComponent } from './apertura-ambiente/apertura-ambiente
 import { ListarInfoDirector } from 'src/app/auth/domain/models/listarInfoDirector.model';
 import { AperturaAmbienteSignal } from '../domain/signal/apertura-ambiente.signal';
 import { AperturaDocenteComponent } from './apertura-docente/apertura-docente.component';
+import { AperturaDocenteSignal } from '../domain/signal/apertura-docente.signal';
 
 @Component({
   selector: 'app-apertura',
   standalone: true,
   imports: [SharedModule,
     AperturaDocenteComponent,
-    UiButtonComponent,
-    UiButtonIconComponent,
-    CommonModule, UiSelectComponent,
-    LeyendaPlanEstudioComponent,
+    CommonModule, LeyendaPlanEstudioComponent,
     AperturaAmbienteComponent,
     AperturaCursosComponent],
   templateUrl: './apertura.component.html',
@@ -39,13 +35,13 @@ export class AperturaComponent implements OnInit {
   localSeleccionado: string;
   localesFiltrados: string[] = [];
   programaSeleccionado: ListarInfoDirector | null ; // Almacena el JSON seleccionado
-
+  renderizarCurso = this.cursoAperturadoSignal.renderizarPor
   renderizar = this.ambienteSignal.renderizarPor
   currentRuta = this.rutaSignal.currentRuta;
-  listaSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal
+  selectSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal
   currentInfoDirector = this.auth.currentInfoDirector;
   idPrograma = this.planEstudioSignal.programaId;
-
+  
   constructor(
     private ambienteSignal : AperturaAmbienteSignal,
     private cursoAperturadoSignal: CursoAperturadoSignal,
@@ -53,6 +49,7 @@ export class AperturaComponent implements OnInit {
     private auth: AuthSignal,
     private modal: UiModalService,
     private rutaSignal: RutasSignal,
+    private docenteSignal: AperturaDocenteSignal,
   ) {
   }
   ngOnInit(): void {
@@ -93,7 +90,6 @@ export class AperturaComponent implements OnInit {
     } else {
       this.localesFiltrados = [];
     }
-    // Reinicia la selección del local al cambiar de semestre
     this.localSeleccionado = ''; 
   }
 
@@ -105,17 +101,16 @@ export class AperturaComponent implements OnInit {
       ) || null; // Si no se encuentra el programa, asigna null o un valor por defecto
     
       if (this.programaSeleccionado) {
-        this.listaSemestreLocal.set(this.programaSeleccionado);
+        this.selectSemestreLocal.set(this.programaSeleccionado);
       }
-      this.renderizar.set('Renderizar')
+      this.renderizar.set('Renderizar');
+      this.renderizarCurso.set('RenderizarCurso')
+      this.docenteSignal.seleccionarDocente.set(this.docenteSignal.seleccionarDocenteDefault)
     } else {
       this.programaSeleccionado = null; // Limpia el programa seleccionado si no hay selección completa
     }
   }
   
-
-
-
   getSemestresUnicos() {
     const semestresMap = new Map();
     this.currentInfoDirector().forEach(programa => {
@@ -125,6 +120,5 @@ export class AperturaComponent implements OnInit {
     });
     return Array.from(semestresMap.values());
   }
-
 
 }

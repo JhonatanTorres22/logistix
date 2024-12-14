@@ -32,7 +32,7 @@ export class SeccionesListComponent implements OnInit{
   openFormSecciones: boolean = false;
   seccionEdit: ListarSecciones
   listaSecciones = this.seccionSignal.listaSecciones;
-
+  listarTipoAmbiente = this.seccionSignal.listaTipoAmbiente;
   cursoAperturado = this.cursoAperturadoSignal.cursoAperturado
   secciones: ListarSecciones[] = []
   constructor(
@@ -123,6 +123,7 @@ export class SeccionesListComponent implements OnInit{
       case 'Cancelar' : {
         this.openFormSecciones = false;
         this.limpiarDatosSeccion()
+        this.listarTipoAmbiente.set(this.seccionSignal.listaTipoAmbienteDefault)
       } break;
 
       case 'Add' : {
@@ -130,6 +131,7 @@ export class SeccionesListComponent implements OnInit{
         this.limpiarDatosSeccion()
         this.openFormSecciones = false;
         this.obtenerSecciones();
+        this.listarTipoAmbiente.set(this.seccionSignal.listaTipoAmbienteDefault)
       } break;
 
       case 'Edit' : {
@@ -137,12 +139,14 @@ export class SeccionesListComponent implements OnInit{
         this.limpiarDatosSeccion()
         this.openFormSecciones = false;
         this.obtenerSecciones()
+        this.listarTipoAmbiente.set(this.seccionSignal.listaTipoAmbienteDefault)
       }; break;
 
       case 'DeleteTipoAmbiente' : {
         console.log('DeleteTipoAmbiente');
         this.openFormSecciones = true;
-        this.obtenerSecciones()       
+        this.obtenerSecciones()  
+        this.listarTipoAmbiente.set(this.seccionSignal.listaTipoAmbienteDefault)     
       }; break;
     }
   }

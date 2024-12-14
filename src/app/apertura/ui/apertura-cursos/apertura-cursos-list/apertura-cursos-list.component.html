@@ -1,5 +1,8 @@
 @if((listaCursosAperturados().length > 0)){
-<ui-button color="primary" (onClick)="listarCursosPlanEstudio(agregarCursosPlanEstudio)"> Agregar Curso </ui-button>
+<div class="flex gap-2">
+    <ui-button color="primary" (onClick)="listarCursosPlanEstudio(agregarCursosPlanEstudio)"> Agregar Curso </ui-button>
+    <ui-button color="red" (click)="eliminarConfirm()">Eliminar Cursos</ui-button>
+</div>
 }
 @if(!loading){
 

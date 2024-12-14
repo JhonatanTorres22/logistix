@@ -8,6 +8,7 @@ import {  ListaGrupoCursos, ListarCursosAperturados } from "../models/apertura-c
 
 export class CursoAperturadoSignal {
 
+    
     cursosAperturadosListDefault:ListaGrupoCursos[] = []
 
     cursoAperturadoDefault : ListarCursosAperturados = {
@@ -29,9 +30,11 @@ export class CursoAperturadoSignal {
         resolucion: ""
     }
 
+    listarCursosAperturadosDefault : ListarCursosAperturados[] = []
+    listarCursosAperturados: WritableSignal<ListarCursosAperturados[]> = signal(this.listarCursosAperturadosDefault)
     cursoAperturado : WritableSignal<ListarCursosAperturados> = signal(this.cursoAperturadoDefault)
     listaCursosAperturados: WritableSignal<ListaGrupoCursos[]> = signal(this.cursosAperturadosListDefault)
-    listaSemestreLocalDefault: ListarInfoDirector = {
+    selectSemestreLocalDefault: ListarInfoDirector = {
         idProgramaAcademico: 0,
         idSemestre: 0,
         DescripcionLocal: "",
@@ -40,7 +43,8 @@ export class CursoAperturadoSignal {
         codigoLocal: 0
     }
 
-    listaSemestreLocal: WritableSignal<ListarInfoDirector> = signal(this.listaSemestreLocalDefault)
+    selectSemestreLocal: WritableSignal<ListarInfoDirector> = signal(this.selectSemestreLocalDefault)
 
     renderizarPor = signal( '' );
+    selectProgramaSeleccionado = signal(false)
 }

@@ -1,0 +1,33 @@
+<!-- {{ selectProgramaSeleccionado() }}
+{{ localesFiltrados }} -->
+ <!-- {{ idSemestreSeleccionado }} - {{ localSeleccionado }} -->
+   <!-- {{ selectProgramaSeleccionado() }}
+   {{ programaSeleccionado | json }} -->
+<div class="flex gap-2">
+    <mat-form-field appearance="outline">
+        <mat-label>Seleccionar Semestre</mat-label>
+        <mat-select (selectionChange)="onSelectSemestre($event)">
+            @for (programa of getSemestresUnicos(); track $index) {
+            <mat-option [value]="programa.idSemestre">
+                {{ programa.DescripcionSemestre }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Selector de Local -->
+     @if(currentRuta() !== '/apertura/docente'){
+         <mat-form-field appearance="outline">
+             <mat-label>Seleccionar Local</mat-label>
+             <mat-select [(value)]="localSeleccionado" [disabled]="localesFiltrados.length === 0"
+                 (selectionChange)="onSelectLocal($event)">
+                 @for (local of localesFiltrados; track $index) {
+                 <mat-option [value]="local">
+                     {{ local }}
+                 </mat-option>
+                 }
+             </mat-select>
+         </mat-form-field>
+     }
+
+</div>

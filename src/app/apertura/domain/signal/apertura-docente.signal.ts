@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
-import { DocenteExcel, ListarDocentes } from "../models/apertura-docente.model";
+import { DocenteExcel, ListarCursosDominioDocente, ListarDisponibilidadDocente, ListarDocenteNoAsignado, ListarDocentes } from "../models/apertura-docente.model";
 
 @Injectable({
     providedIn: 'root'
@@ -7,8 +7,10 @@ import { DocenteExcel, ListarDocentes } from "../models/apertura-docente.model";
 
 export class AperturaDocenteSignal{
     listarDocenteDefault: ListarDocentes[] = [];
-
     listarDocente: WritableSignal<ListarDocentes[]> = signal(this.listarDocenteDefault)
+
+    listarCursosDominioDocenteDefault : ListarCursosDominioDocente[] = [];
+    listarCursosDominioDocente : WritableSignal<ListarCursosDominioDocente[]> = signal(this.listarCursosDominioDocenteDefault)
 
     docentesImportExcelDefault: DocenteExcel[] = [];
     docentesImportExcel = signal( this.docentesImportExcelDefault );
@@ -22,8 +24,8 @@ export class AperturaDocenteSignal{
         nombreSemestre: "",
         idLocal: 0,
         codigoInterno: "",
-        grado1: "",
-        grado2: "",
+        primerGrado: "",
+        segundoGrado: "",
         discapacidad: false,
         fechaNacimiento: "",
         tipoDeDocumento: "",
@@ -35,5 +37,27 @@ export class AperturaDocenteSignal{
         numeroCelular: ""
     }
 
-    seleccionarDocente : WritableSignal<ListarDocentes> = signal(this.seleccionarDocenteDefault)
+    seleccionarDocente : WritableSignal<ListarDocentes> = signal(this.seleccionarDocenteDefault);
+
+    editarDocente : WritableSignal<ListarDocentes> = signal(this.seleccionarDocenteDefault); 
+    loadingDocente = signal<boolean>(false);
+
+    /* DISPONIBILIDAD DOCENTE */
+    renderizarAlSeleccionarDocente =signal( '' )
+    listarDisponibilidadDocenteDefault : ListarDisponibilidadDocente[] = [];
+    listarDisponibilidadDocente: WritableSignal<ListarDisponibilidadDocente[]> = signal(this.listarDisponibilidadDocenteDefault)
+
+
+    seleccionarDocenteNoAsignadoefault: ListarDocenteNoAsignado = {
+        idUsuarioRol: 0,
+        nombreAp: "",
+        numeroDocumento: ""
+    }
+
+    seleccionarDocenteNoAsignado : WritableSignal<ListarDocenteNoAsignado> = signal(this.seleccionarDocenteNoAsignadoefault)
+    
+    selectSemestre = signal(false)
+    renderizarDisponibilidad = signal ( '' )
+
+    idLocalSelect = signal (0)
 }

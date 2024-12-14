@@ -3,10 +3,13 @@
         <div class="flex justify-content-between align-items-center gap-8 font-bold">
             <div> P.A: {{ infoDirector[0].NombreProgramaAcademico }} </div>
             <div class="flex-grow-1 text-center"> Curso: {{ cursoAperturado().nombreCurso}} </div>
-            <div class="text-right">Sección: {{ obtenerSiguienteSeccion() }} </div>
+            @if(seccionEdit.idAperturaSeccion == 0){
+                <div class="text-right">Sección: {{ obtenerSiguienteSeccion() }} </div>
+            }@else {
+                <div class="text-right">Sección: {{ seccionEdit.nombreSeccion }} </div>
+            }
         </div>
         <mat-divider></mat-divider>
-
         @if(!loading){
             <div>
                 <form class="p-3" [formGroup]="formSeccion">
@@ -59,7 +62,7 @@
                         </mat-form-field>
                     <!-- </div> -->
                     @if(mostrarCantidadGrupos){
-                        <ui-input class="w-full" label="Vacantes" formControlName="nGrupos" [maxlength]="maxLengthVacantes"
+                        <ui-input class="w-full" label="Cantidad de Grupos" formControlName="nGrupos" [maxlength]="maxLengthVacantes"
                             [min]="minVacantes" [expReg]="expRegVacantesBlockToInput"></ui-input>
                     }
                     }
@@ -92,9 +95,7 @@
     <mat-dialog-actions align="end">
         <ui-button color="primary" [disabled]="formSelectedTipo.value?.length == 0 || formSeccion.invalid" label="Guardar" class="m-r-10"
             (onClick)="onSubmit()"></ui-button>
-            @if (formSelectedTipo.value?.length > 0) {
-                <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"
+        <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"
                 (onClick)="cancelarAdd()"></ui-button>
-            }
     </mat-dialog-actions>
 </mat-card>

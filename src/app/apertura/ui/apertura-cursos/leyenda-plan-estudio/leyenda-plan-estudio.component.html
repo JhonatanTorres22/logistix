@@ -1,29 +1,29 @@
-<mat-dialog-content>
-     @if(listaCursosAperturados().length > 0){
-         
-        @for(cursosAperturados of resolucionesColoreadas; track $index){
-          <!-- {{ cursosAperturados | json }} -->
-            <div class="flex align-items-center mb-2" >
-              <span [ngStyle]="{'background-color': cursosAperturados.color}" 
-                    class="w-1rem h-1rem inline-block mr-4 border-round-md">
-              </span>
-              <div>
-                <div class="font-semibold pb-2">{{ cursosAperturados.resolucion }}</div>
-              </div>
-            </div>
-            <mat-divider class="pb-2"></mat-divider>
-          }
-     }
-  
-     @if(listaCursosAperturados().length === 0){
-         <div>
-           <p>No hay planes con resolución vigente.</p>
-         </div>
-     }
-  </mat-dialog-content>
-  
-  <mat-dialog-actions align="end">
-    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
-  </mat-dialog-actions>
+<!-- @if (selectProgramaSeleccionado()) {
+  {{ selectProgramaSeleccionado() }} -->
+  <mat-dialog-content>
+    @if(listaCursosAperturados().length > 0){
+       @for(cursosAperturados of resolucionesColoreadas; track $index){
+        <!-- {{ cursosAperturados |json }}    -->
+        <div class="flex align-items-center" >
+             <span [ngStyle]="{'background-color': cursosAperturados.color}" 
+                   class="w-1rem h-1rem mr-2 inline-block border-round-md">
+             </span>
+             <div>
+               <div class="font-normal text-xs" >{{ cursosAperturados.resolucion }}</div>
+             </div>
+           </div>
+         }
+    }
+ 
+    @if(listaCursosAperturados().length === 0){
+        <div>
+          <p class="text-xs">No se encontraron cursos aperturados de un plan</p>
+        </div>
+    }
+ </mat-dialog-content>
+<!-- }@else {
+  {{ selectProgramaSeleccionado() }}
+ pruebaaa -->
+<!-- } -->
 
   

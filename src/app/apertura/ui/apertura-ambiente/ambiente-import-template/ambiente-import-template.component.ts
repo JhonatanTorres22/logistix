@@ -56,19 +56,14 @@ export class AmbienteImportTemplateComponent {
   }
 
   setFile = () => {
-    console.log('**');
     if(this.listarAmbienteAnterior().length == 0){
-      console.log('listando del archivo');
       
       if( this.file().files.length == 0 ) {
-        console.log('se anula');
-        
         return
       }
       ( async() => {   
         const file = await this.file().files[0].arrayBuffer();
-        console.log(file,'file');
-        
+
         /* parse workbook */
         // const wb = read(ab);
         const wb = read(file);
@@ -81,9 +76,7 @@ export class AmbienteImportTemplateComponent {
           
       })();
     }
-    else {
-      console.log('listando del ambinte anterior');
-      
+    else {     
       this.dataSource.data = this.listarAmbienteAnterior()
     }
   }

@@ -25,7 +25,7 @@ export class CursoValidation {
     // maxLengthCiclo: string
     maxLengthCodigoCurso: number = 8;
     minLengthCodigoCurso: number = 5;
-    expRegCodigoCurso: RegExp = /^P?\d{2}(?![A-Za-z]$)([A-Za-z0-9]*A[A-Za-z0-9]*A?[A-Za-z0-9]*)?\d{1,2}$/; //AGREGUÉ EL ? AL COSTADO DE LA P PARA VOLVERLO OPCIONAL
+    expRegCodigoCurso: RegExp = /^P?\d{2}(?![A-Za-z]$)([A-Za-z0-9]*A?[A-Za-z0-9]*)?\d{1,2}$/; //AGREGUÉ EL ? AL COSTADO DE LA P PARA VOLVERLO OPCIONAL
     expRegCodigoCursoBlockToInput: RegExp =  /[^P\dA-Za-z0-9]|(?<=^P\d{2})[^A-Za-z0-9]?(?=\d{4})/g;
     minTotalHoras: number = 2;
     minCreditos: number = 2;

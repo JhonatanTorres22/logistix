@@ -1,37 +1,6 @@
 
-<div class="pt-4">
-  <div class="flex align-items-center justify-content-between gap-2" >
-    <div  class="flex gap-2">
-      <mat-form-field appearance="outline">
-        <mat-label>Seleccionar Semestre</mat-label>
-        <mat-select (selectionChange)="onSelectSemestre($event)">
-          <mat-option *ngFor="let programa of getSemestresUnicos()" [value]="programa.idSemestre">
-            {{ programa.DescripcionSemestre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
 
-      <!-- Selector de Local -->
-      <mat-form-field appearance="outline">
-        <mat-label>Seleccionar Local</mat-label>
-        <mat-select  [(value)]="localSeleccionado"  [disabled]="localesFiltrados.length === 0" (selectionChange)="onSelectLocal($event)">
-          <mat-option *ngFor="let local of localesFiltrados" [value]="local">
-            {{ local }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <ui-button icon="ti ti-book f-18 border-circle" color="primary"
-      (onClick)="mostrarLeyendaPlanEstudio(leyendaPlanEstudio)">
-    </ui-button>
-  </div>
-
-  <mat-divider class="mt-4"></mat-divider>
-
-  @if (programaSeleccionado) {
-    <!-- {{ programaSeleccionado | json }} -->
-    <div class="mt-4">
+    <div class="mt-2">
     @if(currentRuta() == '/apertura/cursos'){
       <app-apertura-cursos></app-apertura-cursos>
     }
@@ -42,11 +11,7 @@
       <app-apertura-docente></app-apertura-docente>
     }
     </div>
-    }
-</div>
 
 <ng-template #leyendaPlanEstudio let-data>
   <app-leyenda-plan-estudio></app-leyenda-plan-estudio>
 </ng-template>
-
-<!-- <pre>{{ currentInfoDirector() | json }}</pre> -->

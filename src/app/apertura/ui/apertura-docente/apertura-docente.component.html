@@ -1,10 +1,56 @@
-<mat-stepper>
-    <mat-step>
-        <ng-template matStepLabel>Asignación de cursos</ng-template>
-        <app-docente-list></app-docente-list>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Disponibilidad</ng-template>
+<mat-stepper linear #stepper>
+    <mat-step  [editable]="isEditable" #stepper [stepControl]="formAsignacion">
+        <form [formGroup]="formAsignacion" hidden>
+            <ng-template matStepLabel>
+                <span [ngClass]="{'texto-step': stepper.selectedIndex === 0}">Asignación de cursos</span>
+            </ng-template>
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput type="number" formControlName="inputStep1" placeholder="Last name, First name" required>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+        <div class="mt-1">
+            <mat-form-field appearance="outline">
+                <mat-label>Seleccionar Semestre</mat-label>
+                <mat-select (selectionChange)="seleccionarSemestre($event)">
+                    @for (programa of getSemestresUnicos(); track $index) {
+                    <mat-option [value]="programa.idSemestre">
+                        {{ programa.DescripcionSemestre }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <!-- <app-select-semestre-local></app-select-semestre-local> -->
+
+        </div>
+       @if (selectSemestre()) {
+           <div class="mt-1">
+            <app-docente-list></app-docente-list>
+           </div>
+       }
         
+    </mat-step>
+    <mat-step >
+        <ng-template matStepLabel>Disponibilidad</ng-template>
+
+        <mat-form-field appearance="outline" class="mt-2 mb-2">
+            <mat-label>Seleccionar Local</mat-label>
+            <mat-select [value]="idLocalSelect()" [disabled]="localesFiltrados.length === 0"
+                (selectionChange)="seleccionarLocal($event)">
+                @for (local of localesFiltrados; track $index) {
+                <mat-option [value]="local.id">
+                    {{ local.nombre }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        @if(selectProgramaSeleccionado() && idLocalSelect() > 0){
+            {{ idLocalSelect() }}
+            <app-docente-disponibilidad-horario [localesFiltrados]="localesFiltrados"></app-docente-disponibilidad-horario>
+        }
     </mat-step>
 </mat-stepper>

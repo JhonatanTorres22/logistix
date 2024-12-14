@@ -30,7 +30,7 @@ export class AmbienteAddComponent implements OnInit {
 
   loading : boolean = false
   renderizar = this.ambienteSignal.renderizarPor
-  listaSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal
+  selectSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal
   formSelectedTipo = new FormControl<ListarTipoAmbiente[]>([]);
   selectedChips: ListarTipoAmbiente[] = [];
 
@@ -187,8 +187,8 @@ export class AmbienteAddComponent implements OnInit {
   guardarAmbiente = () => {
     const tiposAmbienteSeleccionados = this.formSelectedTipo.value || [];
     const insertarAmbiente : InsertarAmbiente[] = tiposAmbienteSeleccionados.map((tipoAmbiente: ListarTipoAmbiente) =>({
-      idSemestre : this.listaSemestreLocal().idSemestre,
-      idLocal: this.listaSemestreLocal().codigoLocal,
+      idSemestre : this.selectSemestreLocal().idSemestre,
+      idLocal: this.selectSemestreLocal().codigoLocal,
       idTipoAmbiente: tipoAmbiente.idTipoAmbiente,
       aforo: this.formAmbiente.value.aforo,
       nivelAmbiente: this.formAmbiente.value.nivel,
@@ -225,8 +225,6 @@ export class AmbienteAddComponent implements OnInit {
       nombrePabellon: this.formAmbiente.value.pabellon,
       idUsuario: parseInt(this.authSignal.currentRol().id)
     }
-    console.log(editarAmbiente,'editando...');
-    
     this.ambienteRepository.editarAmbiente(editarAmbiente).subscribe({
       next:(data) => {
         this.alertaService.showAlert('Ambiente editado correctamnete', 'success')

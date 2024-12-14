@@ -17,7 +17,7 @@ import { SharedModule } from 'src/app/demo/shared/shared.module';
 export class ExportPdfAmbienteComponent {
 
   listaAmbiente = this.ambienteSignal.listarAmbientes
-  selectedSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal 
+  selectedSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal 
 
   @ViewChild('previewPDFSimulacion') previewPDFSimulacion: MatDrawer;
 
@@ -237,7 +237,6 @@ export class ExportPdfAmbienteComponent {
       })
       .catch((err) => {
         console.error('error al cargar la imagen', err);
-
       })
   }
 

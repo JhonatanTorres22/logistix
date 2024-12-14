@@ -139,7 +139,9 @@ export class SeccionesAddComponent implements OnInit {
     this.repository.obtenerFormato().subscribe({
       next: (formato) => {
         this.listaFormato.set(formato);
-        this.loading = false
+        this.loading = false;
+        // this.selectedChips = [];
+        // this.formSelectedTipo = []
       },
       error: () => {
         this.alertaService.sweetAlert('error')
@@ -149,6 +151,9 @@ export class SeccionesAddComponent implements OnInit {
 
   seleccionarFormato = (event: any): void => {
     const idFormato = event.value; // Objeto JSON completo
+    this.selectedChips = [];
+    this.mostrarCantidadGrupos = false
+    this.formSelectedTipo.setValue([]);
     this.obtenerTipoAmbiente(idFormato);
   }
 
@@ -243,10 +248,19 @@ export class SeccionesAddComponent implements OnInit {
   }
 
   onSubmit = () => {
+
     if (this.formSeccion.invalid && this.formSelectedTipo.value?.length == 0) {
       this.alertaService.showAlert('El formulario está incompleto o no cumple con los valores esperados');
       return;
     }
+    if (this.formSelectedTipo && this.formSelectedTipo.value && this.formSelectedTipo.value.length > 0) {
+      if (this.formSelectedTipo.value[0]?.grupo) {
+        this.alertaService.showAlert('No puede agregar este tipo de ambiente solo, debe ir acompañado de otro tipo de ambiente','warning');
+      return;
+      }
+    }
+    
+    
     const tipoAccionForm = this.seccionEdit.idAperturaSeccion !== 0 ? 'Editar' : 'Crear';
     this.alertaService.sweetAlert('question', 'Confirmación', `¿Está seguro que desea ${tipoAccionForm} la sección?`)
       .then(isConfirm => {
@@ -317,6 +331,8 @@ export class SeccionesAddComponent implements OnInit {
         this.alertaService.sweetAlert('success', '¡Correcto!', 'La sección fue creada exitosamente')
         this.cerrarFormulario.emit('Add');
         this.renderizarPor.set('RenderizarCurso')
+        console.log(this.renderizarPor(),'renderizar por');
+        
         this.loading = false
       },
       error: () => {

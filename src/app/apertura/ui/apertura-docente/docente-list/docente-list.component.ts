@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, effect, OnInit, TemplateRef } from '@angular/core';
 import { AperturaDocenteSignal } from 'src/app/apertura/domain/signal/apertura-docente.signal';
 import { CursoAperturadoSignal } from 'src/app/apertura/domain/signal/curso-aperturado.signal';
 import { AperturaDocenteRepositoryImpl } from 'src/app/apertura/infraestructure/repositories/docente.repository.impl';
@@ -9,60 +9,69 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { DocenteImportTemplateComponent } from './docente-import-template/docente-import-template.component';
-import { DocenteAddComponent } from '../docente-add/docente-add.component';
-import Swal from 'sweetalert2';
-import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
-import { UsuarioCrear } from 'src/app/usuarios/domain/models/usuario.model';
-import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
-import { MatSelectChange } from '@angular/material/select';
-import { UsuarioRolSignal } from 'src/app/usuarios/domain/signals/usuario-rol.signal';
-import { RolRepository } from 'src/app/roles/domain/repositories/rol.repository';
-import { Rol } from 'src/app/roles/domain/models/rol.model';
 import { MostrarDatosDocenteComponent } from './mostrar-datos-docente/mostrar-datos-docente.component';
+import { AperturaAmbienteSignal } from 'src/app/apertura/domain/signal/apertura-ambiente.signal';
+import { DocenteAddEditComponent } from '../docente-add-edit/docente-add-edit.component';
+import { DocenteCursosDominadosComponent } from '../docente-cursos-dominados/docente-cursos-dominados.component';
+import { DocenteDisponibilidadHorarioComponent } from '../docente-disponibilidad-horario/docente-disponibilidad-horario.component';
+import { ListDocenteToAddComponent } from '../list-docente-to-add/list-docente-to-add.component';
 
 @Component({
   selector: 'app-docente-list',
   standalone: true,
   imports: [CommonModule, SharedModule, UiButtonComponent, MostrarDatosDocenteComponent,
-    DocenteImportTemplateComponent,
-    DocenteAddComponent,
+    DocenteAddEditComponent, DocenteCursosDominadosComponent,
+    ListDocenteToAddComponent,
     UiLoadingProgressBarComponent],
   templateUrl: './docente-list.component.html',
   styleUrl: './docente-list.component.scss'
 })
 export class DocenteListComponent implements OnInit {
-  seleccionarDocente = this.docenteSignal.seleccionarDocente
-  loading : boolean = true
+  idLocalSelected= this.docenteSignal.idLocalSelect
+  seleccionarDocenteNoAsignado = this.docenteSignal.seleccionarDocenteNoAsignado
+  renderizarAlSeleccionarDocente = this.docenteSignal.renderizarAlSeleccionarDocente
+  renderizar = this.ambienteSignal.renderizarPor
+  seleccionarDocente = this.docenteSignal.seleccionarDocente;
+  editarDocente = this.docenteSignal.editarDocente
+  loading= this.docenteSignal.loadingDocente
   listarDocente = this.docenteSignal.listarDocente;
-  selectSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal
+  selectSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal
   constructor(
+    private ambienteSignal: AperturaAmbienteSignal,
     private cursoAperturadoSignal: CursoAperturadoSignal,
     private docenteSignal: AperturaDocenteSignal,
     private docenteRepository: AperturaDocenteRepositoryImpl,
     private alertaService: AlertService,
     private modal: UiModalService,
-  ){}
+  ){
+    effect(() => {
+      if (this.renderizar() == 'Renderizar') {
+        console.log(this.renderizar(), 'renderizando desde docentes');
+        
+        this.obtenerDocente()
+      }
+      this.renderizar.set('')
+    }, { allowSignalWrites: true })
+  }
 
   ngOnInit(): void {
-
-
-    this.obtenerDocente()
-    
+    // this.obtenerDocente()
   }
 
 
 
   obtenerDocente = () => {
-    this.docenteRepository.obtenerDocentes(this.selectSemestreLocal().idSemestre,
-  this.selectSemestreLocal().codigoLocal).subscribe({
+    this.loading.set(true)
+    this.docenteRepository.obtenerDocentes(this.selectSemestreLocal().idSemestre).subscribe({
     next:(docentes) => {
       this.alertaService.showAlert('Listando los docentes correctamente', 'success');
       this.listarDocente.set(docentes);
-      this.loading = false
+      this.loading.set(false)
+      console.log(docentes);
+      
     }, error: (error) => {
       this.alertaService.showAlert('Ocurrió un error al listar los docentes', 'error');
-      console.log(error);
-      this.loading = false
+      this.loading.set(false)
 
     }
   })
@@ -74,28 +83,30 @@ export class DocenteListComponent implements OnInit {
       titulo: 'Importar Docentes'
     }).afterClosed().subscribe(response => {
       if (response == 'cancelar') {
-        console.log(response);
         return
       }
     });
   }
 
   modalAddDocente = (template: TemplateRef<any>) => {
+    this.editarDocente.set(this.docenteSignal.seleccionarDocenteDefault)
     this.modal.openTemplate({
       template,
       titulo: 'Agregar Docente'
     }).afterClosed().subscribe(response => {
       if (response == 'cancelar') {
-        console.log(response);
+        this.seleccionarDocenteNoAsignado.set(this.docenteSignal.seleccionarDocenteNoAsignadoefault)
         return
       }
     });
   }
 
-  onDocenteSelected(idDocente: number): void {
+  onDocenteSelected = (idDocente: number) => {
 // Asume que listarDocente devuelve un array con todos los docentes
     const selectedDocente = this.listarDocente().find(docente => docente.idDocente === idDocente) || this.docenteSignal.seleccionarDocenteDefault;
-    this.seleccionarDocente.set(selectedDocente)    
+    this.seleccionarDocente.set(selectedDocente)
+    this.editarDocente.set(selectedDocente)
+    this.renderizarAlSeleccionarDocente.set('Renderizar')
+    this.idLocalSelected.set(0)
   }
 }
-

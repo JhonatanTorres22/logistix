@@ -17,29 +17,28 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
+import { render } from '@fullcalendar/core/preact';
 @Component({
   selector: 'apertura-cursos-list',
   standalone: true,
-  imports: [UiButtonComponent, MatIconModule, SeccionesAddComponent,
+  imports: [UiButtonComponent, MatIconModule,
     UiLoadingProgressBarComponent,
-    UiButtonComponent, UiCardNotItemsComponent, CommonModule,
-    AperturaSeccionesComponent,
+    UiButtonComponent,  CommonModule,
     SeccionesListComponent, AperturaCursosAddComponent, CdkMenuModule, SharedModule],
   templateUrl: './apertura-cursos-list.component.html',
   styleUrl: './apertura-cursos-list.component.scss'
 })
 export class AperturaCursosListComponent implements OnInit {
 
-  loading = true;
+  loading: boolean = false;
   colores = [
-    '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFB3', '#BAE1FF',
-    '#D1BAFF', '#FFBAE1', '#C2F0C2', '#F3C7E0', '#F8D8B4',
+   '#FFB3BA','#FFDFBA', '#D1BAFF','#BAFFB3','#C2F0C2','#BAE1FF','#FFBAE1','#F8D8B4','#F3C7E0','#FFFFBA',
   ];
 
   renderizarPor = this.cursoAperturadoSignal.renderizarPor;
   cursoAperturado = this.cursoAperturadoSignal.cursoAperturado;
   listaCursosAperturados = this.cursoAperturadoSignal.listaCursosAperturados
-  listaSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal
+  selectSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal
   constructor(
     private authSignal: AuthSignal,
     private cursoAperturadoSignal: CursoAperturadoSignal,
@@ -48,13 +47,16 @@ export class AperturaCursosListComponent implements OnInit {
     private aperturaCursoRepository: AperturaCursoRepository
   ) {
     effect(() => {
-      console.log('rendizando por',this.renderizarPor());
       
       if(this.renderizarPor() == 'RenderizarCurso'){
+        console.log(this.renderizarPor(), 'listando los cursos');
+        
         this.obtenerCursosAperturados();
       }
 
-      this.renderizarPor.set('')
+      // setTimeout(() => {
+this.renderizarPor.set('')
+      // }, 400);
     }, { allowSignalWrites: true })
   }
 
@@ -70,16 +72,16 @@ export class AperturaCursosListComponent implements OnInit {
     }).afterClosed().subscribe(response => {
       // console.log( response );
       if (response == 'cancelar') {
-        console.log(response);
         return
       }
     });
   }
 
   obtenerCursosAperturados = () => {
-    this.aperturaCursoRepository.obtenerCursosAperturados(this.listaSemestreLocal().codigoLocal,
-      this.listaSemestreLocal().idProgramaAcademico,
-      this.listaSemestreLocal().idSemestre)
+    this.loading = true;
+    this.aperturaCursoRepository.obtenerCursosAperturados(this.selectSemestreLocal().codigoLocal,
+      this.selectSemestreLocal().idProgramaAcademico,
+      this.selectSemestreLocal().idSemestre)
       .subscribe({
         next: (cursosAperturados) => {
           // Agrupar cursos por 'denominacionResumen'
@@ -102,11 +104,10 @@ export class AperturaCursosListComponent implements OnInit {
 
       // Setear en el Signal la estructura agrupada
       this.listaCursosAperturados.set(resultadoOrdenado);
-      console.log(this.listaCursosAperturados(), 'agrupados y ordenados');
           this.loading = false;
         }, error: (error) => {
           this.alertService.showAlert('Ocurrió un error al listar los ciclos...', 'error');
-          console.log(error);
+          this.loading = false;
 
         }
       })
@@ -138,36 +139,59 @@ export class AperturaCursosListComponent implements OnInit {
   }
 
   openOptions = (event: any, curso: ListarCursosAperturados) => {
-    console.log(event);
     this.cursoAperturado.set(curso)
   }
 
   eliminarConfirm = () => {
-    console.log(this.cursoAperturado().nSecciones);
-    if(this.cursoAperturado().nSecciones > 0) {
-      this.alertService.showAlert(`No puede eliminar la seccion, porque cuenta con ${this.cursoAperturado().nSecciones} seccion(es) creadas`,'error')
-      return
+    this.loading = true;
+    let cursosAEliminar: EliminarCursoAperturado[] = [];
+
+    if (this.cursoAperturado().idAperturaCurso !== 0) {
+        // Caso: Eliminar un curso específico
+        cursosAEliminar.push({
+            idAperturaCurso: this.cursoAperturado().idAperturaCurso,
+            idUsuario: parseInt(this.authSignal.currentRol().id),
+        });
+    } else {
+        // Caso: Eliminar todos los cursos
+        cursosAEliminar = this.listaCursosAperturados().flatMap(cursoGrupo =>
+            cursoGrupo.cursos.map(curso => ({
+                idAperturaCurso: curso.idAperturaCurso,
+                idUsuario: parseInt(this.authSignal.currentRol().id),
+            }))
+        );
+
+        if (cursosAEliminar.length === 0) {
+            this.alertService.showAlert('No hay cursos para eliminar.', 'info');
+            return;
+        }
     }
-    
-    const cursoMallaEliminar: EliminarCursoAperturado[] = [];
-    const curso = {
-      idAperturaCurso: this.cursoAperturado().idAperturaCurso,
-      idUsuario: parseInt(this.authSignal.currentRol().id),
-    };
-    cursoMallaEliminar.push(curso);
-    this.alertService.sweetAlert('question', 'Confirmar', 'Los cursos que fueron asignados al Plan de Estudios serán ELIMINADOS, ¿Está seguro que desea limpiar la malla curricular?')
-      .then(isConfirm => {
-        if (!isConfirm) { return }
-        this.eliminarCursoApertura(cursoMallaEliminar)
-      })
-  }
+
+    const confirmMessage = this.cursoAperturado().idAperturaCurso !== 0
+        ? `¿Está seguro de que desea eliminar el curso?`
+        : 'Todos los cursos del Plan de Estudios serán ELIMINADOS, ¿Está seguro que desea continuar?';
+
+    this.alertService.sweetAlert('question', 'Confirmar', confirmMessage).then(isConfirm => {
+        if (!isConfirm) {
+          this.cursoAperturado.set(this.cursoAperturadoSignal.cursoAperturadoDefault)
+          this.loading = false;
+          return;
+        }
+        this.eliminarCursoApertura(cursosAEliminar);
+    });
+};
   eliminarCursoApertura = (cursoAperturado: EliminarCursoAperturado[]) => {
     this.aperturaCursoRepository.eliminarCursoAperturado(cursoAperturado).subscribe({
       next: (value) => {
         this.alertService.showAlert('Curso eliminado correctamente', 'success', 5)
         this.obtenerCursosAperturados();
-        // this.agruparPorCiclo()
-      },
+        this.cursoAperturado.set(this.cursoAperturadoSignal.cursoAperturadoDefault)
+        this.loading = false;
+      },error : (e) => {
+        this.alertService.showAlert('Ocurrió un error al eliminar el curso', 'error', 5)
+        this.cursoAperturado.set(this.cursoAperturadoSignal.cursoAperturadoDefault)
+        this.loading = false;
+      }
     })
   }
 }

@@ -15,9 +15,12 @@ export class DocenteValidation{
     expRegLockToInputApellidos: RegExp =  /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]/g;
 
     maxLengthGrados: number = 80;
-    minLengthGrados: number = 10;
-    expRegLockToInputGrados: RegExp =  /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]/g;
+    minLengthGrados: number = 1;
+    expRegBlockToInputGrados: RegExp =  /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,\-]/g;
 
     expRegLockToInputFechaNacimiento : RegExp = /[^0-9\/]/g;
-    maxLengthFechaNacimiento = 10
+    maxLengthFechaNacimiento = 10;
+
+    maxLengthCodigoInterno: number = 10;
+    minLengthCodigoInterno: number =7;
 }

@@ -1,0 +1,28 @@
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Asegura que las celdas tengan bordes visibles */
+}
+
+th, td {
+  border: 1px solid #ddd; /* Borde de las celdas */
+  text-align: center; /* Alineamos el texto al centro */
+}
+
+/* Verde para agregar */
+.celda-agregar {
+  background-color: rgb(85, 130, 212); /* Fondo verde */
+  border: 2px solid rgb(20, 80, 211); /* Borde verde oscuro */
+}
+
+/* Rojo para eliminar */
+.celda-eliminar {
+  background-color: rgb(221, 109, 109); /* Fondo rojo */
+  border: 4px solid darkred; /* Borde rojo oscuro */
+}
+
+/* Gris para celdas bloqueadas */
+.celda-bloqueada {
+  background-color: rgb(200, 200, 200); /* Fondo gris */
+  border: 2px solid grey; /* Borde gris */
+}

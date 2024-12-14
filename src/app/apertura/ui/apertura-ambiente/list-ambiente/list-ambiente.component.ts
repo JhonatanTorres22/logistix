@@ -18,6 +18,7 @@ import { AmbienteAddComponent } from '../ambiente-add/ambiente-add.component';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { template } from 'lodash';
 import { ExportPdfAmbienteComponent } from '../export-pdf-ambiente/export-pdf-ambiente.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -34,13 +35,12 @@ export class ListAmbienteComponent implements OnInit {
   renderizar = this.ambienteSignal.renderizarPor
   loadingImport = this.ambienteSignal.loadingImportAmbiente;
   cursosImportExcel = this.ambienteSignal.cursosImportExcel;
-  loading: boolean = true
   listarAmbiente = this.ambienteSignal.listarAmbientes;
   listarAmbienteAnterior = this.ambienteSignal.listarAmbienteAnterior
   ambienteSelected = this.ambienteSignal.ambienteSelected
-  displayedColumns: string[] = ['codigo', 'nombre', 'pabellon', 'nivel', 'tipoAmbiente', 'aforo', 'discapacidad', 'action'];
+  displayedColumns: string[] = ['nombre', 'pabellon', 'nivel', 'tipoAmbiente', 'aforo', 'discapacidad', 'action'];
   ambientes: ListarAmbientes[] = []
-  listaSemestreLocal = this.cursoAperturadoSignal.listaSemestreLocal
+  selectSemestreLocal = this.cursoAperturadoSignal.selectSemestreLocal
   dataSourceAmbiente = new MatTableDataSource(this.ambientes)
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -48,7 +48,15 @@ export class ListAmbienteComponent implements OnInit {
 
   file = this.mensajeriaSignal.file;
 
+  /* filtro */
+  filterForm: FormGroup;
+  tiposDeAmbiente: string[] = [];
+  pabellones: string[] = [];
+  niveles: number[] = [];
+
+  
   constructor(
+    private fb: FormBuilder,
     private authSignal: AuthSignal,
     private mensajeriaSignal: MensajeriaSignal,
     private cursoAperturadoSignal: CursoAperturadoSignal,
@@ -58,38 +66,69 @@ export class ListAmbienteComponent implements OnInit {
     private alertService: AlertService,
   ) {
     effect(() => {
-      console.log(this.renderizar());
+
       if (this.renderizar() == 'Renderizar') {
-        this.obtenerAmbientes()
+        this.obtenerAmbientes();
+
+         // Suscribirse a cambios en el formulario
+         this.filterForm.valueChanges.subscribe(() => this.applyFilters());
+
+         
       }
       this.renderizar.set('')
     }, { allowSignalWrites: true })
 
+    this.filterForm = this.fb.group({
+      discapacidad: [],
+      tipoDeAmbiente: [],
+      nombrePabellon: [],
+      nivelAmbiente: [],
+  });
+}
+
+ngOnInit(): void {
+  this.applyFilters()
+  // this.obtenerAmbientes()
   }
 
-  ngOnInit(): void {
-    // this.obtenerAmbientes()
-  }
+  applyFilters() {
+    const { discapacidad, tipoDeAmbiente, nombrePabellon, nivelAmbiente } = this.filterForm.value;
+    this.dataSourceAmbiente.data = this.listarAmbiente().filter(ambiente => {
+      
+        return (
+            (discapacidad === null || ambiente.discapacidad === discapacidad) &&
+            (tipoDeAmbiente === null || ambiente.tipoDeAmbiente === tipoDeAmbiente) &&
+            (nombrePabellon === null || ambiente.nombrePabellon === nombrePabellon) &&
+            (nivelAmbiente === null || ambiente.nivelAmbiente === nivelAmbiente)
+        );
+      });
+      // this.listarAmbiente.set(this.dataSourceAmbiente.data)
+}
 
   obtenerAmbientes = () => {
+    this.loadingImport.set(true);
     return new Promise<boolean>(resolve => {
-      this.repository.obtenerAmbientexSemestre(this.listaSemestreLocal().idSemestre, this.listaSemestreLocal().codigoLocal).subscribe({
+      this.repository.obtenerAmbientexSemestre(this.selectSemestreLocal().idSemestre, this.selectSemestreLocal().codigoLocal).subscribe({
         next: (ambiente) => {
           this.dataSourceAmbiente.data = ambiente
           this.listarAmbiente.set(ambiente)
-          this.loading = false;
+          this.loadingImport.set(false);
           this.listarAmbienteAnterior.set(this.ambienteSignal.listaAmbienteAnteriorDefault)
           this.alertService.showAlert('Ambientes listados correctamente', 'success')
 
+          if(ambiente.length> 0){
+            this.tiposDeAmbiente = [...new Set(ambiente.map((a) => a.tipoDeAmbiente))];
+             this.pabellones = [...new Set(ambiente.map((a) => a.nombrePabellon))];
+             this.niveles = [...new Set(ambiente.map((a) => a.nivelAmbiente))];
+          }
+
           if (ambiente.length == 0) {
-            console.log('listando los ambientes anteriores');
-            this.loading = true
+            this.loadingImport.set(true);
             this.obtenerAmbientesAnterior()
           }
           resolve(true)
         }, error: (error) => {
           this.alertService.showAlert('Ocurrió un error al listar los ambientes...', 'error');
-          console.log(error);
           resolve(false);
         }
       })
@@ -97,18 +136,16 @@ export class ListAmbienteComponent implements OnInit {
   }
 
   obtenerAmbientesAnterior = () => {
-    this.repository.obtenerAmbiente(this.listaSemestreLocal().codigoLocal).subscribe({
+    this.repository.obtenerAmbiente(this.selectSemestreLocal().codigoLocal).subscribe({
       next: (ambiente) => {
-        console.log(ambiente);
         this.listarAmbienteAnterior.set(ambiente);
         this.alertService.showAlert('Listando ambientes del semestre anterior', 'success');
 
         this.modalImportarAmbiente(this.templateAmbienteImport)
-        this.loading = false
+        this.loadingImport.set(false);
       }, error: (error) => {
         this.alertService.showAlert('Ocurrió un error al listar los ambientes...', 'error');
-        console.log(error);
-        this.loading = false
+        this.loadingImport.set(false);
       }
     })
   }
@@ -118,9 +155,7 @@ export class ListAmbienteComponent implements OnInit {
       template,
       titulo: 'Importar Ambientes',
     }).afterClosed().subscribe(data => {
-      console.log(data);
       if (data === 'cancelar') {
-        console.log(data);
         return
       }
     })
@@ -144,18 +179,14 @@ export class ListAmbienteComponent implements OnInit {
       template,
       titulo: title,
     }).afterClosed().subscribe(data => {
-      console.log(data);
       if (data === 'cancelar') {
         this.ambienteSelected.set(this.ambienteSignal.ambienteDefault)
-        console.log(data);
         return
       }
     })
   }
 
   guardarCursosImport = () => {
-    console.log(this.cursosImportExcel());
-    
     const tipoAmbienteMap: { [key: string]: number } = {
       "Aula": 1,
         "Laboratorio": 2,
@@ -176,8 +207,8 @@ export class ListAmbienteComponent implements OnInit {
           const idTipoAmbiente = tipoAmbienteMap[tipoAmbienteTexto];
 
           return {
-            idSemestre: this.listaSemestreLocal().idSemestre,
-            idLocal: this.listaSemestreLocal().codigoLocal,
+            idSemestre: this.selectSemestreLocal().idSemestre,
+            idLocal: this.selectSemestreLocal().codigoLocal,
             idTipoAmbiente: idTipoAmbiente,
             nombreAmbiente: ambiente.nombreAmbiente,
             nombrePabellon: ambiente.nombrePabellon,
@@ -190,8 +221,6 @@ export class ListAmbienteComponent implements OnInit {
           }
         });
 
-        console.log(ambientes,'ambnientes a insertar');
-        
         this.validarTipoAmbiente().then(isValid => {
           if (!isValid) {
             return
@@ -223,12 +252,9 @@ export class ListAmbienteComponent implements OnInit {
   
       for (const ambiente of ambientes) {
         const tipoAmbienteTexto = String(ambiente.tipoDeAmbiente).trim();  // Normalizamos a mayúsculas
-  
-        console.log("Valor recibido para tipoAmbienteTexto:", tipoAmbienteTexto);  // Verifica qué valor estás obteniendo
-  
+
         // Validación del tipo de ambiente
         if (!(tipoAmbienteTexto in tipoAmbienteMap)) {
-          console.log('Error: El valor de tipoDeAmbiente es inválido:', tipoAmbienteTexto);
           this.alertService.showAlert('Hay problemas de validación con el tipo de ambiente', 'error');
           resolve(false);
           this.loadingImport.set(false);
@@ -254,8 +280,6 @@ export class ListAmbienteComponent implements OnInit {
 
       this.repository.insertarAmbiente(ambiente).subscribe({
         next: (data) => {
-          console.log(data);
-
           this.alertService.showAlert('Los ambientes fueron guardados correctamente', 'success', 6);
           this.listarAmbienteAnterior.set(this.ambienteSignal.listaAmbienteAnteriorDefault)
           this.file.set(this.mensajeriaSignal.fileDefault);
@@ -272,7 +296,6 @@ export class ListAmbienteComponent implements OnInit {
           })
         }, error: (error) => {
           resolve(false);
-          console.log(error);
           this.alertService.showAlert('Ocurrió un error al guardar los ambientes', 'error', 6);
         }
       })
@@ -299,7 +322,7 @@ export class ListAmbienteComponent implements OnInit {
     this.alertService.sweetAlert('question', '¿Confirmar?', '¿Desea eliminar los ambientes seleccionados?')
       .then(isConfirm => {
         if (!isConfirm) return;
-        this.loading = true
+        this.loadingImport.set(true);
         this.eliminarAmbientes(eliminarAmbiente);
       });
   }
@@ -309,11 +332,10 @@ export class ListAmbienteComponent implements OnInit {
       next: () => {
         this.alertService.showAlert('Ambiente eliminado correctamente', 'success');
         this.obtenerAmbientes();
-        this.loading = false
+        this.loadingImport.set(false);
       }, error: (error) => {
         this.alertService.showAlert('Ocurrió un error al eliminar los ambientes...', 'error');
-        console.log(error);
-        this.loading = false
+        this.loadingImport.set(false);
 
       }
     })
