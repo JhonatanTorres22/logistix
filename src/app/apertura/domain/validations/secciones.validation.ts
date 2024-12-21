@@ -13,7 +13,7 @@ export class SeccionValidation {
     minLengthVacantes:number = 1;
     maxLengthVacantes: number = 2;
     minVacantes: number = 1;
-    maxVacantes: number = 50;
+    maxVacantes: number = 99;
     expRegVacantesBlockToInput: RegExp = /[^0-9]/g;
 
     /* GRUPO */

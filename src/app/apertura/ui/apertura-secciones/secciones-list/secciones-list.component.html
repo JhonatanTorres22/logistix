@@ -15,10 +15,8 @@
             </div>
 
         </ng-template>
-    
         <div class="p-b-5">
           @if(listaSecciones().length > 0){
-            <!-- {{ listaSecciones() | json }} -->
           <div class="table-containe table-reponsive">
             <div class="table-search p-0">
               <mat-form-field appearance="outline" class="w-100">
@@ -52,28 +50,25 @@
                 </ng-container>
     
                 <ng-container matColumnDef="nombre_formato">
-                  <th mat-header-cell *matHeaderCellDef> Nombre Formato </th>
+                  <th mat-header-cell *matHeaderCellDef> Formato </th>
                   <td mat-cell *matCellDef="let seccion">
-                    {{ getNombreFormatoUnico(seccion) }}
+                      <div class="bg-blue-200 text-blue-800 border-round font-medium mb-2"><span class="m-2"> TEORÍA:  {{ seccion.descripcionFormatoTeoria }} </span></div>
+                      <div class="bg-green-200 text-green-800 border-round font-medium"><span class="m-2"> PRÁCTICA: {{ seccion.nombreFormatoPractica }} </span></div>
                   </td>
                 </ng-container>
     
                 <ng-container matColumnDef="tipoAmbiente">
-                  <th mat-header-cell *matHeaderCellDef> Tipo de Ambiente </th>
+                  <th mat-header-cell *matHeaderCellDef> Ambientes </th>
                   <td mat-cell *matCellDef="let seccion">
-                    <div *ngFor="let ambiente of seccion.ambiente">
-                      {{ ambiente.nombreTipoAmbiente }}
-                    </div>
+                      <div class="bg-blue-200 text-blue-800 border-round font-medium mb-2"><span class="m-2"> TEORÍA:  {{ seccion.nombreAmbienteTeoria }} </span></div>
+                      <div class="bg-green-200 text-green-800 border-round font-medium"><span class="m-2"> PRÁCTICA: {{ seccion.nombreAmbientePractica }} </span></div>
                   </td>
                 </ng-container>
     
                 <ng-container matColumnDef="n_grupos">
                   <th mat-header-cell *matHeaderCellDef> Nª GRUPOS </th>
                   <td mat-cell *matCellDef="let seccion">
-                    <div *ngFor="let ambiente of seccion.ambiente">
-                      {{ ambiente.cantidadGrupos }}
-                    </div>
-                    
+                    {{ seccion.numeroGrupos }}            
                   </td>
                 </ng-container>
     

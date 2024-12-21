@@ -3,14 +3,23 @@ import { AgregarSeccion, AgregarTipoAmbienteASeccion, EditarSeccion, EliminarSec
 
 export class AperturaSeccionMapper {
     static fromApiToDomain( param: ListarSeccionesDTO ): ListarSecciones {
-        const listarAmbienteSeccion = param.ambiente.map(AperturaSeccionMapper.fromApiToDomainAmbienteSeccion)
+        // const listarAmbienteSeccion = param.ambiente.map(AperturaSeccionMapper.fromApiToDomainAmbienteSeccion)
         return {
             idAperturaSeccion: param.codigoAperturaSeccion,
             nombreSeccion: param.seccion,
             discapacidad: param.discapacidad,
             nVacantes: param.vacantes,
             detalleObservacion: param.observacion,
-            ambiente: listarAmbienteSeccion
+            idAmbienteTipoTeoria : param.codigoAmbienteTipoTeoria,
+            nombreAmbienteTeoria : param.nombreAmbienteTipoTeoria,
+            idFormatoTeoria : param.codigoFormatoTeoria,
+            descripcionFormatoTeoria : param.nombreFormatoTeoria,
+            idAmbienteTipoPractica : param.codigoAmbienteTipoPractica,
+            nombreAmbientePractica: param.nombreAmbienteTipoPractica,
+            idFormatoPractica : param.codigoFormatoPractica,
+            nombreFormatoPractica : param.nombreFormatoPractica,
+            numeroGrupos : param.nGrupos,
+            // ambiente: listarAmbienteSeccion
         }
     }
 
@@ -30,9 +39,11 @@ export class AperturaSeccionMapper {
             seccion: param.nombreSeccion,
             discapacidad: param.discapacidad,
             observacion: param.detalleObservacion,
-            vacantes: param.nVacantes,
-            codigoAmbienteTipo: param.idTipoAmbiente,
-            nGrupos: param.nGrupos
+            vacantes: param.cantidadVacantes,
+            codigoAmbienteTipoPractica: param.idTipoAmbientePractica,
+            codigoAmbienteTipoTeoria: param.idTipoAmbienteTeoria,
+            nGrupos: param.cantidadGrupos,
+            usuario: param.idUsuario
         }
     }
 
@@ -57,16 +68,23 @@ export class AperturaSeccionMapper {
             idTipoAmbiente: param.codigoAmbienteTipo,
             nombreTipoAmbiente: param.nombre,
             descripcionTipoAmbiente: param.descripcion,
-            grupo:param.grupo
+            grupo:param.grupo,
+            practica: param.seDictaPractica,
+            teoria: param.seDictaTeoria
+            
         }
     }
 
     static fromDomainToApiEditarSeccion ( param: EditarSeccion ): EditarSeccionDTO {
         return {
             codigoAperturaSeccion: param.idAperturaSeccion,
+            seccion: param.nombreSeccion,
             discapacidad: param.discapacidad,
+            vacantes: param.cantidadVacantes,
             observacion: param.detalleObservacion,
-            vacantes: param.nVacantes,
+            codigoAmbienteTipoTeoria: param.idTipoAmbienteTeoria,
+            codigoAmbienteTipoPractica: param.idTipoAmbientePractica,
+            nGrupos: param.cantidadGrupos,
             usuario: param.idUsuario
         }
     }

@@ -3,7 +3,7 @@ import { AgregarSeccion, AgregarTipoAmbienteASeccion, EditarSeccion, EliminarSec
 
 export abstract class AperturaSeccionRepository {
     abstract obtenerSecciones(idAperturaCurso: number): Observable<ListarSecciones[]>
-    abstract insertarSecciones( secciones: AgregarSeccion[] ) : Observable<void>
+    abstract insertarSecciones( secciones: AgregarSeccion ) : Observable<void>
     abstract agregarTipoAmbienteASeccion(agregarTipoAmbiente: AgregarTipoAmbienteASeccion[]): Observable<void>
     abstract obtenerFormato(): Observable<ListarFormato[]>
     abstract obtenerTipoAmbiente(idFormato:number): Observable<ListarTipoAmbiente[]>

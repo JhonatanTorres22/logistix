@@ -1,3 +1,4 @@
+
 export class ListarSecciones{
     constructor(
        public idAperturaSeccion: number,
@@ -5,7 +6,17 @@ export class ListarSecciones{
        public discapacidad: boolean,
        public nVacantes: number,
        public detalleObservacion: string,
-       public ambiente: ListarTipoAmbienteSeccion[]
+
+       public idAmbienteTipoTeoria : null | number,
+       public nombreAmbienteTeoria: string,
+       public idFormatoTeoria: null | number,
+       public descripcionFormatoTeoria: string,
+       public idAmbienteTipoPractica: null | number,
+       public nombreAmbientePractica: string,
+       public idFormatoPractica : null | number,
+       public nombreFormatoPractica: string,
+       public numeroGrupos: number,
+    //    public ambiente: ListarTipoAmbienteSeccion[]
     ){}
     
 }
@@ -19,11 +30,16 @@ export interface AgregarSeccion {
     idAperturaCurso: number,
     nombreSeccion: string,
     discapacidad:boolean,
-    nVacantes: number,
+    cantidadVacantes: number,
     detalleObservacion: string,
-    idTipoAmbiente: number,
-    nGrupos: number
+    idTipoAmbienteTeoria: number,
+    idTipoAmbientePractica: number
+    cantidadGrupos: number,
+    idUsuario: number
+}
 
+export type EditarSeccion = Omit <AgregarSeccion, 'idAperturaCurso'> & {
+    idAperturaSeccion: number
 }
 export interface ListarFormato {
     idFormato:number,
@@ -36,16 +52,11 @@ export interface ListarTipoAmbiente {
     idTipoAmbiente: number,
     nombreTipoAmbiente: string,
     descripcionTipoAmbiente: string,
-    grupo: boolean 
+    grupo: boolean,
+    teoria: boolean,
+    practica: boolean
 }
 
-export interface EditarSeccion {
-    idAperturaSeccion: number,
-    discapacidad: boolean,
-    nVacantes: number,
-    detalleObservacion: string,
-    idUsuario: number
-}
 export interface EliminarSeccion {
     idAperturaSeccion : number,
     idUsuario: number

@@ -8,7 +8,16 @@ export interface ListarSeccionesDTO{
     discapacidad: boolean,
     vacantes: number,
     observacion: string,
-    ambiente: ListarAmbienteSeccionDTO[]
+    codigoAmbienteTipoTeoria: number,
+    nombreAmbienteTipoTeoria: string,
+    codigoFormatoTeoria: number,
+    nombreFormatoTeoria: string,
+    codigoAmbienteTipoPractica: number,
+    nombreAmbienteTipoPractica: string,
+     codigoFormatoPractica: number,
+    nombreFormatoPractica: string,
+    nGrupos: number
+    // ambiente: ListarAmbienteSeccionDTO[]
 }
 
 export interface ListarAmbienteSeccionDTO{
@@ -24,9 +33,15 @@ export interface AgregarSeccionDTO{
     discapacidad: boolean,
     vacantes: number,
     observacion: string,
-    codigoAmbienteTipo: number,
-    nGrupos: number
+    codigoAmbienteTipoTeoria: number,
+    codigoAmbienteTipoPractica: number,
+    nGrupos: number,
+    usuario: number
 }
+
+export type EditarSeccionDTO = Omit<AgregarSeccionDTO, 'codigoAperturaCurso'> & {
+    codigoAperturaSeccion: number;
+};
 
 export interface ListarFormatoArrayDTO{
     data: ListarFormatoDTO[]
@@ -45,16 +60,12 @@ export interface ListarTipoAmbienteDTO {
     codigoAmbienteTipo: number,
     nombre: string,
     descripcion: string,
-    grupo:boolean 
+    grupo:boolean,
+    seDictaTeoria:boolean,
+    seDictaPractica: boolean
 }
 
-export interface EditarSeccionDTO {
-    codigoAperturaSeccion: number,
-    discapacidad: boolean,
-    vacantes: number,
-    observacion: string,
-    usuario: number
-}
+
 
 export interface EliminarSeccionDTO {
     codigoAperturaSeccion :number,

@@ -14,7 +14,7 @@ export class AperturaSeccionRespositoryImpl implements AperturaSeccionRepository
     obtenerSecciones(idAperturaCurso: number): Observable<ListarSecciones[]> {
         return this.service.obtenerSeccionesAperturadas(idAperturaCurso)
     }
-    insertarSecciones(secciones: AgregarSeccion[]): Observable<void> {
+    insertarSecciones(secciones: AgregarSeccion): Observable<void> {
         return this.service.insertarSeccion(secciones)
     }
     obtenerFormato(): Observable<ListarFormato[]> {

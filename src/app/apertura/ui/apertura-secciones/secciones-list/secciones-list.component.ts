@@ -54,11 +54,11 @@ export class SeccionesListComponent implements OnInit{
     this.obtenerSecciones()
   }
 
-  getNombreFormatoUnico = (seccion: ListarSecciones): string => {
-    const formatos = seccion.ambiente.map((ambiente: any) => ambiente.nombreFormato);
-    const formatosUnicos = [...new Set(formatos)]; // Elimina duplicados
-    return formatosUnicos[0]; // Devuelve el primer nombre único
-  }
+  // getNombreFormatoUnico = (seccion: ListarSecciones): string => {
+  //   const formatos = seccion.ambiente.map((ambiente: any) => ambiente.nombreFormato);
+  //   const formatosUnicos = [...new Set(formatos)]; // Elimina duplicados
+  //   return formatosUnicos[0]; // Devuelve el primer nombre único
+  // }
 
   // Función para obtener la cantidad única de grupos
   // getCantidadGruposUnica = (seccion: ListarSecciones): number => {
@@ -91,12 +91,20 @@ export class SeccionesListComponent implements OnInit{
 
   limpiarDatosSeccion = () => {
     this.seccionEdit = {
-      ambiente: [],
       detalleObservacion: '',
       discapacidad:false,
       idAperturaSeccion: 0,
       nombreSeccion: '',
-      nVacantes:0
+      nVacantes:0,
+      descripcionFormatoTeoria : '',
+      idAmbienteTipoPractica: null,
+      idAmbienteTipoTeoria: null,
+      idFormatoPractica: null,
+      idFormatoTeoria: null,
+      nombreAmbientePractica:'',
+      nombreAmbienteTeoria: '',
+      nombreFormatoPractica: '',
+      numeroGrupos:0
     };
   }
 

@@ -42,9 +42,9 @@ export class AperturaSeccionService {
         .pipe(map( (api) => api.data.map(AperturaSeccionMapper.fromApiToDomain)))
     }
 
-    insertarSeccion = (seccion: AgregarSeccion[]): Observable<void> => {
-        const seccionAPI = seccion.map( AperturaSeccionMapper.fromDomainToApiAgregarSeccion );
-        return this.http.post<void>(this.urlApi + this.urlAgregarSeccion,seccionAPI  )
+    insertarSeccion = (seccion: AgregarSeccion): Observable<void> => {
+        const seccionAPI = AperturaSeccionMapper.fromDomainToApiAgregarSeccion(seccion);
+        return this.http.post<void>(this.urlApi + this.urlAgregarSeccion, seccionAPI  )
     }
 
     agregarTipoAmbienteASeccion = (tipoAmbiente: AgregarTipoAmbienteASeccion[]): Observable<void> => {

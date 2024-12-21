@@ -16,16 +16,26 @@ export class AperturaSeccionesSignal {
         idTipoAmbiente: 0,
         nombreTipoAmbiente: '',
         descripcionTipoAmbiente: '',
-        grupo: false
+        grupo: false,
+        teoria: false,
+        practica: false
     }
 
     listarSeccionDefault: ListarSecciones = {
-        ambiente: [],
         detalleObservacion: '',
         discapacidad: false,
         idAperturaSeccion: 0,
         nombreSeccion: '',
-        nVacantes: 0
+        nVacantes: 0,
+        idAmbienteTipoTeoria: 0,
+        nombreAmbienteTeoria: "",
+        idFormatoTeoria: 0,
+        descripcionFormatoTeoria: "",
+        idAmbienteTipoPractica: 0,
+        nombreAmbientePractica: "",
+        idFormatoPractica: 0,
+        nombreFormatoPractica: "",
+        numeroGrupos: 0
     }
 
     listarSeccionesDefault: ListarSecciones[] = [];
@@ -36,9 +46,17 @@ export class AperturaSeccionesSignal {
 
     listaSecciones: WritableSignal<ListarSecciones[]> = signal(this.listarSeccionesDefault);
     seccionEdit: WritableSignal<ListarSecciones> = signal(this.listarSeccionDefault)
-    listaFormato: WritableSignal<ListarFormato[]> = signal(this.listaFormatoDefault);
-    listaTipoAmbiente: WritableSignal<ListarTipoAmbiente[]> = signal(this.listaTipoAmbienteDefault)
 
+    listaFormato: WritableSignal<ListarFormato[]> = signal(this.listaFormatoDefault);
+    listaFormatoTeorico: WritableSignal<ListarFormato[]> = signal(this.listaFormatoDefault);
+    listaFormatoPractico: WritableSignal<ListarFormato[]> = signal(this.listaFormatoDefault);
+    listaFormtatoNoRequire: WritableSignal<ListarFormato[]> = signal(this.listaFormatoDefault)
+
+    listaTipoAmbiente: WritableSignal<ListarTipoAmbiente[]> = signal(this.listaTipoAmbienteDefault)
+    listaTipoAmbienteTeorico: WritableSignal<ListarTipoAmbiente[]> = signal(this.listaTipoAmbienteDefault)
+    listaTipoAmbientePractico: WritableSignal<ListarTipoAmbiente[]> = signal(this.listaTipoAmbienteDefault)
+    listaTipoAmbienteExterno : WritableSignal<ListarTipoAmbiente[]> = signal(this.listaTipoAmbienteDefault)
+    
     formatoSeleccionado: WritableSignal<ListarFormato> = signal(this.formatoSeleccionadoDefault);
     tipoAmbienteSeleccionado: WritableSignal<ListarTipoAmbiente> = signal(this.tipoAmbienteSeleccionadoDefault)
 

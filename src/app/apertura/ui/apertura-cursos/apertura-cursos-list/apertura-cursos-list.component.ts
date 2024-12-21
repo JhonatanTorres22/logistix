@@ -123,11 +123,11 @@ this.renderizarPor.set('')
   }
 
 
-  listarSeccion = (template: TemplateRef<any>, curso: any) => {
+  listarSeccion = (template: TemplateRef<any>, curso: ListarCursosAperturados) => {
     this.cursoAperturado.set(curso)
     this.modal.openTemplate({
       template,
-      titulo: 'Secciones'
+      titulo: `${curso.nombreCurso}`
     }).afterClosed().subscribe(response => {
       // console.log( response );
 
