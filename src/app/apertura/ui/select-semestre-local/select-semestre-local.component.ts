@@ -10,6 +10,7 @@ import { AperturaDocenteSignal } from '../../domain/signal/apertura-docente.sign
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MatSelectChange } from '@angular/material/select';
+import { ValidarHorarioSignal } from 'src/app/horario/domain/signal/validar-horario.signal';
 
 @Component({
   selector: 'app-select-semestre-local',
@@ -32,14 +33,16 @@ export class SelectSemestreLocalComponent implements OnInit {
   idPrograma = this.planEstudioSignal.programaId;
   selectProgramaSeleccionado = this.cursoAperturadoSignal.selectProgramaSeleccionado
 
+  renderizarValidarHorario = this.validarHorarioSignal.renderizarHorario
+
   constructor(
     private ambienteSignal : AperturaAmbienteSignal,
     private cursoAperturadoSignal: CursoAperturadoSignal,
     private planEstudioSignal: PlanEstudioSignal,
     private auth: AuthSignal,
-    private modal: UiModalService,
     private rutaSignal: RutasSignal,
     private docenteSignal: AperturaDocenteSignal,
+    private validarHorarioSignal: ValidarHorarioSignal
   ){
     
   }
@@ -94,6 +97,8 @@ export class SelectSemestreLocalComponent implements OnInit {
         // Acciones según la ruta actual
         this.currentRuta() === '/apertura/cursos'
             ? this.renderizarCurso.set('RenderizarCurso')
+            :  this.currentRuta() === '/validar' 
+            ? this.renderizarValidarHorario.set('ValidarHorario')
             : this.renderizar.set('Renderizar');
 
         this.docenteSignal.seleccionarDocente.set(this.docenteSignal.seleccionarDocenteDefault);

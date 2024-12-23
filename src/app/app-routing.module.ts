@@ -59,6 +59,11 @@ const routes: Routes = [
         path: 'apertura',
         loadChildren: () => import('./apertura/apertura.module').then( (m) => m.AperturaModule ),
         
+      },
+      {
+        path: '',
+        loadChildren: () => import('./horario/horario.module').then( (m) => m.HorarioModule ),
+        
       }
     ]
   },

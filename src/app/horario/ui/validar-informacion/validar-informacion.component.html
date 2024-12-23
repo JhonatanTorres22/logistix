@@ -1,0 +1,17 @@
+<div class="pt-4 pb-4">
+    <app-select-semestre-local></app-select-semestre-local>
+</div>
+@if(selectProgramaSeleccionado()){
+    <mat-dialog-content>
+        <app-list-validar-horario></app-list-validar-horario>
+    </mat-dialog-content>
+} @else {
+    <div
+    class="boton-parpadeante flex gap-2 border-round border-1 border-dashed bg-gray-100 w-full h-15rem justify-content-center align-items-center border-gray-400 hover:bg-blue-50 hover:border-blue-500 hover:text-blue-500">
+    <h5 class="text-center absolute pt-4 f-14 font-italic">SELECCIONE EL SEMESTRE Y LOCAL</h5>
+</div>
+}
+
+
+<!-- {{ validarHorario() | json }} -->
+

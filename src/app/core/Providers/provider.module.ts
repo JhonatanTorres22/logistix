@@ -51,6 +51,8 @@ import { AperturaDocenteRepositoryImpl } from "src/app/apertura/infraestructure/
 import { RolRepository } from "src/app/roles/domain/repositories/rol.repository";
 import { RolRepositoryImpl } from "src/app/roles/infraestucture/repositories/rol.repository.imp";
 import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura-docente.repository";
+import { ValidarHorarioRepository } from "src/app/horario/domain/repositories/validar-horario.repository";
+import { ValidarHorarioRepositoryImpl } from "src/app/horario/infraestructure/repositories/validar-horario.repository.impl";
 
 
 @NgModule({
@@ -86,6 +88,7 @@ import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura
             {provide: AperturaAmbienteRepository, useClass: AperturaAmbienteRespositoryImpl},
             {provide: DocenteRepository, useClass: AperturaDocenteRepositoryImpl},
             {provide: RolRepository, useClass: RolRepositoryImpl},
+            {provide: ValidarHorarioRepository, useClass: ValidarHorarioRepositoryImpl}
            
         ]
     ]
