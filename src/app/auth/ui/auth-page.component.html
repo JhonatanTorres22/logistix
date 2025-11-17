@@ -1,0 +1,43 @@
+<div class="auth-wrapper">
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <img src="assets/images/logo_negro_v2.png" alt="Logo" class="auth-logo" />
+
+    <!-- Panel Toggle -->
+    <div class="toggle-container">
+      <div class="toggle">
+        <div class="toggle-panel toggle-right">
+          <h2 class="toggle-title">{{ toggleTitle() }}</h2>
+          <p class="toggle-text">{{ toggleText() }}</p>
+          <div class="toggle-footer">
+            <img 
+              src="assets/images/logo_logistica.png" 
+              alt="Imagen footer" 
+              class="footer-image"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="form-container">
+      
+        @if (step() === 'dni') {
+            <app-search-dni></app-search-dni>
+        }
+        @else if (step() === 'roles') {
+            <select-rol></select-rol>
+        }
+        @else if(step() === 'login') {
+          <app-login></app-login>
+        }
+      <!-- <app-card [showHeader]="false" cardClass="mt-4 md:mt-0" padding="40">
+
+
+      </app-card> -->
+    </div>
+
+  </div>
+</div>

@@ -16,6 +16,9 @@ import { SelectRolComponent } from '../select-rol/select-rol.component';
 import { AuthSignal } from '../../domain/signals/auth.signal';
 import { DeshabilitarInputsFormularioService } from 'src/app/core/services/deshabilitar-inputs-formulario.service';
 import { UiInputtComponent } from 'src/app/core/components/ui-inputt/ui-inputt.component';
+import { AuthenticarRepository } from '../../domain/repositories/authenticar.repository';
+import { Authenticar } from '../../domain/models/authenticar.model';
+import { AuthenticarSignal } from '../../domain/signals/authenticar.signal';
 
 @Component({
   selector: 'app-login',
@@ -26,14 +29,11 @@ import { UiInputtComponent } from 'src/app/core/components/ui-inputt/ui-inputt.c
     RouterModule,
     FormsModule,
     UiInputtComponent,
-    SelectRolComponent ],
+    ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../../authentication.scss']
 })
 export class LoginComponent {
-
-  listaCamposFormulario: string[] = ['userName', 'password']
-  validatorUsername = this.authValidations.validatorUsername;
   validatorPassword = this.authValidations.validatorPassword;
     // public props
     hide = true;
@@ -42,18 +42,6 @@ export class LoginComponent {
     loading = false;
     submitted = false;
     returnUrl: string;
-    error = '';
-  
-    // maxLengthUserName: number;
-    // minLengthUserName: number;
-    // expRegUsername: RegExp;
-    // expRegUserNameToLockInput: RegExp;
-
-    // maxLengthPassword: number;
-    // minLengthPassword: number;
-    // expRegPassword: RegExp;
-    // expRegPasswordToLockInput: RegExp;
-
     messageErrorLogin = '';
 
     userData = this.auth.currentUserData;
@@ -62,16 +50,18 @@ export class LoginComponent {
     token: string = '';
     menu = [];
 
+    dni = this.authenticarSignal.dni
+    rol = this.authenticarSignal.rol
+
     constructor(
-      private deshabilitarInputsFormService:DeshabilitarInputsFormularioService,
-      private formBuilder: FormBuilder,
+      
       private route: ActivatedRoute,
       private router: Router,
-      private authenticationService: AuthenticationService,
+
       private authValidations: AuthValidations,
-      private authService: AuthService,
-      private authRepository: AuthRepository,
       private auth: AuthSignal,
+      private authenticarSignal : AuthenticarSignal,
+      private authenticar : AuthenticarRepository,
       private alertService: AlertService
     ) {
 
@@ -87,13 +77,6 @@ export class LoginComponent {
       // this.expRegPasswordToLockInput = this.authValidations.expRegPasswordToLockInput;
 
       this.formLogin = new FormGroup({
-        userName: new FormControl('', [
-          Validators.required,
-          Validators.maxLength(this.validatorUsername.maxLength),
-          Validators.minLength(this.validatorUsername.minLength),
-          Validators.pattern(this.validatorUsername.expReg)
-        ]
-        ),
         password: new FormControl('', [
           Validators.required,
           Validators.maxLength(this.validatorPassword.maxLength),
@@ -101,8 +84,7 @@ export class LoginComponent {
         ]
         )
       })
-      this.deshabilitarInputsFormService.inicializarInputs(this.formLogin, this.listaCamposFormulario,0);
-      this.deshabilitarInputsFormService.controlarInputs(this.formLogin, this.listaCamposFormulario)
+      
       // redirect to home if already logged in
       if (this.auth.currentUserData()?.NumeroDocumento != '') {
         this.router.navigate(['/dashboard']); // '/dashboard/default'
@@ -143,33 +125,22 @@ export class LoginComponent {
       //       this.loading = false;
       //     }
       //   );
-      const login: any = { 
-        userName: this.formLogin.value.userName,
-        password: this.formLogin.value.password,
-
-        // userName: 'info@phoenixcoded.co',
-        // password: '123456',
-
+      const login: Authenticar = { 
+        username : this.dni(),
+        password : this.formLogin.value.password,
+        role : this.rol()
       }
-      this.authRepository.login( login ).subscribe({
+      console.log(login);
+      
+      this.authenticar.login( login ).subscribe({
         next: ( data ) => {
-          
-          // const decoded = jwtDecode<JwtPayload>(data.accessToken);
           const decoded = JSON.stringify(jwtDecode<JwtPayload>(data.accessToken))
-   
+  
           const userData = JSON.parse(decoded);
           this.token = data.accessToken;
-          // console.log();
-          
+
           this.roles = JSON.parse(userData.Roles);
-          // this.auth.user;
-          // console.log(this.userData());
-          // console.log(JSON.parse(this.userData().Roles));
-          
-          // this.menu = this.mapp
-         
-          
-          // this.router.navigate(['/dashboard']);
+
         }, error: (error) => {
           console.log(error);
           this.alertService.showAlert(this.authValidations.errorLogin(error.error?.message), 'error');

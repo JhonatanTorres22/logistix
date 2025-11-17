@@ -17,7 +17,7 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
-import { render } from '@fullcalendar/core/preact';
+// import { render } from '@fullcalendar/core/preact';
 @Component({
   selector: 'apertura-cursos-list',
   standalone: true,

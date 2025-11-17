@@ -1,24 +1,28 @@
-<!-- {{ listarDisponibilidadDocente() | json }}
-{{ seleccionarDocente() | json }} -->
-<!-- {{ 'ID DEL PROGRAMA'+ ' '  + this.selectSemestreLocal().idProgramaAcademico }} -->
 @if (!loading) {
+<div class="flex justify-content-end gap-2">
+  @for (local of localesFiltrados; track $index) {
+  <div class="flex align-items-center mr-4">
+    <div [style.background-color]="localColors[$index]" style="width: 20px; height: 20px; border-radius: 50%"></div>
+    <div class="font-normal text-xs">{{ local.nombre }}</div>
+  </div>
+  }
+  <div class="flex">
+    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: rgb(200, 200, 200);"></div>
+    <div class="font-normal text-xs">OTRO PROGRAMA</div>
+  </div>
+</div>
+
 <app-card headerClassTemplate="py-10 flex justify-content-between align-item-center w-full">
   <ng-template #headerTitleTemplate>
-
-    <div>DISPONIBILIDAD HORARIA DE {{ seleccionarDocente().nombreApellido }} </div>
-
-    <div class="flex justify-content-end gap-2">
-      @for (local of localesFiltrados; track $index) {
-        <div class="flex align-items-center mr-4">
-          <div [style.background-color]="localColors[$index]" style="width: 20px; height: 20px; border-radius: 50%"></div>
-          <div class="font-normal text-xs">{{ local.nombre }}</div>
-        </div>
-      }
-      <div class="flex">
-        <div style="width: 20px; height: 20px; border-radius: 50%; background-color: rgb(200, 200, 200);"></div>
-        <div class="font-normal text-xs">OTRO PROGRAMA</div>
-      </div>
+    <div>DISPONIBILIDAD HORARIA DE {{ seleccionarDocente().nombreApellido }}
     </div>
+    <mat-button-toggle-group name="restriccion" aria-label="Tipo de restricción" (change)="onToggleGroupChange($event)">
+    <mat-button-toggle value="activada">Descanso Obligatorio Automático</mat-button-toggle>
+    <mat-button-toggle value="manual">Descanso Obligatorio Manual</mat-button-toggle>
+    <mat-button-toggle value="desactivada">Cancelar</mat-button-toggle>
+  </mat-button-toggle-group>
+    <!-- <mat-checkbox class="example-margin" (change)="toggleRestriccion($event.checked)">Restricción de horas por la Universidad</mat-checkbox> -->
+    <ui-button color="primary" label="Guardar" (onClick)="agregarDisponibilidad()"></ui-button>
 
   </ng-template>
   <table mat-table [dataSource]="horasAcademicas">
@@ -35,9 +39,11 @@
             'celda-agregar': isAdding(diaIndex + 1, horaIndex + 1) && !esCeldaBloqueada(diaIndex + 1, horaIndex + 1),
             'celda-eliminar': isRemoving(diaIndex + 1, horaIndex + 1) && !esCeldaBloqueada(diaIndex + 1, horaIndex + 1),
             'celda-bloqueada': esCeldaBloqueada(diaIndex + 1, horaIndex + 1),
+            
           }" [style.background-color]="getLocalColor(diaIndex + 1, horaIndex + 1)"
           (mousedown)="startSelection(diaIndex + 1, horaIndex + 1)"
           (mousemove)="draggingSelection(diaIndex + 1, horaIndex + 1)" (mouseup)="endSelection()">
+          <!-- <span *ngIf="esCeldaDeDescanso(diaIndex +1, horaIndex + 1)">Descanso Obligatorio</span> -->
         </td>
       </ng-container>
     </ng-container>
@@ -48,7 +54,7 @@
 </app-card>
 }
 @else {
-  <ui-loading-progress-bar></ui-loading-progress-bar>
-}  
+<ui-loading-progress-bar></ui-loading-progress-bar>
+}
 <!-- {{ celdasSeleccionadas | json }} -->
 <!-- <full-calendar [options]="calendarOptions"></full-calendar> -->

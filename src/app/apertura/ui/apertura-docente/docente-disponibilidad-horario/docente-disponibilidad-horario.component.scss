@@ -26,3 +26,10 @@ th, td {
   background-color: rgb(200, 200, 200); /* Fondo gris */
   border: 2px solid grey; /* Borde gris */
 }
+
+.celda-descanso {
+  background-color: #f0f0f0; /* Color claro */
+  color: #ff0000;           /* Texto rojo */
+  font-weight: bold;        /* Negrita */
+  text-align: center;
+}

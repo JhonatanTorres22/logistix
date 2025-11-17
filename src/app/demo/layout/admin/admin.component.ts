@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 // rxjs
 import { Subscription } from 'rxjs';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { MenuSignal } from 'src/app/auth/domain/signals/menu.signal';
 
 @Component({
   selector: 'app-admin',
@@ -50,6 +51,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   // public props
   @ViewChild('sidebar') sidebar: MatDrawer;
   menus = this.auth.currentMenu;
+  menu = this.menuSignal.currentMenu
   modeValue: MatDrawerMode = 'side';
   direction: string;
   currentApplicationVersion = environment.appVersion;
@@ -61,6 +63,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // Constructor
   constructor(
+    private menuSignal : MenuSignal,
     private breakpointObserver: BreakpointObserver,
     private themeService: ThemeLayoutService,
     private auth: AuthSignal,

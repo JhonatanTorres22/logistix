@@ -53,6 +53,8 @@ import { RolRepositoryImpl } from "src/app/roles/infraestucture/repositories/rol
 import { DocenteRepository } from "src/app/apertura/domain/repositories/apertura-docente.repository";
 import { ValidarHorarioRepository } from "src/app/horario/domain/repositories/validar-horario.repository";
 import { ValidarHorarioRepositoryImpl } from "src/app/horario/infraestructure/repositories/validar-horario.repository.impl";
+import { AuthenticarRepository } from "src/app/auth/domain/repositories/authenticar.repository";
+import { AuthenticarRepositoryImpl } from "src/app/auth/infraestructure/repositories/authenticar.repository.impl";
 
 
 @NgModule({
@@ -88,8 +90,12 @@ import { ValidarHorarioRepositoryImpl } from "src/app/horario/infraestructure/re
             {provide: AperturaAmbienteRepository, useClass: AperturaAmbienteRespositoryImpl},
             {provide: DocenteRepository, useClass: AperturaDocenteRepositoryImpl},
             {provide: RolRepository, useClass: RolRepositoryImpl},
-            {provide: ValidarHorarioRepository, useClass: ValidarHorarioRepositoryImpl}
+            {provide: ValidarHorarioRepository, useClass: ValidarHorarioRepositoryImpl},
            
+
+            //LOGÍSTICA
+
+            {provide : AuthenticarRepository, useClass : AuthenticarRepositoryImpl}
         ]
     ]
 })

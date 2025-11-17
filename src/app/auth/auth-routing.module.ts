@@ -8,7 +8,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'login',
-                loadComponent: () => import('./ui/login/login.component').then( c => c.LoginComponent ),
+                loadComponent: () => import('./ui/auth-page.component').then( c => c.AuthComponent ),
             },
             {
                 path: 'select-rol',

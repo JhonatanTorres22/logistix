@@ -4,55 +4,6 @@
       <div class="flex flex-column align-items-center gap-1">
         <div class="flex">
           <img src="assets/images/user/avatar-1.png" alt="user-image" class="user-avatar" />
-          <!-- <div class="user-setting">
-            <a href="javascript:" [matMenuTriggerFor]="menu" class="text-muted absolute right-0 mr-3">
-              <i class="ti ti-dots-vertical f-18"></i>
-            </a>
-            <mat-menu #menu="matMenu" [overlapTrigger]="false" yPosition="below" xPosition="after">
-              <button mat-menu-item>
-                <a [routerLink]="['/application/profile/account']" class="text-muted">
-                  <i class="ti ti-user f-18 m-r-10"></i>
-                  <span>My Account</span>
-                </a>
-              </button>
-              <button mat-menu-item>
-                <a href="javascript:" class="text-muted" [routerLink]="['/application/profile/account/settings']">
-                  <i class="ti ti-settings f-18 m-r-10"></i>
-                  <span>Settings</span>
-                </a>
-              </button>
-              <button mat-menu-item [matMenuTriggerFor]="currentUser().Roles.length > 1 ? roles : ''">
-                <a href="javascript:" class="text-muted" [routerLink]="['/application/profile/account/settings']">
-                  <i class="ti ti-lock f-18 m-r-10"></i>
-                  <span>Cambiar Rol</span>
-                </a>
-              </button>
-              <button mat-menu-item>
-                <a href="javascript:" class="text-muted" [routerLink]="['/application/profile/account/settings']">
-                  <i class="ti ti-lock f-18 m-r-10"></i>
-                  <span>Lock Screen</span>
-                </a>
-              </button>
-              <button mat-menu-item>
-                <a href="javascript:" class="text-muted" (click)="logout()">
-                  <i class="ti ti-power f-18 m-r-10"></i>
-                  <span>Cerrar Sesión</span>
-                </a>
-              </button>
-            </mat-menu>
-
-     
-
-              <mat-menu #roles="matMenu">
-                @for (rol of currentUser().Roles; let isLast = $last; track rol) {
-                  @if ( rol.Nombre != currentRol()?.rol ) {
-                    <button mat-menu-item (click)="changeRol(rol)">{{ rol.Nombre }}</button>
-                  }
-                }
-
-              </mat-menu>
-            
-          </div> -->
         </div>
         <div class="">
           <div class="f-w-600 text-center f-12">{{ currentUser()?.ApellidosyNombres }}</div>
@@ -65,6 +16,7 @@
   <div class="navbar-content">
     <ul class="nav coded-inner-navbar" (click)="fireOutClick()">
       @for (item of menus; track item.id) {
+        <!-- {{ item | json }} -->
         @if (item.type === 'group') {
           <app-menu-group-vertical [item]="item"></app-menu-group-vertical>
         }

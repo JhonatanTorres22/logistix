@@ -1,17 +1,53 @@
-<div class="text-center m-b-25 f-18 f-w-500 text-white">Seleccione el rol a ingresar</div>
+<div class="text-center m-b-25 f-18 f-w-500 text-black">Seleccione el rol a ingresar</div>
 <mat-progress-bar class="loader" mode="indeterminate" value="40"></mat-progress-bar>
 <br>
 @if (isSpinnerVisible) {
 }
 
-@for (rol of roles; track rol) {
-    
+<div class="flex flex-column justify-content-center align-items-center min-h-screen w-full pt-4 -mt-8">
 
-<div class="bg-white scale bg-white border-round my-4 border-3 border-white cursor-pointer hover:border-cyan-500" (click)="selectRol(rol)">
-    <div class="flex justify-content-left align-item-center gap-4 mx-4">
-        <img [src]="'./assets/images/authentication/rol/' + rol.Nombre.substring(0, 4) +'.gif'" width="80px"/>
-        <span class="f-w-400 f-20">{{ rol.Nombre }}</span>
+    <div class="flex flex-column align-items-center mb-2">
+        <h1 class="font-bold text-base m-0 text-800">SELECCIONAR ROL</h1>
+        <p class="text-sm text-600 mt-1">Elija su área y rol para continuar</p>
+    </div>
+
+    <div class="flex shadow-2 border-round overflow-hidden bg-white w-full max-w-5xl">
+
+        <div class="flex flex-column gap-2 p-2 flex-1 border-right-1 surface-border overflow-hidden">
+            <h3 class="font-bold m-0 text-sm">MÓDULO</h3>
+
+            <div class="flex flex-column gap-1">
+                @for (modulo of listaRol().modulos; track $index) {
+                <div [ngClass]="{
+                'bg-primary text-white': selectedModulo === modulo,
+                'surface-card text-700 hover:surface-hover cursor-pointer': selectedModulo !== modulo
+              }" class="p-2 border-round flex align-items-center gap-1 transition-all transition-duration-200 border-1 surface-border flex-auto min-w-0 break-words"
+                    (click)="selectModulo(modulo)">
+                    <span class="font-semibold text-sm w-full break-words">{{ modulo.nombre }}</span>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="flex flex-column gap-1 p-2 flex-1 overflow-hidden">
+            <h3 class="font-bold m-0 text-sm">
+                ROL
+                <span class="text-sm">
+                    {{ selectedModulo ? selectedModulo.nombre.toUpperCase() : '...' }}
+                </span>
+            </h3>
+
+            @if (selectedModulo) {
+            <div class="flex flex-column gap-1 flex-grow-1 overflow-auto">
+                @for (rol of selectedModulo.roles; track $index) {
+                <div class="flex justify-content-between align-items-center py-1">
+                    <div class="flex align-items-center gap-1 cursor-pointer " (click)="seleccionarRol(rol)">
+                        <span class="text-sm break-words">{{ rol.nombre }}</span>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
     </div>
 </div>
-
-}

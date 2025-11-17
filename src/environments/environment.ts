@@ -10,7 +10,8 @@ export const environment = {
   production: false,
   apiUrl: 'https://mock-data-api-nextjs.vercel.app',
   EnpPointMSW: 'https://mock.com/',
-  EndPoint: 'https://pruebas2024.somee.com/Academico/',
+  // EndPoint: 'https://pruebas2024.somee.com/Academico/',
+  EndPoint : 'http://logistix.somee.com/logistix',
   // EndPoint: 'http://192.168.100.167/',
   
   EndPointSoap: 'http://localhost:8080/'

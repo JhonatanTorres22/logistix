@@ -1,78 +1,100 @@
-.auth-main {
-    .auth-wrapper {
-      &.version-1 {
-        display: flex;
-        align-items: stretch;
-  
-        .auth-form {
-          flex-direction: column;
-          background-size: cover;
-          position: relative;
-          justify-content: center;
-  
-          .auth-background {
-            position: absolute;
-            filter: blur(140px);
-            z-index: -1;
-            inset: 0px;
-            overflow: hidden;
-  
-            &::before {
-              content: ' ';
-              width: 300px;
-              height: 300px;
-              border-radius: 50%;
-              background-color: rgb(247, 220, 179);
-              position: absolute;
-              top: 0px;
-              right: 0px;
-              opacity: 1;
-  
-              ::ng-deep .dark & {
-                background-color: rgb(211, 90, 0) !important;
-                opacity: 0.6 !important;
-              }
-            }
-          }
-  
-          .yellow-circle {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background-color: rgb(192, 229, 217);
-            margin-left: 160px;
-            position: absolute;
-            bottom: 180px;
-            opacity: 1;
-  
-            ::ng-deep .dark & {
-              background-color: rgb(16, 125, 79) !important;
-              opacity: 0.8 !important;
-            }
-          }
-  
-          .red-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: rgb(231, 103, 103);
-            position: absolute;
-            bottom: 0px;
-            left: -50px;
-            opacity: 1;
-  
-            ::ng-deep .dark & {
-              background-color: rgb(211, 28, 28) !important;
-              opacity: 0.8 !important;
-            }
-          }
-  
-          .main-form {
-            display: flex;
-            justify-content: center;
-          }
-        }
-      }
-    }
-  }
-  
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+.auth-wrapper {
+  background: linear-gradient(to right, #e2e2e2, #b0bdec);
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-container {
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(71, 85, 194, 0.35);
+  position: relative;
+  overflow: hidden;
+  width: 90%;
+  max-width: 900px;
+  min-height: 500px;
+  transition: all 0.6s ease-in-out;
+}
+
+/* =========================
+   FORMULARIO
+========================= */
+.form-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+/* =========================
+   PANEL AZUL (TOGGLE)
+========================= */
+.toggle-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 150px 0 0 100px;
+  z-index: 20;
+}
+
+.toggle {
+  background: linear-gradient(to right, #1E3A8A, #3B82F6);
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.toggle-panel {
+  width: 100%;
+  height: 100%;
+  padding: 0 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.toggle-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.toggle-text {
+  font-size: 1rem;
+  color: #dce3ef;
+  margin: 15px 0 20px 0;
+}
+
+.footer-image {
+  width: 200px;
+  height: 150px;
+  margin-top: 20px;
+}
+
+/* =========================
+   LOGO
+========================= */
+.auth-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+  z-index: 30;
+}

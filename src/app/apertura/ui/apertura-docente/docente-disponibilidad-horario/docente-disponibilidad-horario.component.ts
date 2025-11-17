@@ -7,15 +7,16 @@ import { CommonModule } from '@angular/common';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { AperturaDocenteSignal } from 'src/app/apertura/domain/signal/apertura-docente.signal';
 import { DocenteRepository } from 'src/app/apertura/domain/repositories/apertura-docente.repository';
-import { FullCalendarModule } from '@fullcalendar/angular';
+// import { FullCalendarModule } from '@fullcalendar/angular';
 import { AgregarDisponibilidadDocente, CeldaSeleccionada, EliminarDisponibilidadDocente, ListarDisponibilidadDocente, ListarLocalFiltrado } from 'src/app/apertura/domain/models/apertura-docente.model';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { CursoAperturadoSignal } from 'src/app/apertura/domain/signal/curso-aperturado.signal';
+import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-docente-disponibilidad-horario',
   standalone: true,
-  imports: [SharedModule, CommonModule,  UiLoadingProgressBarComponent, MatGridListModule, FullCalendarModule],
+  imports: [SharedModule, CommonModule,  UiLoadingProgressBarComponent, MatButtonToggleModule,MatGridListModule,  UiButtonComponent],
   templateUrl: './docente-disponibilidad-horario.component.html',
   styleUrl: './docente-disponibilidad-horario.component.scss'
 })
@@ -101,7 +102,114 @@ export class DocenteDisponibilidadHorarioComponent implements OnInit {
       c => c.idDia === diaId && c.idHora === horaId
     );
     return celda ? celda.idLocal === this.selectSemestreLocal().codigoLocal : true;
-  };
+  }
+  restriccionActiva: boolean = false;
+  celdasOriginales: CeldaSeleccionada[] = [];  // Estado original de las celdas seleccionadas
+  
+  onToggleGroupChange(event: MatButtonToggleChange) {
+    const isRestriccionActiva = event.value === 'activada';
+    this.restriccionActiva = isRestriccionActiva;
+  
+    if (this.restriccionActiva) {
+      // Guardamos las celdas seleccionadas actuales como las originales
+      this.celdasOriginales = [...this.celdasSeleccionadas];
+      // Aplicamos la restricción
+      this.aplicarRestriccionUniversitaria();
+    } else {
+      // Restauramos las celdas al estado original
+      this.celdasSeleccionadas = [...this.celdasOriginales];
+    }
+  }
+  
+  aplicarRestriccionUniversitaria() {
+    // Recorremos los días para aplicar la restricción
+    this.dias.forEach((dia, diaIndex) => {
+      // Filtramos las celdas seleccionadas por día
+      const celdasDia = this.celdasSeleccionadas.filter(
+        (c) => c.diaId === diaIndex + 1
+      );
+  
+      // Aseguramos que las celdas del día estén ordenadas por horaId
+      celdasDia.sort((a, b) => a.horaId - b.horaId);
+  
+      console.log(`Día ${diaIndex + 1}: celdas ordenadas`, celdasDia);
+  
+      // Validamos si hay 6 o más celdas seleccionadas
+      if (celdasDia.length >= 6 && celdasDia.length >= 9) {
+        // Identificamos las celdas que están en posiciones múltiplos de 7
+        const celdasParaEliminar = celdasDia.filter((_, index) => (index + 1) % 7 === 0);
+  
+        console.log(`Día ${diaIndex + 1}: celdas para eliminar`, celdasParaEliminar);
+  
+        // Verificamos si todas cumplen con la condición de consecutividad
+        const todasConsecutivas = celdasParaEliminar.every((celda) =>
+          this.validarCeldasConsecutivas(celda, diaIndex, celdasDia)
+        );
+  
+        if (todasConsecutivas) {
+          celdasParaEliminar.forEach((celda) => {
+            this.quitarCeldaSeleccionada(celda, diaIndex, celdasDia);
+          });
+        } else {
+          console.log(`Día ${diaIndex + 1}: No se eliminó nada por falta de consecutividad.`);
+        }
+      } else if (celdasDia.length > 6 && celdasDia.length < 9) {
+        // Si hay menos de 9 celdas seleccionadas y no hay consecutivas
+        const centralIndex = Math.floor(celdasDia.length / 2); // Calculamos el índice central
+        const celdaCentral = celdasDia[centralIndex];
+  
+        console.log(`Día ${diaIndex + 1}: Eliminando celda en la posición central`, celdaCentral);
+  
+        this.quitarCeldaSeleccionada(celdaCentral, diaIndex, celdasDia);
+        // Verificamos si la celda central cumple con consecutividad
+        // if (!this.validarCeldasConsecutivas(celdaCentral, diaIndex, celdasDia)) {
+        //   console.log(`Día ${diaIndex + 1}: No hay celdas consecutivas, eliminando celda central`);
+        // }
+      }
+    });
+  }
+  
+  // Función para quitar la celda seleccionada sin eliminarla del sistema completamente
+  quitarCeldaSeleccionada(celda: CeldaSeleccionada, diaIndex: number, celdasDia: CeldaSeleccionada[]) {
+    // Verificamos si la celda está seleccionada en el día y si la condición de consecutividad se cumple
+    if (this.validarCeldasConsecutivas(celda, diaIndex, celdasDia)) {
+      // Si la celda es válida para desmarcar, la eliminamos solo en el día correspondiente
+      this.celdasSeleccionadas = this.celdasSeleccionadas.filter(
+        (selectedCelda) => !(selectedCelda.diaId === celda.diaId && selectedCelda.horaId === celda.horaId)
+      );
+    } else {
+      // Si no hay celdas consecutivas, mostramos el mensaje
+      console.log('No se puede desmarcar esta celda porque no hay suficientes celdas consecutivas.');
+    }
+  }
+  
+  validarCeldasConsecutivas(celda: CeldaSeleccionada, diaIndex: number, celdasDia: CeldaSeleccionada[]): boolean {
+    let consecutivasEncontradas = 0;
+  
+    // Ordenamos las celdas por hora para asegurarnos de que estamos verificando las consecutivas correctamente
+    celdasDia.sort((a, b) => a.horaId - b.horaId);
+  
+    // Buscamos si hay celdas consecutivas
+    const celdaIndex = celdasDia.findIndex(c => c.diaId === celda.diaId && c.horaId === celda.horaId);
+  
+    // Recorremos las celdas después de la celda seleccionada y verificamos si son consecutivas
+    for (let i = celdaIndex + 1; i < celdasDia.length; i++) {
+      if (celdasDia[i].horaId === celdasDia[i - 1].horaId + 1) {
+        consecutivasEncontradas++;
+      } else {
+        break; // Si no son consecutivas, salimos del ciclo
+      }
+  
+      // Si ya encontramos 2 celdas consecutivas, podemos continuar
+      if (consecutivasEncontradas >= 2) {
+        return true;
+      }
+    }
+  
+    // Si no encontramos al menos 2 celdas consecutivas después de esta celda, no permitimos el desmarque
+    return false;
+  }
+
 
   // Función para empezar la selección (cuando se hace clic en una celda)
   startSelection = (diaId: number, horaId: number) => {
@@ -235,28 +343,44 @@ export class DocenteDisponibilidadHorarioComponent implements OnInit {
       this.eliminarDisponibilidadConfirm(celdasExistentes);
     }
   
-    if (celdasNuevas.length > 0) {
-      this.loading = true;
-      this.agregarDisponibilidad();
-    }
+    // if (celdasNuevas.length > 0) {
+    //   this.loading = true;
+    //   this.agregarDisponibilidad();
+    // }
   };
   
 
   agregarDisponibilidad = () => {
-
     if (this.celdasSeleccionadas.length === 0) {
       this.alertServcie.showAlert('No has seleccionado ninguna celda para agregar disponibilidad', 'warning');
       return;
     }
-
+  
+    // Agrupar las celdas seleccionadas por día
+    const celdasPorDia = this.celdasSeleccionadas.reduce((acc, cell) => {
+      acc[cell.diaId] = (acc[cell.diaId] || 0) + 1;
+      return acc;
+    }, {} as { [key: number]: number });
+  
+    // Verificar si cada día tiene al menos 6 celdas seleccionadas
+    const diasInvalidos = Object.entries(celdasPorDia)
+      .filter(([diaId, count]) => count < 6)
+      .map(([diaId]) => diaId);
+  
+    if (diasInvalidos.length > 0) {
+      this.alertServcie.showAlert( `Cada día seleccionado debe tener como mínimo 6 horas disponible`,'warning');
+      this.loading = false
+      return;
+    }
+  
     this.alertServcie.sweetAlert('question', 'Confirmar', '¿Está seguro que desea agregar la disponibilidad del docente?')
       .then(isConfirm => {
         if (!isConfirm) {
           this.celdasSeleccionadas = [];
-          this.loading = false
-          return
+          this.loading = false;
+          return;
         }
-
+  
         const agregarDisponibilidad: AgregarDisponibilidadDocente[] = this.celdasSeleccionadas.map(cell => ({
           idDia: cell.diaId,
           idHora: cell.horaId,
@@ -265,24 +389,24 @@ export class DocenteDisponibilidadHorarioComponent implements OnInit {
           idProgramaAcademico: this.selectSemestreLocal().idProgramaAcademico,
           idLocal: this.selectSemestreLocal().codigoLocal
         }));
-
-        console.log(agregarDisponibilidad,'agregando disponibilidad del docente');
-        
-
+  
+        console.log(agregarDisponibilidad, 'agregando disponibilidad del docente');
+  
         this.docenteRepository.agregarDisponibilidadDocente(agregarDisponibilidad).subscribe({
           next: () => {
             this.alertServcie.showAlert('Disponibilidad agregada exitosamente', 'success');
-            this.obtenerDisponibilidad()
+            this.obtenerDisponibilidad();
             this.celdasSeleccionadas = [];
-            this.loading = false
+            this.loading = false;
           },
           error: (e) => {
             this.alertServcie.showAlert('Ocurrió un error al agregar la disponibilidad', 'error');
-            this.loading = false
+            this.loading = false;
           }
         });
-      })
-  }
+      });
+  };
+  
 
   eliminarDisponibilidadConfirm = (disponibilidad: CeldaSeleccionada[]) => {
     const eliminarDisponibilidad: EliminarDisponibilidadDocente[] = disponibilidad.map(celda => ({

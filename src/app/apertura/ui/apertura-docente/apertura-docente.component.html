@@ -49,7 +49,6 @@
             </mat-select>
         </mat-form-field>
         @if(selectProgramaSeleccionado() && idLocalSelect() > 0){
-            {{ idLocalSelect() }}
             <app-docente-disponibilidad-horario [localesFiltrados]="localesFiltrados"></app-docente-disponibilidad-horario>
         }
     </mat-step>

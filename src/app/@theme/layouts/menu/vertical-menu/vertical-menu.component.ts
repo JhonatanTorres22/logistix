@@ -1,6 +1,6 @@
 // Angular import
 import { Component, Input, OnDestroy, OnInit, effect } from '@angular/core';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 // project import
@@ -19,7 +19,7 @@ import { AlertService } from 'src/app/demo/services/alert.service';
 @Component({
   selector: 'app-vertical-menu',
   standalone: true,
-  imports: [SharedModule, MenuGroupVerticalComponent, RouterModule],
+  imports: [SharedModule, MenuGroupVerticalComponent, RouterModule, CommonModule],
   templateUrl: './vertical-menu.component.html',
   styleUrls: ['./vertical-menu.component.scss']
 })
