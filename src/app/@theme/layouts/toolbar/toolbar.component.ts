@@ -60,22 +60,22 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.obtenerSemestres();
-    this.obtenerInfoDirector();
-    this.obtenerCiclos();
+    // this.obtenerSemestres();
+    // this.obtenerInfoDirector();
+    // this.obtenerCiclos();
 
-    this.obtenerFacultades().then( hayFacultad => {
-      if( !hayFacultad ) {
-        return
-      }
+    // this.obtenerFacultades().then( hayFacultad => {
+    //   if( !hayFacultad ) {
+    //     return
+    //   }
 
-      this.facultadesList().forEach( facultad => {
-        this.obtenerProgramas( facultad.id );
+    //   this.facultadesList().forEach( facultad => {
+    //     this.obtenerProgramas( facultad.id );
         
-        // console.log( this.programasGlobal() );
-      });
+    //     // console.log( this.programasGlobal() );
+    //   });
       
-    })
+    // })
 
   }
 
@@ -126,7 +126,7 @@ export class NavBarComponent implements OnInit {
 
   obtenerInfoDirector = () => {
     // console.log(rol.Nombre,'****');
-    const rolSeleccionado = this.auth.currentRol().rol.substring(0,3);
+    const rolSeleccionado = 'Dir';
     console.warn( rolSeleccionado);
     
     if(rolSeleccionado === 'Dir'){

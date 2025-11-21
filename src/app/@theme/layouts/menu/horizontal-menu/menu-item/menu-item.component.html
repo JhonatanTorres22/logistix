@@ -1,3 +1,4 @@
+{{ item.title }}
 @if (!item.hidden) {
   @if (item.url && !item.external) {
     <li [ngClass]="item.classes!" [routerLinkActive]="['active']">

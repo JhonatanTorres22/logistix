@@ -8,6 +8,7 @@ import { AuthRepository } from '../../domain/repositories/auth.repository';
 import { AuthenticarRepository } from '../../domain/repositories/authenticar.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { data } from 'src/app/fake-data/series-data';
+import { da } from 'date-fns/locale';
 
 @Component({
   selector: 'app-search-dni',
@@ -24,9 +25,10 @@ export class SearchDniComponent {
   step = this.authSignal.stepAuth
   dni = this.authSignal.dni
   validatorUsername = this.authValidations.validatorUsername;
+  listarRol = this.authSignal.listarRol
   constructor(
-    private alertService:AlertService,
-    private repository : AuthenticarRepository,
+    private alertService: AlertService,
+    private repository: AuthenticarRepository,
     private authValidations: AuthValidations,
     private authSignal: AuthenticarSignal
   ) {
@@ -41,24 +43,22 @@ export class SearchDniComponent {
     })
   }
 
-  buscarDni = (dni : string) => {
+  buscarDni = (dni: string) => {
     console.log(dni);
     this.repository.obtenerRoles(dni).subscribe({
       next: (data) => {
-        
-        console.log(data);
-        
-        // this.alertService.showAlert(`Listando los roles ${data}`)
+        this.alertService.showAlert(`Listando los roles ${data.message}`, 'success')
+        this.listarRol.set(data.data)
+        setTimeout(() => {
+          this.step.set('roles')
+          this.dni.set(dni)
+        }, 100);
       },
-      error : (data) => {
-        this.alertService.showAlert(`Hubo un error`)
-        
+      error: (data) => {
+        this.alertService.showAlert(`Hubo un error ${data.message}`, 'error')
       }
-      
+
     })
-             this.step.set('roles')
-    this.dni.set(dni)
-   
   }
 
 }

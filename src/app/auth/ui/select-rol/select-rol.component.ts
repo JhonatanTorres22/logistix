@@ -20,34 +20,32 @@ import { AuthenticarSignal } from '../../domain/signals/authenticar.signal';
   styleUrl: './select-rol.component.scss'
 })
 export class SelectRolComponent {
-
-
-
   currentRol = this.auth.currentRol;
   imgRol: string = '';
   isSpinnerVisible: boolean = true;
   step = this.authenticasrSignal.stepAuth
   rolSignal = this.authenticasrSignal.rol
+  listaRol =this.authenticasrSignal.listarRol
 
-  listaRol = (): { modulos: Modulo[] } => ({
-    modulos: [
-      {
-        nombre: 'SOFTWARE LOGÍSTICO',
-        roles: [
-          { nombre: 'Jefe Logístico' },
-          { nombre: 'Verificador' }
-        ]
-      },
-      {
-        nombre: 'GIPEO',
-        roles: [
-          { nombre: 'Administrador' },
-          { nombre: 'Controlador' }
-        ]
-      },
+  // listaRol = (): { modulos: Modulo[] } => ({
+  //   modulos: [
+  //     {
+  //       nombre: 'SOFTWARE LOGÍSTICO',
+  //       roles: [
+  //         { nombre: 'Jefe Logístico' },
+  //         { nombre: 'Verificador' }
+  //       ]
+  //     },
+  //     {
+  //       nombre: 'GIPEO',
+  //       roles: [
+  //         { nombre: 'Administrador' },
+  //         { nombre: 'Controlador' }
+  //       ]
+  //     },
 
-    ]
-  });
+  //   ]
+  // });
 
   constructor(
     private auth: AuthSignal,
@@ -58,9 +56,6 @@ export class SelectRolComponent {
     private authService: AuthService,
     private mensajeria: MensajeriaSignal
   ) {
-    effect(() => {
-      'c'
-    })
   }
   infoDirector = this.auth.currentInfoDirector;
   selectRol(rol: RolDTO) {

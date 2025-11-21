@@ -4,7 +4,7 @@ import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 // project import
-import { NavigationItem } from 'src/app/@theme/types/navigation';
+import { Navigation, NavigationItem } from 'src/app/@theme/types/navigation';
 import { ThemeLayoutService } from 'src/app/@theme/services/theme-layout.service';
 import { HORIZONTAL, VERTICAL, COMPACT } from 'src/app/@theme/const';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
@@ -12,25 +12,28 @@ import { MenuGroupVerticalComponent } from './menu-group/menu-group.component';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/infraestructure/services/auth.service';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
-import { UsuarioRol } from 'src/app/usuarios/domain/models/usuario-rol.model';
-import { RolDTO } from 'src/app/auth/infraestructure/dto/auth.dto';
-import { AlertService } from 'src/app/demo/services/alert.service';
+import { AuthenticarSignal } from 'src/app/auth/domain/signals/authenticar.signal';
+import { MenuItemComponent } from './menu-item/menu-item.component';
+import { MenuCollapseComponent } from './menu-collapse/menu-collapse.component';
+import { AuthenticarService } from 'src/app/auth/infraestructure/services/authenticar.service';
+import { Authenticated } from 'src/app/auth/domain/models/authenticar.model';
 
 @Component({
   selector: 'app-vertical-menu',
   standalone: true,
-  imports: [SharedModule, MenuGroupVerticalComponent, RouterModule, CommonModule],
+  imports: [SharedModule, MenuGroupVerticalComponent, RouterModule, CommonModule, MenuItemComponent, MenuCollapseComponent],
   templateUrl: './vertical-menu.component.html',
   styleUrls: ['./vertical-menu.component.scss']
 })
 export class VerticalMenuComponent implements OnInit, OnDestroy {
   // public props
-  @Input() menus: NavigationItem[];
+  @Input() menus: Navigation[];
+  
   showUser: false;
   showContent = true;
   themeLayout = new Subscription();
-
-  currentUser = this.auth.currentUserData;
+  user : Authenticated | null  = this.authenticarService.getUserData()
+  currentUser = this.authenticarSignal.currentUserData;
   currentRol = this.auth.currentRol;
   // Constructor
   constructor(
@@ -41,14 +44,16 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     // private authenticationService: AuthenticationService,
     private authenticationService: AuthService,
     private auth: AuthSignal,
+    private authenticarService: AuthenticarService,
+    private authenticarSignal: AuthenticarSignal
     
 
   ) {
     // console.log(this.currentRol());
-    effect( () => {
-      console.log('Current User', this.currentUser().Roles);
+    // effect( () => {
+    //   console.log('Current User', this.currentUser().Roles);
       
-    })
+    // })
   }
 
   // public method
@@ -78,6 +83,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // this.user = this.authenticarService.getDecodedToken()
     this.themeLayout = this.themeService.layout.subscribe((layout) => {
       if (layout == VERTICAL) {
         this.showContent = true;

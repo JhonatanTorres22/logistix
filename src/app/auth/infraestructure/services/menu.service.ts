@@ -27,4 +27,18 @@ export class MenuService {
         map((apiMenu) => apiMenu.data.map(MenuMapper.fromDTO))
     )
   }
+
+  getMenu() {
+  // Intentamos recuperar del localStorage
+  const menuLS = localStorage.getItem('menu');
+
+  if (menuLS) {
+    try {
+      return JSON.parse(menuLS);
+    } catch {
+      console.error('Error al parsear menu desde localStorage');
+    }
+  }
+}
+
 }

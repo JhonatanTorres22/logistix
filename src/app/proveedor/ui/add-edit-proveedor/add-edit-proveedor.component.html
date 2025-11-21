@@ -1,0 +1,18 @@
+<mat-dialog-content>
+
+    <div [formGroup]="formProveedor">
+        <ui-input label="Nombre" formControlName="nombreRs" [maxlength]="8" [minlength]="8"></ui-input>
+        <ui-input label="RUC" formControlName="ruc" [maxlength]="8" [minlength]="8"></ui-input>
+        <ui-input label="Dirección Fiscal" formControlName="direccionFiscal" [maxlength]="8" [minlength]="8"></ui-input>
+
+        <mat-radio-group formControlName="tipo" aria-label=" SELECCIONAR TIPO DE PROVEEDOR">
+            <mat-radio-button value="PERSONA JURÍDICA"> PERSONA JURÍDICA </mat-radio-button>
+            <mat-radio-button value="PERSONA NORMAL"> PERSONA NORMAL </mat-radio-button>
+        </mat-radio-group>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <ui-button color="secondary" label="Cancelar" mat-dialog-close="cancelar" class="m-r-10"></ui-button>
+    <ui-button color="primary" [label]="proveedorSelect().codigo !== 0 ? 'Editar' : 'Agregar' " (onClick)="guardar()"
+        [disabled]="formProveedor.invalid"></ui-button>
+</mat-dialog-actions>

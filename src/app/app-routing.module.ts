@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     // canActivateChild: [ PathGuard ],
     children: [
       {
@@ -23,6 +23,11 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./demo/pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+
+      },
+      {
+        path: 'proveedor',
+        loadChildren: () => import('./proveedor/proveedor.module').then((m) => m.ProveedorModule),
 
       },
       {

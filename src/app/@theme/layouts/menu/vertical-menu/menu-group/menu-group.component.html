@@ -1,3 +1,4 @@
+<!-- {{ item | json }} -->
 @if (!item.hidden) {
   <li class="nav-item coded-menu-caption">
     <label>{{ item.title | translate }}</label>
@@ -6,6 +7,7 @@
     @if (item.type === 'collapse') {
       <app-menu-collapse [item]="item"></app-menu-collapse>
     } @else if (item.type === 'item') {
+      <!-- {{ item | json }} -->
       <app-menu-item [item]="item"></app-menu-item>
     }
   }

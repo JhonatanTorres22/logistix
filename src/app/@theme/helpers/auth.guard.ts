@@ -4,6 +4,8 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthService } from '../../auth/infraestructure/services/auth.service';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
+import { AuthenticarSignal } from 'src/app/auth/domain/signals/authenticar.signal';
+import { AuthenticarService } from 'src/app/auth/infraestructure/services/authenticar.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -11,17 +13,18 @@ export class AuthGuard implements CanActivate {
     private router: Router,
     private authenticationService: AuthenticationService,
     private authService: AuthService,
-    private auth: AuthSignal,
+    private authenticar: AuthenticarSignal,
+    private authenticarService: AuthenticarService
 
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     // const currentUser = this.authenticationService.currentUserValue; template
-    const currentUser = this.auth.currentUserData;
-    const expired = this.auth.checkExpiredToken();
+    const currentUser = this.authenticarService.getToken();
+    // const expired = this.auth.checkExpiredToken();
     // console.log(currentUser());
     
-    if (currentUser() && currentUser().serviceToken !== '' && !expired) {
+    if (currentUser !== '' ) {
       // logged in so return true
       // console.log(currentUser());
       // console.log( currentUser().serviceToken);

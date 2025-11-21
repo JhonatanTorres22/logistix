@@ -28,6 +28,8 @@ import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { AuthSignal } from 'src/app/auth/domain/signals/auth.signal';
 import { MenuSignal } from 'src/app/auth/domain/signals/menu.signal';
+import { MenuService } from 'src/app/auth/infraestructure/services/menu.service';
+import { AuthenticarService } from 'src/app/auth/infraestructure/services/authenticar.service';
 
 @Component({
   selector: 'app-admin',
@@ -50,8 +52,9 @@ import { MenuSignal } from 'src/app/auth/domain/signals/menu.signal';
 export class AdminComponent implements OnInit, OnDestroy {
   // public props
   @ViewChild('sidebar') sidebar: MatDrawer;
-  menus = this.auth.currentMenu;
+  menus : any;
   menu = this.menuSignal.currentMenu
+  userData = this.authenticarService.getUserData();
   modeValue: MatDrawerMode = 'side';
   direction: string;
   currentApplicationVersion = environment.appVersion;
@@ -63,10 +66,12 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // Constructor
   constructor(
+    private menuService: MenuService,
     private menuSignal : MenuSignal,
     private breakpointObserver: BreakpointObserver,
     private themeService: ThemeLayoutService,
     private auth: AuthSignal,
+    private authenticarService : AuthenticarService
   ) {
     this.currentLayout = AbleProConfig.layout;
     // this.currentLayout = 'compact';
@@ -76,7 +81,9 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // life cycle event
   ngOnInit() {
-    
+    setTimeout(() => {
+      this.menus = this.menuService.getMenu();
+    }, 600);
     // this.menus = this.auth.currentMenuToRole;
     // console.log(this.menus());
     // this.menus = this.auth.menusToRoleOfUsers()[0].menus

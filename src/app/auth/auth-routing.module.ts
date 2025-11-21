@@ -10,14 +10,14 @@ const routes: Routes = [
                 path: 'login',
                 loadComponent: () => import('./ui/auth-page.component').then( c => c.AuthComponent ),
             },
-            {
-                path: 'select-rol',
-                loadComponent: () => import('./ui/select-rol/select-rol.component').then( c => c.SelectRolComponent ),
-            },
-            {
-                path: 'logout',
-                loadComponent: () => import('./ui/logout/logout.component').then( c => c.LogoutComponent )
-            },
+            // {
+            //     path: 'select-rol',
+            //     loadComponent: () => import('./ui/select-rol/select-rol.component').then( c => c.SelectRolComponent ),
+            // },
+            // {
+            //     path: 'logout',
+            //     loadComponent: () => import('./ui/logout/logout.component').then( c => c.LogoutComponent )
+            // },
         ]
     },
     

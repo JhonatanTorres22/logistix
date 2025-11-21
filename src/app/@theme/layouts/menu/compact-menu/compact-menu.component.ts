@@ -1,6 +1,6 @@
 // Angular import
 import { Component, Input } from '@angular/core';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 
 // project import
 import { NavigationItem } from 'src/app/@theme/types/navigation';
@@ -10,7 +10,7 @@ import { MenuGroupCompactComponent } from './menu-group/menu-group.component';
 @Component({
   selector: 'app-compact-menu',
   standalone: true,
-  imports: [SharedModule, MenuGroupCompactComponent],
+  imports: [SharedModule, MenuGroupCompactComponent, CommonModule],
   templateUrl: './compact-menu.component.html',
   styleUrls: ['./compact-menu.component.scss']
 })

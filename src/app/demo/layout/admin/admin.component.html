@@ -12,14 +12,14 @@
     <nav>
       <div class="navbar-wrapper">
         <div class="m-header">
-          Logo
+          LOGISTIX
         </div>
         <!-- <pre>{{ menu() | json}}</pre> -->
         @if (currentLayout === 'vertical') {
-          <app-vertical-menu [menus]="menu()"></app-vertical-menu>
+          <app-vertical-menu [menus]="menus"></app-vertical-menu>
         }
         @if (currentLayout === 'compact') {
-          <app-compact-menu [menus]="menu()"></app-compact-menu>
+          <app-compact-menu [menus]="menus"></app-compact-menu>
         }
       </div>
     </nav>
@@ -32,7 +32,7 @@
     ></app-nav-bar>
     @if (currentLayout === 'horizontal') {
       <app-horizontal-menu
-        [menus]="menu()"
+        [menus]="menus"
         [ngClass]="{
           'horizontal-menu': currentLayout === 'horizontal'
         }"

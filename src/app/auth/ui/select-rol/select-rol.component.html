@@ -17,7 +17,7 @@
             <h3 class="font-bold m-0 text-sm">MÓDULO</h3>
 
             <div class="flex flex-column gap-1">
-                @for (modulo of listaRol().modulos; track $index) {
+                @for (modulo of listaRol()[0].modulos; track $index) {
                 <div [ngClass]="{
                 'bg-primary text-white': selectedModulo === modulo,
                 'surface-card text-700 hover:surface-hover cursor-pointer': selectedModulo !== modulo

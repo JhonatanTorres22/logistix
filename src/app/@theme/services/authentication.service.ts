@@ -9,6 +9,8 @@ import { SemestreSignal } from 'src/app/programas-academicos/domain/signals/seme
 import { NavigationItem } from '../types/navigation';
 import { PlanEstudioSignal } from 'src/app/plan-de-estudios/domain/signal/plan-estudio.signal';
 import { ListarInfoDirector } from 'src/app/auth/domain/models/listarInfoDirector.model';
+import { AuthenticarSignal } from 'src/app/auth/domain/signals/authenticar.signal';
+import { MenuSignal } from 'src/app/auth/domain/signals/menu.signal';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -21,10 +23,13 @@ export class AuthenticationService {
 
 
   public currentUser = this.auth.currentUserData;
+  public currentUsers = this.authenticar.currentUserData;
   constructor(
     private router: Router,
     private http: HttpClient,
     private auth: AuthSignal,
+    private menuSignal: MenuSignal,
+    private authenticar : AuthenticarSignal,
     private mensajeriaSignal: MensajeriaSignal,
     private semestreSignal: SemestreSignal,
     private planEstudio: PlanEstudioSignal,
@@ -42,7 +47,8 @@ export class AuthenticationService {
     if( currentUserData ) {
       auth.currentUserData.set(currentUserDataJSON);
     }
-    auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
+    menuSignal.currentMenu.set( JSON.parse( localStorage.getItem('currentMenu')! ) )
+    // auth.currentMenu.set(JSON.parse(localStorage.getItem('currentMenu')!));
     auth.currentRol.set(JSON.parse(localStorage.getItem('currentRol')!));
 
     localStorage.getItem('currentInfoDirector') ? auth.currentInfoDirector.set( JSON.parse( localStorage.getItem('currentInfoDirector')!)) : '';

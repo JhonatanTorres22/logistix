@@ -14,7 +14,7 @@ export interface NavigationItem {
   target?: boolean;
   breadcrumbs?: boolean;
   layout?: string;
-  children?: Navigation[];
+   children?: NavigationItem[]; // 👈 AJUSTADO
 }
 
 export interface Navigation extends NavigationItem {

@@ -1,6 +1,6 @@
 // Angular import
 import { Component, Input, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 // project import
 import { NavigationItem } from 'src/app/@theme/types/navigation';
@@ -11,7 +11,7 @@ import { MenuItemComponent } from '../menu-item/menu-item.component';
 @Component({
   selector: 'app-menu-group-vertical',
   standalone: true,
-  imports: [SharedModule, MenuCollapseComponent, MenuItemComponent],
+  imports: [SharedModule, CommonModule,MenuCollapseComponent, MenuItemComponent],
   templateUrl: './menu-group.component.html',
   styleUrls: ['./menu-group.component.scss']
 })

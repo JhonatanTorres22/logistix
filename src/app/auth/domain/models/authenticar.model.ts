@@ -34,7 +34,7 @@ export class Authenticar {
 
 
 export interface AccessToken {
-    accessToken: string;
+    token: string;
 }
 
 export interface AccessTokenData {
@@ -43,7 +43,7 @@ export interface AccessTokenData {
 
 export interface Authenticated {
     IdUsuario: string,
-    ApellidosyNombres: string,
+    apellidosyNombres: string,
     Correo: string,
     Rol:string
     permission : string
@@ -54,4 +54,5 @@ export interface Authenticated {
     iat: number,
     iss: string,
     aud: string,
+    serviceToken: string
 }

@@ -9,11 +9,10 @@ import { RolMenu } from "../../domain/models/menu.model";
 })
 
 export class MenuRepositoryImpl implements MenuRepository {
-    constructor(
-        private service: MenuService
-    ) { }
+  constructor(private service: MenuService) { }
 
-    obtenerMenu(): Observable<RolMenu[]> {
-        return this.service.obtenerMenu()
-    }
+  obtenerMenu(): Observable<RolMenu[]> {
+    // Aquí llamas al servicio que hace el GET al backend
+    return this.service.obtenerMenu();
+  }
 }

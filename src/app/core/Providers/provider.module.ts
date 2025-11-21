@@ -55,6 +55,10 @@ import { ValidarHorarioRepository } from "src/app/horario/domain/repositories/va
 import { ValidarHorarioRepositoryImpl } from "src/app/horario/infraestructure/repositories/validar-horario.repository.impl";
 import { AuthenticarRepository } from "src/app/auth/domain/repositories/authenticar.repository";
 import { AuthenticarRepositoryImpl } from "src/app/auth/infraestructure/repositories/authenticar.repository.impl";
+import { MenuRepository } from "src/app/auth/domain/repositories/menu.repository";
+import { MenuRepositoryImpl } from "src/app/auth/infraestructure/repositories/menu.repository.impl";
+import { ProveedorRepository } from "src/app/proveedor/domain/repositories/proveedor.repository";
+import { ProveedorRepositoryImpl } from "src/app/proveedor/infrastructure/repositories/proveedor.respository.impl";
 
 
 @NgModule({
@@ -95,7 +99,9 @@ import { AuthenticarRepositoryImpl } from "src/app/auth/infraestructure/reposito
 
             //LOGÍSTICA
 
-            {provide : AuthenticarRepository, useClass : AuthenticarRepositoryImpl}
+            {provide : AuthenticarRepository, useClass : AuthenticarRepositoryImpl},
+            {provide : MenuRepository, useClass : MenuRepositoryImpl},
+            {provide : ProveedorRepository, useClass : ProveedorRepositoryImpl}
         ]
     ]
 })
