@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ProveedorService } from "../services/proveedor.services";
 import { Observable } from "rxjs";
-import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../../domain/models/proveedor,model";
+import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../../domain/models/proveedor.model";
 import { ProveedorRepository } from "../../domain/repositories/proveedor.repository";
 
 @Injectable({

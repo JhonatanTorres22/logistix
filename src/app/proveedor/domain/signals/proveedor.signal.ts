@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
-import { Proveedor } from "../models/proveedor,model";
+import { Proveedor } from "../models/proveedor.model";
 
 @Injectable({
     providedIn    : 'root'

@@ -1,0 +1,55 @@
+.criterios-container {
+  padding-top: 10px;
+}
+
+.criterio-card {
+  padding: 18px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  border-left: 4px solid #1976d2;
+  transition: transform 0.1s ease;
+}
+
+.criterio-card:hover {
+  transform: translateY(-2px);
+}
+
+.criterio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.criterio-title {
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  color: #424242;
+}
+
+.icon {
+  margin-right: 8px;
+  color: #1976d2;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: white;
+}
+
+.badge-obligatorio {
+  background: #d32f2f;
+}
+
+.badge-opcional {
+  background: #0288d1;
+}
+
+.criterio-upload {
+  margin-top: 10px;
+}

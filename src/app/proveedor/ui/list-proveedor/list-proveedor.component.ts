@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { Proveedor, ProveedorEliminar } from '../../domain/models/proveedor,model';
+import { Proveedor, ProveedorEliminar } from '../../domain/models/proveedor.model';
 import { ProveedorRepository } from '../../domain/repositories/proveedor.repository';
 import { AlertService } from 'src/app/demo/services/alert.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,16 +10,18 @@ import { ProveedorSignal } from '../../domain/signals/proveedor.signal';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditProveedorComponent } from '../add-edit-proveedor/add-edit-proveedor.component';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { ListCriteriosComponent } from '../list-criterios/list-criterios.component';
+import { UiLoadingProgressBarComponent } from 'src/app/core/components/ui-loading-progress-bar/ui-loading-progress-bar.component';
 
 @Component({
   selector: 'app-list-proveedor',
   standalone: true,
-  imports: [SharedModule, AddEditProveedorComponent],
+  imports: [SharedModule, AddEditProveedorComponent, ListCriteriosComponent, UiLoadingProgressBarComponent],
   templateUrl: './list-proveedor.component.html',
   styleUrl: './list-proveedor.component.scss'
 })
 export class ListProveedorComponent implements OnInit {
-
+  loading: boolean = true;
   proveedorList = this.signal.proveedorList
   proveedorSelect = this.signal.proveedorSelect;
   proveedorDefault = this.signal.proveedorDefault
@@ -46,26 +48,14 @@ export class ListProveedorComponent implements OnInit {
       next: (proveedor) => {
         this.proveedorList.set(proveedor)
         this.dataSource.data = this.proveedorList()
-        console.log(proveedor);
         this.alert.showAlert('Proveedores cargados con éxito', 'success');
+        this.loading = false;
       },
 
       error: () => {
         this.alert.showAlert('Ocurrió un error al cargar los proveedores', 'error');
+        this.loading = false;
       }
-    })
-  }
-
-  openModalProveedor = (proveedor: Proveedor) => {
-    this.proveedorSelect.set(proveedor)
-    const dialogRef = this.dialog.open(AddEditProveedorComponent, {
-      width: '400px',
-      disableClose: true,
-    })
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == 'cancelar') { return }
-      this.obtenerProveedores()
     })
   }
 
@@ -110,5 +100,16 @@ export class ListProveedorComponent implements OnInit {
         this.alert.showAlert('Ocurrió un error al eliminar el proveedor', 'error');
       }
     })
+  }
+
+  openModalCriterios = (template: TemplateRef<any>, proveedor: Proveedor) => {
+    this.proveedorSelect.set(proveedor)
+    this.modal.openTemplate({
+      template,
+      titulo : 'Criterios de selección',
+    }).afterClosed().subscribe( ( result ) => {
+      if( result == 'cancelar' ) { return; }
+      // this.obtenerProveedores()
+    } );;
   }
 }

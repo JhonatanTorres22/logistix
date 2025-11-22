@@ -1,19 +1,30 @@
-<!-- <app-card [showHeader]="false"> -->
-    <form [formGroup]="filesForm">
-        <div class="overflow-auto max-h-20rem">
-            <file-upload formControlName="files" [accept]="typeFile" [multiple]="false" (ngModelChange)="setFile()"></file-upload>
-        </div>
-    </form>
-
-    <div 
-        class="text-justify m-t-20 p-3 bg-{{file().files.length == 1 ? 'green' : 'yellow'}}-200 text-{{file().files.length == 1 ? 'green' : 'yellow'}}-900 border-round"
-        
-    >
-      <!-- <button mat-flat-button color="primary" (click)="setFile()">Upload Now</button> -->
-      <span class="font-bold px-2">{{ file().files.length == 0 ? 'No hay archivo!' : 'Correcto!' }}</span>{{ file().files.length == 0 ? 'Ud. aún no ha cargado nigún archivo.' : 'Ud. ha cargado 1 archivo.'}}
+<form [formGroup]="filesForm">
+    <div class="overflow-auto max-h-20rem">
+        <file-upload 
+            formControlName="files" 
+            [accept]="typeFile" 
+            [multiple]="false" 
+            (ngModelChange)="setFile()">
+        </file-upload>
     </div>
+</form>
 
-    <!-- @if ( showButton ) { } -->
-    <!-- {{ filesForm.value | json }}
-    <pre>{{ file().files.length  | json }}</pre> -->
-   <!-- </app-card> -->
+<!-- Miniatura PDF -->
+<div *ngIf="previewUrl" class="mt-2">
+    <img [src]="previewUrl" alt="PDF preview" style="width:80px; height:auto; border:1px solid #ccc; border-radius:4px;" />
+</div>
+
+<div 
+    class="text-justify m-t-20 p-3 bg-{{file().files.length == 1 ? 'green' : 'yellow'}}-200 
+           text-{{file().files.length == 1 ? 'green' : 'yellow'}}-900 border-round"
+>
+  <span class="font-bold px-2">
+    {{ file().files.length == 0 ? 'No hay archivo!' : 'Correcto!' }}
+  </span>
+  {{ file().files.length == 0 
+      ? 'Ud. aún no ha cargado nigún archivo.' 
+      : 'Ud. ha cargado 1 archivo.' 
+  }}
+</div>
+
+

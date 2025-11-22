@@ -1,0 +1,43 @@
+<mat-card class="upload-card">
+
+  <div
+    class="upload-dropzone"
+    (click)="fileInput.click()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    [class.dragover]="isDragOver"
+  >
+    <input
+      type="file"
+      #fileInput
+      hidden
+      accept="application/pdf"
+      (change)="onFileSelected($event)"
+    />
+
+    <!-- Miniatura PDF -->
+    <canvas *ngIf="file" #pdfCanvas class="preview-img"></canvas>
+
+    <!-- Nombre -->
+    <span *ngIf="file" class="file-name">{{ file.name }}</span>
+
+    <!-- Ícono + texto cuando no hay archivo -->
+    <ng-container *ngIf="!file">
+      <mat-icon class="upload-icon">picture_as_pdf</mat-icon>
+      <p>Subir o arrastrar PDF</p>
+    </ng-container>
+
+    <!-- Botón eliminar -->
+    <button
+      *ngIf="file"
+      mat-mini-fab
+      color="warn"
+      class="remove-btn"
+      (click)="removeFile()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+</mat-card>

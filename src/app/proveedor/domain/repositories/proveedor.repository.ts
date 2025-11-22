@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../models/proveedor,model";
+import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../models/proveedor.model";
 
 export abstract class ProveedorRepository {
 

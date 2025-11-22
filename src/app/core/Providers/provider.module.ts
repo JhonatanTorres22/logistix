@@ -59,6 +59,8 @@ import { MenuRepository } from "src/app/auth/domain/repositories/menu.repository
 import { MenuRepositoryImpl } from "src/app/auth/infraestructure/repositories/menu.repository.impl";
 import { ProveedorRepository } from "src/app/proveedor/domain/repositories/proveedor.repository";
 import { ProveedorRepositoryImpl } from "src/app/proveedor/infrastructure/repositories/proveedor.respository.impl";
+import { EvaluacionRepositoryImpl } from "src/app/proveedor/infrastructure/repositories/evaluacion.repository.impl";
+import { EvaluacionRepository } from "src/app/proveedor/domain/repositories/evaluacion.repository";
 
 
 @NgModule({
@@ -101,7 +103,8 @@ import { ProveedorRepositoryImpl } from "src/app/proveedor/infrastructure/reposi
 
             {provide : AuthenticarRepository, useClass : AuthenticarRepositoryImpl},
             {provide : MenuRepository, useClass : MenuRepositoryImpl},
-            {provide : ProveedorRepository, useClass : ProveedorRepositoryImpl}
+            {provide : ProveedorRepository, useClass : ProveedorRepositoryImpl},
+            {provide : EvaluacionRepository, useClass : EvaluacionRepositoryImpl}
         ]
     ]
 })

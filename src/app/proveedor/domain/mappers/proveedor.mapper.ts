@@ -1,5 +1,5 @@
 import { ProveedorCrearDTO, ProveedorDTO, ProveedorEditarDTO, ProveedorEliminarDTO } from "../../infrastructure/dto/proveedor.dto";
-import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../models/proveedor,model";
+import { Proveedor, ProveedorCrear, ProveedorEditar, ProveedorEliminar } from "../models/proveedor.model";
 
 export class ProveedorMapper {
     static toDomain(dto: ProveedorDTO): Proveedor {

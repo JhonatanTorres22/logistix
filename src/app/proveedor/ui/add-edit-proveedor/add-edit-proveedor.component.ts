@@ -6,9 +6,10 @@ import { UiButtonComponent } from 'src/app/core/components/ui-button/ui-button.c
 import { UiInputComponent } from 'src/app/core/components/ui-input/ui-input.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/demo/services/alert.service';
-import { ProveedorCrear, ProveedorEditar } from '../../domain/models/proveedor,model';
+import { ProveedorCrear, ProveedorEditar } from '../../domain/models/proveedor.model';
 import { ProveedorRepository } from '../../domain/repositories/proveedor.repository';
 import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.service';
+import { ProveedorValidation } from '../../domain/validation/proveedor.validation';
 
 @Component({
   selector: 'app-add-edit-proveedor',
@@ -20,16 +21,29 @@ import { UiModalService } from 'src/app/core/components/ui-modal/ui-modal.servic
 export class AddEditProveedorComponent implements OnInit {
   formProveedor: FormGroup;
   proveedorSelect = this.signal.proveedorSelect;
+
+  expRegRuc : RegExp = this.validation.expRegRuc;
+  expRegNombreRs : RegExp = this.validation.expRegNombreRs;
+  expRegDireccionFiscal : RegExp = this.validation.expRegDireccionFiscal;
+
+  maxLengthRuc : number = this.validation.maxLengthRuc;
+  maxLengthNombreRs : number = this.validation.maxLengthNombreRs;
+  maxLengthDireccionFiscal : number = this.validation.maxLengthDireccionFiscal;
+
+  minLengthRuc : number = this.validation.minLengthRuc;
+  minLengthNombreRs : number = this.validation.minLengthNombreRs;
+  minLengthDireccionFiscal : number = this.validation.minLengthDireccionFiscal;
   constructor(
+    private validation: ProveedorValidation,
     private modal: UiModalService,
     private repository: ProveedorRepository,
     private signal: ProveedorSignal,
     private alert: AlertService
   ) {
     this.formProveedor = new FormGroup({
-      nombreRs: new FormControl('', [Validators.required]),
-      ruc: new FormControl('', [Validators.required]),
-      direccionFiscal: new FormControl('', [Validators.required]),
+      nombreRs: new FormControl('', [Validators.required, Validators.minLength(this.minLengthNombreRs), Validators.maxLength(this.maxLengthNombreRs), Validators.pattern(this.expRegNombreRs)]),
+      ruc: new FormControl('', [Validators.required, Validators.minLength(this.minLengthRuc), Validators.maxLength(this.maxLengthRuc), Validators.pattern(this.expRegRuc)]),
+      direccionFiscal: new FormControl('', [Validators.required, Validators.minLength(this.minLengthDireccionFiscal), Validators.maxLength(this.maxLengthDireccionFiscal), Validators.pattern(this.expRegDireccionFiscal)]),
       tipo: new FormControl('', [Validators.required]),
     });
   }
@@ -89,7 +103,7 @@ export class AddEditProveedorComponent implements OnInit {
     this.repository.editar(editProveedor).subscribe({
       next: () => {
         this.alert.showAlert('Proveedor editado con éxito', 'success');
-        this.modal.getRefModal().close('Edit');
+        this.modal.getRefModal().close('Edit');        
       },
       error: () => {
         this.alert.showAlert('Ocurrió un error al editar el proveedor', 'error');
@@ -99,7 +113,7 @@ export class AddEditProveedorComponent implements OnInit {
   patchValueForm = () => {
     this.formProveedor.patchValue({
       nombreRs: this.proveedorSelect().nombreRs,
-      ruc: this.proveedorSelect().ruc,
+      ruc: this.proveedorSelect().ruc.trim(),
       direccionFiscal: this.proveedorSelect().direccionFiscal,
       tipo: this.proveedorSelect().tipo,
     })

@@ -6,7 +6,11 @@ import { UploaderModule } from 'angular-uploader';
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 import { MensajeriaSignal } from 'src/app/mensajeria/domain/signals/mensajeria.signal';
 import { Uploader, UploadWidgetConfig, UploadWidgetResult } from 'uploader';
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 
+// Configurar el worker de pdfjs
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 const apiKey = 'free';
 
 @Component({
@@ -22,7 +26,7 @@ export class UiUploaderFilesComponent {
   private filesControl = new UntypedFormControl(null, [FileUploadValidators.filesLimit(2),FileUploadValidators.accept( this.typeFile )]);
 
   file = this.mensajeriaSignal.file;
-
+previewUrl: string | null = null;
 
   constructor(
     private mensajeriaSignal: MensajeriaSignal
@@ -52,11 +56,33 @@ export class UiUploaderFilesComponent {
     this.uploadedFileUrl = files[0]?.fileUrl;
   };
 
-  setFile = () => {
-    console.log('ddd');
-    
-    this.file.set( this.filesForm.value )
-  }
 
+setFile = () => {
+  const file = this.filesForm.value.files?.[0];
+  if (!file) return;
+
+  this.file.set(this.filesForm.value);
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const arrayBuffer = e.target?.result as ArrayBuffer;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const page = await pdf.getPage(1);
+
+    const viewport = page.getViewport({ scale: 0.2 }); // tamaño pequeño
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    const ctx = canvas.getContext('2d')!;
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    this.previewUrl = canvas.toDataURL(); // lo mostramos en el HTML
+  };
+  reader.readAsArrayBuffer(file);
+};
   uploadedFileUrl: string | undefined = undefined;
+
+
+  
 }

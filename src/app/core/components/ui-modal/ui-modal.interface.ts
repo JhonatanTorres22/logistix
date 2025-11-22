@@ -8,5 +8,5 @@ export interface uiModalData {
 
 export interface uiModalTemplateData {
  template: TemplateRef<any>
- titulo: string
+ titulo: string,
 }
